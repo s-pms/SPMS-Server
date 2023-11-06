@@ -3,7 +3,9 @@ package com.qqlab.spms.module.system.role;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Exclude;
 import cn.hamm.airpower.annotation.Payload;
+import com.qqlab.spms.annotation.AutoGenerateCode;
 import com.qqlab.spms.base.BaseEntity;
+import com.qqlab.spms.module.system.coderule.CodeRuleField;
 import com.qqlab.spms.module.system.menu.MenuEntity;
 import com.qqlab.spms.module.system.permission.PermissionEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -44,6 +46,14 @@ public class RoleEntity extends BaseEntity<RoleEntity> {
     @Column(columnDefinition = "varchar(255) default '' comment '角色名称'", unique = true)
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "角色名称不能为空")
     private String name;
+
+    /**
+     * <h2>角色编码</h2>
+     */
+    @Description("角色编码")
+    @Column(columnDefinition = "varchar(255) default '' comment '角色编码'", unique = true)
+    @AutoGenerateCode(CodeRuleField.RoleCode)
+    private String code;
 
     /**
      * <h2>是否系统角色</h2>

@@ -1,8 +1,8 @@
 package com.qqlab.spms.module.system.app;
 
 import cn.hamm.airpower.result.Result;
-import cn.hamm.airpower.root.RootService;
 import cn.hutool.core.util.RandomUtil;
+import com.qqlab.spms.base.BaseService;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -13,7 +13,7 @@ import java.util.Objects;
  * @author Hamm
  */
 @Service
-public class AppService extends RootService<AppEntity, AppRepository> {
+public class AppService extends BaseService<AppEntity, AppRepository> {
     /**
      * <h2>通过AppKey获取一个应用</h2>
      *

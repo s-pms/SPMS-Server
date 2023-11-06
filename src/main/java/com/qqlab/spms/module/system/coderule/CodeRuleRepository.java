@@ -13,8 +13,8 @@ public interface CodeRuleRepository extends RootRepository<CodeRuleEntity> {
     /**
      * <h1>查询指定表的编码规则实体</h1>
      *
-     * @param tableId 从枚举字典中传入
+     * @param ruleField 从枚举字典中传入
      * @return 编码规则实体
      */
-    CodeRuleEntity getByTableId(Integer tableId);
+    CodeRuleEntity getByRuleField(Integer ruleField);
 }

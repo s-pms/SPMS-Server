@@ -36,13 +36,13 @@ import javax.validation.constraints.NotNull;
 @Description("编码规则")
 public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     /**
-     * <h2>所属表</h2>
+     * <h2>规则字段</h2>
      */
-    @Description("所属表")
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '所属表'", unique = true)
-    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "所属表不能为空")
-    @Dictionary(value = CodeRuleTable.class, groups = {WhenUpdate.class, WhenAdd.class})
-    private Integer tableId;
+    @Description("规则字段")
+    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '规则字段'", unique = true)
+    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "规则字段不能为空")
+    @Dictionary(value = CodeRuleField.class, groups = {WhenUpdate.class, WhenAdd.class})
+    private Integer ruleField;
 
     /**
      * <h2>流水号更新方式</h2>
@@ -59,7 +59,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     @Description("流水号起始长度")
     @Column(columnDefinition = "tinyint UNSIGNED default 4 comment '流水号起始长度'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "流水号起始长度不能为空")
-    @Range(min = 4, max = 16, message = "流水号只允许{min}-{max}位")
+    @Range(min = 1, max = 10, message = "流水号只允许{min}-{max}位")
     private Integer snLength;
 
     /**
@@ -68,7 +68,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     @Description("编码前缀")
     @Column(columnDefinition = "varchar(255) default '' comment '编码前缀'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "流水号起始长度不能为空")
-    @Length(min = 1, max = 6, message = "编码前缀只允许{min}-{max}位")
+    @Length(min = 1, max = 10, message = "编码前缀只允许{min}-{max}位")
     private String prefix;
 
 
@@ -78,6 +78,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     @Description("编码规则模板")
     @Column(columnDefinition = "varchar(255) default '' comment '编码规则模板'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "编码规则模板")
+    @Length(max = 64,message = "模板最多允许{max}个字符")
     private String template;
 
     /**

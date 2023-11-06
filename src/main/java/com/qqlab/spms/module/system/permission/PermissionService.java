@@ -3,10 +3,10 @@ package com.qqlab.spms.module.system.permission;
 import cn.hamm.airpower.query.QueryRequest;
 import cn.hamm.airpower.result.Result;
 import cn.hamm.airpower.root.RootEntityController;
-import cn.hamm.airpower.root.RootService;
 import cn.hamm.airpower.security.AccessConfig;
 import cn.hamm.airpower.security.AccessUtil;
 import cn.hamm.airpower.util.ReflectUtil;
+import com.qqlab.spms.base.BaseService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -30,7 +30,7 @@ import java.util.Objects;
  * @author Hamm
  */
 @Service
-public class PermissionService extends RootService<PermissionEntity, PermissionRepository> {
+public class PermissionService extends BaseService<PermissionEntity, PermissionRepository> {
     /**
      * <h2>通过标识获取一个权限</h2>
      *

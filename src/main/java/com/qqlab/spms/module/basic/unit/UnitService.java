@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.basic.unit;
 
-import cn.hamm.airpower.root.RootService;
+import com.qqlab.spms.base.BaseService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Service;
  * @author Hamm
  */
 @Service
-public class UnitService extends RootService<UnitEntity, UnitRepository> {
+public class UnitService extends BaseService<UnitEntity, UnitRepository> {
 }

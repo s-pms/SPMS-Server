@@ -1,7 +1,7 @@
 package com.qqlab.spms.module.system.role;
 
 import cn.hamm.airpower.result.Result;
-import cn.hamm.airpower.root.RootService;
+import com.qqlab.spms.base.BaseService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * @author Hamm
  */
 @Service
-public class RoleService extends RootService<RoleEntity, RoleRepository> {
+public class RoleService extends BaseService<RoleEntity, RoleRepository> {
     @Override
     protected void beforeDelete(RoleEntity entity) {
         Result.FORBIDDEN_DELETE.when(entity.getIsSystem(), "系统内置角色无法被删除!");

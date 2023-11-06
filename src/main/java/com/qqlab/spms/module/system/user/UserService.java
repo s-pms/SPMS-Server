@@ -3,10 +3,11 @@ package com.qqlab.spms.module.system.user;
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.query.QueryRequest;
 import cn.hamm.airpower.result.Result;
-import cn.hamm.airpower.root.RootService;
 import cn.hamm.airpower.security.PasswordUtil;
 import cn.hamm.airpower.security.SecurityUtil;
 import cn.hamm.airpower.util.EmailUtil;
+import cn.hutool.core.util.RandomUtil;
+import com.qqlab.spms.base.BaseService;
 import com.qqlab.spms.exception.CustomResult;
 import com.qqlab.spms.module.system.app.AppVo;
 import com.qqlab.spms.module.system.menu.MenuEntity;
@@ -14,7 +15,6 @@ import com.qqlab.spms.module.system.menu.MenuService;
 import com.qqlab.spms.module.system.permission.PermissionEntity;
 import com.qqlab.spms.module.system.permission.PermissionService;
 import com.qqlab.spms.module.system.role.RoleEntity;
-import cn.hutool.core.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -29,7 +29,7 @@ import java.util.Objects;
  * @author Hamm
  */
 @Service
-public class UserService extends RootService<UserEntity, UserRepository> {
+public class UserService extends BaseService<UserEntity, UserRepository> {
     @Autowired
     private SecurityUtil securityUtil;
     /**

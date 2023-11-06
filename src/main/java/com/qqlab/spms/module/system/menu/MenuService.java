@@ -3,7 +3,7 @@ package com.qqlab.spms.module.system.menu;
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.query.QueryRequest;
 import cn.hamm.airpower.result.Result;
-import cn.hamm.airpower.root.RootService;
+import com.qqlab.spms.base.BaseService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author Hamm
  */
 @Service
-public class MenuService extends RootService<MenuEntity, MenuRepository> {
+public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     @Override
     protected void beforeDelete(MenuEntity entity) {
         QueryRequest<MenuEntity> queryRequest = new QueryRequest<>();

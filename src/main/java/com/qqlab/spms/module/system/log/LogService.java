@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.system.log;
 
-import cn.hamm.airpower.root.RootService;
+import com.qqlab.spms.base.BaseService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Service;
  * @author Hamm
  */
 @Service
-public class LogService extends RootService<LogEntity, LogRepository> {
+public class LogService extends BaseService<LogEntity, LogRepository> {
 }

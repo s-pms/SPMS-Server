@@ -44,6 +44,7 @@ public class Initialization {
         }
         firstRole = roleService.add(new RoleEntity()
                 .setName("超级管理员")
+                .setCode("ROOT")
                 .setIsSystem(true)
                 .setRemark("超级管理员角色组,请勿数据库暴力直接删除"));
 
@@ -120,6 +121,9 @@ public class Initialization {
         menuService.add(sysSubMenu);
 
         sysSubMenu = new MenuEntity().setName("应用管理").setPath("/console/system/app/list").setParentId(sysMenu.getId());
+        menuService.add(sysSubMenu);
+
+        sysSubMenu = new MenuEntity().setName("编码规则").setPath("/console/system/coderule/list").setParentId(sysMenu.getId());
         menuService.add(sysSubMenu);
     }
 

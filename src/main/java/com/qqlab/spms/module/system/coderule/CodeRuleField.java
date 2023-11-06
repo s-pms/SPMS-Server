@@ -10,12 +10,12 @@ import lombok.Getter;
  * @author Hamm https://hamm.cn
  */
 @AllArgsConstructor
-public enum CodeRuleTable implements IEnum {
+public enum CodeRuleField implements IEnum {
 
     /**
      * <h2>角色</h2>
      */
-    Role(1, "角色", "role", "ROLE"),
+    RoleCode(1, "角色编码", "ROLE"),
     ;
 
     @Getter
@@ -23,9 +23,6 @@ public enum CodeRuleTable implements IEnum {
 
     @Getter
     private String label;
-
-    @Getter
-    private String table;
 
     @Getter
     private String defaultPrefix;
