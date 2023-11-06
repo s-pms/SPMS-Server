@@ -35,7 +35,6 @@ import javax.validation.constraints.NotNull;
 @Table(name = "supplier")
 @Description("供应商")
 public class SupplierEntity extends BaseEntity<SupplierEntity> {
-
     @Description("供应商名称")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "供应商名称不能为空")
     @Column(columnDefinition = "varchar(255) default '' comment '供应商名称'")
