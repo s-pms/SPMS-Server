@@ -1,0 +1,56 @@
+package cn.hamm.starter.module.basic.supplier;
+
+import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.validate.dictionary.Dictionary;
+import cn.hamm.airpower.validate.phone.Phone;
+import cn.hamm.starter.base.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+/**
+ * <h1>供应商实体</h1>
+ *
+ * @author Hamm
+ */
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@DynamicInsert
+@DynamicUpdate
+@Table(name = "supplier")
+@Description("供应商")
+public class SupplierEntity extends BaseEntity<SupplierEntity> {
+    @Description("供应商编码")
+    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "供应商编码不能为空")
+    @Column(columnDefinition = "varchar(255) default '' comment '供应商编码'", unique = true)
+    private String code;
+
+    @Description("供应商名称")
+    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "供应商名称不能为空")
+    @Column(columnDefinition = "varchar(255) default '' comment '供应商名称'")
+    private String name;
+
+    @Description("供应商级别")
+    @Column(columnDefinition = "int default 3 comment '供应商级别'")
+    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "供应商级别不能为空")
+    @Dictionary(value = SupplierLevel.class, message = "供应商级别不在允许范围")
+    private Integer level;
+
+    @Description("手机号")
+    @Column(columnDefinition = "varchar(255) default '' comment '手机号'")
+    @Phone(mobile = false)
+    private String phone;
+}

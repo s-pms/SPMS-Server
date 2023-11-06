@@ -1,0 +1,8 @@
+host = smtp.exmail.qq.com
+from = mail@hamm.cn
+pass = j2UUZZHG6WMX7SGY
+port = 465
+sslEnable = true
+socketFactoryClass = javax.net.ssl.SSLSocketFactory
+socketFactoryFallback = true
+socketFactoryPort = 465
