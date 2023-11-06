@@ -21,7 +21,7 @@ public enum CodeRuleField implements IEnum {
     /**
      * <h2>供应商编码</h2>
      */
-    SupplierCode(1, "供应商编码", "SP"),
+    SupplierCode(2, "供应商编码", "SP"),
 
     ;
 
