@@ -43,7 +43,7 @@ public class SupplierEntity extends BaseEntity<SupplierEntity> {
 
     @Description("供应商编码")
     @Column(columnDefinition = "varchar(255) default '' comment '供应商编码'", unique = true)
-    @AutoGenerateCode(CodeRuleField.RoleCode)
+    @AutoGenerateCode(CodeRuleField.SupplierCode)
     private String code;
 
     @Description("供应商级别")
