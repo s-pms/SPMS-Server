@@ -15,6 +15,12 @@ import java.util.Map;
 @Service
 public class CodeRuleService extends RootService<CodeRuleEntity, CodeRuleRepository> {
 
+    /**
+     * 创建一个自定义编码
+     *
+     * @param codeRuleTable 为哪张表创建
+     * @return 一个自定义编码
+     */
     String createCode(CodeRuleTable codeRuleTable) {
         CodeRuleEntity codeRuleEntity = repository.getByTableId(codeRuleTable.getValue());
         Result.ERROR.whenNull(codeRuleEntity, "获取自定义规则失败");
