@@ -5,6 +5,8 @@ import com.qqlab.spms.module.basic.unit.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 /**
  * <h1>Service</h1>
  *
@@ -18,6 +20,12 @@ public class MaterialService extends BaseService<MaterialEntity, MaterialReposit
     @Override
     protected MaterialEntity beforeSaveToDatabase(MaterialEntity entity) {
         entity.setUnitInfo(unitService.getById(entity.getUnitInfo().getId()));
-        return entity;
+        if(Objects.isNull(entity.getPurchasePrice())){
+            entity.setPurchasePrice(0D);
+        }
+        if(Objects.isNull(entity.getSalePrice())){
+            entity.setSalePrice(0D);
+        }
+        return super.beforeSaveToDatabase(entity);
     }
 }

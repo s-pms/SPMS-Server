@@ -26,6 +26,11 @@ public enum SerialNumberUpdate implements IEnum {
      * <h2>按年更新</h2>
      */
     YEAR(3, "按年更新"),
+
+    /**
+     * <h2>不更新</h2>
+     */
+    NEVER(4, "不更新"),
     ;
 
     @Getter

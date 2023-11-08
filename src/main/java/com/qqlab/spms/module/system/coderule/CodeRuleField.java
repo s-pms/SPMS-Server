@@ -37,7 +37,18 @@ public enum CodeRuleField implements IEnum {
     /**
      * <h2>客户编码</h2>
      */
-    CustomerCode(5, "客户编码", "CT");
+    CustomerCode(5, "客户编码", "CT"),
+
+    /**
+     * <h2>物料编码</h2>
+     */
+    MaterialCode(6, "物料编码", "MA"),
+
+    /**
+     * <h2>单位编码</h2>
+     */
+    UnitCode(7,"单位编码","UT")
+    ;
 
     @Getter
     private int value;

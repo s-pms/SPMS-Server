@@ -14,6 +14,7 @@ public enum CustomResult implements IResult {
 
     USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID(2, "用户账号或密码错误"),
     USER_REGISTER_ERROR_EXIST(3, "注册失败，账号已存在"),
+
     ;
 
     /**

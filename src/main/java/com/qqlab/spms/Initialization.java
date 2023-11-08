@@ -1,8 +1,26 @@
 package com.qqlab.spms;
 
 import cn.hamm.airpower.security.PasswordUtil;
+import cn.hutool.core.util.RandomUtil;
+import com.qqlab.spms.module.basic.customer.CustomerEntity;
+import com.qqlab.spms.module.basic.customer.CustomerService;
+import com.qqlab.spms.module.basic.material.MaterialEntity;
+import com.qqlab.spms.module.basic.material.MaterialService;
+import com.qqlab.spms.module.basic.material.MaterialType;
+import com.qqlab.spms.module.basic.storage.StorageEntity;
+import com.qqlab.spms.module.basic.storage.StorageService;
+import com.qqlab.spms.module.basic.structure.StructureEntity;
+import com.qqlab.spms.module.basic.structure.StructureService;
+import com.qqlab.spms.module.basic.supplier.SupplierEntity;
+import com.qqlab.spms.module.basic.supplier.SupplierService;
+import com.qqlab.spms.module.basic.unit.UnitEntity;
+import com.qqlab.spms.module.basic.unit.UnitService;
 import com.qqlab.spms.module.system.app.AppEntity;
 import com.qqlab.spms.module.system.app.AppService;
+import com.qqlab.spms.module.system.coderule.CodeRuleEntity;
+import com.qqlab.spms.module.system.coderule.CodeRuleField;
+import com.qqlab.spms.module.system.coderule.CodeRuleService;
+import com.qqlab.spms.module.system.coderule.SerialNumberUpdate;
 import com.qqlab.spms.module.system.menu.MenuEntity;
 import com.qqlab.spms.module.system.menu.MenuService;
 import com.qqlab.spms.module.system.permission.PermissionService;
@@ -10,7 +28,6 @@ import com.qqlab.spms.module.system.role.RoleEntity;
 import com.qqlab.spms.module.system.role.RoleService;
 import com.qqlab.spms.module.system.user.UserEntity;
 import com.qqlab.spms.module.system.user.UserService;
-import cn.hutool.core.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,13 +47,200 @@ public class Initialization {
     private static PermissionService permissionService;
     private static AppService appService;
     private static MenuService menuService;
+    private static CodeRuleService codeRuleService;
+    private static MaterialService materialService;
+    private static UnitService unitService;
+    private static StorageService storageService;
+    private static StructureService structureService;
+    private static CustomerService customerService;
+    private static SupplierService supplierService;
 
-    public static void run() {
-        initDatabase();
-        permissionService.forceReloadAllPermissions();
+    @Autowired
+    private void setDatastore(
+            UserService userService,
+            RoleService roleService,
+            PermissionService permissionService,
+            AppService appService,
+            MenuService menuService,
+            CodeRuleService codeRuleService,
+            MaterialService materialService,
+            UnitService unitService,
+            StorageService storageService,
+            StructureService structureService,
+            CustomerService customerService,
+            SupplierService supplierService
+    ) {
+        Initialization.userService = userService;
+        Initialization.roleService = roleService;
+        Initialization.permissionService = permissionService;
+        Initialization.appService = appService;
+        Initialization.menuService = menuService;
+        Initialization.codeRuleService = codeRuleService;
+        Initialization.materialService = materialService;
+        Initialization.unitService = unitService;
+        Initialization.storageService = storageService;
+        Initialization.structureService = structureService;
+        Initialization.customerService = customerService;
+        Initialization.supplierService = supplierService;
     }
 
-    private static void initDatabase() {
+    public static void run() {
+        permissionService.forceReloadAllPermissions();
+        initUserAndRole();
+        initCodeRules();
+        initUnitAndMaterial();
+        initFactory();
+        initMenu();
+        initOtherData();
+    }
+
+    private static void initFactory() {
+        storageService.add(new StorageEntity().setCode("sw01").setName("西南一区").setParentId(storageService.add(new StorageEntity().setName("西南大仓").setCode("east")).getId()));
+        structureService.add(new StructureEntity().setCode("room1").setName("车间1").setParentId(structureService.add(new StructureEntity().setName("产线1").setCode("line1")).getId()));
+    }
+
+    private static void initCodeRules() {
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.RoleCode.getValue()).setPrefix("RO").setSnLength(4).setSnType(SerialNumberUpdate.NEVER.getValue())
+        );
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.SupplierCode.getValue()).setPrefix("SP").setSnLength(4).setTemplate("yyyy").setSnType(SerialNumberUpdate.YEAR.getValue())
+        );
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.StorageCode.getValue()).setPrefix("SRG").setSnLength(4).setSnType(SerialNumberUpdate.NEVER.getValue())
+        );
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.StructureCode.getValue()).setPrefix("ST").setSnLength(4).setSnType(SerialNumberUpdate.NEVER.getValue())
+        );
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.CustomerCode.getValue()).setPrefix("CT").setSnLength(4).setTemplate("yyyy").setSnType(SerialNumberUpdate.YEAR.getValue())
+        );
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.MaterialCode.getValue()).setPrefix("MA").setTemplate("yyyy").setSnLength(4).setSnType(SerialNumberUpdate.YEAR.getValue())
+        );
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.UnitCode.getValue()).setPrefix("UN").setSnLength(2).setSnType(SerialNumberUpdate.NEVER.getValue())
+        );
+    }
+
+    private static void initOtherData() {
+        appService.add(new AppEntity().setAppKey("airpower").setAppName("第三方应用").setUrl("https://hamm.cn").setAppSecret("abcdefghijklmnopqrstuvwxyz"));
+
+        supplierService.add(new SupplierEntity().setCode("SP01").setName("三星屏幕套件"));
+        customerService.add(new CustomerEntity().setCode("CUS01").setName("重庆解放碑AppleStore"));
+
+    }
+
+    @SuppressWarnings("AlibabaMethodTooLong")
+    private static void initMenu() {
+        MenuEntity exist = menuService.getByIdMaybeNull(1L);
+        if (Objects.nonNull(exist)) {
+            return;
+        }
+        MenuEntity homeMenu = new MenuEntity().setName("首页").setOrderNo(99).setPath("/console").setComponent("/console/index/index").setParentId(0L);
+        menuService.add(homeMenu);
+
+        // 仓储管理
+        MenuEntity wmsMenu = new MenuEntity().setName("仓储管理").setOrderNo(90).setParentId(0L);
+        wmsMenu = menuService.add(wmsMenu);
+
+        MenuEntity wmsSubMenu;
+        wmsSubMenu = new MenuEntity().setName("库存概览").setPath("/console/wms/inventory/list").setParentId(wmsMenu.getId());
+        menuService.add(wmsSubMenu);
+
+        wmsSubMenu = new MenuEntity().setName("入库管理").setPath("/console/wms/input/list").setParentId(wmsMenu.getId());
+        menuService.add(wmsSubMenu);
+
+        wmsSubMenu = new MenuEntity().setName("出库管理").setPath("/console/wms/output/list").setParentId(wmsMenu.getId());
+        menuService.add(wmsSubMenu);
+
+        wmsSubMenu = new MenuEntity().setName("移库管理").setPath("/console/wms/move/list").setParentId(wmsMenu.getId());
+        menuService.add(wmsSubMenu);
+
+        wmsSubMenu = new MenuEntity().setName("库存盘点").setPath("/console/wms/review/list").setParentId(wmsMenu.getId());
+        menuService.add(wmsSubMenu);
+
+        // 人事管理
+        MenuEntity userMenu = new MenuEntity().setName("人事管理").setOrderNo(88).setParentId(0L);
+        userMenu = menuService.add(userMenu);
+
+        MenuEntity userSubMenu;
+        userSubMenu = new MenuEntity().setName("用户管理").setPath("/console/personnel/user/list").setParentId(userMenu.getId());
+        menuService.add(userSubMenu);
+
+        userSubMenu = new MenuEntity().setName("角色管理").setPath("/console/personnel/role/list").setParentId(userMenu.getId());
+        menuService.add(userSubMenu);
+
+        // 资产管理
+        MenuEntity assetMenu = new MenuEntity().setName("资产管理").setOrderNo(86).setParentId(0L);
+        assetMenu = menuService.add(assetMenu);
+
+        MenuEntity assetSubMenu;
+        assetSubMenu = new MenuEntity().setName("物料管理").setPath("/console/asset/material/list").setParentId(assetMenu.getId());
+        menuService.add(assetSubMenu);
+
+        userSubMenu = new MenuEntity().setName("设备管理").setPath("/console/asset/device/list").setParentId(assetMenu.getId());
+        menuService.add(userSubMenu);
+
+        // 渠道管理
+        MenuEntity sourceMenu = new MenuEntity().setName("渠道管理").setOrderNo(77).setParentId(0L);
+        sourceMenu = menuService.add(sourceMenu);
+
+        MenuEntity sourceSubMenu;
+
+        sourceSubMenu = new MenuEntity().setName("采购管理").setPath("/console/channel/purchase/list").setParentId(sourceMenu.getId());
+        menuService.add(sourceSubMenu);
+
+        sourceSubMenu = new MenuEntity().setName("销售管理").setPath("/console/channel/sale/list").setParentId(sourceMenu.getId());
+        menuService.add(sourceSubMenu);
+
+        sourceSubMenu = new MenuEntity().setName("供应商管理").setPath("/console/channel/supplier/list").setParentId(sourceMenu.getId());
+        menuService.add(sourceSubMenu);
+
+        sourceSubMenu = new MenuEntity().setName("客户管理").setPath("/console/channel/customer/list").setParentId(sourceMenu.getId());
+        menuService.add(sourceSubMenu);
+
+        sourceSubMenu = new MenuEntity().setName("采购价管理").setPath("/console/channel/purchasePrice/list").setParentId(sourceMenu.getId());
+        menuService.add(sourceSubMenu);
+
+        sourceSubMenu = new MenuEntity().setName("销售价管理").setPath("/console/channel/salePrice/list").setParentId(sourceMenu.getId());
+        menuService.add(sourceSubMenu);
+
+        // 工厂模型
+        MenuEntity factoryMenu = new MenuEntity().setName("工厂模型").setOrderNo(66).setParentId(0L);
+        factoryMenu = menuService.add(factoryMenu);
+
+        MenuEntity factorySubMenu;
+
+        factorySubMenu = new MenuEntity().setName("存储资源管理").setPath("/console/factory/storage/list").setParentId(factoryMenu.getId());
+        menuService.add(factorySubMenu);
+
+        factorySubMenu = new MenuEntity().setName("工厂结构管理").setPath("/console/factory/structure/list").setParentId(factoryMenu.getId());
+        menuService.add(factorySubMenu);
+
+        // 系统设置
+        MenuEntity sysMenu = new MenuEntity().setName("系统设置").setOrderNo(2).setParentId(0L);
+        sysMenu = menuService.add(sysMenu);
+
+        MenuEntity sysSubMenu;
+
+        sysSubMenu = new MenuEntity().setName("权限管理").setPath("/console/system/permission/list").setParentId(sysMenu.getId());
+        menuService.add(sysSubMenu);
+
+        sysSubMenu = new MenuEntity().setName("菜单管理").setPath("/console/system/menu/list").setParentId(sysMenu.getId());
+        menuService.add(sysSubMenu);
+
+        sysSubMenu = new MenuEntity().setName("编码规则").setPath("/console/system/coderule/list").setParentId(sysMenu.getId());
+        menuService.add(sysSubMenu);
+
+        sysSubMenu = new MenuEntity().setName("计量单位").setPath("/console/system/unit/list").setParentId(sysMenu.getId());
+        menuService.add(sysSubMenu);
+
+        sysSubMenu = new MenuEntity().setName("第三方应用").setPath("/console/system/app/list").setParentId(sysMenu.getId());
+        menuService.add(sysSubMenu);
+    }
+
+    private static void initUserAndRole() {
         // 初始化角色
         RoleEntity firstRole = roleService.getByIdMaybeNull(1L);
         if (Objects.nonNull(firstRole)) {
@@ -70,88 +274,10 @@ public class Initialization {
         System.out.println("初始化第一个用户成功!\n");
         System.out.println("邮箱: admin@hamm.cn");
         System.out.println("密码: 12345678");
-
-        // 初始化第三方应用
-        appService.add(new AppEntity().setAppKey("airpower").setAppName("第三方应用").setUrl("https://hamm.cn").setAppSecret("abcdefghijklmnopqrstuvwxyz"));
-
-        // 初始化菜单
-        initMenu();
     }
 
-    private static void initMenu() {
-        MenuEntity exist = menuService.getByIdMaybeNull(1L);
-        if (Objects.nonNull(exist)) {
-            return;
-        }
-        MenuEntity homeMenu = new MenuEntity().setName("首页").setOrderNo(99).setPath("/console").setComponent("/console/index/index").setParentId(0L);
-        menuService.add(homeMenu);
-
-        // 人事管理
-        MenuEntity userMenu = new MenuEntity().setName("人事管理").setOrderNo(88).setParentId(0L);
-        userMenu = menuService.add(userMenu);
-
-        MenuEntity userSubMenu;
-        userSubMenu = new MenuEntity().setName("用户管理").setPath("/console/personnel/user/list").setParentId(userMenu.getId());
-        menuService.add(userSubMenu);
-
-        userSubMenu = new MenuEntity().setName("角色管理").setPath("/console/personnel/role/list").setParentId(userMenu.getId());
-        menuService.add(userSubMenu);
-
-        // 渠道管理
-        MenuEntity sourceMenu = new MenuEntity().setName("渠道管理").setOrderNo(77).setParentId(0L);
-        sourceMenu = menuService.add(sourceMenu);
-
-        MenuEntity sourceSubMenu;
-
-        sourceSubMenu = new MenuEntity().setName("供应商管理").setPath("/console/channel/supplier/list").setParentId(sourceMenu.getId());
-        menuService.add(sourceSubMenu);
-
-        sourceSubMenu = new MenuEntity().setName("客户管理").setPath("/console/channel/customer/list").setParentId(sourceMenu.getId());
-        menuService.add(sourceSubMenu);
-
-        // 工厂模型
-        MenuEntity factoryMenu = new MenuEntity().setName("工厂模型").setOrderNo(66).setParentId(0L);
-        factoryMenu = menuService.add(factoryMenu);
-
-        MenuEntity factorySubMenu;
-
-        factorySubMenu = new MenuEntity().setName("存储资源管理").setPath("/console/factory/storage/list").setParentId(factoryMenu.getId());
-        menuService.add(factorySubMenu);
-
-        factorySubMenu = new MenuEntity().setName("工厂结构管理").setPath("/console/factory/structure/list").setParentId(factoryMenu.getId());
-        menuService.add(factorySubMenu);
-
-        // 系统设置
-        MenuEntity sysMenu = new MenuEntity().setName("系统设置").setOrderNo(2).setParentId(0L);
-        sysMenu = menuService.add(sysMenu);
-
-        MenuEntity sysSubMenu;
-
-        sysSubMenu = new MenuEntity().setName("权限管理").setPath("/console/system/permission/list").setParentId(sysMenu.getId());
-        menuService.add(sysSubMenu);
-
-        sysSubMenu = new MenuEntity().setName("菜单管理").setPath("/console/system/menu/list").setParentId(sysMenu.getId());
-        menuService.add(sysSubMenu);
-
-        sysSubMenu = new MenuEntity().setName("应用管理").setPath("/console/system/app/list").setParentId(sysMenu.getId());
-        menuService.add(sysSubMenu);
-
-        sysSubMenu = new MenuEntity().setName("编码规则").setPath("/console/system/coderule/list").setParentId(sysMenu.getId());
-        menuService.add(sysSubMenu);
-    }
-
-    @Autowired
-    private void setDatastore(
-            UserService userService,
-            RoleService roleService,
-            PermissionService permissionService,
-            AppService appService,
-            MenuService menuService
-    ) {
-        Initialization.userService = userService;
-        Initialization.roleService = roleService;
-        Initialization.permissionService = permissionService;
-        Initialization.appService = appService;
-        Initialization.menuService = menuService;
+    private static void initUnitAndMaterial() {
+        UnitEntity unitEntity = unitService.add(new UnitEntity().setCode("kg").setName("kg"));
+        materialService.add(new MaterialEntity().setMaterialType(MaterialType.PRODUCT.getValue()).setName("MacBookPro").setSpc("M1Pro-16G-512G-16Inch").setCode("macbook").setUnitInfo(unitEntity));
     }
 }
