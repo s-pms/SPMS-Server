@@ -63,6 +63,7 @@ public class PurchaseDetailEntity extends BaseEntity<PurchaseDetailEntity> {
     @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '已入库数量'")
     private Double inputQuantity;
 
-    @Column(columnDefinition = "bigint UNSIGNED default 0 comment '采购单ID'")
-    private Long purchaseId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "purchase_id", referencedColumnName = "id")
+    private PurchaseEntity purchase;
 }

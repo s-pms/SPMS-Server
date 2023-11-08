@@ -18,11 +18,9 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,9 +64,14 @@ public class PurchaseEntity extends BaseEntity<PurchaseEntity> {
     /**
      * <h2>采购明细</h2>
      */
-    @Transient
     @Payload
     @Exclude(filters = {WhenPayLoad.class})
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "采购明细不能为空")
-    private List<PurchaseDetailEntity> purchaseDetail;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "purchase")
+    private List<PurchaseDetailEntity> purchaseDetail = new ArrayList<>();
+
+    public void addDetail(PurchaseDetailEntity detail) {
+        detail.setPurchase(this);
+        purchaseDetail.add(detail);
+    }
 }
