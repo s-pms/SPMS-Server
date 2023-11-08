@@ -17,9 +17,9 @@ import java.util.Objects;
 @Service
 public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     @Override
-    protected void beforeDelete(MenuEntity entity) {
+    protected void beforeDelete(Long id) {
         QueryRequest<MenuEntity> queryRequest = new QueryRequest<>();
-        queryRequest.setFilter(new MenuEntity().setParentId(entity.getId()));
+        queryRequest.setFilter(new MenuEntity().setParentId(id));
         List<MenuEntity> children = getList(queryRequest);
         Result.FORBIDDEN_DELETE.when(children.size() > 0, "含有子菜单,无法删除!");
     }

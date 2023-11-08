@@ -47,7 +47,12 @@ public enum CodeRuleField implements IEnum {
     /**
      * <h2>单位编码</h2>
      */
-    UnitCode(7,"单位编码","UT")
+    UnitCode(7,"单位编码","UT"),
+
+    /**
+     * <h2>采购单号</h2>
+     */
+    PurchaseBillCode(8,"采购单号","PC")
     ;
 
     @Getter

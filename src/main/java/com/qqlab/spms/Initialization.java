@@ -2,19 +2,21 @@ package com.qqlab.spms;
 
 import cn.hamm.airpower.security.PasswordUtil;
 import cn.hutool.core.util.RandomUtil;
-import com.qqlab.spms.module.basic.customer.CustomerEntity;
-import com.qqlab.spms.module.basic.customer.CustomerService;
-import com.qqlab.spms.module.basic.material.MaterialEntity;
-import com.qqlab.spms.module.basic.material.MaterialService;
-import com.qqlab.spms.module.basic.material.MaterialType;
-import com.qqlab.spms.module.basic.storage.StorageEntity;
-import com.qqlab.spms.module.basic.storage.StorageService;
-import com.qqlab.spms.module.basic.structure.StructureEntity;
-import com.qqlab.spms.module.basic.structure.StructureService;
-import com.qqlab.spms.module.basic.supplier.SupplierEntity;
-import com.qqlab.spms.module.basic.supplier.SupplierService;
-import com.qqlab.spms.module.basic.unit.UnitEntity;
-import com.qqlab.spms.module.basic.unit.UnitService;
+import com.qqlab.spms.module.asset.material.MaterialEntity;
+import com.qqlab.spms.module.asset.material.MaterialService;
+import com.qqlab.spms.module.asset.material.MaterialType;
+import com.qqlab.spms.module.channel.customer.CustomerEntity;
+import com.qqlab.spms.module.channel.customer.CustomerService;
+import com.qqlab.spms.module.channel.supplier.SupplierEntity;
+import com.qqlab.spms.module.channel.supplier.SupplierService;
+import com.qqlab.spms.module.factory.storage.StorageEntity;
+import com.qqlab.spms.module.factory.storage.StorageService;
+import com.qqlab.spms.module.factory.structure.StructureEntity;
+import com.qqlab.spms.module.factory.structure.StructureService;
+import com.qqlab.spms.module.personnel.role.RoleEntity;
+import com.qqlab.spms.module.personnel.role.RoleService;
+import com.qqlab.spms.module.personnel.user.UserEntity;
+import com.qqlab.spms.module.personnel.user.UserService;
 import com.qqlab.spms.module.system.app.AppEntity;
 import com.qqlab.spms.module.system.app.AppService;
 import com.qqlab.spms.module.system.coderule.CodeRuleEntity;
@@ -24,10 +26,8 @@ import com.qqlab.spms.module.system.coderule.SerialNumberUpdate;
 import com.qqlab.spms.module.system.menu.MenuEntity;
 import com.qqlab.spms.module.system.menu.MenuService;
 import com.qqlab.spms.module.system.permission.PermissionService;
-import com.qqlab.spms.module.system.role.RoleEntity;
-import com.qqlab.spms.module.system.role.RoleService;
-import com.qqlab.spms.module.system.user.UserEntity;
-import com.qqlab.spms.module.system.user.UserService;
+import com.qqlab.spms.module.system.unit.UnitEntity;
+import com.qqlab.spms.module.system.unit.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -101,25 +101,28 @@ public class Initialization {
 
     private static void initCodeRules() {
         codeRuleService.add(
-                new CodeRuleEntity().setRuleField(CodeRuleField.RoleCode.getValue()).setPrefix("RO").setSnLength(4).setSnType(SerialNumberUpdate.NEVER.getValue())
+                new CodeRuleEntity().setRuleField(CodeRuleField.RoleCode.getValue()).setPrefix(CodeRuleField.RoleCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.NEVER.getValue())
         );
         codeRuleService.add(
-                new CodeRuleEntity().setRuleField(CodeRuleField.SupplierCode.getValue()).setPrefix("SP").setSnLength(4).setTemplate("yyyy").setSnType(SerialNumberUpdate.YEAR.getValue())
+                new CodeRuleEntity().setRuleField(CodeRuleField.SupplierCode.getValue()).setPrefix(CodeRuleField.SupplierCode.getDefaultPrefix()).setSnLength(4).setTemplate("yyyy").setSnType(SerialNumberUpdate.YEAR.getValue())
         );
         codeRuleService.add(
-                new CodeRuleEntity().setRuleField(CodeRuleField.StorageCode.getValue()).setPrefix("SRG").setSnLength(4).setSnType(SerialNumberUpdate.NEVER.getValue())
+                new CodeRuleEntity().setRuleField(CodeRuleField.StorageCode.getValue()).setPrefix(CodeRuleField.StorageCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.NEVER.getValue())
         );
         codeRuleService.add(
-                new CodeRuleEntity().setRuleField(CodeRuleField.StructureCode.getValue()).setPrefix("ST").setSnLength(4).setSnType(SerialNumberUpdate.NEVER.getValue())
+                new CodeRuleEntity().setRuleField(CodeRuleField.StructureCode.getValue()).setPrefix(CodeRuleField.StructureCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.NEVER.getValue())
         );
         codeRuleService.add(
-                new CodeRuleEntity().setRuleField(CodeRuleField.CustomerCode.getValue()).setPrefix("CT").setSnLength(4).setTemplate("yyyy").setSnType(SerialNumberUpdate.YEAR.getValue())
+                new CodeRuleEntity().setRuleField(CodeRuleField.CustomerCode.getValue()).setPrefix(CodeRuleField.CustomerCode.getDefaultPrefix()).setSnLength(4).setTemplate("yyyy").setSnType(SerialNumberUpdate.YEAR.getValue())
         );
         codeRuleService.add(
-                new CodeRuleEntity().setRuleField(CodeRuleField.MaterialCode.getValue()).setPrefix("MA").setTemplate("yyyy").setSnLength(4).setSnType(SerialNumberUpdate.YEAR.getValue())
+                new CodeRuleEntity().setRuleField(CodeRuleField.MaterialCode.getValue()).setPrefix(CodeRuleField.MaterialCode.getDefaultPrefix()).setTemplate("yyyy").setSnLength(4).setSnType(SerialNumberUpdate.YEAR.getValue())
         );
         codeRuleService.add(
-                new CodeRuleEntity().setRuleField(CodeRuleField.UnitCode.getValue()).setPrefix("UN").setSnLength(2).setSnType(SerialNumberUpdate.NEVER.getValue())
+                new CodeRuleEntity().setRuleField(CodeRuleField.UnitCode.getValue()).setPrefix(CodeRuleField.UnitCode.getDefaultPrefix()).setSnLength(2).setSnType(SerialNumberUpdate.NEVER.getValue())
+        );
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.PurchaseBillCode.getValue()).setPrefix(CodeRuleField.PurchaseBillCode.getDefaultPrefix()).setSnLength(2).setSnType(SerialNumberUpdate.NEVER.getValue())
         );
     }
 
@@ -278,6 +281,14 @@ public class Initialization {
 
     private static void initUnitAndMaterial() {
         UnitEntity unitEntity = unitService.add(new UnitEntity().setCode("kg").setName("kg"));
-        materialService.add(new MaterialEntity().setMaterialType(MaterialType.PRODUCT.getValue()).setName("MacBookPro").setSpc("M1Pro-16G-512G-16Inch").setCode("macbook").setUnitInfo(unitEntity));
+        materialService.add(
+                new MaterialEntity()
+                        .setMaterialType(MaterialType.PRODUCT.getValue())
+                        .setName("MacBookPro")
+                        .setSpc("M1Pro-16G-512G-16Inch")
+                        .setCode("macbook")
+                        .setPurchasePrice(200D)
+                        .setUnitInfo(unitEntity)
+        );
     }
 }
