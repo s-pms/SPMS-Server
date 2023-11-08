@@ -106,6 +106,9 @@ public class Initialization {
         sourceSubMenu = new MenuEntity().setName("供应商管理").setPath("/console/channel/supplier/list").setParentId(sourceMenu.getId());
         menuService.add(sourceSubMenu);
 
+        sourceSubMenu = new MenuEntity().setName("客户管理").setPath("/console/channel/customer/list").setParentId(sourceMenu.getId());
+        menuService.add(sourceSubMenu);
+
         // 工厂模型
         MenuEntity factoryMenu = new MenuEntity().setName("工厂模型").setOrderNo(66).setParentId(0L);
         factoryMenu = menuService.add(factoryMenu);
@@ -113,6 +116,9 @@ public class Initialization {
         MenuEntity factorySubMenu;
 
         factorySubMenu = new MenuEntity().setName("存储资源管理").setPath("/console/factory/storage/list").setParentId(factoryMenu.getId());
+        menuService.add(factorySubMenu);
+
+        factorySubMenu = new MenuEntity().setName("工厂结构管理").setPath("/console/factory/structure/list").setParentId(factoryMenu.getId());
         menuService.add(factorySubMenu);
 
         // 系统设置

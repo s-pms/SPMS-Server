@@ -29,7 +29,15 @@ public enum CodeRuleField implements IEnum {
      */
     StorageCode(3, "存储资源编码", "SRG"),
 
-    ;
+    /**
+     * <h2>工厂结构编码</h2>
+     */
+    StructureCode(4, "工厂结构编码", "ST"),
+
+    /**
+     * <h2>客户编码</h2>
+     */
+    CustomerCode(5, "客户编码", "CT");
 
     @Getter
     private int value;

@@ -1,4 +1,4 @@
-package com.qqlab.spms.module.basic.supplier;
+package com.qqlab.spms.module.basic.customer;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.validate.phone.Phone;
@@ -31,17 +31,17 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "supplier")
-@Description("供应商")
-public class SupplierEntity extends BaseEntity<SupplierEntity> {
-    @Description("供应商名称")
-    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "供应商名称不能为空")
-    @Column(columnDefinition = "varchar(255) default '' comment '供应商名称'")
+@Table(name = "customer")
+@Description("客户")
+public class CustomerEntity extends BaseEntity<CustomerEntity> {
+    @Description("客户名称")
+    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "客户名称不能为空")
+    @Column(columnDefinition = "varchar(255) default '' comment '客户名称'")
     private String name;
 
-    @Description("供应商编码")
-    @Column(columnDefinition = "varchar(255) default '' comment '供应商编码'", unique = true)
-    @AutoGenerateCode(CodeRuleField.SupplierCode)
+    @Description("客户编码")
+    @Column(columnDefinition = "varchar(255) default '' comment '客户编码'", unique = true)
+    @AutoGenerateCode(CodeRuleField.CustomerCode)
     private String code;
 
     @Description("联系电话")
