@@ -15,13 +15,19 @@ public enum CodeRuleField implements IEnum {
     /**
      * <h2>角色</h2>
      */
-    RoleCode(1, "角色编码", "R"),
+    RoleCode(1, "角色编码", "RO"),
 
 
     /**
      * <h2>供应商编码</h2>
      */
-    SupplierCode(2, "供应商编码", "SP"),
+    SupplierCode(2, "供应商编码", "SUP"),
+
+
+    /**
+     * <h2>存储资源编码</h2>
+     */
+    StorageCode(3, "存储资源编码", "SRG"),
 
     ;
 

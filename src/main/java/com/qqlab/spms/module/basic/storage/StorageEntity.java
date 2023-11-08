@@ -1,7 +1,9 @@
 package com.qqlab.spms.module.basic.storage;
 
 import cn.hamm.airpower.annotation.Description;
+import com.qqlab.spms.annotation.AutoGenerateCode;
 import com.qqlab.spms.base.BaseTreeEntity;
+import com.qqlab.spms.module.system.coderule.CodeRuleField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,7 +15,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 /**
  * <h1>存储资源实体</h1>
@@ -32,12 +33,7 @@ import javax.validation.constraints.NotNull;
 @Description("存储资源")
 public class StorageEntity extends BaseTreeEntity<StorageEntity> {
     @Description("存储资源编码")
-    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "存储资源编码不能为空")
     @Column(columnDefinition = "varchar(255) default '' comment '存储资源编码'", unique = true)
+    @AutoGenerateCode(CodeRuleField.StorageCode)
     private String code;
-
-    @Description("存储资源名称")
-    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "存储资源名称不能为空")
-    @Column(columnDefinition = "varchar(255) default '' comment '存储资源名称'")
-    private String name;
 }

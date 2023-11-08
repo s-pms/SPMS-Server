@@ -1,7 +1,6 @@
 package com.qqlab.spms.module.basic.supplier;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.airpower.validate.phone.Phone;
 import com.qqlab.spms.annotation.AutoGenerateCode;
 import com.qqlab.spms.base.BaseEntity;
@@ -44,12 +43,6 @@ public class SupplierEntity extends BaseEntity<SupplierEntity> {
     @Column(columnDefinition = "varchar(255) default '' comment '供应商编码'", unique = true)
     @AutoGenerateCode(CodeRuleField.SupplierCode)
     private String code;
-
-    @Description("供应商级别")
-    @Column(columnDefinition = "int default 3 comment '供应商级别'")
-    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "供应商级别不能为空")
-    @Dictionary(value = SupplierLevel.class, message = "供应商级别不在允许范围")
-    private Integer level;
 
     @Description("手机号")
     @Column(columnDefinition = "varchar(255) default '' comment '手机号'")

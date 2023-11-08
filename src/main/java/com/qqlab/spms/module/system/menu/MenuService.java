@@ -42,7 +42,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
             QueryRequest<MenuEntity> queryRequest = new QueryRequest<>();
             queryRequest.setFilter(new MenuEntity().setParentId(item.getId()));
             item.setChildren(this.getList(queryRequest));
-            item.setCreateTime(null).setUpdateTime(null).setCreateUserId(null).setUpdateUserId(null).setRemark(null).setIsDisabled(null);
+            item.excludeBaseData();
         }
         return list;
     }

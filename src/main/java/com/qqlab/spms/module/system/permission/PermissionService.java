@@ -99,6 +99,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                     AccessConfig accessConfig = AccessUtil.getWhatNeedAccess(clazz, method);
                     if (!accessConfig.login || !accessConfig.authorize) {
                         // 这里可以选择是否不读取这些接口的权限，但前端可能需要
+                        System.out.println("不需要的权限");
                     }
                     System.out.println(clazz.getSimpleName() + ":" + method.getName());
 
@@ -151,7 +152,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
             QueryRequest<PermissionEntity> queryRequest = new QueryRequest<>();
             queryRequest.setFilter(new PermissionEntity().setParentId(item.getId()));
             item.setChildren(this.getList(queryRequest));
-            item.setCreateTime(null).setUpdateTime(null).setCreateUserId(null).setUpdateUserId(null).setRemark(null).setIsDisabled(null);
+            item.excludeBaseData();
         }
         return list;
     }
