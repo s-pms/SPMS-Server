@@ -8,6 +8,7 @@ import cn.hamm.airpower.validate.dictionary.Dictionary;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.annotation.AutoGenerateCode;
 import com.qqlab.spms.base.BaseEntity;
+import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailEntity;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -65,13 +66,8 @@ public class PurchaseEntity extends BaseEntity<PurchaseEntity> {
      * <h2>采购明细</h2>
      */
     @Payload
+    @Transient
     @Exclude(filters = {WhenPayLoad.class})
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "采购明细不能为空")
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "purchase")
-    private List<PurchaseDetailEntity> purchaseDetail = new ArrayList<>();
-
-    public void addDetail(PurchaseDetailEntity detail) {
-        detail.setPurchase(this);
-        purchaseDetail.add(detail);
-    }
+    private List<PurchaseDetailEntity> details = new ArrayList<>();
 }

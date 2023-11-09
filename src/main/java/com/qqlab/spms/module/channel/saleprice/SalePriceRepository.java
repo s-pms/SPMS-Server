@@ -1,8 +1,8 @@
 package com.qqlab.spms.module.channel.saleprice;
 
-import cn.hamm.airpower.root.RootRepository;
-import com.qqlab.spms.module.channel.customer.CustomerEntity;
+import com.qqlab.spms.base.BaseRepository;
 import com.qqlab.spms.module.asset.material.MaterialEntity;
+import com.qqlab.spms.module.channel.customer.CustomerEntity;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
  * @author Hamm
  */
 @Repository
-public interface SalePriceRepository extends RootRepository<SalePriceEntity> {
+public interface SalePriceRepository extends BaseRepository<SalePriceEntity> {
     /**
      * <h2>获取指定客户和物料的销售价</h2>
      * @param customerEntity 客户

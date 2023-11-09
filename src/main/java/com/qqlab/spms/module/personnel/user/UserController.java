@@ -5,15 +5,15 @@ import cn.hamm.airpower.response.ResponseFilter;
 import cn.hamm.airpower.result.Result;
 import cn.hamm.airpower.result.json.Json;
 import cn.hamm.airpower.result.json.JsonData;
-import cn.hamm.airpower.root.RootEntityController;
 import cn.hamm.airpower.security.CookieUtil;
 import cn.hamm.airpower.security.Permission;
 import cn.hamm.airpower.security.SecurityUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
+import com.qqlab.spms.base.BaseController;
 import com.qqlab.spms.module.system.app.AppEntity;
 import com.qqlab.spms.module.system.app.AppService;
 import com.qqlab.spms.module.system.app.AppVo;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("user")
 @Description("用户")
-public class UserController extends RootEntityController<UserService, UserVo> {
+public class UserController extends BaseController<UserService, UserVo> {
     @Autowired
     private AppService appService;
 

@@ -2,9 +2,9 @@ package com.qqlab.spms.module.system.coderule;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.result.json.JsonData;
-import cn.hamm.airpower.root.RootEntityController;
 import cn.hamm.airpower.security.Permission;
 import cn.hamm.airpower.util.ReflectUtil;
+import com.qqlab.spms.base.BaseController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("coderule")
 @Description("编码规则")
-public class CodeRuleController extends RootEntityController<CodeRuleService, CodeRuleEntity> {
+public class CodeRuleController extends BaseController<CodeRuleService, CodeRuleEntity> {
     @Description("获取支持的表")
     @Permission(login = false)
     @PostMapping("getFieldList")

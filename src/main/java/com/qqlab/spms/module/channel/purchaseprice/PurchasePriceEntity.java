@@ -52,7 +52,7 @@ public class PurchasePriceEntity extends BaseEntity<PurchasePriceEntity> {
     @Description("采购单价")
     @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '采购单价'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "采购单价不能为空")
-    private Double purchasePrice;
+    private Double price;
 
     public interface WhenGetByMaterialAndSupplier {
     }

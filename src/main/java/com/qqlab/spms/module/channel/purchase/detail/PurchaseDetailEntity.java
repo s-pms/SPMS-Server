@@ -1,4 +1,4 @@
-package com.qqlab.spms.module.channel.purchase;
+package com.qqlab.spms.module.channel.purchase.detail;
 
 
 import cn.hamm.airpower.annotation.Description;
@@ -57,13 +57,12 @@ public class PurchaseDetailEntity extends BaseEntity<PurchaseDetailEntity> {
     @Description("采购单价")
     @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '采购单价'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "采购单价不能为空")
-    private Double purchasePrice;
+    private Double price;
 
     @Description("已入库数量")
     @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '已入库数量'")
     private Double inputQuantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "purchase_id", referencedColumnName = "id")
-    private PurchaseEntity purchase;
+    @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '单据号'")
+    private Long billId;
 }

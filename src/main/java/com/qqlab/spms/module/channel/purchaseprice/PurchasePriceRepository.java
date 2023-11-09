@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.channel.purchaseprice;
 
-import cn.hamm.airpower.root.RootRepository;
+import com.qqlab.spms.base.BaseRepository;
 import com.qqlab.spms.module.asset.material.MaterialEntity;
 import com.qqlab.spms.module.channel.supplier.SupplierEntity;
 import org.springframework.stereotype.Repository;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
  * @author Hamm
  */
 @Repository
-public interface PurchasePriceRepository extends RootRepository<PurchasePriceEntity> {
+public interface PurchasePriceRepository extends BaseRepository<PurchasePriceEntity> {
     /**
      * <h2>获取指定供应商和物料的采购价</h2>
      * @param supplierEntity 供应商

@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.system.permission;
 
-import cn.hamm.airpower.root.RootRepository;
+import com.qqlab.spms.base.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * @author Hamm
  */
 @Repository
-public interface PermissionRepository extends RootRepository<PermissionEntity> {
+public interface PermissionRepository extends BaseRepository<PermissionEntity> {
     /**
      * <h1>根据权限标识获取一个权限</h1>
      *

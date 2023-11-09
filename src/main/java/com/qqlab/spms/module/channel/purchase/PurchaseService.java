@@ -1,6 +1,9 @@
 package com.qqlab.spms.module.channel.purchase;
 
 import com.qqlab.spms.base.BaseService;
+import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailEntity;
+import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,14 +15,27 @@ import java.util.List;
  */
 @Service
 public class PurchaseService extends BaseService<PurchaseEntity, PurchaseRepository> {
+    @Autowired
+    private PurchaseDetailService detailService;
+
     @Override
     public PurchaseEntity add(PurchaseEntity entity) {
-        List<PurchaseDetailEntity> detailList = entity.getPurchaseDetail();
+        return saveDetails(entity.getDetails(), addToDatabase(entity));
+    }
+
+    @Override
+    public PurchaseEntity update(PurchaseEntity entity) {
+        return saveDetails(entity.getDetails(), updateToDatabase(entity));
+    }
+
+    private PurchaseEntity saveDetails(List<PurchaseDetailEntity> details, PurchaseEntity savedEntity) {
+        detailService.deleteAllByBillId(savedEntity.getId());
         double totalPrice = 0D;
-        for (PurchaseDetailEntity detail : detailList) {
-            totalPrice += detail.getQuantity() * detail.getPurchasePrice();
+        for (PurchaseDetailEntity detail : details) {
+            detailService.add(detail.setBillId(savedEntity.getId()));
+            totalPrice += detail.getQuantity() * detail.getPrice();
         }
-        entity.setTotalPrice(totalPrice);
-        return addToDatabase(entity);
+        savedEntity.setTotalPrice(totalPrice);
+        return updateToDatabase(savedEntity);
     }
 }

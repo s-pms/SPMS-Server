@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.personnel.user;
 
-import cn.hamm.airpower.root.RootRepository;
+import com.qqlab.spms.base.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * @author Hamm
  */
 @Repository
-public interface UserRepository extends RootRepository<UserEntity> {
+public interface UserRepository extends BaseRepository<UserEntity> {
     /**
      * <h2>根据邮箱查询一个用户</h2>
      *

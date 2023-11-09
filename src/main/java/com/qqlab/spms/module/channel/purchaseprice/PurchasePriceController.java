@@ -4,7 +4,7 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.response.ResponseFilter;
 import cn.hamm.airpower.result.json.JsonData;
 import cn.hamm.airpower.root.RootEntity;
-import cn.hamm.airpower.root.RootEntityController;
+import com.qqlab.spms.base.BaseController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("purchasePrice")
 @Description("采购价格")
-public class PurchasePriceController extends RootEntityController<PurchasePriceService, PurchasePriceEntity> {
+public class PurchasePriceController extends BaseController<PurchasePriceService, PurchasePriceEntity> {
     @Description("查询物料和供应商的价格")
     @PostMapping("getByMaterialAndSupplier")
     @ResponseFilter(RootEntity.WhenGetDetail.class)

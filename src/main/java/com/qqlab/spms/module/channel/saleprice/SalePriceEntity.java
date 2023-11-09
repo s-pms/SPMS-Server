@@ -52,5 +52,5 @@ public class SalePriceEntity extends BaseEntity<SalePriceEntity> {
     @Description("销售单价")
     @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '销售单价'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "销售单价不能为空")
-    private Double salePrice;
+    private Double price;
 }

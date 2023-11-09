@@ -3,7 +3,7 @@ package com.qqlab.spms.module.personnel.role;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.result.json.Json;
 import cn.hamm.airpower.root.RootEntity;
-import cn.hamm.airpower.root.RootEntityController;
+import com.qqlab.spms.base.BaseController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("role")
 @Description("角色")
-public class RoleController extends RootEntityController<RoleService, RoleEntity> {
+public class RoleController extends BaseController<RoleService, RoleEntity> {
     @Description("授权菜单")
     @PostMapping("authorizeMenu")
     public Json authorizeMenu(@RequestBody @Validated({RoleEntity.WhenAuthorizePermission.class, RootEntity.WhenIdRequired.class}) RoleEntity entity) {

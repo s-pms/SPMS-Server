@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.factory.storage;
 
-import cn.hamm.airpower.root.RootRepository;
+import com.qqlab.spms.base.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * @author Hamm
  */
 @Repository
-public interface StorageRepository extends RootRepository<StorageEntity> {
+public interface StorageRepository extends BaseRepository<StorageEntity> {
 }

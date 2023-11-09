@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.system.coderule;
 
-import cn.hamm.airpower.root.RootRepository;
+import com.qqlab.spms.base.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * @author Hamm
  */
 @Repository
-public interface CodeRuleRepository extends RootRepository<CodeRuleEntity> {
+public interface CodeRuleRepository extends BaseRepository<CodeRuleEntity> {
     /**
      * <h1>查询指定表的编码规则实体</h1>
      *
