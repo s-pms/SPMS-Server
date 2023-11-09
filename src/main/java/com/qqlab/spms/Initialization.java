@@ -122,7 +122,7 @@ public class Initialization {
                 new CodeRuleEntity().setRuleField(CodeRuleField.UnitCode.getValue()).setPrefix(CodeRuleField.UnitCode.getDefaultPrefix()).setSnLength(2).setSnType(SerialNumberUpdate.NEVER.getValue())
         );
         codeRuleService.add(
-                new CodeRuleEntity().setRuleField(CodeRuleField.PurchaseBillCode.getValue()).setPrefix(CodeRuleField.PurchaseBillCode.getDefaultPrefix()).setSnLength(2).setSnType(SerialNumberUpdate.NEVER.getValue())
+                new CodeRuleEntity().setRuleField(CodeRuleField.PurchaseBillCode.getValue()).setPrefix(CodeRuleField.PurchaseBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmddhh")
         );
     }
 

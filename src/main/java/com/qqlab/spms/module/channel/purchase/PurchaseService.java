@@ -6,6 +6,7 @@ import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -28,7 +29,8 @@ public class PurchaseService extends BaseService<PurchaseEntity, PurchaseReposit
         return saveDetails(entity.getDetails(), updateToDatabase(entity));
     }
 
-    private PurchaseEntity saveDetails(List<PurchaseDetailEntity> details, PurchaseEntity savedEntity) {
+    @Transactional(rollbackOn = Exception.class)
+    PurchaseEntity saveDetails(List<PurchaseDetailEntity> details, PurchaseEntity savedEntity) {
         detailService.deleteAllByBillId(savedEntity.getId());
         double totalPrice = 0D;
         for (PurchaseDetailEntity detail : details) {
