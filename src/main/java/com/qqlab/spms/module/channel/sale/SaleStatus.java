@@ -1,4 +1,4 @@
-package com.qqlab.spms.module.channel.purchase;
+package com.qqlab.spms.module.channel.sale;
 
 import cn.hamm.airpower.interfaces.IEnum;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.Getter;
  * @author Hamm https://hamm.cn
  */
 @AllArgsConstructor
-public enum PurchaseStatus implements IEnum {
+public enum SaleStatus implements IEnum {
     /**
      * <h2>审核中</h2>
      */
@@ -22,24 +22,19 @@ public enum PurchaseStatus implements IEnum {
     REJECTED(2, "已驳回"),
 
     /**
-     * <h2>采购中</h2>
+     * <h2>出库中</h2>
      */
-    PURCHASING(3, "采购中"),
-
-    /**
-     * <h2>入库中</h2>
-     */
-    INPUTING(4, "入库中"),
+    OUTPUTING(3, "出库中"),
 
     /**
      * <h2>已完成</h2>
      */
-    DONE(5, "已完成"),
+    DONE(4, "已完成"),
 
     /**
      * <h2>已取消</h2>
      */
-    CANCELED(6, "已取消");
+    CANCELED(5, "已取消");
 
 
     @Getter

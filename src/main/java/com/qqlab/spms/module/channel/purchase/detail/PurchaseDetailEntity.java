@@ -18,7 +18,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
- * <h1>采购单实体</h1>
+ * <h1>采购明细实体</h1>
  *
  * @author Hamm
  */
