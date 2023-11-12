@@ -2,12 +2,11 @@ package com.qqlab.spms.module.channel.sale;
 
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Exclude;
 import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.annotation.AutoGenerateCode;
-import com.qqlab.spms.base.BaseEntity;
+import com.qqlab.spms.base.bill.BaseBillEntity;
 import com.qqlab.spms.module.channel.customer.CustomerEntity;
 import com.qqlab.spms.module.channel.sale.detail.SaleDetailEntity;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
@@ -22,8 +21,6 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <h1>采购单实体</h1>
@@ -40,7 +37,7 @@ import java.util.List;
 @DynamicUpdate
 @Table(name = "sale")
 @Description("销售单")
-public class SaleEntity extends BaseEntity<SaleEntity> {
+public class SaleEntity extends BaseBillEntity<SaleEntity, SaleDetailEntity> {
     @Description("销售单号")
     @Column(columnDefinition = "varchar(255) default '' comment '销售单号'", unique = true)
     @AutoGenerateCode(CodeRuleField.PurchaseBillCode)
@@ -69,13 +66,4 @@ public class SaleEntity extends BaseEntity<SaleEntity> {
     @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "客户不能为空")
     private CustomerEntity customer;
-
-    /**
-     * <h2>销售明细</h2>
-     */
-    @Payload
-    @Transient
-    @Exclude(filters = {WhenPayLoad.class})
-    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "销售明细不能为空")
-    private List<SaleDetailEntity> details = new ArrayList<>();
 }

@@ -7,13 +7,12 @@ import cn.hamm.airpower.result.json.JsonData;
 import cn.hamm.airpower.root.RootController;
 import cn.hamm.airpower.security.Permission;
 import cn.hamm.airpower.security.SecurityUtil;
-import com.qqlab.spms.module.system.app.AppEntity;
-import com.qqlab.spms.module.system.app.AppService;
-import com.qqlab.spms.module.system.app.AppVo;
-import com.qqlab.spms.module.personnel.user.UserEntity;
-import com.qqlab.spms.module.personnel.user.UserService;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import com.qqlab.spms.module.personnel.user.UserEntity;
+import com.qqlab.spms.module.personnel.user.UserService;
+import com.qqlab.spms.module.system.app.AppEntity;
+import com.qqlab.spms.module.system.app.AppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
@@ -94,9 +93,8 @@ public class Oauth2Controller extends RootController {
         }
         UserEntity userEntity = userService.getById(userId);
         String code = RandomUtil.randomString(32);
-        AppVo appVo = appEntity.copyTo(AppVo.class);
-        appVo.setCode(code).setAppKey(appKey);
-        userService.saveOauthCode(userEntity.getId(), appVo);
+        appEntity.setCode(code).setAppKey(appKey);
+        userService.saveOauthCode(userEntity.getId(), appEntity);
         String redirectTarget;
         try {
             redirectTarget = URLDecoder.decode(redirectUri, Charset.defaultCharset().toString());
@@ -116,11 +114,11 @@ public class Oauth2Controller extends RootController {
     @Description("Code换取AccessToken")
     @Permission(login = false)
     @PostMapping("accessToken")
-    public JsonData accessToken(@RequestBody @Validated({AppEntity.WhenCode2AccessToken.class}) AppVo appVo) {
-        String code = appVo.getCode();
-        Long userId = userService.getUserIdByOauthAppKeyAndCode(appVo.getAppKey(), code);
-        AppEntity existApp = appService.getByAppKey(appVo.getAppKey());
-        Result.FORBIDDEN.whenNotEquals(existApp.getAppSecret(), appVo.getAppSecret(), "应用秘钥错误");
+    public JsonData accessToken(@RequestBody @Validated({AppEntity.WhenCode2AccessToken.class}) AppEntity appEntity) {
+        String code = appEntity.getCode();
+        Long userId = userService.getUserIdByOauthAppKeyAndCode(appEntity.getAppKey(), code);
+        AppEntity existApp = appService.getByAppKey(appEntity.getAppKey());
+        Result.FORBIDDEN.whenNotEquals(existApp.getAppSecret(), appEntity.getAppSecret(), "应用秘钥错误");
         userService.removeOauthCode(existApp.getAppKey(), code);
         String accessToken = securityUtil.createAccessToken(userId);
         return new JsonData(accessToken);

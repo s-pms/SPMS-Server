@@ -15,5 +15,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("unit")
 @Description("单位")
 @Permission(login = false)
-public class UnitController extends BaseController<UnitService, UnitEntity> {
+public class UnitController extends BaseController<UnitEntity, UnitService, UnitRepository> {
 }

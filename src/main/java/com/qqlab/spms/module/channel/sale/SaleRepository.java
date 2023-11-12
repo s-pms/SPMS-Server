@@ -1,6 +1,7 @@
 package com.qqlab.spms.module.channel.sale;
 
-import com.qqlab.spms.base.BaseRepository;
+import com.qqlab.spms.base.bill.BaseBillRepository;
+import com.qqlab.spms.module.channel.sale.detail.SaleDetailEntity;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * @author Hamm
  */
 @Repository
-public interface SaleRepository extends BaseRepository<SaleEntity> {
+public interface SaleRepository extends BaseBillRepository<SaleEntity, SaleDetailEntity> {
 }

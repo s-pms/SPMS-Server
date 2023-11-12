@@ -15,5 +15,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("storage")
 @Description("存储资源")
 @Permission(login = false)
-public class StorageController extends BaseController<StorageService, StorageEntity> {
+public class StorageController extends BaseController<StorageEntity, StorageService, StorageRepository> {
 }

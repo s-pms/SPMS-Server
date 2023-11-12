@@ -13,5 +13,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("permission")
 @Description("权限")
-public class PermissionController extends BaseController<PermissionService, PermissionEntity> {
+public class PermissionController extends BaseController<PermissionEntity, PermissionService, PermissionRepository> {
 }

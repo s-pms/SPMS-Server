@@ -18,5 +18,5 @@ import org.springframework.web.bind.annotation.RestController;
 @Description("客户")
 @Permission(login = false)
 @Extends(exclude = Api.Delete)
-public class CustomerController extends BaseController<CustomerService, CustomerEntity> {
+public class CustomerController extends BaseController<CustomerEntity, CustomerService, CustomerRepository> {
 }

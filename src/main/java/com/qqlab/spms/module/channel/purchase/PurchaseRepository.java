@@ -1,6 +1,7 @@
 package com.qqlab.spms.module.channel.purchase;
 
-import com.qqlab.spms.base.BaseRepository;
+import com.qqlab.spms.base.bill.BaseBillRepository;
+import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailEntity;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * @author Hamm
  */
 @Repository
-public interface PurchaseRepository extends BaseRepository<PurchaseEntity> {
+public interface PurchaseRepository extends BaseBillRepository<PurchaseEntity, PurchaseDetailEntity> {
 }

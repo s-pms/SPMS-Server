@@ -3,7 +3,7 @@ package com.qqlab.spms.module.channel.purchase.detail;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Payload;
-import com.qqlab.spms.base.BaseEntity;
+import com.qqlab.spms.base.bill.detail.BaseBillDetailEntity;
 import com.qqlab.spms.module.asset.material.MaterialEntity;
 import com.qqlab.spms.module.channel.supplier.SupplierEntity;
 import lombok.AllArgsConstructor;
@@ -32,7 +32,7 @@ import javax.validation.constraints.NotNull;
 @DynamicUpdate
 @Table(name = "purchase_detail")
 @Description("采购明细")
-public class PurchaseDetailEntity extends BaseEntity<PurchaseDetailEntity> {
+public class PurchaseDetailEntity extends BaseBillDetailEntity<PurchaseDetailEntity> {
     /**
      * <h2>物料信息</h2>
      */
@@ -62,7 +62,4 @@ public class PurchaseDetailEntity extends BaseEntity<PurchaseDetailEntity> {
     @Description("已入库数量")
     @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '已入库数量'")
     private Double inputQuantity;
-
-    @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '单据号'")
-    private Long billId;
 }

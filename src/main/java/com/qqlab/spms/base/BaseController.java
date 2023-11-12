@@ -7,10 +7,11 @@ import cn.hamm.airpower.security.Permission;
  * <h1>实体控制器基类</h1>
  *
  * @param <S> Service
- * @param <E> 实体或实体的子类
+ * @param <E> 实体
+ * @param <R> 数据源
  * @author Hamm
  */
-@SuppressWarnings("rawtypes")
 @Permission
-public class BaseController<S extends BaseService, E extends BaseEntity<?>> extends RootEntityController<S, E> {
+public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>, R extends BaseRepository<E>> extends RootEntityController<E, S, R> {
+
 }

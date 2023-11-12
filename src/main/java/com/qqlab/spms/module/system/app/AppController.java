@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("app")
 @Description("应用")
-public class AppController extends BaseController<AppService, AppVo> {
+public class AppController extends BaseController<AppEntity, AppService, AppRepository> {
     @Description("通过AppKey获取应用信息")
     @PostMapping("getByAppKey")
     @Permission(login = false)

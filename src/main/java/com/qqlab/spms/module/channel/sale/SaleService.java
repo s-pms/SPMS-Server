@@ -1,12 +1,11 @@
 package com.qqlab.spms.module.channel.sale;
 
-import com.qqlab.spms.base.BaseService;
+import com.qqlab.spms.base.bill.AbstractBaseBillService;
 import com.qqlab.spms.module.channel.sale.detail.SaleDetailEntity;
+import com.qqlab.spms.module.channel.sale.detail.SaleDetailRepository;
 import com.qqlab.spms.module.channel.sale.detail.SaleDetailService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -15,29 +14,45 @@ import java.util.List;
  * @author Hamm
  */
 @Service
-public class SaleService extends BaseService<SaleEntity, SaleRepository> {
-    @Autowired
-    private SaleDetailService detailService;
-
+public class SaleService extends AbstractBaseBillService<SaleEntity, SaleRepository, SaleDetailEntity, SaleDetailService, SaleDetailRepository> {
     @Override
-    public SaleEntity add(SaleEntity entity) {
-        return saveDetails(entity.getDetails(), addToDatabase(entity));
+    public SaleEntity setAudited(SaleEntity bill) {
+        return bill.setStatus(SaleStatus.OUTPUTING.getValue());
     }
 
     @Override
-    public SaleEntity update(SaleEntity entity) {
-        return saveDetails(entity.getDetails(), updateToDatabase(entity));
+    public SaleEntity setAuditing(SaleEntity bill) {
+        return bill.setStatus(SaleStatus.AUDITING.getValue());
     }
 
-    @Transactional(rollbackOn = Exception.class)
-    SaleEntity saveDetails(List<SaleDetailEntity> details, SaleEntity savedEntity) {
-        detailService.deleteAllByBillId(savedEntity.getId());
+    @Override
+    public boolean isAudited(SaleEntity bill) {
+        return bill.getStatus() == SaleStatus.OUTPUTING.getValue();
+    }
+
+    @Override
+    public boolean canReject(SaleEntity bill) {
+        return bill.getStatus() == SaleStatus.AUDITING.getValue();
+    }
+
+    @Override
+    public SaleEntity setReject(SaleEntity bill) {
+        return bill.setStatus(SaleStatus.REJECTED.getValue());
+    }
+
+    @Override
+    public boolean canEdit(SaleEntity bill) {
+        return bill.getStatus() == SaleStatus.REJECTED.getValue();
+    }
+
+    @Override
+    protected SaleEntity afterDetailSaved(SaleEntity bill) {
+        List<SaleDetailEntity> details = bill.getDetails();
         double totalPrice = 0D;
         for (SaleDetailEntity detail : details) {
-            detailService.add(detail.setBillId(savedEntity.getId()));
             totalPrice += detail.getQuantity() * detail.getPrice();
         }
-        savedEntity.setTotalPrice(totalPrice);
-        return updateToDatabase(savedEntity);
+        bill.setTotalPrice(totalPrice);
+        return updateToDatabase(bill);
     }
 }

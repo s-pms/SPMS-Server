@@ -15,5 +15,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("structure")
 @Description("工厂结构")
 @Permission(login = false)
-public class StructureController extends BaseController<StructureService, StructureEntity> {
+public class StructureController extends BaseController<StructureEntity, StructureService, StructureRepository> {
 }

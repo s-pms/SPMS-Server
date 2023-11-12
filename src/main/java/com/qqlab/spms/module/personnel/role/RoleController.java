@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("role")
 @Description("角色")
-public class RoleController extends BaseController<RoleService, RoleEntity> {
+public class RoleController extends BaseController<RoleEntity, RoleService, RoleRepository> {
     @Description("授权菜单")
     @PostMapping("authorizeMenu")
     public Json authorizeMenu(@RequestBody @Validated({RoleEntity.WhenAuthorizePermission.class, RootEntity.WhenIdRequired.class}) RoleEntity entity) {

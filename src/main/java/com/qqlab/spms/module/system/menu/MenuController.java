@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("menu")
 @Description("菜单")
-public class MenuController extends BaseController<MenuService, MenuEntity> {
+public class MenuController extends BaseController<MenuEntity, MenuService, MenuRepository> {
     @Permission(authorize = false)
     @Override
     public JsonData getList(@RequestBody QueryRequest<MenuEntity> queryRequest) {

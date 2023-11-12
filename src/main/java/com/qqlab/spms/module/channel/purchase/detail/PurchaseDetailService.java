@@ -1,9 +1,7 @@
 package com.qqlab.spms.module.channel.purchase.detail;
 
-import com.qqlab.spms.base.BaseService;
+import com.qqlab.spms.base.bill.detail.BaseBillDetailService;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * <h1>Service</h1>
@@ -11,15 +9,5 @@ import java.util.List;
  * @author Hamm
  */
 @Service
-public class PurchaseDetailService extends BaseService<PurchaseDetailEntity, PurchaseDetailRepository> {
-    public List<PurchaseDetailEntity> getAllByBillId(Long billId) {
-        return repository.getAllByBillId(billId);
-    }
-
-    public void deleteAllByBillId(Long billId) {
-        List<PurchaseDetailEntity> details = getAllByBillId(billId);
-        for (PurchaseDetailEntity detail : details) {
-            repository.deleteById(detail.getId());
-        }
-    }
+public class PurchaseDetailService extends BaseBillDetailService<PurchaseDetailEntity, PurchaseDetailRepository> {
 }

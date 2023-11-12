@@ -13,7 +13,6 @@ import cn.hutool.core.util.StrUtil;
 import com.qqlab.spms.base.BaseController;
 import com.qqlab.spms.module.system.app.AppEntity;
 import com.qqlab.spms.module.system.app.AppService;
-import com.qqlab.spms.module.system.app.AppVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("user")
 @Description("用户")
-public class UserController extends BaseController<UserService, UserVo> {
+public class UserController extends BaseController<UserEntity, UserService, UserRepository> {
     @Autowired
     private AppService appService;
 
@@ -73,58 +72,58 @@ public class UserController extends BaseController<UserService, UserVo> {
     @Description("修改我的密码")
     @Permission(authorize = false)
     @PostMapping("updateMyPassword")
-    public Json updateMyPassword(@RequestBody @Validated({UserEntity.WhenUpdateMyPassword.class}) UserVo userVo, Long userId) {
-        userVo.setId(userId);
-        service.modifyUserPassword(userVo);
+    public Json updateMyPassword(@RequestBody @Validated({UserEntity.WhenUpdateMyPassword.class}) UserEntity userEntity, Long userId) {
+        userEntity.setId(userId);
+        service.modifyUserPassword(userEntity);
         return json("密码修改成功");
     }
 
     @Description("找回密码")
     @Permission(login = false)
     @PostMapping("resetMyPassword")
-    public Json resetMyPassword(@RequestBody @Validated(UserEntity.WhenResetMyPassword.class) UserVo userVo) {
-        service.resetMyPassword(userVo);
+    public Json resetMyPassword(@RequestBody @Validated(UserEntity.WhenResetMyPassword.class) UserEntity userEntity) {
+        service.resetMyPassword(userEntity);
         return json("密码重置成功");
     }
 
     @Description("注册账号")
     @Permission(login = false)
     @PostMapping("register")
-    public Json register(@RequestBody @Validated({UserEntity.WhenRegister.class}) UserVo userVo) {
-        service.register(userVo);
+    public Json register(@RequestBody @Validated({UserEntity.WhenRegister.class}) UserEntity userEntity) {
+        service.register(userEntity);
         return json("注册成功");
     }
 
     @Description("账号密码登录")
     @Permission(login = false)
     @PostMapping("login")
-    public JsonData login(@RequestBody @Validated({UserEntity.WhenLogin.class}) UserVo userVo, HttpServletResponse httpServletResponse) {
-        return doLogin(UserLoginType.VIA_ACCOUNT_PASSWORD, userVo, httpServletResponse);
+    public JsonData login(@RequestBody @Validated({UserEntity.WhenLogin.class}) UserEntity userEntity, HttpServletResponse httpServletResponse) {
+        return doLogin(UserLoginType.VIA_ACCOUNT_PASSWORD, userEntity, httpServletResponse);
     }
 
     @Description("邮箱验证码登录")
     @Permission(login = false)
     @PostMapping("loginViaEmail")
-    public JsonData loginViaEmail(@RequestBody @Validated({UserEntity.WhenLoginViaEmail.class}) UserVo userVo, HttpServletResponse httpServletResponse) {
-        return doLogin(UserLoginType.VIA_EMAIL_CODE, userVo, httpServletResponse);
+    public JsonData loginViaEmail(@RequestBody @Validated({UserEntity.WhenLoginViaEmail.class}) UserEntity userEntity, HttpServletResponse httpServletResponse) {
+        return doLogin(UserLoginType.VIA_EMAIL_CODE, userEntity, httpServletResponse);
     }
 
     /**
      * <h1>处理用户登录</h1>
      *
      * @param userLoginType 登录方式
-     * @param userVo        登录数据
+     * @param userEntity    登录数据
      * @param response      响应的请求
      * @return JsonData
      */
-    private JsonData doLogin(UserLoginType userLoginType, UserVo userVo, HttpServletResponse response) {
+    private JsonData doLogin(UserLoginType userLoginType, UserEntity userEntity, HttpServletResponse response) {
         String accessToken = "";
         switch (userLoginType) {
             case VIA_ACCOUNT_PASSWORD:
-                accessToken = service.login(userVo);
+                accessToken = service.login(userEntity);
                 break;
             case VIA_EMAIL_CODE:
-                accessToken = service.loginViaEmail(userVo);
+                accessToken = service.loginViaEmail(userEntity);
                 break;
             default:
                 Result.ERROR.show("暂不支持的登录方式");
@@ -138,22 +137,21 @@ public class UserController extends BaseController<UserService, UserVo> {
         service.saveCookie(userId, cookieString);
         response.addCookie(CookieUtil.getAuthorizeCookie(cookieString));
 
-        String appKey = userVo.getAppKey();
+        String appKey = userEntity.getAppKey();
         if (StrUtil.isAllBlank(appKey)) {
             return jsonData(accessToken, "登录成功,请存储你的访问凭证");
         }
 
         // 验证应用信息
         AppEntity appEntity = appService.getByAppKey(appKey);
-        AppVo appVo = appEntity.copyTo(AppVo.class);
         Result.PARAM_INVALID.whenNull(appEntity, "登录失败,错误的应用ID");
 
         // 生成临时身份令牌code
         String code = RandomUtil.randomString(32);
-        appVo.setCode(code);
+        appEntity.setCode(code);
 
         // 缓存临时身份令牌code
-        service.saveOauthCode(userId, appVo);
+        service.saveOauthCode(userId, appEntity);
         return jsonData(code, "登录成功,请重定向此Code");
     }
 }

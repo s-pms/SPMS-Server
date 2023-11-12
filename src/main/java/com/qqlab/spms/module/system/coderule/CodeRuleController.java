@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("coderule")
 @Description("编码规则")
-public class CodeRuleController extends BaseController<CodeRuleService, CodeRuleEntity> {
+public class CodeRuleController extends BaseController<CodeRuleEntity, CodeRuleService, CodeRuleRepository> {
     @Description("获取支持的表")
     @Permission(login = false)
     @PostMapping("getFieldList")

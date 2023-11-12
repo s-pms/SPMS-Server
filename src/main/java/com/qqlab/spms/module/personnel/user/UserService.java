@@ -9,12 +9,12 @@ import cn.hamm.airpower.util.EmailUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.qqlab.spms.base.BaseService;
 import com.qqlab.spms.exception.CustomResult;
-import com.qqlab.spms.module.system.app.AppVo;
+import com.qqlab.spms.module.personnel.role.RoleEntity;
+import com.qqlab.spms.module.system.app.AppEntity;
 import com.qqlab.spms.module.system.menu.MenuEntity;
 import com.qqlab.spms.module.system.menu.MenuService;
 import com.qqlab.spms.module.system.permission.PermissionEntity;
 import com.qqlab.spms.module.system.permission.PermissionService;
-import com.qqlab.spms.module.personnel.role.RoleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -130,23 +130,23 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * <h2>修改密码</h2>
      *
-     * @param userVo vo
+     * @param userEntity vo
      */
-    public void modifyUserPassword(UserVo userVo) {
-        UserEntity existUser = getById(userVo.getId());
+    public void modifyUserPassword(UserEntity userEntity) {
+        UserEntity existUser = getById(userEntity.getId());
         String code = getEmailCode(existUser.getEmail());
-        Result.PARAM_INVALID.whenNotEquals(code, userVo.getCode(), "验证码输入错误");
-        String oldPassword = userVo.getOldPassword();
+        Result.PARAM_INVALID.whenNotEquals(code, userEntity.getCode(), "验证码输入错误");
+        String oldPassword = userEntity.getOldPassword();
         Result.PARAM_INVALID.whenNotEqualsIgnoreCase(
                 PasswordUtil.encode(oldPassword, existUser.getSalt()),
                 existUser.getPassword(),
                 "原密码输入错误，修改密码失败"
         );
         String salt = RandomUtil.randomString(4);
-        userVo.setSalt(salt);
-        userVo.setPassword(PasswordUtil.encode(userVo.getPassword(), salt));
+        userEntity.setSalt(salt);
+        userEntity.setPassword(PasswordUtil.encode(userEntity.getPassword(), salt));
         removeEmailCodeCache(existUser.getEmail());
-        update(userVo);
+        update(userEntity);
     }
 
     /**
@@ -161,16 +161,16 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * <h2>重置密码</h2>
      *
-     * @param userVo 用户实体
+     * @param userEntity 用户实体
      */
-    public void resetMyPassword(UserVo userVo) {
-        String code = getEmailCode(userVo.getEmail());
-        Result.PARAM_INVALID.whenNotEqualsIgnoreCase(code, userVo.getCode(), "邮箱验证码不一致");
-        UserEntity existUser = repository.getByEmail(userVo.getEmail());
+    public void resetMyPassword(UserEntity userEntity) {
+        String code = getEmailCode(userEntity.getEmail());
+        Result.PARAM_INVALID.whenNotEqualsIgnoreCase(code, userEntity.getCode(), "邮箱验证码不一致");
+        UserEntity existUser = repository.getByEmail(userEntity.getEmail());
         Result.PARAM_INVALID.whenNull(existUser, "重置密码失败，用户信息异常");
         String salt = RandomUtil.randomString(4);
         existUser.setSalt(salt);
-        existUser.setPassword(PasswordUtil.encode(userVo.getPassword(), salt));
+        existUser.setPassword(PasswordUtil.encode(userEntity.getPassword(), salt));
         removeEmailCodeCache(existUser.getEmail());
         update(existUser);
     }
@@ -190,11 +190,11 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * <h2>存储Oauth的一次性Code</h2>
      *
-     * @param userId 用户ID
-     * @param appVo  保存的应用信息
+     * @param userId    用户ID
+     * @param appEntity 保存的应用信息
      */
-    public void saveOauthCode(Long userId, AppVo appVo) {
-        redisUtil.set(getAppCodeKey(appVo.getAppKey(), appVo.getCode()), userId, CACHE_CODE_EXPIRE_SECOND);
+    public void saveOauthCode(Long userId, AppEntity appEntity) {
+        redisUtil.set(getAppCodeKey(appEntity.getAppKey(), appEntity.getCode()), userId, CACHE_CODE_EXPIRE_SECOND);
     }
 
     /**
@@ -282,13 +282,13 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * <h2>邮箱验证码登录</h2>
      *
-     * @param userVo 用户实体
+     * @param userEntity 用户实体
      * @return AccessToken
      */
-    public String loginViaEmail(UserVo userVo) {
-        String code = getEmailCode(userVo.getEmail());
-        Result.PARAM_INVALID.whenNotEquals(code, userVo.getCode(), "邮箱验证码不正确");
-        UserEntity existUser = repository.getByEmail(userVo.getEmail());
+    public String loginViaEmail(UserEntity userEntity) {
+        String code = getEmailCode(userEntity.getEmail());
+        Result.PARAM_INVALID.whenNotEquals(code, userEntity.getCode(), "邮箱验证码不正确");
+        UserEntity existUser = repository.getByEmail(userEntity.getEmail());
         Result.PARAM_INVALID.whenNull("邮箱或验证码不正确");
         return securityUtil.createAccessToken(existUser.getId());
     }
@@ -296,24 +296,24 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * <h2>用户注册</h2>
      *
-     * @param userVo 用户实体
+     * @param userEntity 用户实体
      */
-    public void register(UserVo userVo) {
+    public void register(UserEntity userEntity) {
         // 获取发送的验证码
-        String code = getEmailCode(userVo.getEmail());
-        Result.PARAM_INVALID.whenNotEquals(code, userVo.getCode(), "邮箱验证码不正确");
+        String code = getEmailCode(userEntity.getEmail());
+        Result.PARAM_INVALID.whenNotEquals(code, userEntity.getCode(), "邮箱验证码不正确");
         // 验证邮箱是否已经注册过
-        UserEntity existUser = repository.getByEmail(userVo.getEmail());
+        UserEntity existUser = repository.getByEmail(userEntity.getEmail());
         CustomResult.USER_REGISTER_ERROR_EXIST.whenNotNull(existUser, "账号已存在,无法重复注册");
         // 获取一个随机盐
         String salt = RandomUtil.randomString(4);
         UserEntity newUser = new UserEntity();
-        newUser.setEmail(userVo.getEmail());
+        newUser.setEmail(userEntity.getEmail());
         newUser.setSalt(salt);
-        newUser.setPassword(PasswordUtil.encode(userVo.getPassword(), salt));
+        newUser.setPassword(PasswordUtil.encode(userEntity.getPassword(), salt));
         add(newUser);
         //删掉使用过的邮箱验证码
-        removeEmailCodeCache(userVo.getEmail());
+        removeEmailCodeCache(userEntity.getEmail());
     }
 
     /**

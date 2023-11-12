@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("purchasePrice")
 @Description("采购价格")
-public class PurchasePriceController extends BaseController<PurchasePriceService, PurchasePriceEntity> {
+public class PurchasePriceController extends BaseController<PurchasePriceEntity, PurchasePriceService, PurchasePriceRepository> {
     @Description("查询物料和供应商的价格")
     @PostMapping("getByMaterialAndSupplier")
     @ResponseFilter(RootEntity.WhenGetDetail.class)
     public JsonData getByMaterialAndSupplier(@RequestBody @Validated(PurchasePriceEntity.WhenGetByMaterialAndSupplier.class) PurchasePriceEntity entity) {
-        return jsonData(service.getByMaterialAndSupplier(entity.getMaterial(),entity.getSupplier()));
+        return jsonData(service.getByMaterialAndSupplier(entity.getMaterial(), entity.getSupplier()));
     }
 }

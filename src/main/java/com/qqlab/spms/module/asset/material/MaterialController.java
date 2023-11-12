@@ -15,5 +15,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("material")
 @Description("物料")
 @Permission(login = false)
-public class MaterialController extends BaseController<MaterialService, MaterialVo> {
+public class MaterialController extends BaseController<MaterialEntity, MaterialService, MaterialRepository> {
 }

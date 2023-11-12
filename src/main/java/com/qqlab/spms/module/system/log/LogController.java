@@ -13,5 +13,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("log")
 @Description("日志")
-public class LogController extends BaseController<LogService, LogEntity> {
+public class LogController extends BaseController<LogEntity, LogService, LogRepository> {
 }

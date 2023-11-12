@@ -1,7 +1,6 @@
 package com.qqlab.spms.base;
 
 import cn.hamm.airpower.result.Result;
-import cn.hamm.airpower.root.RootRepository;
 import cn.hamm.airpower.root.RootService;
 import cn.hamm.airpower.util.ReflectUtil;
 import cn.hutool.core.date.DateTime;
@@ -20,9 +19,11 @@ import java.util.Objects;
 /**
  * <h1>基础服务类</h1>
  *
- * @author Hamm https://hamm.cn
+ * @param <E> 实体
+ * @param <R> 数据源
+ * @author Hamm
  */
-public class BaseService<E extends BaseEntity<E>, R extends RootRepository<E>> extends RootService<E, R> {
+public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> extends RootService<E, R> {
     @Autowired
     private CodeRuleRepository codeRuleRepository;
 
