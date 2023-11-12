@@ -1,25 +1,26 @@
-package com.qqlab.spms.module.asset.material;
+package com.qqlab.spms.module.mes.order;
 
 import cn.hamm.airpower.interfaces.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * <h1>物料类型枚举</h1>
+ * <h1>订单类型</h1>
  *
  * @author Hamm
  */
 @AllArgsConstructor
-public enum MaterialType implements IEnum {
+public enum OrderType implements IEnum {
     /**
-     * <h2>自产品</h2>
+     * <h2>计划订单</h2>
      */
-    PRODUCT(1, "自产品"),
+    PLAN(1, "计划订单"),
 
     /**
-     * <h2>外购品</h2>
+     * <h2>其他订单</h2>
      */
-    PURCHASE(2, "外购品");
+    OTHER(2, "其他订单");
+
 
     @Getter
     private int value;

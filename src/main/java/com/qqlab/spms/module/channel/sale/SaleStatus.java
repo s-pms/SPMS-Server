@@ -7,7 +7,7 @@ import lombok.Getter;
 /**
  * <h1>采购单状态</h1>
  *
- * @author Hamm https://hamm.cn
+ * @author Hamm
  */
 @AllArgsConstructor
 public enum SaleStatus implements IEnum {

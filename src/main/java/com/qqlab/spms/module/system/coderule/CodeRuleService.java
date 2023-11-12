@@ -4,7 +4,7 @@ import com.qqlab.spms.base.BaseService;
 import org.springframework.stereotype.Service;
 
 /**
- * @author Hamm https://hamm.cn
+ * @author Hamm
  */
 @Service
 public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleRepository> {

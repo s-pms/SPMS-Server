@@ -127,7 +127,7 @@ public class Initialization {
     }
 
     private static void initOtherData() {
-        appService.add(new AppEntity().setAppKey("airpower").setAppName("第三方应用").setUrl("https://hamm.cn").setAppSecret("abcdefghijklmnopqrstuvwxyz"));
+        appService.add(new AppEntity().setAppKey("airpower").setAppName("第三方应用").setUrl("").setAppSecret("abcdefghijklmnopqrstuvwxyz"));
 
         supplierService.add(new SupplierEntity().setCode("SP01").setName("三星屏幕套件"));
         customerService.add(new CustomerEntity().setCode("CUS01").setName("重庆解放碑AppleStore"));
@@ -143,8 +143,8 @@ public class Initialization {
         MenuEntity homeMenu = new MenuEntity().setName("首页").setOrderNo(99).setPath("/console").setComponent("/console/index/index").setParentId(0L);
         menuService.add(homeMenu);
 
-        // 仓储管理
-        MenuEntity wmsMenu = new MenuEntity().setName("仓储管理").setOrderNo(90).setParentId(0L);
+        // 仓储管理 - WMS
+        MenuEntity wmsMenu = new MenuEntity().setName("仓储管理").setOrderNo(98).setParentId(0L);
         wmsMenu = menuService.add(wmsMenu);
 
         MenuEntity wmsSubMenu;
@@ -162,6 +162,38 @@ public class Initialization {
 
         wmsSubMenu = new MenuEntity().setName("库存盘点").setPath("/console/wms/review/list").setParentId(wmsMenu.getId());
         menuService.add(wmsSubMenu);
+
+        // 生产管理 - MES
+        MenuEntity mesMenu = new MenuEntity().setName("生产管理").setOrderNo(97).setParentId(0L);
+        mesMenu = menuService.add(mesMenu);
+
+        MenuEntity mesSubMenu;
+        MenuEntity mesFunctionMenu;
+        mesSubMenu = new MenuEntity().setName("生产资源").setParentId(mesMenu.getId());
+        menuService.add(mesSubMenu);
+
+        mesFunctionMenu = new MenuEntity().setName("物料领取").setPath("/console/mes/pickout/list").setParentId(mesSubMenu.getId());
+        menuService.add(mesFunctionMenu);
+        mesFunctionMenu = new MenuEntity().setName("物料退还").setPath("/console/mes/restore/list").setParentId(mesSubMenu.getId());
+        menuService.add(mesFunctionMenu);
+
+        mesSubMenu = new MenuEntity().setName("工艺工序").setParentId(mesMenu.getId());
+        menuService.add(mesSubMenu);
+
+        mesFunctionMenu = new MenuEntity().setName("工艺流程").setPath("/console/mes/process/list").setParentId(mesSubMenu.getId());
+        menuService.add(mesFunctionMenu);
+        mesFunctionMenu = new MenuEntity().setName("工序管理").setPath("/console/mes/operation/list").setParentId(mesSubMenu.getId());
+        menuService.add(mesFunctionMenu);
+        mesFunctionMenu = new MenuEntity().setName("BOM管理").setPath("/console/mes/bom/list").setParentId(mesSubMenu.getId());
+        menuService.add(mesFunctionMenu);
+
+        mesSubMenu = new MenuEntity().setName("生产执行").setParentId(mesMenu.getId());
+        menuService.add(mesSubMenu);
+
+        mesFunctionMenu = new MenuEntity().setName("生产计划").setPath("/console/mes/plan/list").setParentId(mesSubMenu.getId());
+        menuService.add(mesFunctionMenu);
+        mesFunctionMenu = new MenuEntity().setName("生产订单").setPath("/console/mes/order/list").setParentId(mesSubMenu.getId());
+        menuService.add(mesFunctionMenu);
 
         // 人事管理
         MenuEntity userMenu = new MenuEntity().setName("人事管理").setOrderNo(88).setParentId(0L);

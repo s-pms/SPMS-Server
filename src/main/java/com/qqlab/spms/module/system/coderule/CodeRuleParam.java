@@ -7,7 +7,7 @@ import lombok.Getter;
 /**
  * <h1>编码规则参数</h1>
  *
- * @author Hamm https://hamm.cn
+ * @author Hamm
  */
 @AllArgsConstructor
 public enum CodeRuleParam implements IEnum {

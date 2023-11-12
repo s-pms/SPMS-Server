@@ -7,7 +7,7 @@ import lombok.Getter;
 /**
  * <h1>编码规则表格枚举</h1>
  *
- * @author Hamm https://hamm.cn
+ * @author Hamm
  */
 @AllArgsConstructor
 public enum CodeRuleField implements IEnum {
@@ -47,13 +47,27 @@ public enum CodeRuleField implements IEnum {
     /**
      * <h2>单位编码</h2>
      */
-    UnitCode(7,"单位编码","UT"),
+    UnitCode(7, "单位编码", "UT"),
 
     /**
      * <h2>采购单号</h2>
      */
-    PurchaseBillCode(8,"采购单号","PC")
-    ;
+    PurchaseBillCode(8, "采购单号", "PC"),
+
+    /**
+     * <h2>领料单号</h2>
+     */
+    PickoutBillCode(9, "领料单号", "PK"),
+
+    /**
+     * <h2>生产计划号</h2>
+     */
+    PlanBillCode(10, "生产计划号", "PL"),
+
+    /**
+     * <h2>生产订单号</h2>
+     */
+    OrderBillCode(11, "生产订单号", "ODR");
 
     @Getter
     private int value;

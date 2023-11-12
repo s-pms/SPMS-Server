@@ -7,7 +7,7 @@ import lombok.Getter;
 /**
  * <h1>序列号更新方式</h1>
  *
- * @author Hamm https://hamm.cn
+ * @author Hamm
  */
 @AllArgsConstructor
 public enum SerialNumberUpdate implements IEnum {
