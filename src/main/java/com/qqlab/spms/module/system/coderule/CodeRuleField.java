@@ -55,9 +55,9 @@ public enum CodeRuleField implements IEnum {
     PurchaseBillCode(8, "采购单号", "PC"),
 
     /**
-     * <h2>领料单号</h2>
+     * <h2>销售单号</h2>
      */
-    PickoutBillCode(9, "领料单号", "PK"),
+    SaleBillCode(9, "销售单号", "SL"),
 
     /**
      * <h2>生产计划号</h2>
@@ -67,7 +67,17 @@ public enum CodeRuleField implements IEnum {
     /**
      * <h2>生产订单号</h2>
      */
-    OrderBillCode(11, "生产订单号", "ODR");
+    OrderBillCode(11, "生产订单号", "ODR"),
+
+    /**
+     * <h2>领料单号</h2>
+     */
+    PickoutBillCode(12, "领料单号", "PK"),
+
+    /**
+     * <h2>退料单号</h2>
+     */
+    RestoreBillCode(13, "退料单号", "RT");
 
     @Getter
     private int value;

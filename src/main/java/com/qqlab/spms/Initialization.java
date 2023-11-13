@@ -124,6 +124,21 @@ public class Initialization {
         codeRuleService.add(
                 new CodeRuleEntity().setRuleField(CodeRuleField.PurchaseBillCode.getValue()).setPrefix(CodeRuleField.PurchaseBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmddhh")
         );
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.SaleBillCode.getValue()).setPrefix(CodeRuleField.SaleBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmddhh")
+        );
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.PlanBillCode.getValue()).setPrefix(CodeRuleField.PlanBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmddhh")
+        );
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.OrderBillCode.getValue()).setPrefix(CodeRuleField.OrderBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmddhh")
+        );
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.PickoutBillCode.getValue()).setPrefix(CodeRuleField.OrderBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmddhh")
+        );
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.RestoreBillCode.getValue()).setPrefix(CodeRuleField.RestoreBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmddhh")
+        );
     }
 
     private static void initOtherData() {
@@ -170,7 +185,7 @@ public class Initialization {
         MenuEntity mesSubMenu;
         MenuEntity mesFunctionMenu;
         mesSubMenu = new MenuEntity().setName("生产资源").setParentId(mesMenu.getId());
-        menuService.add(mesSubMenu);
+        mesSubMenu = menuService.add(mesSubMenu);
 
         mesFunctionMenu = new MenuEntity().setName("物料领取").setPath("/console/mes/pickout/list").setParentId(mesSubMenu.getId());
         menuService.add(mesFunctionMenu);
@@ -178,7 +193,7 @@ public class Initialization {
         menuService.add(mesFunctionMenu);
 
         mesSubMenu = new MenuEntity().setName("工艺工序").setParentId(mesMenu.getId());
-        menuService.add(mesSubMenu);
+        mesSubMenu = menuService.add(mesSubMenu);
 
         mesFunctionMenu = new MenuEntity().setName("工艺流程").setPath("/console/mes/process/list").setParentId(mesSubMenu.getId());
         menuService.add(mesFunctionMenu);
@@ -188,7 +203,7 @@ public class Initialization {
         menuService.add(mesFunctionMenu);
 
         mesSubMenu = new MenuEntity().setName("生产执行").setParentId(mesMenu.getId());
-        menuService.add(mesSubMenu);
+        mesSubMenu = menuService.add(mesSubMenu);
 
         mesFunctionMenu = new MenuEntity().setName("生产计划").setPath("/console/mes/plan/list").setParentId(mesSubMenu.getId());
         menuService.add(mesFunctionMenu);

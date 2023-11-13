@@ -27,7 +27,7 @@ public class SaleService extends AbstractBaseBillService<SaleEntity, SaleReposit
 
     @Override
     public boolean isAudited(SaleEntity bill) {
-        return bill.getStatus() == SaleStatus.OUTPUTING.getValue();
+        return bill.getStatus() != SaleStatus.AUDITING.getValue();
     }
 
     @Override

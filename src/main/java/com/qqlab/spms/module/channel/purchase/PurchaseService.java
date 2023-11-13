@@ -23,7 +23,7 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
 
     @Override
     public boolean isAudited(PurchaseEntity bill) {
-        return bill.getStatus() == PurchaseStatus.PURCHASING.getValue();
+        return bill.getStatus() != PurchaseStatus.AUDITING.getValue();
     }
 
     @Override

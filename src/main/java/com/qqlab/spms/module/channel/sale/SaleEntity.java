@@ -40,7 +40,7 @@ import javax.validation.constraints.NotNull;
 public class SaleEntity extends BaseBillEntity<SaleEntity, SaleDetailEntity> {
     @Description("销售单号")
     @Column(columnDefinition = "varchar(255) default '' comment '销售单号'", unique = true)
-    @AutoGenerateCode(CodeRuleField.PurchaseBillCode)
+    @AutoGenerateCode(CodeRuleField.SaleBillCode)
     private String billCode;
 
     @Description("销售说明")

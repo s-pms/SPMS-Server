@@ -3,7 +3,6 @@ package com.qqlab.spms.module.mes.order.detail;
 
 import cn.hamm.airpower.annotation.Description;
 import com.qqlab.spms.base.bill.detail.BaseBillDetailEntity;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -24,7 +23,6 @@ import javax.persistence.Table;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "order_detail")

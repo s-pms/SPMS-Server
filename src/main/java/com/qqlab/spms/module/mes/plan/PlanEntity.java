@@ -8,8 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.annotation.AutoGenerateCode;
 import com.qqlab.spms.base.bill.BaseBillEntity;
 import com.qqlab.spms.module.channel.customer.CustomerEntity;
-import com.qqlab.spms.module.mes.pickout.PickoutStatus;
-import com.qqlab.spms.module.mes.pickout.detail.PickoutDetailEntity;
+import com.qqlab.spms.module.mes.plan.detail.PlanDetailEntity;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,23 +35,27 @@ import javax.persistence.*;
 @DynamicUpdate
 @Table(name = "plan")
 @Description("生产计划")
-public class PlanEntity extends BaseBillEntity<PlanEntity, PickoutDetailEntity> {
-    @Description("生产计划编码")
-    @Column(columnDefinition = "varchar(255) default '' comment '生产计划编码'", unique = true)
+public class PlanEntity extends BaseBillEntity<PlanEntity, PlanDetailEntity> {
+    @Description("生产计划号")
+    @Column(columnDefinition = "varchar(255) default '' comment '生产计划号'", unique = true)
     @AutoGenerateCode(CodeRuleField.PlanBillCode)
     private String billCode;
 
-    @Description("生产计划状态")
+    @Description("计划状态")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '生产计划状态'")
-    @Dictionary(PickoutStatus.class)
+    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '计划状态'")
+    @Dictionary(PlanStatus.class)
     private Integer status;
+
+    @Description("计划类型")
+    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '计划类型'")
+    @Dictionary(PlanType.class)
+    private Integer type;
 
     /**
      * <h2>交付时间</h2>
      */
     @Description("交付时间")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '交付时间'")
     private Long deliverTime;
 
@@ -62,7 +65,6 @@ public class PlanEntity extends BaseBillEntity<PlanEntity, PickoutDetailEntity> 
     @Description("开始时间")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '开始时间'")
     private Long startTime;
-
 
     /**
      * <h2>完成时间</h2>
