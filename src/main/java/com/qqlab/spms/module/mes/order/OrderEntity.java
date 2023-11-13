@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.annotation.AutoGenerateCode;
 import com.qqlab.spms.base.bill.BaseBillEntity;
 import com.qqlab.spms.module.asset.material.MaterialEntity;
+import com.qqlab.spms.module.channel.customer.CustomerEntity;
 import com.qqlab.spms.module.mes.order.detail.OrderDetailEntity;
+import com.qqlab.spms.module.mes.plan.PlanEntity;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,7 +36,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "order")
+@Table(name = "orders")
 @Description("生产订单")
 public class OrderEntity extends BaseBillEntity<OrderEntity, OrderDetailEntity> {
     @Description("订单号")
@@ -48,6 +50,10 @@ public class OrderEntity extends BaseBillEntity<OrderEntity, OrderDetailEntity> 
     @Dictionary(OrderStatus.class)
     private Integer status;
 
+    @Description("订单类型")
+    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '订单类型'")
+    @Dictionary(OrderType.class)
+    private Integer type;
 
     /**
      * <h2>开始时间</h2>
@@ -56,7 +62,6 @@ public class OrderEntity extends BaseBillEntity<OrderEntity, OrderDetailEntity> 
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '开始时间'")
     private Long startTime;
 
-
     /**
      * <h2>完成时间</h2>
      */
@@ -64,6 +69,13 @@ public class OrderEntity extends BaseBillEntity<OrderEntity, OrderDetailEntity> 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '完成时间'")
     private Long finishTime;
+
+    /**
+     * <h2>交付时间</h2>
+     */
+    @Description("交付时间")
+    @Column(columnDefinition = "bigint UNSIGNED default 0 comment '交付时间'")
+    private Long deliverTime;
 
     /**
      * <h2>物料信息</h2>
@@ -82,6 +94,17 @@ public class OrderEntity extends BaseBillEntity<OrderEntity, OrderDetailEntity> 
     @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '已完成数量'")
     private Double finishQuantity;
 
-    @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '生产计划ID'")
-    private Long planId;
+    /**
+     * <h2>计划信息</h2>
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Payload
+    private PlanEntity plan;
+
+    /**
+     * <h2>客户信息</h2>
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Payload
+    private CustomerEntity customer;
 }

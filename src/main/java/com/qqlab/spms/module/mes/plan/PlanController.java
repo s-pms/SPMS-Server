@@ -5,6 +5,8 @@ import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.api.Extends;
 import com.qqlab.spms.base.bill.BaseBillController;
 import com.qqlab.spms.module.mes.plan.detail.PlanDetailEntity;
+import com.qqlab.spms.module.mes.plan.detail.PlanDetailRepository;
+import com.qqlab.spms.module.mes.plan.detail.PlanDetailService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

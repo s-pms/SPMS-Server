@@ -2,6 +2,8 @@ package com.qqlab.spms.module.mes.plan;
 
 import com.qqlab.spms.base.bill.AbstractBaseBillService;
 import com.qqlab.spms.module.mes.plan.detail.PlanDetailEntity;
+import com.qqlab.spms.module.mes.plan.detail.PlanDetailRepository;
+import com.qqlab.spms.module.mes.plan.detail.PlanDetailService;
 import org.springframework.stereotype.Service;
 
 /**
