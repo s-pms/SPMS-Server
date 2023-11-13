@@ -122,22 +122,28 @@ public class Initialization {
                 new CodeRuleEntity().setRuleField(CodeRuleField.UnitCode.getValue()).setPrefix(CodeRuleField.UnitCode.getDefaultPrefix()).setSnLength(2).setSnType(SerialNumberUpdate.NEVER.getValue())
         );
         codeRuleService.add(
-                new CodeRuleEntity().setRuleField(CodeRuleField.PurchaseBillCode.getValue()).setPrefix(CodeRuleField.PurchaseBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmddhh")
+                new CodeRuleEntity().setRuleField(CodeRuleField.PurchaseBillCode.getValue()).setPrefix(CodeRuleField.PurchaseBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmdd")
         );
         codeRuleService.add(
-                new CodeRuleEntity().setRuleField(CodeRuleField.SaleBillCode.getValue()).setPrefix(CodeRuleField.SaleBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmddhh")
+                new CodeRuleEntity().setRuleField(CodeRuleField.SaleBillCode.getValue()).setPrefix(CodeRuleField.SaleBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmdd")
         );
         codeRuleService.add(
-                new CodeRuleEntity().setRuleField(CodeRuleField.PlanBillCode.getValue()).setPrefix(CodeRuleField.PlanBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmddhh")
+                new CodeRuleEntity().setRuleField(CodeRuleField.PlanBillCode.getValue()).setPrefix(CodeRuleField.PlanBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmdd")
         );
         codeRuleService.add(
-                new CodeRuleEntity().setRuleField(CodeRuleField.OrderBillCode.getValue()).setPrefix(CodeRuleField.OrderBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmddhh")
+                new CodeRuleEntity().setRuleField(CodeRuleField.OrderBillCode.getValue()).setPrefix(CodeRuleField.OrderBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmdd")
         );
         codeRuleService.add(
-                new CodeRuleEntity().setRuleField(CodeRuleField.PickoutBillCode.getValue()).setPrefix(CodeRuleField.OrderBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmddhh")
+                new CodeRuleEntity().setRuleField(CodeRuleField.PickoutBillCode.getValue()).setPrefix(CodeRuleField.OrderBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmdd")
         );
         codeRuleService.add(
-                new CodeRuleEntity().setRuleField(CodeRuleField.RestoreBillCode.getValue()).setPrefix(CodeRuleField.RestoreBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmddhh")
+                new CodeRuleEntity().setRuleField(CodeRuleField.RestoreBillCode.getValue()).setPrefix(CodeRuleField.RestoreBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmdd")
+        );
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.InputBillCode.getValue()).setPrefix(CodeRuleField.InputBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmdd")
+        );
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.OutputBillCode.getValue()).setPrefix(CodeRuleField.OutputBillCode.getDefaultPrefix()).setSnLength(4).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmdd")
         );
     }
 
