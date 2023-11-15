@@ -14,7 +14,7 @@
     <name>smart-production-manage-system</name>
     <description>smart-production-manage-system</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
     </properties>
     <dependencies>
         <dependency>
