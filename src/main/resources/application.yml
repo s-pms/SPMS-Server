@@ -1,3 +1,17 @@
 spring:
   profiles:
-    active: dev
+    active: production
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
+  jpa:
+    show-sql: true
+    generate-ddl: true
+  web:
+    resources:
+      add-mappings: false
+  mvc:
+    throw-exception-if-no-handler-found: true
+    view:
+      suffix: .html
+      prefix: /
