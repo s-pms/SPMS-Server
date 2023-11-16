@@ -4,13 +4,14 @@ import cn.hamm.airpower.annotation.Description;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.qqlab.spms.base.BaseEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+
 
 /**
  * <h1>单据明细基类</h1>

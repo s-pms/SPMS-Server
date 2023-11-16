@@ -1,0 +1,30 @@
+server:
+  port:
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: root
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: false
+  mvc:
+    throw-exception-if-no-handler-found: true
+    view:
+      prefix: /
+      suffix: .html
+  web:
+    resources:
+      add-mappings: false
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+
+#应用配置
+application:
+  loginUrl: http://localhost:3000/login

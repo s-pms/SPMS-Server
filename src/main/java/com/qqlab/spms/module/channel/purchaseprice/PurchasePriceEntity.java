@@ -6,6 +6,8 @@ import cn.hamm.airpower.annotation.Payload;
 import com.qqlab.spms.base.BaseEntity;
 import com.qqlab.spms.module.asset.material.MaterialEntity;
 import com.qqlab.spms.module.channel.supplier.SupplierEntity;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,8 +16,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 /**
  * <h1>采购价格实体</h1>
