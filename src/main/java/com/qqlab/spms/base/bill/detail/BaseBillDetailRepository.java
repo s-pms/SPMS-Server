@@ -8,16 +8,16 @@ import java.util.List;
 /**
  * <h1>单据明细的标准接口</h1>
  *
- * @param <D> 明细实体
+ * @param <E> 明细实体
  * @author hamm
  */
 @NoRepositoryBean
-public interface BaseBillDetailRepository<D extends BaseBillDetailEntity<D>> extends BaseRepository<D> {
+public interface BaseBillDetailRepository<E extends BaseBillDetailEntity<E>> extends BaseRepository<E> {
     /**
      * 根据单据ID查询所有明细
      *
      * @param billId 单据ID
      * @return 明细
      */
-    List<D> getAllByBillId(Long billId);
+    List<E> getAllByBillId(Long billId);
 }

@@ -6,8 +6,6 @@ import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailRepository;
 import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
  * <h1>Service</h1>
  *
@@ -44,16 +42,5 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
     @Override
     public PurchaseEntity setAuditing(PurchaseEntity bill) {
         return bill.setStatus(PurchaseStatus.AUDITING.getValue());
-    }
-
-    @Override
-    protected PurchaseEntity afterDetailSaved(PurchaseEntity bill) {
-        List<PurchaseDetailEntity> details = bill.getDetails();
-        double totalPrice = 0D;
-        for (PurchaseDetailEntity detail : details) {
-            totalPrice += detail.getQuantity() * detail.getPrice();
-        }
-        bill.setTotalPrice(totalPrice);
-        return updateToDatabase(bill);
     }
 }

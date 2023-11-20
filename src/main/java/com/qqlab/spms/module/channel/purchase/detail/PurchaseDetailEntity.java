@@ -62,5 +62,5 @@ public class PurchaseDetailEntity extends BaseBillDetailEntity<PurchaseDetailEnt
 
     @Description("已入库数量")
     @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '已入库数量'")
-    private Double inputQuantity;
+    private Double finishQuantity;
 }

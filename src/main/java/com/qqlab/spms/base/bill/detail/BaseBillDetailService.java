@@ -8,11 +8,11 @@ import java.util.List;
 /**
  * <h1>单据明细Service基类</h1>
  *
- * @param <D>  明细实体
- * @param <DR> 明细数据源
+ * @param <E> 明细实体
+ * @param <R> 明细数据源
  * @author hamm
  */
-public class BaseBillDetailService<D extends BaseBillDetailEntity<D>, DR extends BaseBillDetailRepository<D>> extends BaseService<D, DR> {
+public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends BaseBillDetailRepository<E>> extends BaseService<E, R> {
 
     /**
      * <h2>根据单据ID删除所有明细</h2>
@@ -20,8 +20,8 @@ public class BaseBillDetailService<D extends BaseBillDetailEntity<D>, DR extends
      * @param billId 单据ID
      */
     public void deleteAllByBillId(Long billId) {
-        List<D> details = getAllByBillId(billId);
-        for (D detail : details) {
+        List<E> details = getAllByBillId(billId);
+        for (E detail : details) {
             repository.deleteById(detail.getId());
         }
     }
@@ -32,7 +32,7 @@ public class BaseBillDetailService<D extends BaseBillDetailEntity<D>, DR extends
      * @param billId 单据ID
      * @return 明细
      */
-    public List<D> getAllByBillId(Long billId) {
+    public List<E> getAllByBillId(Long billId) {
         return repository.getAllByBillId(billId);
     }
 
@@ -43,11 +43,11 @@ public class BaseBillDetailService<D extends BaseBillDetailEntity<D>, DR extends
      * @param details 明细
      * @return 存储后的明细
      */
-    public List<D> saveDetails(Long billId, List<D> details) {
+    public List<E> saveDetails(Long billId, List<E> details) {
         deleteAllByBillId(billId);
-        List<D> savedDetails = new ArrayList<>(details.size());
+        List<E> savedDetails = new ArrayList<>(details.size());
         deleteAllByBillId(billId);
-        for (D detail : details) {
+        for (E detail : details) {
             detail.setBillId(billId);
             savedDetails.add(repository.save(detail));
         }

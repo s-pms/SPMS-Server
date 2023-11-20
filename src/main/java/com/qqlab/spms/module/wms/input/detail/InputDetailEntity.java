@@ -5,6 +5,8 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Payload;
 import com.qqlab.spms.base.bill.detail.BaseBillDetailEntity;
 import com.qqlab.spms.module.asset.material.MaterialEntity;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,11 +15,8 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-
 /**
- * <h1>计划明细实体</h1>
+ * <h1>入库明细实体</h1>
  *
  * @author Hamm
  */

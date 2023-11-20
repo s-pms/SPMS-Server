@@ -42,4 +42,11 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
     public boolean canEdit(InputEntity bill) {
         return bill.getStatus() == InputStatus.REJECTED.getValue();
     }
+
+    @Override
+    public void afterAllDetailsFinished(Long id) {
+        InputEntity bill = getById(id);
+        bill.setStatus(InputStatus.DONE.getValue());
+        updateToDatabase(bill);
+    }
 }

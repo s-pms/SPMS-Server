@@ -18,6 +18,7 @@ import java.util.List;
  * @param <DS>  明细Service
  * @param <DR>> 明细数据源
  * @author hamm
+ * @noinspection UnusedReturnValue
  */
 public abstract class AbstractBaseBillService<
         E extends BaseBillEntity<E, D>, R extends BaseRepository<E>,
@@ -25,7 +26,42 @@ public abstract class AbstractBaseBillService<
         > extends BaseService<E, R> {
 
     @Autowired(required = false)
-    private DS detailService;
+    protected DS detailService;
+
+
+    /**
+     * <h2>添加完成数量</h2>
+     *
+     * @param detail 明细
+     * @return 存储后的明细
+     */
+    public D addFinish(D detail) {
+        D savedDetail = detailService.getById(detail.getId());
+        savedDetail.addFinishQuantity(detail.getQuantity());
+        detail = detailService.update(savedDetail);
+        List<D> details = detailService.getAllByBillId(detail.getBillId());
+        boolean isAllFinished = true;
+        for (D d : details) {
+            if (d.getFinishQuantity() < d.getQuantity()) {
+                isAllFinished = false;
+                break;
+            }
+        }
+        if (isAllFinished) {
+            afterAllDetailsFinished(detail.getBillId());
+        }
+        return detail;
+    }
+
+    /**
+     * <h2>所有明细数量全部完成后置方法</h2>
+     *
+     * @param id 单据ID
+     * @noinspection unused
+     */
+    public void afterAllDetailsFinished(Long id) {
+
+    }
 
     @Override
     public E add(E bill) {

@@ -5,6 +5,8 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Payload;
 import com.qqlab.spms.base.bill.detail.BaseBillDetailEntity;
 import com.qqlab.spms.module.asset.material.MaterialEntity;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,9 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * <h1>领料明细实体</h1>
@@ -47,5 +46,5 @@ public class PickoutDetailEntity extends BaseBillDetailEntity<PickoutDetailEntit
 
     @Description("已出库数量")
     @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '已出库数量'")
-    private Double outputQuantity;
+    private Double finishQuantity;
 }

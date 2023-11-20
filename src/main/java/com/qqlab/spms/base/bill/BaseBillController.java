@@ -61,4 +61,13 @@ public class BaseBillController<
         service.setAuditing(savedBill);
         return savedBill;
     }
+
+
+    @Description("添加完成数量")
+    @PostMapping("addFinish")
+    @ResponseFilter(RootEntity.WhenGetDetail.class)
+    public Json finish(@RequestBody @Validated(BaseBillDetailEntity.WhenAddFinish.class) D detail) {
+        service.addFinish(detail);
+        return json("添加完成数量成功");
+    }
 }
