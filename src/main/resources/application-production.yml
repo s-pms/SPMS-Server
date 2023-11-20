@@ -10,7 +10,7 @@ spring:
     view:
       suffix: .html
   jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: update
 #应用配置
