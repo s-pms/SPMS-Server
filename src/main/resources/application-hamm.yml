@@ -13,6 +13,11 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: create-drop
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password:
 #应用配置
 application:
   loginUrl: "http://localhost:3000/login"

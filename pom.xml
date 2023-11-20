@@ -12,12 +12,10 @@
     <version>1.0.0</version>
     <name>smart-production-manage-system</name>
     <description>smart-production-manage-system</description>
-
     <dependencies>
-
         <dependency>
             <groupId>cn.hamm</groupId>
-            <artifactId>airpower-support</artifactId>
+            <artifactId>airpower-core</artifactId>
             <version>${airpower.version}</version>
         </dependency>
         <dependency>
