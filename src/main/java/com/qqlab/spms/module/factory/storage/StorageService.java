@@ -32,4 +32,16 @@ public class StorageService extends BaseService<StorageEntity, StorageRepository
         }
         return queryRequest.setFilter(filter);
     }
+
+    /**
+     * <h2>根据父级ID查询子集</h2>
+     *
+     * @param pid 父ID
+     * @return 列表
+     */
+    public List<StorageEntity> getByPid(Long pid) {
+        QueryRequest<StorageEntity> queryRequest = new QueryRequest<>();
+        queryRequest.setFilter(new StorageEntity().setParentId(pid));
+        return this.getList(queryRequest);
+    }
 }

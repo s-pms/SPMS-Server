@@ -28,6 +28,8 @@ import com.qqlab.spms.module.system.menu.MenuService;
 import com.qqlab.spms.module.system.permission.PermissionService;
 import com.qqlab.spms.module.system.unit.UnitEntity;
 import com.qqlab.spms.module.system.unit.UnitService;
+import com.qqlab.spms.module.wms.inventory.InventoryEntity;
+import com.qqlab.spms.module.wms.inventory.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,35 +56,7 @@ public class Initialization {
     private static StructureService structureService;
     private static CustomerService customerService;
     private static SupplierService supplierService;
-
-    @Autowired
-    private void setDatastore(
-            UserService userService,
-            RoleService roleService,
-            PermissionService permissionService,
-            AppService appService,
-            MenuService menuService,
-            CodeRuleService codeRuleService,
-            MaterialService materialService,
-            UnitService unitService,
-            StorageService storageService,
-            StructureService structureService,
-            CustomerService customerService,
-            SupplierService supplierService
-    ) {
-        Initialization.userService = userService;
-        Initialization.roleService = roleService;
-        Initialization.permissionService = permissionService;
-        Initialization.appService = appService;
-        Initialization.menuService = menuService;
-        Initialization.codeRuleService = codeRuleService;
-        Initialization.materialService = materialService;
-        Initialization.unitService = unitService;
-        Initialization.storageService = storageService;
-        Initialization.structureService = structureService;
-        Initialization.customerService = customerService;
-        Initialization.supplierService = supplierService;
-    }
+    private static InventoryService inventoryService;
 
     public static void run() {
         permissionService.forceReloadAllPermissions();
@@ -92,6 +66,27 @@ public class Initialization {
         initFactory();
         initMenu();
         initOtherData();
+
+    }
+
+    private static void initOtherData() {
+        appService.add(new AppEntity().setAppKey("airpower").setAppName("第三方应用").setUrl("").setAppSecret("abcdefghijklmnopqrstuvwxyz"));
+
+        supplierService.add(new SupplierEntity().setCode("SP01").setName("三星屏幕套件"));
+        customerService.add(new CustomerEntity().setCode("CUS01").setName("重庆解放碑AppleStore"));
+
+
+        inventoryService.add(new InventoryEntity()
+                .setMaterial(materialService.getById(1L))
+                .setQuantity(2D)
+                .setStorage(storageService.getById(1L))
+        );
+        inventoryService.add(new InventoryEntity()
+                .setMaterial(materialService.getById(1L))
+                .setQuantity(10D)
+                .setStorage(storageService.getById(2L))
+        );
+
     }
 
     private static void initFactory() {
@@ -150,12 +145,35 @@ public class Initialization {
         );
     }
 
-    private static void initOtherData() {
-        appService.add(new AppEntity().setAppKey("airpower").setAppName("第三方应用").setUrl("").setAppSecret("abcdefghijklmnopqrstuvwxyz"));
-
-        supplierService.add(new SupplierEntity().setCode("SP01").setName("三星屏幕套件"));
-        customerService.add(new CustomerEntity().setCode("CUS01").setName("重庆解放碑AppleStore"));
-
+    @Autowired
+    private void setDatastore(
+            UserService userService,
+            RoleService roleService,
+            PermissionService permissionService,
+            AppService appService,
+            MenuService menuService,
+            CodeRuleService codeRuleService,
+            MaterialService materialService,
+            UnitService unitService,
+            StorageService storageService,
+            StructureService structureService,
+            CustomerService customerService,
+            SupplierService supplierService,
+            InventoryService inventoryService
+    ) {
+        Initialization.userService = userService;
+        Initialization.roleService = roleService;
+        Initialization.permissionService = permissionService;
+        Initialization.appService = appService;
+        Initialization.menuService = menuService;
+        Initialization.codeRuleService = codeRuleService;
+        Initialization.materialService = materialService;
+        Initialization.unitService = unitService;
+        Initialization.storageService = storageService;
+        Initialization.structureService = structureService;
+        Initialization.customerService = customerService;
+        Initialization.supplierService = supplierService;
+        Initialization.inventoryService = inventoryService;
     }
 
     @SuppressWarnings("AlibabaMethodTooLong")

@@ -4,7 +4,14 @@ import com.qqlab.spms.base.bill.AbstractBaseBillService;
 import com.qqlab.spms.module.wms.input.detail.InputDetailEntity;
 import com.qqlab.spms.module.wms.input.detail.InputDetailRepository;
 import com.qqlab.spms.module.wms.input.detail.InputDetailService;
+import com.qqlab.spms.module.wms.inventory.InventoryEntity;
+import com.qqlab.spms.module.wms.inventory.InventoryService;
+import com.qqlab.spms.module.wms.inventory.InventoryType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * <h1>Service</h1>
@@ -13,6 +20,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class InputService extends AbstractBaseBillService<InputEntity, InputRepository, InputDetailEntity, InputDetailService, InputDetailRepository> {
+    @Autowired
+    private InventoryService inventoryService;
+
     @Override
     public InputEntity setAudited(InputEntity bill) {
         return bill.setStatus(InputStatus.PRODUCING.getValue());
@@ -48,5 +58,21 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
         InputEntity bill = getById(id);
         bill.setStatus(InputStatus.DONE.getValue());
         updateToDatabase(bill);
+        // 查询所有明细 入库到指定的位置
+        List<InputDetailEntity> details = detailService.getAllByBillId(id);
+        for (InputDetailEntity detail : details) {
+            InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(detail.getMaterial().getId(), bill.getStorage().getId());
+            if (Objects.nonNull(inventory)) {
+                inventory.setQuantity(inventory.getQuantity() + detail.getFinishQuantity());
+                inventoryService.update(inventory);
+            } else {
+                inventory = new InventoryEntity()
+                        .setQuantity(detail.getFinishQuantity())
+                        .setMaterial(detail.getMaterial())
+                        .setStorage(bill.getStorage())
+                        .setType(InventoryType.STORAGE.getValue());
+                inventoryService.add(inventory);
+            }
+        }
     }
 }
