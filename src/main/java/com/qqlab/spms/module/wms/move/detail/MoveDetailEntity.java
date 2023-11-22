@@ -2,9 +2,8 @@ package com.qqlab.spms.module.wms.move.detail;
 
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Payload;
 import com.qqlab.spms.base.bill.detail.BaseBillDetailEntity;
-import com.qqlab.spms.module.asset.material.MaterialEntity;
+import com.qqlab.spms.module.wms.inventory.InventoryEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -32,12 +31,11 @@ import org.hibernate.annotations.DynamicUpdate;
 @Description("移库明细")
 public class MoveDetailEntity extends BaseBillDetailEntity<MoveDetailEntity> {
     /**
-     * <h2>物料信息</h2>
+     * <h2>库存信息</h2>
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
-    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料不能为空")
-    private MaterialEntity material;
+    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "库存信息")
+    private InventoryEntity inventory;
 
     @Description("移动数量")
     @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '移动数量'")
