@@ -17,4 +17,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("sale")
 @Description("销售单")
 public class SaleController extends BaseBillController<SaleEntity, SaleService, SaleRepository, SaleDetailEntity, SaleDetailService, SaleDetailRepository> {
+
 }

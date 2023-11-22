@@ -17,7 +17,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +26,7 @@ import java.util.List;
  * @param <E> 单据实体
  * @param <D> 明细实体
  * @author hamm
+ * @noinspection unchecked
  */
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -36,7 +36,7 @@ import java.util.List;
 @DynamicInsert
 @DynamicUpdate
 @Description("")
-public class BaseBillEntity<E extends BaseBillEntity<E, D>, D extends BaseBillDetailEntity<D>> extends BaseEntity<E> {
+public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E, D>, D extends BaseBillDetailEntity<D>> extends BaseEntity<E> {
     /**
      * <h2>单据明细</h2>
      */
@@ -78,4 +78,12 @@ public class BaseBillEntity<E extends BaseBillEntity<E, D>, D extends BaseBillDe
 
     public interface WhenReject {
     }
+
+    /**
+     * <h2>设置状态</h2>
+     *
+     * @param status 状态值
+     * @return 单据实体
+     */
+    public abstract E setStatus(Integer status);
 }

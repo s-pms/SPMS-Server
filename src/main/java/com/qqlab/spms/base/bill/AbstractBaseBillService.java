@@ -21,7 +21,7 @@ import java.util.List;
  * @noinspection UnusedReturnValue
  */
 public abstract class AbstractBaseBillService<
-        E extends BaseBillEntity<E, D>, R extends BaseRepository<E>,
+        E extends AbstractBaseBillEntity<E, D>, R extends BaseRepository<E>,
         D extends BaseBillDetailEntity<D>, DS extends BaseBillDetailService<D, DR>, DR extends BaseBillDetailRepository<D>
         > extends BaseService<E, R> {
 

@@ -6,10 +6,11 @@ import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.annotation.AutoGenerateCode;
-import com.qqlab.spms.base.bill.BaseBillEntity;
+import com.qqlab.spms.base.bill.AbstractBaseBillEntity;
 import com.qqlab.spms.module.channel.customer.CustomerEntity;
 import com.qqlab.spms.module.mes.plan.detail.PlanDetailEntity;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,8 +18,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-
-import jakarta.persistence.*;
 
 /**
  * <h1>领料单实体</h1>
@@ -35,14 +34,13 @@ import jakarta.persistence.*;
 @DynamicUpdate
 @Table(name = "plan")
 @Description("生产计划")
-public class PlanEntity extends BaseBillEntity<PlanEntity, PlanDetailEntity> {
+public class PlanEntity extends AbstractBaseBillEntity<PlanEntity, PlanDetailEntity> {
     @Description("生产计划号")
     @Column(columnDefinition = "varchar(255) default '' comment '生产计划号'", unique = true)
     @AutoGenerateCode(CodeRuleField.PlanBillCode)
     private String billCode;
 
     @Description("计划状态")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '计划状态'")
     @Dictionary(PlanStatus.class)
     private Integer status;

@@ -29,12 +29,7 @@ public enum InputStatus implements IEnum {
     /**
      * <h2>已完成</h2>
      */
-    DONE(4, "已完成"),
-
-    /**
-     * <h2>已取消</h2>
-     */
-    CANCELED(5, "已取消");
+    DONE(4, "已完成");
 
 
     @Getter

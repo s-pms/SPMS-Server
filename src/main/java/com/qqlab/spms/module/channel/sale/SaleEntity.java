@@ -6,10 +6,12 @@ import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.annotation.AutoGenerateCode;
-import com.qqlab.spms.base.bill.BaseBillEntity;
+import com.qqlab.spms.base.bill.AbstractBaseBillEntity;
 import com.qqlab.spms.module.channel.customer.CustomerEntity;
 import com.qqlab.spms.module.channel.sale.detail.SaleDetailEntity;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,9 +20,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
-
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * <h1>采购单实体</h1>
@@ -37,7 +36,7 @@ import jakarta.validation.constraints.NotNull;
 @DynamicUpdate
 @Table(name = "sale")
 @Description("销售单")
-public class SaleEntity extends BaseBillEntity<SaleEntity, SaleDetailEntity> {
+public class SaleEntity extends AbstractBaseBillEntity<SaleEntity, SaleDetailEntity> {
     @Description("销售单号")
     @Column(columnDefinition = "varchar(255) default '' comment '销售单号'", unique = true)
     @AutoGenerateCode(CodeRuleField.SaleBillCode)
@@ -54,7 +53,6 @@ public class SaleEntity extends BaseBillEntity<SaleEntity, SaleDetailEntity> {
     private Double totalPrice;
 
     @Description("销售状态")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '销售状态'")
     @Dictionary(SaleStatus.class)
     private Integer status;

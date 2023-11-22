@@ -17,4 +17,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("purchase")
 @Description("采购单")
 public class PurchaseController extends BaseBillController<PurchaseEntity, PurchaseService, PurchaseRepository, PurchaseDetailEntity, PurchaseDetailService, PurchaseDetailRepository> {
+
 }

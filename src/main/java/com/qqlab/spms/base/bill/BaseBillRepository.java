@@ -12,5 +12,5 @@ import org.springframework.data.repository.NoRepositoryBean;
  * @author hamm
  */
 @NoRepositoryBean
-public interface BaseBillRepository<E extends BaseBillEntity<E, D>, D extends BaseBillDetailEntity<D>> extends BaseRepository<E> {
+public interface BaseBillRepository<E extends AbstractBaseBillEntity<E, D>, D extends BaseBillDetailEntity<D>> extends BaseRepository<E> {
 }

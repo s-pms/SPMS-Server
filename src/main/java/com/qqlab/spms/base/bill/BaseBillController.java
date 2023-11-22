@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  */
 @Permission
 public class BaseBillController<
-        E extends BaseBillEntity<E, D>, S extends AbstractBaseBillService<E, R, D, DS, DR>, R extends BaseBillRepository<E, D>,
+        E extends AbstractBaseBillEntity<E, D>, S extends AbstractBaseBillService<E, R, D, DS, DR>, R extends BaseBillRepository<E, D>,
         D extends BaseBillDetailEntity<D>, DS extends BaseBillDetailService<D, DR>, DR extends BaseBillDetailRepository<D>
         > extends BaseController<E, S, R> {
 
@@ -45,7 +45,7 @@ public class BaseBillController<
     @Description("驳回")
     @PostMapping("reject")
     @ResponseFilter(RootEntity.WhenGetDetail.class)
-    public Json reject(@RequestBody @Validated(BaseBillEntity.WhenReject.class) E bill) {
+    public Json reject(@RequestBody @Validated(AbstractBaseBillEntity.WhenReject.class) E bill) {
         E savedBill = service.getById(bill.getId());
         Result.FORBIDDEN.when(!service.canReject(savedBill), "该单据状态无法驳回");
         savedBill.setRejectReason(bill.getRejectReason());
@@ -58,10 +58,14 @@ public class BaseBillController<
     protected E beforeUpdate(E bill) {
         E savedBill = service.getById(bill.getId());
         Result.FORBIDDEN.when(!service.canEdit(savedBill), "该单据状态下无法编辑");
-        service.setAuditing(savedBill);
-        return savedBill;
+        service.setAuditing(bill.setStatus(null));
+        return bill;
     }
 
+    @Override
+    protected E beforeAdd(E entity) {
+        return super.beforeAdd(entity.setStatus(null));
+    }
 
     @Description("添加完成数量")
     @PostMapping("addFinish")

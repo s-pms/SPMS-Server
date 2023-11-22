@@ -4,15 +4,16 @@ package com.qqlab.spms.module.wms.input;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.annotation.AutoGenerateCode;
-import com.qqlab.spms.base.bill.BaseBillEntity;
+import com.qqlab.spms.base.bill.AbstractBaseBillEntity;
 import com.qqlab.spms.module.channel.purchase.PurchaseEntity;
 import com.qqlab.spms.module.factory.storage.StorageEntity;
 import com.qqlab.spms.module.factory.structure.StructureEntity;
 import com.qqlab.spms.module.mes.order.OrderEntity;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
 import com.qqlab.spms.module.wms.input.detail.InputDetailEntity;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,9 +21,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * <h1>领料单实体</h1>
@@ -39,14 +37,13 @@ import jakarta.validation.constraints.NotNull;
 @DynamicUpdate
 @Table(name = "input")
 @Description("入库单")
-public class InputEntity extends BaseBillEntity<InputEntity, InputDetailEntity> {
+public class InputEntity extends AbstractBaseBillEntity<InputEntity, InputDetailEntity> {
     @Description("入库单号")
     @Column(columnDefinition = "varchar(255) default '' comment '入库单号'", unique = true)
     @AutoGenerateCode(CodeRuleField.InputBillCode)
     private String billCode;
 
     @Description("入库状态")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '入库状态'")
     @Dictionary(InputStatus.class)
     private Integer status;

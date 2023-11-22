@@ -6,12 +6,14 @@ import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.annotation.AutoGenerateCode;
-import com.qqlab.spms.base.bill.BaseBillEntity;
+import com.qqlab.spms.base.bill.AbstractBaseBillEntity;
 import com.qqlab.spms.module.asset.material.MaterialEntity;
 import com.qqlab.spms.module.channel.customer.CustomerEntity;
 import com.qqlab.spms.module.mes.order.detail.OrderDetailEntity;
 import com.qqlab.spms.module.mes.plan.PlanEntity;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,9 +21,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * <h1>领料单实体</h1>
@@ -38,14 +37,13 @@ import jakarta.validation.constraints.NotNull;
 @DynamicUpdate
 @Table(name = "orders")
 @Description("生产订单")
-public class OrderEntity extends BaseBillEntity<OrderEntity, OrderDetailEntity> {
+public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetailEntity> {
     @Description("订单号")
     @Column(columnDefinition = "varchar(255) default '' comment '订单号'", unique = true)
     @AutoGenerateCode(CodeRuleField.OrderBillCode)
     private String billCode;
 
     @Description("订单状态")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '订单状态'")
     @Dictionary(OrderStatus.class)
     private Integer status;

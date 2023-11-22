@@ -27,19 +27,9 @@ public enum PurchaseStatus implements IEnum {
     PURCHASING(3, "采购中"),
 
     /**
-     * <h2>入库中</h2>
-     */
-    INPUTING(4, "入库中"),
-
-    /**
      * <h2>已完成</h2>
      */
-    DONE(5, "已完成"),
-
-    /**
-     * <h2>已取消</h2>
-     */
-    CANCELED(6, "已取消");
+    DONE(4, "已完成");
 
 
     @Getter
