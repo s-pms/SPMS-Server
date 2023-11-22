@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @param <DS> 明细Service
  * @param <DR> 明细数据源
  * @author Hamm
+ * @noinspection unused
  */
 @Permission
 public class BaseBillController<
@@ -38,7 +39,8 @@ public class BaseBillController<
         E savedBill = service.getById(bill.getId());
         Result.FORBIDDEN.when(service.isAudited(savedBill), "该单据状态无法审核");
         service.setAudited(savedBill);
-        service.update(savedBill);
+        savedBill = service.update(savedBill);
+        afterAudit(savedBill);
         return json("审核成功");
     }
 
@@ -73,5 +75,14 @@ public class BaseBillController<
     public Json finish(@RequestBody @Validated(BaseBillDetailEntity.WhenAddFinish.class) D detail) {
         service.addFinish(detail);
         return json("添加完成数量成功");
+    }
+
+    /**
+     * <h2>审核后置方法</h2>
+     *
+     * @param bill 单据
+     */
+    public void afterAudit(E bill) {
+
     }
 }

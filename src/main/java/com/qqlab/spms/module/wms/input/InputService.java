@@ -1,7 +1,8 @@
 package com.qqlab.spms.module.wms.input;
 
+import cn.hamm.airpower.result.Result;
 import com.qqlab.spms.base.bill.AbstractBaseBillService;
-import com.qqlab.spms.helper.PurchaseInputHelper;
+import com.qqlab.spms.helper.BillHelper;
 import com.qqlab.spms.module.channel.purchase.PurchaseEntity;
 import com.qqlab.spms.module.channel.purchase.PurchaseStatus;
 import com.qqlab.spms.module.wms.input.detail.InputDetailEntity;
@@ -13,7 +14,6 @@ import com.qqlab.spms.module.wms.inventory.InventoryType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -28,7 +28,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
 
     @Override
     public InputEntity setAudited(InputEntity bill) {
-        return bill.setStatus(InputStatus.INPUTING.getValue());
+        return bill.setStatus(InputStatus.INPUTTING.getValue());
     }
 
     @Override
@@ -61,25 +61,30 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
         InputEntity bill = getById(id);
         bill.setStatus(InputStatus.DONE.getValue());
         updateToDatabase(bill);
-        // 查询所有明细 入库到指定的位置
-        List<InputDetailEntity> details = detailService.getAllByBillId(id);
-        for (InputDetailEntity detail : details) {
-            InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(detail.getMaterial().getId(), bill.getStorage().getId());
-            if (Objects.nonNull(inventory)) {
-                inventory.setQuantity(inventory.getQuantity() + detail.getFinishQuantity());
-                inventoryService.update(inventory);
-            } else {
-                inventory = new InventoryEntity()
-                        .setQuantity(detail.getFinishQuantity())
-                        .setMaterial(detail.getMaterial())
-                        .setStorage(bill.getStorage())
-                        .setType(InventoryType.STORAGE.getValue());
-                inventoryService.add(inventory);
-            }
-        }
         if (bill.getType() == InputType.PURCHASE.getValue()) {
             PurchaseEntity purchaseEntity = bill.getPurchase();
-            PurchaseInputHelper.updatePurchaseBill(purchaseEntity.setStatus(PurchaseStatus.FINISHED.getValue()));
+            BillHelper.updatePurchaseBill(purchaseEntity.setStatus(PurchaseStatus.FINISHED.getValue()));
         }
+    }
+
+    @Override
+    public InputDetailEntity addFinish(InputDetailEntity detail) {
+        InputDetailEntity savedDetail = detailService.getById(detail.getId());
+        if (Objects.isNull(detail.getStorage()) || Objects.isNull(detail.getStorage().getId())) {
+            Result.FORBIDDEN.show("请传入入库存储资源");
+            return null;
+        }
+        InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(savedDetail.getMaterial().getId(), detail.getStorage().getId());
+        if (Objects.nonNull(inventory)) {
+            inventory.setQuantity(inventory.getQuantity() + detail.getQuantity());
+            inventoryService.update(inventory);
+        } else {
+            inventory = new InventoryEntity()
+                    .setQuantity(detail.getQuantity())
+                    .setMaterial(detail.getMaterial())
+                    .setType(InventoryType.STORAGE.getValue());
+            inventoryService.add(inventory);
+        }
+        return super.addFinish(detail);
     }
 }

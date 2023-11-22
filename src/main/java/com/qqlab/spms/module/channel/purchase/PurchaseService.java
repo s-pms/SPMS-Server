@@ -1,7 +1,7 @@
 package com.qqlab.spms.module.channel.purchase;
 
 import com.qqlab.spms.base.bill.AbstractBaseBillService;
-import com.qqlab.spms.helper.PurchaseInputHelper;
+import com.qqlab.spms.helper.BillHelper;
 import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailEntity;
 import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailRepository;
 import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailService;
@@ -69,13 +69,11 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
         updateToDatabase(bill);
 
         // 创建采购入库单
-
         InputEntity inputBill = new InputEntity()
-                .setStatus(InputStatus.REJECTED.getValue())
+                .setStatus(InputStatus.AUDITING.getValue())
                 .setPurchase(bill)
-                .setRejectReason("请选择存储资源")
                 .setDetails(inputDetails);
-        PurchaseInputHelper.addInputBill(inputBill);
+        BillHelper.addInputBill(inputBill);
     }
 
     @Override

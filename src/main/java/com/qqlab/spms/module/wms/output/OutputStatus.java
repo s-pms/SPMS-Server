@@ -1,16 +1,16 @@
-package com.qqlab.spms.module.wms.input;
+package com.qqlab.spms.module.wms.output;
 
 import cn.hamm.airpower.interfaces.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * <h1>入库状态</h1>
+ * <h1>出库状态</h1>
  *
  * @author Hamm
  */
 @AllArgsConstructor
-public enum InputStatus implements IEnum {
+public enum OutputStatus implements IEnum {
     /**
      * <h2>审核中</h2>
      */
@@ -22,9 +22,9 @@ public enum InputStatus implements IEnum {
     REJECTED(2, "已驳回"),
 
     /**
-     * <h2>入库中</h2>
+     * <h2>出库中</h2>
      */
-    INPUTTING(3, "入库中"),
+    OUTPUTTING(3, "出库中"),
 
     /**
      * <h2>已完成</h2>

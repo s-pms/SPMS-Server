@@ -24,7 +24,7 @@ public enum SaleStatus implements IEnum {
     /**
      * <h2>出库中</h2>
      */
-    OUTPUTING(3, "出库中"),
+    OUTPUTTING(3, "出库中"),
 
     /**
      * <h2>已完成</h2>

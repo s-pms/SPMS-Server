@@ -3,6 +3,7 @@ package com.qqlab.spms.module.channel.sale;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Payload;
+import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.annotation.AutoGenerateCode;
@@ -40,11 +41,13 @@ public class SaleEntity extends AbstractBaseBillEntity<SaleEntity, SaleDetailEnt
     @Description("销售单号")
     @Column(columnDefinition = "varchar(255) default '' comment '销售单号'", unique = true)
     @AutoGenerateCode(CodeRuleField.SaleBillCode)
+    @Search(Search.Mode.LIKE)
     private String billCode;
 
     @Description("销售说明")
     @Column(columnDefinition = "varchar(255) default '' comment '销售说明'")
     @Length(max = 80, message = "采购事由仅支持输入{min}个{max}个字符")
+    @Search(Search.Mode.LIKE)
     private String reason;
 
     @Description("总金额")
@@ -55,6 +58,7 @@ public class SaleEntity extends AbstractBaseBillEntity<SaleEntity, SaleDetailEnt
     @Description("销售状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '销售状态'")
     @Dictionary(SaleStatus.class)
+    @Search(Search.Mode.EQUALS)
     private Integer status;
 
     /**

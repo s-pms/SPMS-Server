@@ -2,15 +2,26 @@ package com.qqlab.spms.module.wms.move;
 
 import cn.hamm.airpower.result.Result;
 import com.qqlab.spms.base.bill.AbstractBaseBillService;
+import com.qqlab.spms.helper.BillHelper;
+import com.qqlab.spms.module.wms.input.InputEntity;
+import com.qqlab.spms.module.wms.input.InputStatus;
+import com.qqlab.spms.module.wms.input.InputType;
+import com.qqlab.spms.module.wms.input.detail.InputDetailEntity;
 import com.qqlab.spms.module.wms.inventory.InventoryEntity;
 import com.qqlab.spms.module.wms.inventory.InventoryService;
 import com.qqlab.spms.module.wms.inventory.InventoryType;
 import com.qqlab.spms.module.wms.move.detail.MoveDetailEntity;
 import com.qqlab.spms.module.wms.move.detail.MoveDetailRepository;
 import com.qqlab.spms.module.wms.move.detail.MoveDetailService;
+import com.qqlab.spms.module.wms.output.OutputEntity;
+import com.qqlab.spms.module.wms.output.OutputStatus;
+import com.qqlab.spms.module.wms.output.OutputType;
+import com.qqlab.spms.module.wms.output.detail.OutputDetailEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -22,6 +33,9 @@ import java.util.Objects;
 public class MoveService extends AbstractBaseBillService<MoveEntity, MoveRepository, MoveDetailEntity, MoveDetailService, MoveDetailRepository> {
     @Autowired
     private InventoryService inventoryService;
+
+    @Autowired
+    private MoveDetailService moveDetailService;
 
     @Override
     public MoveEntity setAudited(MoveEntity bill) {
@@ -68,7 +82,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
 
         // 查询移库单
         MoveEntity bill = getById(detail.getBillId());
-        InventoryEntity to = inventoryService.getByMaterialIdAndStorageId(detail.getInventory().getMaterial().getId(), bill.getToStorage().getId());
+        InventoryEntity to = inventoryService.getByMaterialIdAndStorageId(detail.getInventory().getMaterial().getId(), bill.getStorage().getId());
         if (Objects.nonNull(to)) {
             // 更新目标库存
             to.setQuantity(to.getQuantity() + detail.getQuantity());
@@ -78,7 +92,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
             to = new InventoryEntity()
                     .setQuantity(detail.getQuantity())
                     .setMaterial(detail.getInventory().getMaterial())
-                    .setStorage(bill.getToStorage())
+                    .setStorage(bill.getStorage())
                     .setType(InventoryType.STORAGE.getValue());
             inventoryService.add(to);
         }
@@ -87,8 +101,39 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
 
     @Override
     public void afterAllDetailsFinished(Long id) {
-        MoveEntity bill = getById(id);
-        bill.setStatus(MoveStatus.DONE.getValue());
-        updateToDatabase(bill);
+        MoveEntity moveBill = getById(id);
+        moveBill.setStatus(MoveStatus.DONE.getValue());
+        moveBill = updateToDatabase(moveBill);
+
+
+        InputEntity inputBill = new InputEntity()
+                .setType(InputType.MOVE.getValue())
+                .setMove(moveBill)
+                .setStatus(InputStatus.DONE.getValue());
+        OutputEntity outputBill = new OutputEntity()
+                .setType(OutputType.MOVE.getValue())
+                .setMove(moveBill)
+                .setStatus(OutputStatus.DONE.getValue());
+        List<MoveDetailEntity> details = moveDetailService.getAllByBillId(moveBill.getId());
+        List<OutputDetailEntity> outputDetails = new ArrayList<>();
+        List<InputDetailEntity> inputDetails = new ArrayList<>();
+        for (MoveDetailEntity detail : details) {
+            inputDetails.add(new InputDetailEntity()
+                    .setStorage(moveBill.getStorage())
+                    .setMaterial(detail.getInventory().getMaterial())
+                    .setQuantity(detail.getQuantity())
+                    .setFinishQuantity(detail.getFinishQuantity())
+            );
+            outputDetails.add(new OutputDetailEntity()
+                    .setInventory(detail.getInventory())
+                    .setMaterial(detail.getInventory().getMaterial())
+                    .setQuantity(detail.getQuantity())
+                    .setFinishQuantity(detail.getFinishQuantity())
+            );
+        }
+        inputBill.setDetails(inputDetails);
+        BillHelper.addInputBill(inputBill);
+        outputBill.setDetails(outputDetails);
+        BillHelper.addOutputBill(outputBill);
     }
 }

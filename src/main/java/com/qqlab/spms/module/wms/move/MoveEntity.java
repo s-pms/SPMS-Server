@@ -46,25 +46,10 @@ public class MoveEntity extends AbstractBaseBillEntity<MoveEntity, MoveDetailEnt
     private Integer status;
 
     /**
-     * <h2>出库存储资源</h2>
-     */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
-    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "出库存储资源")
-    private StorageEntity fromStorage;
-
-    /**
      * <h2>入库存储资源</h2>
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "入库存储资源")
-    private StorageEntity toStorage;
-
-    /**
-     * <h2>开始时间</h2>
-     */
-    @Description("开始时间")
-    @Column(columnDefinition = "bigint UNSIGNED default 0 comment '开始时间'")
-    private Long startTime;
+    private StorageEntity storage;
 }

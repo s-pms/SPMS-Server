@@ -17,7 +17,7 @@ import java.util.List;
 public class SaleService extends AbstractBaseBillService<SaleEntity, SaleRepository, SaleDetailEntity, SaleDetailService, SaleDetailRepository> {
     @Override
     public SaleEntity setAudited(SaleEntity bill) {
-        return bill.setStatus(SaleStatus.OUTPUTING.getValue());
+        return bill.setStatus(SaleStatus.OUTPUTTING.getValue());
     }
 
     @Override
@@ -53,6 +53,7 @@ public class SaleService extends AbstractBaseBillService<SaleEntity, SaleReposit
             totalPrice += detail.getQuantity() * detail.getPrice();
         }
         bill.setTotalPrice(totalPrice);
-        return updateToDatabase(bill);
+        bill = updateToDatabase(bill);
+        return bill;
     }
 }
