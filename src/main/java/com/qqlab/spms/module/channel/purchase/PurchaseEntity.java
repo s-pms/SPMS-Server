@@ -48,7 +48,7 @@ public class PurchaseEntity extends AbstractBaseBillEntity<PurchaseEntity, Purch
     @Description("采购事由")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "采购事由")
     @Column(columnDefinition = "varchar(255) default '' comment '采购事由'")
-    @Length(min = 5, max = 80, message = "采购事由仅支持输入{min}个{max}个字符")
+    @Length(max = 80, message = "采购事由最多允许输入{max}个字符")
     @Search(Search.Mode.LIKE)
     private String reason;
 
