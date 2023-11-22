@@ -46,11 +46,11 @@ public class OutputDetailEntity extends BaseBillDetailEntity<OutputDetailEntity>
     private MaterialEntity material;
 
     @Description("出库数量")
-    @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '出库数量'")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '出库数量'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "出库数量不能为空")
     private Double quantity;
 
     @Description("已出库数量")
-    @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '已出库数量'")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已出库数量'")
     private Double finishQuantity;
 }

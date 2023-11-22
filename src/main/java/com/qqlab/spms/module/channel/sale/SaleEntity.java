@@ -52,7 +52,7 @@ public class SaleEntity extends AbstractBaseBillEntity<SaleEntity, SaleDetailEnt
 
     @Description("总金额")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '总金额'")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '总金额'")
     private Double totalPrice;
 
     @Description("销售状态")

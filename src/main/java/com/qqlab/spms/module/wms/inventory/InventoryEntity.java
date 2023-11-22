@@ -44,7 +44,7 @@ public class InventoryEntity extends BaseEntity<InventoryEntity> {
     private MaterialEntity material;
 
     @Description("库存数量")
-    @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '库存数量'")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '库存数量'")
     private Double quantity;
 
     @Description("存储类型")

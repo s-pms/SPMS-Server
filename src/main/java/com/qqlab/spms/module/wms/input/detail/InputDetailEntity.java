@@ -48,11 +48,11 @@ public class InputDetailEntity extends BaseBillDetailEntity<InputDetailEntity> {
     private MaterialEntity material;
 
     @Description("入库数量")
-    @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '入库数量'")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '入库数量'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "入库数量不能为空")
     private Double quantity;
 
     @Description("已入库数量")
-    @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '已入库数量'")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已入库数量'")
     private Double finishQuantity;
 }

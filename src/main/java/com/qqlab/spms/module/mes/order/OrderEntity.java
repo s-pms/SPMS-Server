@@ -84,12 +84,12 @@ public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetail
     private MaterialEntity material;
 
     @Description("生产数量")
-    @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '生产数量'")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '生产数量'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "生产数量不能为空")
     private Double quantity;
 
     @Description("已完成数量")
-    @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '已完成数量'")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已完成数量'")
     private Double finishQuantity;
 
     /**

@@ -40,11 +40,11 @@ public class BomDetailEntity extends BaseBillDetailEntity<BomDetailEntity> {
     private MaterialEntity material;
 
     @Description("数量")
-    @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '数量'")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '数量'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "数量不能为空")
     private Double quantity;
 
     @Description("已完成数量")
-    @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '已完成数量'")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已完成数量'")
     private Double finishQuantity;
 }

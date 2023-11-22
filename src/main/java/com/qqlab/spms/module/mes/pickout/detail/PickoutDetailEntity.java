@@ -40,11 +40,11 @@ public class PickoutDetailEntity extends BaseBillDetailEntity<PickoutDetailEntit
     private MaterialEntity material;
 
     @Description("领料数量")
-    @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '领料数量'")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '领料数量'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "领料数量不能为空")
     private Double quantity;
 
     @Description("已出库数量")
-    @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '已出库数量'")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已出库数量'")
     private Double finishQuantity;
 }

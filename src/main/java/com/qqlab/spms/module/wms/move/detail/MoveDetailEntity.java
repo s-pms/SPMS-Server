@@ -38,11 +38,11 @@ public class MoveDetailEntity extends BaseBillDetailEntity<MoveDetailEntity> {
     private InventoryEntity inventory;
 
     @Description("移动数量")
-    @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '移动数量'")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '移动数量'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "移动数量不能为空")
     private Double quantity;
 
     @Description("已移动数量")
-    @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '已移动数量'")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已移动数量'")
     private Double finishQuantity;
 }

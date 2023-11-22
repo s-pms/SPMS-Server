@@ -29,10 +29,10 @@ import org.hibernate.annotations.DynamicUpdate;
 @Description("订单明细")
 public class OrderDetailEntity extends BaseBillDetailEntity<OrderDetailEntity> {
     @Description("数量")
-    @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '数量'")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '数量'")
     private Double quantity;
 
     @Description("已完成数量")
-    @Column(columnDefinition = "double(11, 6) UNSIGNED default 0 comment '已完成数量'")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已完成数量'")
     private Double finishQuantity;
 }
