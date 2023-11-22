@@ -1,11 +1,16 @@
 package com.qqlab.spms.module.channel.purchase;
 
 import com.qqlab.spms.base.bill.AbstractBaseBillService;
+import com.qqlab.spms.helper.PurchaseInputHelper;
 import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailEntity;
 import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailRepository;
 import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailService;
+import com.qqlab.spms.module.wms.input.InputEntity;
+import com.qqlab.spms.module.wms.input.InputStatus;
+import com.qqlab.spms.module.wms.input.detail.InputDetailEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,12 +56,26 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
         PurchaseEntity bill = getById(id);
         bill.setStatus(PurchaseStatus.DONE.getValue());
         List<PurchaseDetailEntity> details = detailService.getAllByBillId(bill.getId());
+        List<InputDetailEntity> inputDetails = new ArrayList<>();
         double totalRealPrice = 0D;
         for (PurchaseDetailEntity detail : details) {
             totalRealPrice += detail.getPrice() * detail.getFinishQuantity();
+            inputDetails.add(new InputDetailEntity()
+                    .setQuantity(detail.getFinishQuantity())
+                    .setMaterial(detail.getMaterial())
+            );
         }
         bill.setTotalRealPrice(totalRealPrice);
         updateToDatabase(bill);
+
+        // 创建采购入库单
+
+        InputEntity inputBill = new InputEntity()
+                .setStatus(InputStatus.REJECTED.getValue())
+                .setPurchase(bill)
+                .setRejectReason("请选择存储资源")
+                .setDetails(inputDetails);
+        PurchaseInputHelper.addInputBill(inputBill);
     }
 
     @Override

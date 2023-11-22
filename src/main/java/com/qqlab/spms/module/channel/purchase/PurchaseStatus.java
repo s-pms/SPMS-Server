@@ -29,7 +29,12 @@ public enum PurchaseStatus implements IEnum {
     /**
      * <h2>已完成</h2>
      */
-    DONE(4, "已完成");
+    DONE(4, "已完成"),
+
+    /**
+     * <h2>已入库</h2>
+     */
+    FINISHED(5, "已入库");
 
 
     @Getter

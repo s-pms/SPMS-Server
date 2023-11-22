@@ -1,6 +1,9 @@
 package com.qqlab.spms.module.wms.input;
 
 import com.qqlab.spms.base.bill.AbstractBaseBillService;
+import com.qqlab.spms.helper.PurchaseInputHelper;
+import com.qqlab.spms.module.channel.purchase.PurchaseEntity;
+import com.qqlab.spms.module.channel.purchase.PurchaseStatus;
 import com.qqlab.spms.module.wms.input.detail.InputDetailEntity;
 import com.qqlab.spms.module.wms.input.detail.InputDetailRepository;
 import com.qqlab.spms.module.wms.input.detail.InputDetailService;
@@ -25,7 +28,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
 
     @Override
     public InputEntity setAudited(InputEntity bill) {
-        return bill.setStatus(InputStatus.PRODUCING.getValue());
+        return bill.setStatus(InputStatus.INPUTING.getValue());
     }
 
     @Override
@@ -73,6 +76,10 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
                         .setType(InventoryType.STORAGE.getValue());
                 inventoryService.add(inventory);
             }
+        }
+        if (bill.getType() == InputType.PURCHASE.getValue()) {
+            PurchaseEntity purchaseEntity = bill.getPurchase();
+            PurchaseInputHelper.updatePurchaseBill(purchaseEntity.setStatus(PurchaseStatus.FINISHED.getValue()));
         }
     }
 }

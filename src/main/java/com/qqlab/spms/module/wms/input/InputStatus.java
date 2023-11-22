@@ -24,7 +24,7 @@ public enum InputStatus implements IEnum {
     /**
      * <h2>入库中</h2>
      */
-    PRODUCING(3, "入库中"),
+    INPUTING(3, "入库中"),
 
     /**
      * <h2>已完成</h2>
