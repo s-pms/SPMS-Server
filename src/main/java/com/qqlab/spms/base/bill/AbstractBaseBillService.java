@@ -37,8 +37,8 @@ public abstract class AbstractBaseBillService<
      */
     public D addFinish(D detail) {
         D savedDetail = detailService.getById(detail.getId());
-        savedDetail.addFinishQuantity(detail.getQuantity());
-        detail = detailService.update(savedDetail);
+        detail.setFinishQuantity(savedDetail.getFinishQuantity() + detail.getQuantity());
+        detail = detailService.update(detail);
         List<D> details = detailService.getAllByBillId(detail.getBillId());
         boolean isAllFinished = true;
         for (D d : details) {
