@@ -4,6 +4,7 @@ import cn.hamm.airpower.config.GlobalConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 @EnableAutoConfiguration
 @ComponentScan({"cn.hamm.airpower", "com.qqlab.spms"})
 @EnableWebSocket
+@EnableScheduling
 public class Application {
     public static void main(String[] args) {
         GlobalConfig.isCacheEnabled = false;

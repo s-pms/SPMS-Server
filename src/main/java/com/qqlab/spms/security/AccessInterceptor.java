@@ -6,20 +6,19 @@ import cn.hamm.airpower.result.Result;
 import cn.hamm.airpower.security.AbstractAccessInterceptor;
 import cn.hamm.airpower.security.AccessUtil;
 import cn.hamm.airpower.security.SecurityUtil;
+import com.qqlab.spms.module.personnel.role.RoleEntity;
+import com.qqlab.spms.module.personnel.user.UserEntity;
+import com.qqlab.spms.module.personnel.user.UserService;
 import com.qqlab.spms.module.system.log.LogEntity;
 import com.qqlab.spms.module.system.log.LogService;
 import com.qqlab.spms.module.system.permission.PermissionEntity;
 import com.qqlab.spms.module.system.permission.PermissionService;
-import com.qqlab.spms.module.personnel.role.RoleEntity;
-import com.qqlab.spms.module.personnel.user.UserEntity;
-import com.qqlab.spms.module.personnel.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
-
 
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -107,6 +106,4 @@ public class AccessInterceptor extends AbstractAccessInterceptor {
         ;
         logService.add(logEntity);
     }
-
-
 }
