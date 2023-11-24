@@ -12,34 +12,22 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum InputType implements IEnum {
     /**
-     * <h2>采购入库</h2>
+     * <h2>普通入库</h2>
+     *
+     * @noinspection unused
      */
-    PURCHASE(1, "采购入库"),
-
-    /**
-     * <h2>退料入库</h2>
-     */
-    RESTORE(2, "退料入库"),
-
-    /**
-     * <h2>生产入库</h2>
-     */
-    PRODUCE(3, "生产入库"),
-
-    /**
-     * <h2>盘点入库</h2>
-     */
-    REVIEW(4, "盘点入库"),
+    NORMAL(1, "普通入库"),
 
     /**
      * <h2>转移入库</h2>
      */
-    MOVE(5, "转移入库"),
+    MOVE(2, "转移入库"),
 
     /**
-     * <h2>其他入库</h2>
+     * <h2>采购入库</h2>
      */
-    OTHER(6, "其他入库");
+    PURCHASE(3, "采购入库"),
+    ;
 
 
     @Getter

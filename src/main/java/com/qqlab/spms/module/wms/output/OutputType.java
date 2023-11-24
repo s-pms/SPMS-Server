@@ -12,29 +12,22 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum OutputType implements IEnum {
     /**
-     * <h2>销售出库</h2>
+     * <h2>其他出库</h2>
+     *
+     * @noinspection unused
      */
-    SALE(1, "销售出库"),
-
-    /**
-     * <h2>领料出库</h2>
-     */
-    PICKOUT(2, "领料出库"),
-
-    /**
-     * <h2>盘点出库</h2>
-     */
-    REVIEW(3, "盘点出库"),
+    NORMAL(1, "普通出库"),
 
     /**
      * <h2>转移出库</h2>
      */
-    MOVE(4, "转移出库"),
+    MOVE(2, "转移出库"),
 
     /**
-     * <h2>其他出库</h2>
+     * <h2>销售出库</h2>
      */
-    OTHER(5, "其他出库");
+    SALE(3, "销售出库"),
+    ;
 
 
     @Getter

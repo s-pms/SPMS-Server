@@ -202,9 +202,6 @@ public class Initialization {
         wmsSubMenu = new MenuEntity().setName("移库管理").setPath("/console/wms/move/list").setParentId(wmsMenu.getId());
         menuService.add(wmsSubMenu);
 
-        wmsSubMenu = new MenuEntity().setName("库存盘点").setPath("/console/wms/review/list").setParentId(wmsMenu.getId());
-        menuService.add(wmsSubMenu);
-
         // 生产管理 - MES
         MenuEntity mesMenu = new MenuEntity().setName("生产管理").setOrderNo(97).setParentId(0L);
         mesMenu = menuService.add(mesMenu);

@@ -87,7 +87,7 @@ public enum CodeRuleField implements IEnum {
     /**
      * <h2>出库单号</h2>
      */
-    OutputBillCode(15, "出库", "OUT"),
+    OutputBillCode(15, "出库单号", "OUT"),
 
     /**
      * <h2>移库单号</h2>
