@@ -18,7 +18,6 @@ import java.util.List;
  * @param <DS>  明细Service
  * @param <DR>> 明细数据源
  * @author hamm
- * @noinspection UnusedReturnValue
  */
 public abstract class AbstractBaseBillService<
         E extends AbstractBaseBillEntity<E, D>, R extends BaseRepository<E>,
@@ -57,8 +56,8 @@ public abstract class AbstractBaseBillService<
      * <h2>所有明细数量全部完成后置方法</h2>
      *
      * @param id 单据ID
-     * @noinspection unused
      */
+    @SuppressWarnings("unused")
     public void afterAllDetailsFinished(Long id) {
 
     }
@@ -81,6 +80,7 @@ public abstract class AbstractBaseBillService<
      * @param bill 单据
      * @return 单据
      */
+    @SuppressWarnings("UnusedReturnValue")
     protected E afterDetailSaved(E bill) {
         return bill;
     }

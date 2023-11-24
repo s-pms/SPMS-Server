@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @param <DS> 明细Service
  * @param <DR> 明细数据源
  * @author Hamm
- * @noinspection unused
  */
 @Permission
 public class BaseBillController<

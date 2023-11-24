@@ -39,14 +39,14 @@ public enum CodeRuleParam implements IEnum {
     ;
 
     @Getter
-    private int value;
+    private final int value;
 
     @Getter
-    private String label;
+    private final String label;
 
     @Getter
-    private String desc;
+    private final String desc;
 
     @Getter
-    private String demo;
+    private final String demo;
 }

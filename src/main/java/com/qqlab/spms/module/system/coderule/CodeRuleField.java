@@ -95,11 +95,11 @@ public enum CodeRuleField implements IEnum {
     MoveBillCode(16, "移库单号", "MV");
 
     @Getter
-    private int value;
+    private final int value;
 
     @Getter
-    private String label;
+    private final String label;
 
     @Getter
-    private String defaultPrefix;
+    private final String defaultPrefix;
 }

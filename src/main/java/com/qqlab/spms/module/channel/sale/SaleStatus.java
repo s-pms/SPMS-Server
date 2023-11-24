@@ -33,8 +33,8 @@ public enum SaleStatus implements IEnum {
 
 
     @Getter
-    private int value;
+    private final int value;
 
     @Getter
-    private String label;
+    private final String label;
 }

@@ -7,8 +7,8 @@ import lombok.Getter;
  * <h1>应用自定义异常代码</h1>
  *
  * @author hamm
- * @noinspection unused, AlibabaEnumConstantsMustHaveComment
  */
+@SuppressWarnings("AlibabaEnumConstantsMustHaveComment")
 public enum CustomResult implements IResult {
     EMAIL_SEND_BUSY(1, "发送邮件过于频繁，请稍后再试"),
 

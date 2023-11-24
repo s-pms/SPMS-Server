@@ -22,8 +22,8 @@ public enum MaterialType implements IEnum {
     PURCHASE(2, "外购品");
 
     @Getter
-    private int value;
+    private final int value;
 
     @Getter
-    private String label;
+    private final String label;
 }

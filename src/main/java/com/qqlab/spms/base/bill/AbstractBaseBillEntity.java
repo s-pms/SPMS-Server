@@ -26,7 +26,6 @@ import java.util.List;
  * @param <E> 单据实体
  * @param <D> 明细实体
  * @author hamm
- * @noinspection unchecked
  */
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -59,8 +58,10 @@ public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E,
      * @param rejectReason 驳回原因
      * @return 单据实体
      */
+    @SuppressWarnings("UnusedReturnValue")
     public E setRejectReason(String rejectReason) {
         this.rejectReason = rejectReason;
+        //noinspection unchecked
         return (E) this;
     }
 
@@ -73,6 +74,7 @@ public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E,
      */
     public E setDetails(List<D> details) {
         this.details = details;
+        //noinspection unchecked
         return (E) this;
     }
 
