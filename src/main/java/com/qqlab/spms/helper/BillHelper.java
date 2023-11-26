@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
  * @author hamm
  */
 @Component
+@SuppressWarnings("UnusedReturnValue")
 public class BillHelper {
     private static PurchaseService purchaseService;
     private static SaleService saleService;
