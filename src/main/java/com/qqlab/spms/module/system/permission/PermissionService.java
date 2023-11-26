@@ -44,6 +44,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     /**
      * <h2>强制重载所有权限</h2>
      */
+    @SuppressWarnings("UnusedReturnValue")
     public List<PermissionEntity> forceReloadAllPermissions() {
         String packageName = "com.qqlab.spms";
         // 遍历所有接口

@@ -44,6 +44,7 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
      * @param structureId 工厂结构ID
      * @return 库存
      */
+    @SuppressWarnings("unused")
     public InventoryEntity getByMaterialIdAndStructureId(Long materialId, Long structureId) {
         return repository.getByMaterialAndStructure(new MaterialEntity().setId(materialId), new StructureEntity().setId(structureId));
     }
