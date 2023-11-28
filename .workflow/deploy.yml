@@ -20,7 +20,7 @@ stages:
         jdkVersion: '17'
         mavenVersion: 3.3.9
         commands:
-          - git clone git@gitee.com:air-power/AirPower4J.git
+          - https://gitee.com/air-power/AirPower4J.git
           - cd AirPower4J
           - mvn clean package -Dmaven.test.skip=true -U -e -X -B
         artifacts:
