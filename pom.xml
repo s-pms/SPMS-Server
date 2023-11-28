@@ -19,9 +19,7 @@
             <version>${airpower.version}</version>
         </dependency>
     </dependencies>
-
     <build>
-
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
