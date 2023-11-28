@@ -1,10 +1,10 @@
 server:
-  port: 10080
+  port: 8080
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
-    username: spms
+    username: root
     password: asdfew12345
   mvc:
     view:
@@ -13,6 +13,12 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: update
+
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: asdfew12345
 #应用配置
 application:
-  loginUrl: "https://spms.hamm.cn/login"
+  loginUrl: "https://md4.cn:888/login"
