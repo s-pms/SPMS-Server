@@ -92,7 +92,12 @@ public enum CodeRuleField implements IEnum {
     /**
      * <h2>移库单号</h2>
      */
-    MoveBillCode(16, "移库单号", "MV");
+    MoveBillCode(16, "移库单号", "MV"),
+
+    /**
+     * <h2>设备编码</h2>
+     */
+    DeviceCode(17, "设备编码", "DE");
 
     @Getter
     private final int value;
