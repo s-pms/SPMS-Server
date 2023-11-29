@@ -143,6 +143,9 @@ public class Initialization {
         codeRuleService.add(
                 new CodeRuleEntity().setRuleField(CodeRuleField.MoveBillCode.getValue()).setPrefix(CodeRuleField.MoveBillCode.getDefaultPrefix()).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmdd")
         );
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.DeviceCode.getValue()).setPrefix(CodeRuleField.DeviceCode.getDefaultPrefix()).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmdd")
+        );
     }
 
     @Autowired
