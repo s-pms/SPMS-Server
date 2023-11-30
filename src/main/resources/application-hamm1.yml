@@ -3,28 +3,27 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://localhost:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
-    password: asdfew12345
+    password: root
   mvc:
     view:
       suffix: .html
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: update
-
+      ddl-auto: create-drop
   data:
     redis:
       host: 127.0.0.1
       port: 6379
-      password: asdfew12345
+      password:
 
   mqtt:
-    host: 127.0.0.1
+    host: md4.cn
     port: 1883
     user: mqttroot
     pass: asdfew12345
 #应用配置
 application:
-  loginUrl: "https://md4.cn:888/login"
+  loginUrl: "http://localhost:3000/login"
