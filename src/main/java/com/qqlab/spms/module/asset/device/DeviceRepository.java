@@ -9,5 +9,11 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface DeviceRepository extends BaseRepository<DeviceEntity> {
-
+    /**
+     * <h2>通过UUID查询设备</h2>
+     *
+     * @param uuid UUID
+     * @return 设备
+     */
+    DeviceEntity getByUuid(String uuid);
 }

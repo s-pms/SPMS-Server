@@ -1,18 +1,17 @@
-package com.qqlab.spms.iot;
+package com.qqlab.spms.module.asset.device.enums;
 
 import cn.hamm.airpower.interfaces.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * <h1>设备运行状态</h1>
+ * <h1>设备状态</h1>
  *
- * @author Hamm
+ * @author zfy
  */
-
-@Getter
 @AllArgsConstructor
-public enum IReportStatus implements IEnum {
+@Getter
+public enum DeviceStatus implements IEnum {
     /**
      * <h2>报警</h2>
      */
@@ -39,7 +38,10 @@ public enum IReportStatus implements IEnum {
     DEBUG(5, "调试"),
     ;
 
+
+    @Getter
     private final int value;
 
+    @Getter
     private final String label;
 }

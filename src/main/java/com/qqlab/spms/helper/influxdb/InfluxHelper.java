@@ -1,4 +1,4 @@
-package com.qqlab.spms.iot.influxdb;
+package com.qqlab.spms.helper.influxdb;
 
 import com.influxdb.LogLevel;
 import com.influxdb.client.InfluxDBClient;

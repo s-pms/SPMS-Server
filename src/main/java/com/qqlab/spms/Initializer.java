@@ -2,7 +2,6 @@ package com.qqlab.spms;
 
 import cn.hamm.airpower.security.PasswordUtil;
 import cn.hutool.core.util.RandomUtil;
-import com.qqlab.spms.iot.ReportEvent;
 import com.qqlab.spms.module.asset.material.MaterialEntity;
 import com.qqlab.spms.module.asset.material.MaterialService;
 import com.qqlab.spms.module.asset.material.MaterialType;
@@ -14,6 +13,9 @@ import com.qqlab.spms.module.factory.storage.StorageEntity;
 import com.qqlab.spms.module.factory.storage.StorageService;
 import com.qqlab.spms.module.factory.structure.StructureEntity;
 import com.qqlab.spms.module.factory.structure.StructureService;
+import com.qqlab.spms.module.iot.parameter.ParameterEntity;
+import com.qqlab.spms.module.iot.parameter.ParameterService;
+import com.qqlab.spms.module.iot.report.ReportEvent;
 import com.qqlab.spms.module.personnel.role.RoleEntity;
 import com.qqlab.spms.module.personnel.role.RoleService;
 import com.qqlab.spms.module.personnel.user.UserEntity;
@@ -74,6 +76,9 @@ public class Initializer {
     private InventoryService inventoryService;
 
     @Autowired
+    private ParameterService parameterService;
+
+    @Autowired
     private ReportEvent reportEvent;
 
     public void run() throws MqttException {
@@ -84,7 +89,20 @@ public class Initializer {
         initFactory();
         initMenu();
         initOtherData();
+        initParameters();
         reportEvent.listen();
+    }
+
+    private void initParameters() {
+        parameterService.add(new ParameterEntity()
+                .setId(1L).setCode("status").setLabel("运行状态").setIsSystem(true)
+        );
+        parameterService.add(new ParameterEntity()
+                .setId(1L).setCode("alarm").setLabel("报警状态").setIsSystem(true)
+        );
+        parameterService.add(new ParameterEntity()
+                .setId(1L).setCode("partCount").setLabel("实时产量").setIsSystem(true)
+        );
     }
 
     private void initOtherData() {
@@ -281,6 +299,18 @@ public class Initializer {
         menuService.add(mesFunctionMenu);
         mesFunctionMenu = new MenuEntity().setName("生产订单").setPath("/console/mes/order/list").setParentId(mesSubMenu.getId());
         menuService.add(mesFunctionMenu);
+
+
+        // 物联网
+        MenuEntity iotMenu = new MenuEntity().setName("物联网").setOrderNo(44).setParentId(0L);
+        iotMenu = menuService.add(iotMenu);
+
+        MenuEntity iotSubMenu;
+        iotSubMenu = new MenuEntity().setName("设备概览").setPath("/console/iot/monitor/preview").setParentId(iotMenu.getId());
+        menuService.add(iotSubMenu);
+
+        iotSubMenu = new MenuEntity().setName("参数管理").setPath("/console/iot/parameter/list").setParentId(iotMenu.getId());
+        menuService.add(iotSubMenu);
 
         // 系统设置
         MenuEntity sysMenu = new MenuEntity().setName("系统设置").setOrderNo(2).setParentId(0L);

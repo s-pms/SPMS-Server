@@ -72,15 +72,15 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
                 continue;
             }
             if (CodeRuleParam.MONTH.getLabel().equals(param)) {
-                template = template.replaceAll(param, String.valueOf(DateTime.now().monthBaseOne()));
+                template = template.replaceAll(param, String.format("%02d", DateTime.now().monthBaseOne()));
                 continue;
             }
             if (CodeRuleParam.DATE.getLabel().equals(param)) {
-                template = template.replaceAll(param, String.valueOf(DateTime.now().dayOfMonth()));
+                template = template.replaceAll(param, String.format("%02d", DateTime.now().dayOfMonth()));
                 continue;
             }
             if (CodeRuleParam.HOUR.getLabel().equals(param)) {
-                template = template.replaceAll(param, String.valueOf(DateTime.now().hour(true)));
+                template = template.replaceAll(param, String.format("%02d", DateTime.now().hour(true)));
             }
         }
         int serialNumber = codeRuleEntity.getCurrentSn();

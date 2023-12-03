@@ -1,4 +1,4 @@
-package com.qqlab.spms.iot;
+package com.qqlab.spms.module.asset.device.enums;
 
 import cn.hamm.airpower.interfaces.IEnum;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum IReportAlarm implements IEnum {
+public enum DeviceAlarm implements IEnum {
     /**
      * <h2>正常</h2>
      */

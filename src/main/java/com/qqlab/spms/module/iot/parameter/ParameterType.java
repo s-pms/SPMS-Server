@@ -1,4 +1,4 @@
-package com.qqlab.spms.iot.payload;
+package com.qqlab.spms.module.iot.parameter;
 
 import cn.hamm.airpower.interfaces.IEnum;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum IPayloadType implements IEnum {
+public enum ParameterType implements IEnum {
     /**
      * <h2>数字</h2>
      */
