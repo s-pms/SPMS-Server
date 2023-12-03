@@ -27,4 +27,4 @@ spring:
 
 #应用配置
 application:
-  loginUrl: http://localhost:3000/login
+  loginUrl: http://md4.cn:888/login
