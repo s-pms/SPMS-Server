@@ -78,22 +78,6 @@ public class UserController extends BaseController<UserEntity, UserService, User
         return json("密码修改成功");
     }
 
-    @Description("找回密码")
-    @Permission(login = false)
-    @PostMapping("resetMyPassword")
-    public Json resetMyPassword(@RequestBody @Validated(UserEntity.WhenResetMyPassword.class) UserEntity userEntity) {
-        service.resetMyPassword(userEntity);
-        return json("密码重置成功");
-    }
-
-    @Description("注册账号")
-    @Permission(login = false)
-    @PostMapping("register")
-    public Json register(@RequestBody @Validated({UserEntity.WhenRegister.class}) UserEntity userEntity) {
-        service.register(userEntity);
-        return json("注册成功");
-    }
-
     @Description("账号密码登录")
     @Permission(login = false)
     @PostMapping("login")
@@ -106,6 +90,13 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @PostMapping("loginViaEmail")
     public JsonData loginViaEmail(@RequestBody @Validated({UserEntity.WhenLoginViaEmail.class}) UserEntity userEntity, HttpServletResponse httpServletResponse) {
         return doLogin(UserLoginType.VIA_EMAIL_CODE, userEntity, httpServletResponse);
+    }
+
+    @Description("手机验证码登录")
+    @Permission(login = false)
+    @PostMapping("loginViaPhone")
+    public JsonData loginViaPhone(@RequestBody @Validated({UserEntity.WhenLoginViaPhone.class}) UserEntity userEntity, HttpServletResponse httpServletResponse) {
+        return doLogin(UserLoginType.VIA_PHONE_CODE, userEntity, httpServletResponse);
     }
 
     /**
@@ -125,6 +116,9 @@ public class UserController extends BaseController<UserEntity, UserService, User
                 break;
             case VIA_EMAIL_CODE:
                 accessToken = service.loginViaEmail(userEntity);
+                break;
+            case VIA_PHONE_CODE:
+                accessToken = service.loginViaPhone(userEntity);
                 break;
             default:
                 Result.ERROR.show("暂不支持的登录方式");

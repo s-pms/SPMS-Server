@@ -175,8 +175,66 @@ public class Initializer {
         MenuEntity homeMenu = new MenuEntity().setName("首页").setOrderNo(99).setPath("/console").setComponent("/console/index/index").setParentId(0L);
         menuService.add(homeMenu);
 
+        // 基础数据
+        MenuEntity commonMenu = new MenuEntity().setName("基础数据").setOrderNo(88).setParentId(0L);
+        commonMenu = menuService.add(commonMenu);
+
+        MenuEntity commonSubMenu;
+        MenuEntity commonFunctionMenu;
+
+        commonSubMenu = new MenuEntity().setName("人事管理").setParentId(commonMenu.getId());
+        commonSubMenu = menuService.add(commonSubMenu);
+
+        commonFunctionMenu = new MenuEntity().setName("员工管理").setPath("/console/personnel/user/list").setParentId(commonSubMenu.getId());
+        menuService.add(commonFunctionMenu);
+
+        commonFunctionMenu = new MenuEntity().setName("角色管理").setPath("/console/personnel/role/list").setParentId(commonSubMenu.getId());
+        menuService.add(commonFunctionMenu);
+
+        commonSubMenu = new MenuEntity().setName("资产管理").setParentId(commonMenu.getId());
+        commonSubMenu = menuService.add(commonSubMenu);
+
+        commonFunctionMenu = new MenuEntity().setName("物料管理").setPath("/console/asset/material/list").setParentId(commonSubMenu.getId());
+        menuService.add(commonFunctionMenu);
+
+        commonFunctionMenu = new MenuEntity().setName("设备管理").setPath("/console/asset/device/list").setParentId(commonSubMenu.getId());
+        menuService.add(commonFunctionMenu);
+
+        commonSubMenu = new MenuEntity().setName("工厂模型").setParentId(commonMenu.getId());
+        commonSubMenu = menuService.add(commonSubMenu);
+
+        commonFunctionMenu = new MenuEntity().setName("存储资源").setPath("/console/factory/storage/list").setParentId(commonSubMenu.getId());
+        menuService.add(commonFunctionMenu);
+
+        commonFunctionMenu = new MenuEntity().setName("工厂结构").setPath("/console/factory/structure/list").setParentId(commonSubMenu.getId());
+        menuService.add(commonFunctionMenu);
+
+        // 渠道管理
+        MenuEntity sourceMenu = new MenuEntity().setName("渠道管理").setOrderNo(77).setParentId(0L);
+        sourceMenu = menuService.add(sourceMenu);
+
+        MenuEntity sourceSubMenu;
+
+        sourceSubMenu = new MenuEntity().setName("采购管理").setPath("/console/channel/purchase/list").setParentId(sourceMenu.getId());
+        menuService.add(sourceSubMenu);
+
+        sourceSubMenu = new MenuEntity().setName("销售管理").setPath("/console/channel/sale/list").setParentId(sourceMenu.getId());
+        menuService.add(sourceSubMenu);
+
+        sourceSubMenu = new MenuEntity().setName("供应商管理").setPath("/console/channel/supplier/list").setParentId(sourceMenu.getId());
+        menuService.add(sourceSubMenu);
+
+        sourceSubMenu = new MenuEntity().setName("客户管理").setPath("/console/channel/customer/list").setParentId(sourceMenu.getId());
+        menuService.add(sourceSubMenu);
+
+        sourceSubMenu = new MenuEntity().setName("采购价管理").setPath("/console/channel/purchasePrice/list").setParentId(sourceMenu.getId());
+        menuService.add(sourceSubMenu);
+
+        sourceSubMenu = new MenuEntity().setName("销售价管理").setPath("/console/channel/salePrice/list").setParentId(sourceMenu.getId());
+        menuService.add(sourceSubMenu);
+
         // 仓储管理 - WMS
-        MenuEntity wmsMenu = new MenuEntity().setName("仓储管理").setOrderNo(98).setParentId(0L);
+        MenuEntity wmsMenu = new MenuEntity().setName("仓储管理").setOrderNo(66).setParentId(0L);
         wmsMenu = menuService.add(wmsMenu);
 
         MenuEntity wmsSubMenu;
@@ -193,7 +251,7 @@ public class Initializer {
         menuService.add(wmsSubMenu);
 
         // 生产管理 - MES
-        MenuEntity mesMenu = new MenuEntity().setName("生产管理").setOrderNo(97).setParentId(0L);
+        MenuEntity mesMenu = new MenuEntity().setName("生产管理").setOrderNo(55).setParentId(0L);
         mesMenu = menuService.add(mesMenu);
 
         MenuEntity mesSubMenu;
@@ -224,80 +282,22 @@ public class Initializer {
         mesFunctionMenu = new MenuEntity().setName("生产订单").setPath("/console/mes/order/list").setParentId(mesSubMenu.getId());
         menuService.add(mesFunctionMenu);
 
-        // 人事管理
-        MenuEntity userMenu = new MenuEntity().setName("人事管理").setOrderNo(88).setParentId(0L);
-        userMenu = menuService.add(userMenu);
-
-        MenuEntity userSubMenu;
-        userSubMenu = new MenuEntity().setName("用户管理").setPath("/console/personnel/user/list").setParentId(userMenu.getId());
-        menuService.add(userSubMenu);
-
-        userSubMenu = new MenuEntity().setName("角色管理").setPath("/console/personnel/role/list").setParentId(userMenu.getId());
-        menuService.add(userSubMenu);
-
-        // 资产管理
-        MenuEntity assetMenu = new MenuEntity().setName("资产管理").setOrderNo(86).setParentId(0L);
-        assetMenu = menuService.add(assetMenu);
-
-        MenuEntity assetSubMenu;
-        assetSubMenu = new MenuEntity().setName("物料管理").setPath("/console/asset/material/list").setParentId(assetMenu.getId());
-        menuService.add(assetSubMenu);
-
-        userSubMenu = new MenuEntity().setName("设备管理").setPath("/console/asset/device/list").setParentId(assetMenu.getId());
-        menuService.add(userSubMenu);
-
-        // 渠道管理
-        MenuEntity sourceMenu = new MenuEntity().setName("渠道管理").setOrderNo(77).setParentId(0L);
-        sourceMenu = menuService.add(sourceMenu);
-
-        MenuEntity sourceSubMenu;
-
-        sourceSubMenu = new MenuEntity().setName("采购管理").setPath("/console/channel/purchase/list").setParentId(sourceMenu.getId());
-        menuService.add(sourceSubMenu);
-
-        sourceSubMenu = new MenuEntity().setName("销售管理").setPath("/console/channel/sale/list").setParentId(sourceMenu.getId());
-        menuService.add(sourceSubMenu);
-
-        sourceSubMenu = new MenuEntity().setName("供应商管理").setPath("/console/channel/supplier/list").setParentId(sourceMenu.getId());
-        menuService.add(sourceSubMenu);
-
-        sourceSubMenu = new MenuEntity().setName("客户管理").setPath("/console/channel/customer/list").setParentId(sourceMenu.getId());
-        menuService.add(sourceSubMenu);
-
-        sourceSubMenu = new MenuEntity().setName("采购价管理").setPath("/console/channel/purchasePrice/list").setParentId(sourceMenu.getId());
-        menuService.add(sourceSubMenu);
-
-        sourceSubMenu = new MenuEntity().setName("销售价管理").setPath("/console/channel/salePrice/list").setParentId(sourceMenu.getId());
-        menuService.add(sourceSubMenu);
-
-        // 工厂模型
-        MenuEntity factoryMenu = new MenuEntity().setName("工厂模型").setOrderNo(66).setParentId(0L);
-        factoryMenu = menuService.add(factoryMenu);
-
-        MenuEntity factorySubMenu;
-
-        factorySubMenu = new MenuEntity().setName("存储资源管理").setPath("/console/factory/storage/list").setParentId(factoryMenu.getId());
-        menuService.add(factorySubMenu);
-
-        factorySubMenu = new MenuEntity().setName("工厂结构管理").setPath("/console/factory/structure/list").setParentId(factoryMenu.getId());
-        menuService.add(factorySubMenu);
-
         // 系统设置
         MenuEntity sysMenu = new MenuEntity().setName("系统设置").setOrderNo(2).setParentId(0L);
         sysMenu = menuService.add(sysMenu);
 
         MenuEntity sysSubMenu;
 
-        sysSubMenu = new MenuEntity().setName("权限管理").setPath("/console/system/permission/list").setParentId(sysMenu.getId());
-        menuService.add(sysSubMenu);
-
-        sysSubMenu = new MenuEntity().setName("菜单管理").setPath("/console/system/menu/list").setParentId(sysMenu.getId());
+        sysSubMenu = new MenuEntity().setName("计量单位").setPath("/console/system/unit/list").setParentId(sysMenu.getId());
         menuService.add(sysSubMenu);
 
         sysSubMenu = new MenuEntity().setName("编码规则").setPath("/console/system/coderule/list").setParentId(sysMenu.getId());
         menuService.add(sysSubMenu);
 
-        sysSubMenu = new MenuEntity().setName("计量单位").setPath("/console/system/unit/list").setParentId(sysMenu.getId());
+        sysSubMenu = new MenuEntity().setName("权限管理").setPath("/console/system/permission/list").setParentId(sysMenu.getId());
+        menuService.add(sysSubMenu);
+
+        sysSubMenu = new MenuEntity().setName("菜单管理").setPath("/console/system/menu/list").setParentId(sysMenu.getId());
         menuService.add(sysSubMenu);
 
         sysSubMenu = new MenuEntity().setName("第三方应用").setPath("/console/system/app/list").setParentId(sysMenu.getId());
@@ -326,6 +326,8 @@ public class Initializer {
         String salt = RandomUtil.randomString(4);
         userService.add(new UserEntity()
                 .setNickname("Hamm")
+                .setAccount("hamm")
+                .setPhone("18523749565")
                 .setEmail("admin@hamm.cn")
                 .setPassword(PasswordUtil.encode("Aa123456", salt))
                 .setSalt(salt)
