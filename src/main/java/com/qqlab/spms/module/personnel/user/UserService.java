@@ -38,6 +38,11 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     private static final String REDIS_EMAIL_CODE_KEY = "email_code_";
 
     /**
+     * <h2>短信验证码key</h2>
+     */
+    private static final String REDIS_PHONE_CODE_KEY = "phone_code_";
+
+    /**
      * <h2>OAUTH存储的key前缀</h2>
      */
     private static final String OAUTH_CODE_KEY = "oauth_code_";
@@ -159,23 +164,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>重置密码</h2>
-     *
-     * @param userEntity 用户实体
-     */
-    public void resetMyPassword(UserEntity userEntity) {
-        String code = getEmailCode(userEntity.getEmail());
-        Result.PARAM_INVALID.whenNotEqualsIgnoreCase(code, userEntity.getCode(), "邮箱验证码不一致");
-        UserEntity existUser = repository.getByEmail(userEntity.getEmail());
-        Result.PARAM_INVALID.whenNull(existUser, "重置密码失败，用户信息异常");
-        String salt = RandomUtil.randomString(4);
-        existUser.setSalt(salt);
-        existUser.setPassword(PasswordUtil.encode(userEntity.getPassword(), salt));
-        removeEmailCodeCache(existUser.getEmail());
-        update(existUser);
-    }
-
-    /**
      * <h2>发送邮箱验证码</h2>
      *
      * @param email 邮箱
@@ -266,11 +254,11 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         if (Objects.nonNull(userEntity.getId())) {
             // ID登录
             existUser = getById(userEntity.getId());
-        } else if (Objects.nonNull(userEntity.getEmail())) {
-            // 邮箱登录
-            existUser = repository.getByEmail(userEntity.getEmail());
+        } else if (Objects.nonNull(userEntity.getAccount())) {
+            // 账号登录
+            existUser = repository.getByAccount(userEntity.getAccount());
         } else {
-            Result.PARAM_INVALID.show("ID或邮箱不能为空，请确认是否传入");
+            Result.PARAM_INVALID.show("ID或账号不能为空，请确认是否传入");
         }
         CustomResult.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNull(existUser);
         // 将用户传入的密码加密与数据库存储匹配
@@ -294,26 +282,17 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>用户注册</h2>
+     * <h2>短信验证码登录</h2>
      *
      * @param userEntity 用户实体
+     * @return AccessToken
      */
-    public void register(UserEntity userEntity) {
-        // 获取发送的验证码
-        String code = getEmailCode(userEntity.getEmail());
-        Result.PARAM_INVALID.whenNotEquals(code, userEntity.getCode(), "邮箱验证码不正确");
-        // 验证邮箱是否已经注册过
-        UserEntity existUser = repository.getByEmail(userEntity.getEmail());
-        CustomResult.USER_REGISTER_ERROR_EXIST.whenNotNull(existUser, "账号已存在,无法重复注册");
-        // 获取一个随机盐
-        String salt = RandomUtil.randomString(4);
-        UserEntity newUser = new UserEntity();
-        newUser.setEmail(userEntity.getEmail());
-        newUser.setSalt(salt);
-        newUser.setPassword(PasswordUtil.encode(userEntity.getPassword(), salt));
-        add(newUser);
-        //删掉使用过的邮箱验证码
-        removeEmailCodeCache(userEntity.getEmail());
+    public String loginViaPhone(UserEntity userEntity) {
+        String code = getPhoneCode(userEntity.getEmail());
+        Result.PARAM_INVALID.whenNotEquals(code, userEntity.getCode(), "短信验证码不正确");
+        UserEntity existUser = repository.getByPhone(userEntity.getEmail());
+        Result.PARAM_INVALID.whenNull("手机或验证码不正确");
+        return securityUtil.createAccessToken(existUser.getId());
     }
 
     /**
@@ -336,6 +315,18 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         Object code = redisUtil.get(REDIS_EMAIL_CODE_KEY + email);
         return Objects.isNull(code) ? "" : code.toString();
     }
+
+    /**
+     * <h2>获取指定邮箱发送的验证码</h2>
+     *
+     * @param email 邮箱
+     * @return 验证码
+     */
+    private String getPhoneCode(String email) {
+        Object code = redisUtil.get(REDIS_PHONE_CODE_KEY + email);
+        return Objects.isNull(code) ? "" : code.toString();
+    }
+
 
     /**
      * <h2>指定邮箱验证码是否还在缓存内</h2>

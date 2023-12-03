@@ -5,20 +5,21 @@ import cn.hamm.airpower.annotation.Exclude;
 import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.password.Password;
+import cn.hamm.airpower.validate.phone.Phone;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.base.BaseEntity;
 import com.qqlab.spms.module.personnel.role.RoleEntity;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Null;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Null;
 import java.util.Set;
 
 /**
@@ -38,13 +39,30 @@ public class UserEntity extends BaseEntity<UserEntity> {
     /**
      * <h2>邮箱(唯一)</h2>
      */
+    @Description("账号")
+    @Column(columnDefinition = "varchar(255) default '' comment '账号'", unique = true)
+    @Search()
+    private String account;
+
+    /**
+     * <h2>邮箱(唯一)</h2>
+     */
     @Description("邮箱")
     @Column(columnDefinition = "varchar(255) default '' comment '邮箱'", unique = true)
-    @NotBlank(groups = {WhenRegister.class, WhenResetMyPassword.class, WhenSendEmail.class, WhenAdd.class}, message = "邮箱不能为空")
-    @Email(groups = {WhenRegister.class, WhenResetMyPassword.class, WhenSendEmail.class}, message = "邮箱格式不正确")
-    @Null(groups = {WhenUpdateMyInfo.class}, message = "请勿传入email字段")
+    @NotBlank(groups = {WhenSendEmail.class}, message = "邮箱不能为空")
+    @Email(groups = {WhenSendEmail.class}, message = "邮箱格式不正确")
     @Search()
     private String email;
+
+    /**
+     * <h2>手机(唯一)</h2>
+     */
+    @Description("手机")
+    @Column(columnDefinition = "varchar(255) default '' comment '手机'", unique = true)
+    @NotBlank(groups = {WhenSendMessage.class}, message = "手机不能为空")
+    @Phone(groups = {WhenSendMessage.class}, message = "手机格式不正确", tel = false)
+    @Search()
+    private String phone;
 
     /**
      * <h2>用户的密码(不返回给前端)</h2>
@@ -52,7 +70,7 @@ public class UserEntity extends BaseEntity<UserEntity> {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Description("密码")
     @Column(columnDefinition = "varchar(255) default '' comment '密码'")
-    @NotBlank(groups = {WhenLogin.class, WhenRegister.class, WhenResetMyPassword.class}, message = "密码不能为空")
+    @NotBlank(groups = {WhenLogin.class}, message = "密码不能为空")
     @Null(groups = {WhenUpdateMyInfo.class}, message = "请勿传入password字段")
     @Password(message = "密码要求6-16位且至少包含大小写字母和数字")
     private String password;
@@ -97,7 +115,7 @@ public class UserEntity extends BaseEntity<UserEntity> {
     /**
      * <h2>邮箱验证码</h2>
      */
-    @NotBlank(groups = {WhenRegister.class, WhenUpdateMyPassword.class, WhenResetMyPassword.class}, message = "邮箱验证码不能为空")
+    @NotBlank(groups = {WhenLoginViaEmail.class, WhenLoginViaPhone.class}, message = "验证码不能为空")
     private String code;
 
     /**
@@ -118,10 +136,10 @@ public class UserEntity extends BaseEntity<UserEntity> {
     public interface WhenLoginViaEmail {
     }
 
-    public interface WhenRegister {
-    }
-
-    public interface WhenResetMyPassword {
+    /**
+     * 手机+验证码登录
+     */
+    public interface WhenLoginViaPhone {
     }
 
     public interface WhenUpdateMyPassword {
@@ -131,6 +149,9 @@ public class UserEntity extends BaseEntity<UserEntity> {
     }
 
     public interface WhenSendEmail {
+    }
+
+    public interface WhenSendMessage {
     }
 
     public interface WhenGetMyInfo {
