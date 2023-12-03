@@ -2,6 +2,7 @@ package com.qqlab.spms;
 
 import cn.hamm.airpower.security.PasswordUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.qqlab.spms.iot.ReportEvent;
 import com.qqlab.spms.module.asset.material.MaterialEntity;
 import com.qqlab.spms.module.asset.material.MaterialService;
 import com.qqlab.spms.module.asset.material.MaterialType;
@@ -30,6 +31,7 @@ import com.qqlab.spms.module.system.unit.UnitEntity;
 import com.qqlab.spms.module.system.unit.UnitService;
 import com.qqlab.spms.module.wms.inventory.InventoryEntity;
 import com.qqlab.spms.module.wms.inventory.InventoryService;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,22 +45,38 @@ import java.util.Set;
  * @author hamm
  */
 @Component
-public class Initialization {
-    private static UserService userService;
-    private static RoleService roleService;
-    private static PermissionService permissionService;
-    private static AppService appService;
-    private static MenuService menuService;
-    private static CodeRuleService codeRuleService;
-    private static MaterialService materialService;
-    private static UnitService unitService;
-    private static StorageService storageService;
-    private static StructureService structureService;
-    private static CustomerService customerService;
-    private static SupplierService supplierService;
-    private static InventoryService inventoryService;
+public class Initializer {
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private PermissionService permissionService;
+    @Autowired
+    private AppService appService;
+    @Autowired
+    private MenuService menuService;
+    @Autowired
+    private CodeRuleService codeRuleService;
+    @Autowired
+    private MaterialService materialService;
+    @Autowired
+    private UnitService unitService;
+    @Autowired
+    private StorageService storageService;
+    @Autowired
+    private StructureService structureService;
+    @Autowired
+    private CustomerService customerService;
+    @Autowired
+    private SupplierService supplierService;
+    @Autowired
+    private InventoryService inventoryService;
 
-    public static void run() {
+    @Autowired
+    private ReportEvent reportEvent;
+
+    public void run() throws MqttException {
         permissionService.forceReloadAllPermissions();
         initUserAndRole();
         initCodeRules();
@@ -66,10 +84,10 @@ public class Initialization {
         initFactory();
         initMenu();
         initOtherData();
-
+        reportEvent.listen();
     }
 
-    private static void initOtherData() {
+    private void initOtherData() {
         appService.add(new AppEntity().setAppKey("airpower").setAppName("第三方应用").setUrl("").setAppSecret("abcdefghijklmnopqrstuvwxyz"));
 
         supplierService.add(new SupplierEntity().setCode("SP01").setName("三星屏幕套件"));
@@ -89,12 +107,12 @@ public class Initialization {
 
     }
 
-    private static void initFactory() {
+    private void initFactory() {
         storageService.add(new StorageEntity().setCode("sw01").setName("西南一区").setParentId(storageService.add(new StorageEntity().setName("西南大仓").setCode("east")).getId()));
         structureService.add(new StructureEntity().setCode("room1").setName("车间1").setParentId(structureService.add(new StructureEntity().setName("产线1").setCode("line1")).getId()));
     }
 
-    private static void initCodeRules() {
+    private void initCodeRules() {
         codeRuleService.add(
                 new CodeRuleEntity().setRuleField(CodeRuleField.RoleCode.getValue()).setPrefix(CodeRuleField.RoleCode.getDefaultPrefix()).setSnType(SerialNumberUpdate.NEVER.getValue())
         );
@@ -148,39 +166,8 @@ public class Initialization {
         );
     }
 
-    @Autowired
-    private void setDatastore(
-            UserService userService,
-            RoleService roleService,
-            PermissionService permissionService,
-            AppService appService,
-            MenuService menuService,
-            CodeRuleService codeRuleService,
-            MaterialService materialService,
-            UnitService unitService,
-            StorageService storageService,
-            StructureService structureService,
-            CustomerService customerService,
-            SupplierService supplierService,
-            InventoryService inventoryService
-    ) {
-        Initialization.userService = userService;
-        Initialization.roleService = roleService;
-        Initialization.permissionService = permissionService;
-        Initialization.appService = appService;
-        Initialization.menuService = menuService;
-        Initialization.codeRuleService = codeRuleService;
-        Initialization.materialService = materialService;
-        Initialization.unitService = unitService;
-        Initialization.storageService = storageService;
-        Initialization.structureService = structureService;
-        Initialization.customerService = customerService;
-        Initialization.supplierService = supplierService;
-        Initialization.inventoryService = inventoryService;
-    }
-
     @SuppressWarnings("AlibabaMethodTooLong")
-    private static void initMenu() {
+    private void initMenu() {
         MenuEntity exist = menuService.getByIdMaybeNull(1L);
         if (Objects.nonNull(exist)) {
             return;
@@ -317,7 +304,7 @@ public class Initialization {
         menuService.add(sysSubMenu);
     }
 
-    private static void initUserAndRole() {
+    private void initUserAndRole() {
         // 初始化角色
         RoleEntity firstRole = roleService.getByIdMaybeNull(1L);
         if (Objects.nonNull(firstRole)) {
@@ -353,7 +340,7 @@ public class Initialization {
         System.out.println("密码: 12345678");
     }
 
-    private static void initUnitAndMaterial() {
+    private void initUnitAndMaterial() {
         UnitEntity unitEntity = unitService.add(new UnitEntity().setCode("kg").setName("kg"));
         materialService.add(
                 new MaterialEntity()

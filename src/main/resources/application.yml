@@ -12,6 +12,11 @@ spring:
       host: 127.0.0.1
       port: 6379
       password:
+  influxdb:
+    url: http://md4.cn:8086
+    token: spms
+    org: spms
+    bucket: spms
   web:
     resources:
       add-mappings: false

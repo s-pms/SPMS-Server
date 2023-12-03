@@ -18,6 +18,11 @@
             <artifactId>airpower-core</artifactId>
             <version>${airpower.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.influxdb</groupId>
+            <artifactId>influxdb-client-java</artifactId>
+            <version>1.15.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
