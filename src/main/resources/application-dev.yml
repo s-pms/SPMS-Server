@@ -1,30 +1,30 @@
 server:
-  port:
+  port: 8080
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
-    password: root
-  data:
-    web:
-      pageable:
-        one-indexed-parameters: false
+    password: asdfew12345
   mvc:
-    throw-exception-if-no-handler-found: true
     view:
-      prefix: /
       suffix: .html
-  web:
-    resources:
-      add-mappings: false
   jpa:
-    show-sql: true
-    database-platform: org.hibernate.dialect.MySQLDialect
-    generate-ddl: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: asdfew12345
+
+  mqtt:
+    host: 127.0.0.1
+    port: 1883
+    user: mqttroot
+    pass: asdfew12345
 #应用配置
 application:
-  loginUrl: http://md4.cn:888/login
+  loginUrl: "https://md4.cn:888/login"
