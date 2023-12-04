@@ -10,7 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qqlab.spms.base.BaseController;
 import com.qqlab.spms.module.iot.report.ReportData;
-import com.qqlab.spms.module.iot.report.ReportType;
+import com.qqlab.spms.module.iot.report.ReportPayload;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author zfy
- * @date 2023/11/28
  */
 @RestController
 @RequestMapping("device")
@@ -34,9 +36,10 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
     @Description("获取实时采集数据")
     @PostMapping("getCurrentCollectionList")
     public Json getCurrentCollectionList(@RequestBody @Validated({RootEntity.WhenIdRequired.class}) DeviceEntity device) throws MqttException, JsonProcessingException {
-
+        List<ReportPayload> payloads = new ArrayList<>();
+        payloads.add(new ReportPayload().setCode(ReportData.STATUS).setValue(String.valueOf(RandomUtil.randomInt(1, 5))));
         ReportData reportData = new ReportData()
-                .setUuid("DE202312040001").setType(ReportType.STATUS).setValue(String.valueOf(RandomUtil.randomInt(1, 5)));
+                .setDeviceId("DE202312040001").setPayloads(payloads);
         String msg = new ObjectMapper().writeValueAsString(reportData);
         mqttHelper.publish("IOT", msg);
         return jsonData(service.getCurrentCollectionList(device));

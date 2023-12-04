@@ -27,7 +27,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "connection")
+@Table(name = "collection")
 @Description("采集数据")
 public class CollectionEntity extends BaseEntity<CollectionEntity> {
     @Description("参数编码")
@@ -41,6 +41,10 @@ public class CollectionEntity extends BaseEntity<CollectionEntity> {
     @Description("采集数据")
     @Column(columnDefinition = "text comment '采集数据'")
     private String value;
+
+    @Description("上报时间")
+    @Column(columnDefinition = "bigint UNSIGNED default 0 comment '上报时间'")
+    private Long timestamp;
 
     @Transient
     private String label;

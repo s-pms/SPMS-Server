@@ -4,7 +4,6 @@ import cn.hamm.airpower.mqtt.MqttHelper;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.qqlab.spms.helper.influxdb.InfluxHelper;
 import com.qqlab.spms.module.asset.device.DeviceEntity;
 import com.qqlab.spms.module.asset.device.DeviceService;
 import com.qqlab.spms.module.iot.collection.CollectionEntity;
@@ -25,15 +24,14 @@ public class ReportEvent {
     @Autowired
     private MqttHelper mqttHelper;
 
-    @Autowired(required = false)
-    private InfluxHelper influxHelper;
-
     /**
      * <h2>订阅Topic</h2>
      */
-    public final static String IOT_REPORT_TOPIC = "IOT";
+    public final static String IOT_REPORT_TOPIC_V1 = "/sys/msg/v1";
+
     @Autowired
     private DeviceService deviceService;
+
     @Autowired
     private CollectionService collectionService;
 
@@ -45,7 +43,7 @@ public class ReportEvent {
     public void listen() throws MqttException {
         MqttClient mqttClient = mqttHelper.createClient();
         mqttClient.connect(mqttHelper.createOption());
-        mqttClient.subscribe(ReportEvent.IOT_REPORT_TOPIC);
+        mqttClient.subscribe(ReportEvent.IOT_REPORT_TOPIC_V1);
         mqttClient.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable throwable) {
@@ -58,46 +56,36 @@ public class ReportEvent {
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
                 ReportData reportData = mapper.readValue(reportString, ReportData.class);
-//                influxHelper.save(reportData);
-                DeviceEntity device;
-                if (Objects.isNull(reportData.getValue())) {
+                DeviceEntity device = deviceService.getByUuid(reportData.getDeviceId());
+                if (Objects.isNull(device)) {
                     return;
                 }
-                switch (reportData.getType()) {
-                    case STATUS:
-                        device = deviceService.getByUuid(reportData.getUuid());
-                        if (Objects.isNull(device)) {
-                            return;
-                        }
-                        device.setStatus(Integer.parseInt(reportData.getValue()));
-                        deviceService.update(device);
-                        reportData.setCode("status");
-                        break;
-                    case ALARM:
-                        device = deviceService.getByUuid(reportData.getUuid());
-                        if (Objects.isNull(device)) {
-                            return;
-                        }
-                        device.setAlarm(Integer.parseInt(reportData.getValue()));
-                        deviceService.update(device);
-                        reportData.setCode("alarm");
-                        break;
-                    case PART_COUNT:
-                        device = deviceService.getByUuid(reportData.getUuid());
-                        if (Objects.isNull(device)) {
-                            return;
-                        }
-                        device.setPartCount(Long.parseLong(reportData.getValue()));
-                        deviceService.update(device);
-                        reportData.setCode("partCount");
-                        break;
-                    default:
+                for (ReportPayload payload : reportData.getPayloads()) {
+                    if (Objects.isNull(payload.getValue())) {
+                        return;
+                    }
+                    switch (payload.getCode()) {
+                        case ReportData.STATUS:
+                            device.setStatus(Integer.parseInt(payload.getValue()));
+                            deviceService.update(device);
+                            break;
+                        case ReportData.ALARM:
+                            device.setAlarm(Integer.parseInt(payload.getValue()));
+                            deviceService.update(device);
+                            break;
+                        case ReportData.PART_COUNT:
+                            device.setPartCount(Long.parseLong(payload.getValue()));
+                            deviceService.update(device);
+                            break;
+                        default:
+                    }
+                    collectionService.add(new CollectionEntity()
+                            .setCode(payload.getCode())
+                            .setValue(payload.getValue())
+                            .setUuid(reportData.getDeviceId())
+                            .setTimestamp(reportData.getTimestamp())
+                    );
                 }
-                collectionService.add(new CollectionEntity()
-                        .setCode(reportData.getCode())
-                        .setValue(reportData.getValue())
-                        .setUuid(reportData.getUuid())
-                );
             }
 
             @Override

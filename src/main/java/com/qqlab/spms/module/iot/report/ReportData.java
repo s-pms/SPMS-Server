@@ -1,9 +1,10 @@
 package com.qqlab.spms.module.iot.report;
 
-import com.influxdb.annotations.Column;
-import com.influxdb.annotations.Measurement;
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <h1>数据采集报告</h1>
@@ -12,52 +13,37 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@Measurement(name = "report")
 public class ReportData {
     /**
-     * <h2>唯一ID</h2>
+     * <h2>运行状态</h2>
      */
-    @Column(tag = true)
-    private String uuid;
+    public static final String STATUS = "status";
 
     /**
-     * <h2>采集类型</h2>
-     * <li>0. 自定义</li>
-     * <li>1. 运行状态</li>
-     * <li>2. 报警状态</li>
-     * <li>3. 实时产量</li>
+     * <h2>产量事件</h2>
      */
-    @Column
-    private ReportType type;
+    public static final String PART_COUNT = "partCount";
 
     /**
-     * 自定义编码
+     * <h2>报警事件</h2>
      */
-    @Column
-    private String code;
+    public static final String ALARM = "alarm";
 
     /**
-     * 自定义值
+     * <h2>设备ID,存入后台uuid字段</h2>
      */
-    @Column
-    private String value;
-
+    private String deviceId;
 
     /**
-     * <h2>值的布尔值</h2>
-     *
-     * @return 布尔值
+     * <h2>上报真实时间</h2>
+     * <p>
+     * 客户端可能断网重发
      */
-    public boolean parseBoolValue() {
-        return Integer.parseInt(value) == 1;
-    }
+    private Long timestamp;
 
     /**
-     * <h2>值的数值</h2>
-     *
-     * @return 数值
+     * <h2>负载数据</h2>
      */
-    public double parseNumberValue() {
-        return Double.parseDouble(value);
-    }
+    private List<ReportPayload> payloads = new ArrayList<>();
+
 }
