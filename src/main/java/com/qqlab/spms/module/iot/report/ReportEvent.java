@@ -79,6 +79,10 @@ public class ReportEvent {
                             break;
                         default:
                     }
+                    CollectionEntity last = collectionService.getDistinctFirstByUuidAndCode(reportData.getDeviceId(), payload.getCode());
+                    if (Objects.nonNull(last) && last.getValue().equals(payload.getValue())) {
+                        continue;
+                    }
                     collectionService.add(new CollectionEntity()
                             .setCode(payload.getCode())
                             .setValue(payload.getValue())
