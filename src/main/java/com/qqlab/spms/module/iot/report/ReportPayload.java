@@ -1,5 +1,7 @@
 package com.qqlab.spms.module.iot.report;
 
+import com.influxdb.annotations.Column;
+import com.influxdb.annotations.Measurement;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -10,16 +12,31 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
+@Measurement(name = "payload")
 public class ReportPayload {
     /**
-     * 自定义编码
+     * 属性名
      */
+    @Column(tag = true)
     private String code;
 
     /**
-     * 自定义值
+     * 属性值
      */
+    @Column
     private String value;
+
+    /**
+     * 显示的名称
+     */
+    @Column
+    private String label;
+
+    /**
+     * 时序存储设备ID
+     */
+    @Column
+    private String uuid;
 
 
     /**

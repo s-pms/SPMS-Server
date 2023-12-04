@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class DeviceController extends BaseController<DeviceEntity, DeviceService, DeviceRepository> {
 
     @Description("获取实时采集数据")
-    @PostMapping("getCurrentCollectionList")
-    public Json getCurrentCollectionList(@RequestBody @Validated({RootEntity.WhenIdRequired.class}) DeviceEntity device) {
-        return jsonData(service.getCurrentCollectionList(device));
+    @PostMapping("getCurrentReport")
+    public Json getCurrentReport(@RequestBody @Validated({RootEntity.WhenIdRequired.class}) DeviceEntity device) {
+        return jsonData(service.getCurrentReport(device));
     }
 }

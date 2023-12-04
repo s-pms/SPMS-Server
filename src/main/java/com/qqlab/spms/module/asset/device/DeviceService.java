@@ -1,14 +1,16 @@
 package com.qqlab.spms.module.asset.device;
 
-import cn.hamm.airpower.query.QueryRequest;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.qqlab.spms.base.BaseService;
-import com.qqlab.spms.module.iot.collection.CollectionEntity;
-import com.qqlab.spms.module.iot.collection.CollectionService;
-import com.qqlab.spms.module.iot.parameter.ParameterEntity;
 import com.qqlab.spms.module.iot.parameter.ParameterService;
+import com.qqlab.spms.module.iot.report.ReportData;
+import com.qqlab.spms.module.iot.report.ReportEvent;
+import com.qqlab.spms.module.iot.report.ReportPayload;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,25 +23,26 @@ import java.util.Objects;
  */
 @Service
 public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
-    @Autowired
-    private CollectionService collectionService;
 
     @Autowired
     private ParameterService parameterService;
 
-    public List<CollectionEntity> getCurrentCollectionList(DeviceEntity device) {
-        List<ParameterEntity> parameterList = parameterService.getList(new QueryRequest<>());
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+
+    /**
+     * 查询指定设备uuid的当前报告
+     *
+     * @param device 设备
+     * @return 报告列表
+     */
+    public List<ReportPayload> getCurrentReport(DeviceEntity device) {
         device = getById(device.getId());
-        List<CollectionEntity> result = new ArrayList<>();
-        for (ParameterEntity parameter : parameterList) {
-            CollectionEntity collection = collectionService.getDistinctFirstByUuidAndCode(device.getUuid(), parameter.getCode());
-            if (Objects.isNull(collection)) {
-                continue;
-            }
-            collection.setLabel(parameter.getLabel());
-            result.add(collection);
+        Object data = redisTemplate.opsForValue().get(ReportEvent.PREFIX + device.getUuid());
+        if (Objects.isNull(data)) {
+            return new ArrayList<>();
         }
-        return result;
+        return JSON.parseObject(data.toString(), ReportData.class).getPayloads();
     }
 
     /**

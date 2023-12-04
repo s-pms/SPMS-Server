@@ -3,6 +3,8 @@ package com.qqlab.spms.module.iot.parameter;
 import com.qqlab.spms.base.BaseService;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 /**
  * <h1>Service</h1>
  *
@@ -11,12 +13,38 @@ import org.springframework.stereotype.Service;
 @Service
 public class ParameterService extends BaseService<ParameterEntity, ParameterRepository> {
     /**
+     * 缓存的Key前缀
+     */
+    private final String PARAM_CODE_CACHE_PREFIX = "parameter_code_";
+
+    /**
      * <h2>通过参数编码查询</h2>
      *
      * @param code 参数编码
      * @return 参数
      */
     public ParameterEntity getByCode(String code) {
-        return repository.getByCode(code);
+        ParameterEntity parameterEntity = redisUtil.getEntity(PARAM_CODE_CACHE_PREFIX + code, new ParameterEntity());
+        if (Objects.nonNull(parameterEntity)) {
+            if (Objects.isNull(parameterEntity.getId())) {
+                return null;
+            }
+            return parameterEntity;
+        }
+        parameterEntity = repository.getByCode(code);
+        if (Objects.isNull(parameterEntity)) {
+            parameterEntity = new ParameterEntity();
+        }
+        redisUtil.saveEntityCacheData(PARAM_CODE_CACHE_PREFIX + code, parameterEntity);
+        if (Objects.isNull(parameterEntity.getId())) {
+            return null;
+        }
+        return parameterEntity;
+    }
+
+    @Override
+    protected ParameterEntity beforeSaveToDatabase(ParameterEntity entity) {
+        redisUtil.del(PARAM_CODE_CACHE_PREFIX + entity.getCode());
+        return super.beforeSaveToDatabase(entity);
     }
 }

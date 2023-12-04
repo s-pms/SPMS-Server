@@ -1,6 +1,5 @@
 package com.qqlab.spms;
 
-import cn.hamm.airpower.config.GlobalConfig;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -22,7 +21,6 @@ public class Application {
     private static Initializer initializer;
 
     public static void main(String[] args) throws MqttException {
-        GlobalConfig.isCacheEnabled = false;
         SpringApplication.run(Application.class, args);
         initializer.run();
         System.out.println("---------------------------------");

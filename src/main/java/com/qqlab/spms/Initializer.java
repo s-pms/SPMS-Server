@@ -2,6 +2,8 @@ package com.qqlab.spms;
 
 import cn.hamm.airpower.security.PasswordUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.qqlab.spms.module.asset.device.DeviceEntity;
+import com.qqlab.spms.module.asset.device.DeviceService;
 import com.qqlab.spms.module.asset.material.MaterialEntity;
 import com.qqlab.spms.module.asset.material.MaterialService;
 import com.qqlab.spms.module.asset.material.MaterialType;
@@ -79,6 +81,8 @@ public class Initializer {
 
     @Autowired
     private ParameterService parameterService;
+    @Autowired
+    private DeviceService deviceService;
 
     @Autowired
     private ReportEvent reportEvent;
@@ -96,8 +100,15 @@ public class Initializer {
             initMenu();
             initOtherData();
             initParameters();
+            initDevices();
         }
         reportEvent.listen();
+    }
+
+    private void initDevices() {
+        for (int i = 0; i < 6; i++) {
+            deviceService.add(new DeviceEntity().setCode("Simulator00" + i).setName("设备" + i));
+        }
     }
 
     private void initParameters() {

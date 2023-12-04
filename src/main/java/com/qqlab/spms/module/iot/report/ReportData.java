@@ -22,7 +22,7 @@ public class ReportData {
     /**
      * <h2>产量事件</h2>
      */
-    public static final String PART_COUNT = "PartCount";
+    public static final String PART_COUNT = "PartCnt";
 
     /**
      * <h2>报警事件</h2>
@@ -33,13 +33,6 @@ public class ReportData {
      * <h2>设备ID,存入后台uuid字段</h2>
      */
     private String deviceId;
-
-    /**
-     * <h2>上报真实时间</h2>
-     * <p>
-     * 客户端可能断网重发
-     */
-    private Long timestamp;
 
     /**
      * <h2>负载数据</h2>
