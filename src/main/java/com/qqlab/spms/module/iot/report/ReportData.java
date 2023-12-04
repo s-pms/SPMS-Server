@@ -37,7 +37,7 @@ public class ReportData {
     /**
      * <h2>时间戳</h2>
      */
-    private Long timestamps;
+    private Long timestamp;
 
     /**
      * <h2>负载数据</h2>
