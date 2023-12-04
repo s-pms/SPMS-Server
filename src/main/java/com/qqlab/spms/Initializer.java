@@ -36,6 +36,7 @@ import com.qqlab.spms.module.wms.inventory.InventoryEntity;
 import com.qqlab.spms.module.wms.inventory.InventoryService;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -82,15 +83,20 @@ public class Initializer {
     @Autowired
     private ReportEvent reportEvent;
 
+    @Value("${spring.jpa.hibernate.ddl-auto}")
+    private String ddlAuto;
+
     public void run() throws MqttException {
-        permissionService.forceReloadAllPermissions();
-        initUserAndRole();
-        initCodeRules();
-        initUnitAndMaterial();
-        initFactory();
-        initMenu();
-        initOtherData();
-        initParameters();
+        if ("create-drop".equals(ddlAuto)) {
+            permissionService.forceReloadAllPermissions();
+            initUserAndRole();
+            initCodeRules();
+            initUnitAndMaterial();
+            initFactory();
+            initMenu();
+            initOtherData();
+            initParameters();
+        }
         reportEvent.listen();
     }
 

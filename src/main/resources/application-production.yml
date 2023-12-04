@@ -13,7 +13,6 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: update
-
   data:
     redis:
       host: 127.0.0.1
