@@ -160,8 +160,8 @@ public class ReportEvent {
                     }
                     reportData.setPayloads(payloadList);
                     redisTemplate.opsForValue().set(PREFIX + reportData.getDeviceId(), JSON.toJSONString(reportData));
-                } catch (Exception ignored) {
-
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
