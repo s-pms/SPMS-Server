@@ -17,17 +17,17 @@ public class ReportData {
     /**
      * <h2>运行状态</h2>
      */
-    public static final String STATUS = "status";
+    public static final String STATUS = "Status";
 
     /**
      * <h2>产量事件</h2>
      */
-    public static final String PART_COUNT = "partCount";
+    public static final String PART_COUNT = "PartCount";
 
     /**
      * <h2>报警事件</h2>
      */
-    public static final String ALARM = "alarm";
+    public static final String ALARM = "Alarm";
 
     /**
      * <h2>设备ID,存入后台uuid字段</h2>
