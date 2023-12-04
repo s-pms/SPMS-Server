@@ -35,6 +35,11 @@ public class ReportData {
     private String deviceId;
 
     /**
+     * <h2>时间戳</h2>
+     */
+    private Long timestamps;
+
+    /**
      * <h2>负载数据</h2>
      */
     private List<ReportPayload> payloads = new ArrayList<>();
