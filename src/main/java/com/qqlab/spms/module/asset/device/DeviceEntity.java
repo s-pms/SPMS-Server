@@ -69,4 +69,9 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> {
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '实时产量'")
     private Long partCount;
 
+    @Description("开启采集")
+    @Search(Search.Mode.EQUALS)
+    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '开启采集'")
+    private Boolean isReporting;
+
 }

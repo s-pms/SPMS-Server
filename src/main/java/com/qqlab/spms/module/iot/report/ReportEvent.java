@@ -113,7 +113,7 @@ public class ReportEvent {
                                         .getValue(), REPORT_CACHE_SECOND, TimeUnit.SECONDS);
                                 if (Objects.isNull(device)) {
                                     device = deviceService.getByUuid(reportData.getDeviceId());
-                                    if (Objects.nonNull(device)) {
+                                    if (Objects.nonNull(device) && device.getIsReporting()) {
                                         device.setStatus(Integer.parseInt(payload.getValue()));
                                         deviceService.update(device);
                                     }
@@ -129,7 +129,7 @@ public class ReportEvent {
                                         .getValue(), REPORT_CACHE_SECOND, TimeUnit.SECONDS);
                                 if (Objects.isNull(device)) {
                                     device = deviceService.getByUuid(reportData.getDeviceId());
-                                    if (Objects.nonNull(device)) {
+                                    if (Objects.nonNull(device) && device.getIsReporting()) {
                                         device.setAlarm(Integer.parseInt(payload.getValue()));
                                         deviceService.update(device);
                                     }
@@ -145,7 +145,7 @@ public class ReportEvent {
                                         .getValue(), REPORT_CACHE_SECOND, TimeUnit.SECONDS);
                                 if (Objects.isNull(device)) {
                                     device = deviceService.getByUuid(reportData.getDeviceId());
-                                    if (Objects.nonNull(device)) {
+                                    if (Objects.nonNull(device) && device.getIsReporting()) {
                                         device.setPartCount(Long.parseLong(payload.getValue()));
                                         deviceService.update(device);
                                     }
