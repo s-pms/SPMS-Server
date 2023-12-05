@@ -29,6 +29,11 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
     @Autowired
     private ParameterService parameterService;
 
+    @Override
+    protected DeviceEntity afterGetDetail(DeviceEntity device) {
+        return service.getDeviceParameters(device);
+    }
+
     @Description("获取实时采集数据")
     @PostMapping("getCurrentReport")
     public Json getCurrentReport(@RequestBody @Validated({RootEntity.WhenIdRequired.class}) DeviceEntity device) {
@@ -40,7 +45,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
     public Json getDevice(@RequestBody @Validated({DeviceEntity.WhenGetDevice.class}) DeviceEntity device) {
         device = service.getByUuid(device.getUuid());
         Result.NOT_FOUND.whenNull(device);
-        device.setPartCount(null)
+        device = device.setPartCount(null)
                 .setAlarm(null)
                 .setStatus(null)
                 .excludeBaseData();
@@ -50,6 +55,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
             p.setId(null).excludeBaseData();
             parameters.add(p);
         }
+        device.setParameters(parameters);
         return jsonData(device);
     }
 
