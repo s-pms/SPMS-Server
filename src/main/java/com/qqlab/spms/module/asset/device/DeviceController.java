@@ -40,8 +40,9 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
         return jsonData(service.getCurrentReport(device));
     }
 
-    @Description("获取实时采集数据")
+    @Description("获取采集配置")
     @PostMapping("getDevice")
+    @Permission(login = false)
     public Json getDevice(@RequestBody @Validated({DeviceEntity.WhenGetDevice.class}) DeviceEntity device) {
         device = service.getByUuid(device.getUuid());
         Result.NOT_FOUND.whenNull(device);
