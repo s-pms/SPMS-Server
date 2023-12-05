@@ -55,6 +55,15 @@ public class BaseBillController<
         return json("驳回成功");
     }
 
+    @Description("添加完成数量")
+    @PostMapping("addFinish")
+    @ResponseFilter(RootEntity.WhenGetDetail.class)
+    public Json finish(@RequestBody @Validated(BaseBillDetailEntity.WhenAddFinish.class) D detail) {
+        service.addFinish(detail);
+        return json("添加完成数量成功");
+    }
+
+
     @Override
     protected E beforeUpdate(E bill) {
         E savedBill = service.getById(bill.getId());
@@ -68,20 +77,11 @@ public class BaseBillController<
         return super.beforeAdd(entity.setStatus(null));
     }
 
-    @Description("添加完成数量")
-    @PostMapping("addFinish")
-    @ResponseFilter(RootEntity.WhenGetDetail.class)
-    public Json finish(@RequestBody @Validated(BaseBillDetailEntity.WhenAddFinish.class) D detail) {
-        service.addFinish(detail);
-        return json("添加完成数量成功");
-    }
-
     /**
      * 审核后置方法
      *
      * @param bill 单据
      */
     public void afterAudit(E bill) {
-
     }
 }
