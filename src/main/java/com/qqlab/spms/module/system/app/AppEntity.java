@@ -2,8 +2,8 @@ package com.qqlab.spms.module.system.app;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Exclude;
+import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,7 +45,7 @@ public class AppEntity extends BaseEntity<AppEntity> {
     /**
      * 应用密钥
      */
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ReadOnly
     @Column(columnDefinition = "varchar(255) default '' comment 'AppSecret'", unique = true)
     @Null(groups = {WhenAdd.class, WhenUpdate.class}, message = "请不要传入AppSecret")
     @NotBlank(groups = {WhenCode2AccessToken.class})

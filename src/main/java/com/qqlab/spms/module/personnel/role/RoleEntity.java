@@ -3,7 +3,7 @@ package com.qqlab.spms.module.personnel.role;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Exclude;
 import cn.hamm.airpower.annotation.Payload;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import cn.hamm.airpower.annotation.ReadOnly;
 import com.qqlab.spms.annotation.AutoGenerateCode;
 import com.qqlab.spms.base.BaseEntity;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
@@ -58,7 +58,7 @@ public class RoleEntity extends BaseEntity<RoleEntity> {
     /**
      * 是否系统角色
      */
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @ReadOnly
     @Description("是否系统角色")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否系统角色'")
     @Null(groups = {WhenUpdate.class, WhenAdd.class}, message = "是否系统角色这是个只读字段")

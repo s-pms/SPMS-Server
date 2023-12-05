@@ -3,9 +3,9 @@ package com.qqlab.spms.module.channel.sale;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Payload;
+import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.annotation.AutoGenerateCode;
 import com.qqlab.spms.base.bill.AbstractBaseBillEntity;
 import com.qqlab.spms.module.channel.customer.CustomerEntity;
@@ -51,7 +51,7 @@ public class SaleEntity extends AbstractBaseBillEntity<SaleEntity, SaleDetailEnt
     private String reason;
 
     @Description("总金额")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @ReadOnly
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '总金额'")
     private Double totalPrice;
 

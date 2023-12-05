@@ -1,8 +1,8 @@
 package com.qqlab.spms.module.system.coderule;
 
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -83,7 +83,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     /**
      * 当前序列号
      */
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @ReadOnly
     @Column(columnDefinition = "int UNSIGNED default 0 comment '当前序列号'")
     private Integer currentSn;
 }

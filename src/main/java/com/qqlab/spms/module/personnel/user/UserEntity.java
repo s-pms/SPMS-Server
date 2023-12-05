@@ -1,9 +1,6 @@
 package com.qqlab.spms.module.personnel.user;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Exclude;
-import cn.hamm.airpower.annotation.Payload;
-import cn.hamm.airpower.annotation.Search;
+import cn.hamm.airpower.annotation.*;
 import cn.hamm.airpower.validate.password.Password;
 import cn.hamm.airpower.validate.phone.Phone;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -86,7 +83,7 @@ public class UserEntity extends BaseEntity<UserEntity> {
     /**
      * 是否系统用户
      */
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否系统用户'")
     @Null(groups = {WhenUpdateMyInfo.class}, message = "请勿传入isSystem字段")
     @Search(Search.Mode.EQUALS)

@@ -3,8 +3,8 @@ package com.qqlab.spms.module.mes.plan;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Payload;
+import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.annotation.AutoGenerateCode;
 import com.qqlab.spms.base.bill.AbstractBaseBillEntity;
 import com.qqlab.spms.module.channel.customer.CustomerEntity;
@@ -68,7 +68,7 @@ public class PlanEntity extends AbstractBaseBillEntity<PlanEntity, PlanDetailEnt
      * 完成时间
      */
     @Description("完成时间")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @ReadOnly
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '完成时间'")
     private Long finishTime;
 

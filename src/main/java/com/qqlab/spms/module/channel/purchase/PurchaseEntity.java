@@ -2,9 +2,9 @@ package com.qqlab.spms.module.channel.purchase;
 
 
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.annotation.AutoGenerateCode;
 import com.qqlab.spms.base.bill.AbstractBaseBillEntity;
 import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailEntity;
@@ -53,12 +53,12 @@ public class PurchaseEntity extends AbstractBaseBillEntity<PurchaseEntity, Purch
     private String reason;
 
     @Description("总金额")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @ReadOnly
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '总金额'")
     private Double totalPrice;
 
     @Description("实际金额")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @ReadOnly
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '实际金额'")
     private Double totalRealPrice;
 
