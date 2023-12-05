@@ -8,6 +8,8 @@ import com.influxdb.client.domain.WritePrecision;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Objects;
+
 /**
  * @author Hamm
  */
@@ -37,20 +39,24 @@ public class InfluxHelper {
     @Value("${spring.influxdb.bucket:''}")
     private String bucket;
 
+    private InfluxDBClient influxDbClient;
+
     /**
      * <h2>保存数据</h2>
      *
      * @param data 数据
      */
     public void save(Object data) {
-        InfluxDBClient influxDbClient = InfluxDBClientFactory.create(url, token.toCharArray(), org, bucket);
-        influxDbClient.setLogLevel(LogLevel.BASIC);
+        if (Objects.isNull(influxDbClient)) {
+            influxDbClient = InfluxDBClientFactory.create(url, token.toCharArray(), org, bucket);
+            influxDbClient.setLogLevel(LogLevel.NONE);
+        }
         WriteApiBlocking writeApi = influxDbClient.getWriteApiBlocking();
         try {
             writeApi.writeMeasurement(bucket, org, WritePrecision.NS, data);
         } catch (Exception ignored) {
+            influxDbClient.close();
         }
-        influxDbClient.close();
     }
 
 //    public List<FluxTable> findAll() {

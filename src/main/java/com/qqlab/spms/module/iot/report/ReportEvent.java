@@ -10,6 +10,7 @@ import com.qqlab.spms.module.asset.device.DeviceService;
 import com.qqlab.spms.module.iot.parameter.ParameterEntity;
 import com.qqlab.spms.module.iot.parameter.ParameterService;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -26,6 +27,7 @@ import java.util.concurrent.TimeUnit;
  * @author Hamm
  */
 @Component
+@Slf4j
 public class ReportEvent {
     @Autowired
     private MqttHelper mqttHelper;
@@ -49,7 +51,7 @@ public class ReportEvent {
     /**
      * 报告缓存时长
      */
-    private final int REPORT_CACHE_SECOND = 30;
+    private final int REPORT_CACHE_SECOND = 10;
     @Autowired
     private ParameterService parameterService;
     @Resource
@@ -77,7 +79,6 @@ public class ReportEvent {
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) {
                 String reportString = new String(mqttMessage.getPayload());
-                System.out.println(reportString);
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
                 try {
@@ -85,6 +86,9 @@ public class ReportEvent {
                     DeviceEntity device = null;
                     String lastDataInCache;
                     List<ReportPayload> payloadList = new ArrayList<>();
+                    if (Objects.isNull(reportData.getPayloads())) {
+                        return;
+                    }
                     for (ReportPayload payload : reportData.getPayloads()) {
                         if (Objects.isNull(payload.getValue())) {
                             continue;
@@ -126,7 +130,7 @@ public class ReportEvent {
                                 if (Objects.isNull(device)) {
                                     device = deviceService.getByUuid(reportData.getDeviceId());
                                     if (Objects.nonNull(device)) {
-                                        device.setStatus(Integer.parseInt(payload.getValue()));
+                                        device.setAlarm(Integer.parseInt(payload.getValue()));
                                         deviceService.update(device);
                                     }
                                 }

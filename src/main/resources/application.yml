@@ -5,7 +5,7 @@ spring:
     deserialization:
       fail-on-unknown-properties: false
   jpa:
-    show-sql: true
+    show-sql: false
     generate-ddl: true
   data:
     redis:

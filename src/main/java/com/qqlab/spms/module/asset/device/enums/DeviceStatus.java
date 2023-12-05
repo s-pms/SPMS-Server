@@ -13,6 +13,11 @@ import lombok.Getter;
 @Getter
 public enum DeviceStatus implements IEnum {
     /**
+     * <h2>未知</h2>
+     */
+    UNKNOWN(0, "未知"),
+
+    /**
      * <h2>报警</h2>
      */
     ALARM(1, "报警"),

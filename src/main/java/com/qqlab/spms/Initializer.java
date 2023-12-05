@@ -106,8 +106,8 @@ public class Initializer {
     }
 
     private void initDevices() {
-        for (int i = 0; i < 6; i++) {
-            deviceService.add(new DeviceEntity().setCode("Simulator00" + i).setName("设备" + i));
+        for (int i = 0; i < 10; i++) {
+            deviceService.add(new DeviceEntity().setCode("Simulator00" + (i + 1)).setName("设备" + (i + 1)));
         }
     }
 
@@ -385,9 +385,6 @@ public class Initializer {
                 .setRemark("超级管理员,请勿数据库暴力直接删除"));
 
         System.out.println("---------------------------------");
-        System.out.println("初始化第一个用户成功!\n");
-        System.out.println("邮箱: admin@hamm.cn");
-        System.out.println("密码: 12345678");
     }
 
     private void initUnitAndMaterial() {

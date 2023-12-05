@@ -11,6 +11,7 @@ spring:
       suffix: .html
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: false
     hibernate:
       ddl-auto: create-drop
   data:

@@ -7,6 +7,7 @@ import cn.hamm.airpower.security.AccessConfig;
 import cn.hamm.airpower.security.AccessUtil;
 import cn.hamm.airpower.util.ReflectUtil;
 import com.qqlab.spms.base.BaseService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -30,6 +31,7 @@ import java.util.Objects;
  * @author Hamm
  */
 @Service
+@Slf4j
 public class PermissionService extends BaseService<PermissionEntity, PermissionRepository> {
     /**
      * <h2>通过标识获取一个权限</h2>
@@ -100,10 +102,8 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                     AccessConfig accessConfig = AccessUtil.getWhatNeedAccess(clazz, method);
                     if (!accessConfig.login || !accessConfig.authorize) {
                         // 这里可以选择是否不读取这些接口的权限，但前端可能需要
-                        System.out.println("不需要的权限");
+                        log.info("不需要的权限");
                     }
-                    System.out.println(clazz.getSimpleName() + ":" + method.getName());
-
                     if (Objects.nonNull(postMappingMethod) && postMappingMethod.value().length > 0) {
                         String subIdentity = (!"".equalsIgnoreCase(pathClass) ? (pathClass + "_") : "") + postMappingMethod.value()[0];
                         PermissionEntity subPermission = getPermissionByIdentity(subIdentity);
