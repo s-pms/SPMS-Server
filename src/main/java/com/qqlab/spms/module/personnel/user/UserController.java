@@ -1,7 +1,7 @@
 package com.qqlab.spms.module.personnel.user;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.response.ResponseFilter;
+import cn.hamm.airpower.response.Filter;
 import cn.hamm.airpower.result.Result;
 import cn.hamm.airpower.result.json.Json;
 import cn.hamm.airpower.result.json.JsonData;
@@ -40,7 +40,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Description("获取我的信息")
     @Permission(authorize = false)
     @PostMapping("getMyInfo")
-    @ResponseFilter(UserEntity.WhenGetMyInfo.class)
+    @Filter(UserEntity.WhenGetMyInfo.class)
     public JsonData getMyInfo(Long userId) {
         return jsonData(service.getById(userId));
     }

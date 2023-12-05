@@ -1,7 +1,7 @@
 package com.qqlab.spms.module.system.app;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.response.ResponseFilter;
+import cn.hamm.airpower.response.Filter;
 import cn.hamm.airpower.result.json.JsonData;
 import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.security.Permission;
@@ -24,7 +24,7 @@ public class AppController extends BaseController<AppEntity, AppService, AppRepo
     @Description("通过AppKey获取应用信息")
     @PostMapping("getByAppKey")
     @Permission(login = false)
-    @ResponseFilter(RootEntity.WhenGetDetail.class)
+    @Filter(RootEntity.WhenGetDetail.class)
     public JsonData getByAppKey(@RequestBody @Validated({AppEntity.WhenGetByAppKey.class}) AppEntity entity) {
         return jsonData(service.getByAppKey(entity.getAppKey()));
     }

@@ -1,7 +1,7 @@
 package com.qqlab.spms.base.bill;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.response.ResponseFilter;
+import cn.hamm.airpower.response.Filter;
 import cn.hamm.airpower.result.Result;
 import cn.hamm.airpower.result.json.Json;
 import cn.hamm.airpower.root.RootEntity;
@@ -33,7 +33,7 @@ public class BaseBillController<
 
     @Description("审核")
     @PostMapping("audit")
-    @ResponseFilter(RootEntity.WhenGetDetail.class)
+    @Filter(RootEntity.WhenGetDetail.class)
     public Json audit(@RequestBody @Validated(RootEntity.WhenIdRequired.class) E bill) {
         E savedBill = service.getById(bill.getId());
         Result.FORBIDDEN.when(service.isAudited(savedBill), "该单据状态无法审核");
@@ -45,7 +45,7 @@ public class BaseBillController<
 
     @Description("驳回")
     @PostMapping("reject")
-    @ResponseFilter(RootEntity.WhenGetDetail.class)
+    @Filter(RootEntity.WhenGetDetail.class)
     public Json reject(@RequestBody @Validated(AbstractBaseBillEntity.WhenReject.class) E bill) {
         E savedBill = service.getById(bill.getId());
         Result.FORBIDDEN.when(!service.canReject(savedBill), "该单据状态无法驳回");
@@ -57,7 +57,7 @@ public class BaseBillController<
 
     @Description("添加完成数量")
     @PostMapping("addFinish")
-    @ResponseFilter(RootEntity.WhenGetDetail.class)
+    @Filter(RootEntity.WhenGetDetail.class)
     public Json finish(@RequestBody @Validated(BaseBillDetailEntity.WhenAddFinish.class) D detail) {
         service.addFinish(detail);
         return json("添加完成数量成功");
