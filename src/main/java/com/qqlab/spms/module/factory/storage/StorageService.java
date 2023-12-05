@@ -34,7 +34,7 @@ public class StorageService extends BaseService<StorageEntity, StorageRepository
     }
 
     /**
-     * <h2>根据父级ID查询子集</h2>
+     * 根据父级ID查询子集
      *
      * @param pid 父ID
      * @return 列表

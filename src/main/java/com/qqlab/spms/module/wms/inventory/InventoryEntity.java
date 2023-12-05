@@ -36,7 +36,7 @@ import org.hibernate.annotations.DynamicUpdate;
 public class InventoryEntity extends BaseEntity<InventoryEntity> {
 
     /**
-     * <h2>物料信息</h2>
+     * 物料信息
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
@@ -54,7 +54,7 @@ public class InventoryEntity extends BaseEntity<InventoryEntity> {
     private Integer type;
 
     /**
-     * <h2>存储资源</h2>
+     * 存储资源
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
@@ -62,7 +62,7 @@ public class InventoryEntity extends BaseEntity<InventoryEntity> {
     private StorageEntity storage;
 
     /**
-     * <h2>工厂结构</h2>
+     * 工厂结构
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload

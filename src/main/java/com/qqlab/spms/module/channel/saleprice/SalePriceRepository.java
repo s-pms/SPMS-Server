@@ -13,7 +13,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SalePriceRepository extends BaseRepository<SalePriceEntity> {
     /**
-     * <h2>获取指定客户和物料的销售价</h2>
+     * 获取指定客户和物料的销售价
+     *
      * @param customerEntity 客户
      * @param materialEntity 物料
      * @return 采购价实体

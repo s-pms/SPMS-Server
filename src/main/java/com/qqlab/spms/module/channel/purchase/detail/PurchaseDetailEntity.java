@@ -35,7 +35,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Description("采购明细")
 public class PurchaseDetailEntity extends BaseBillDetailEntity<PurchaseDetailEntity> {
     /**
-     * <h2>物料信息</h2>
+     * 物料信息
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
@@ -43,7 +43,7 @@ public class PurchaseDetailEntity extends BaseBillDetailEntity<PurchaseDetailEnt
     private MaterialEntity material;
 
     /**
-     * <h2>供应商信息</h2>
+     * 供应商信息
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload

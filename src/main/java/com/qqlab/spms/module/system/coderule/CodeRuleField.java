@@ -13,89 +13,89 @@ import lombok.Getter;
 public enum CodeRuleField implements IEnum {
 
     /**
-     * <h2>角色</h2>
+     * 角色
      */
     RoleCode(1, "角色编码", "RO"),
 
 
     /**
-     * <h2>供应商编码</h2>
+     * 供应商编码
      */
     SupplierCode(2, "供应商编码", "SUP"),
 
 
     /**
-     * <h2>存储资源编码</h2>
+     * 存储资源编码
      */
     StorageCode(3, "存储资源编码", "SRG"),
 
     /**
-     * <h2>工厂结构编码</h2>
+     * 工厂结构编码
      */
     StructureCode(4, "工厂结构编码", "ST"),
 
     /**
-     * <h2>客户编码</h2>
+     * 客户编码
      */
     CustomerCode(5, "客户编码", "CT"),
 
     /**
-     * <h2>物料编码</h2>
+     * 物料编码
      */
     MaterialCode(6, "物料编码", "MA"),
 
     /**
-     * <h2>单位编码</h2>
+     * 单位编码
      */
     UnitCode(7, "单位编码", "UT"),
 
     /**
-     * <h2>采购单号</h2>
+     * 采购单号
      */
     PurchaseBillCode(8, "采购单号", "PC"),
 
     /**
-     * <h2>销售单号</h2>
+     * 销售单号
      */
     SaleBillCode(9, "销售单号", "SL"),
 
     /**
-     * <h2>生产计划号</h2>
+     * 生产计划号
      */
     PlanBillCode(10, "生产计划号", "PL"),
 
     /**
-     * <h2>生产订单号</h2>
+     * 生产订单号
      */
     OrderBillCode(11, "生产订单号", "ODR"),
 
     /**
-     * <h2>领料单号</h2>
+     * 领料单号
      */
     PickoutBillCode(12, "领料单号", "PK"),
 
     /**
-     * <h2>退料单号</h2>
+     * 退料单号
      */
     RestoreBillCode(13, "退料单号", "RT"),
 
     /**
-     * <h2>入库单号</h2>
+     * 入库单号
      */
     InputBillCode(14, "入库单号", "IN"),
 
     /**
-     * <h2>出库单号</h2>
+     * 出库单号
      */
     OutputBillCode(15, "出库单号", "OUT"),
 
     /**
-     * <h2>移库单号</h2>
+     * 移库单号
      */
     MoveBillCode(16, "移库单号", "MV"),
 
     /**
-     * <h2>设备编码</h2>
+     * 设备编码
      */
     DeviceCode(17, "设备编码", "DE");
 

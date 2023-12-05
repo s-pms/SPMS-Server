@@ -62,7 +62,7 @@ public class SaleEntity extends AbstractBaseBillEntity<SaleEntity, SaleDetailEnt
     private Integer status;
 
     /**
-     * <h2>客户信息</h2>
+     * 客户信息
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload

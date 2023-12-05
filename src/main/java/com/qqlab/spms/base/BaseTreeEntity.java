@@ -32,7 +32,7 @@ import java.util.List;
 @Description("")
 public class BaseTreeEntity<E extends BaseTreeEntity<E>> extends BaseEntity<E> implements ITree<E> {
     /**
-     * <h2>树节点名称</h2>
+     * 树节点名称
      */
     @Description("名称")
     @Search
@@ -41,20 +41,20 @@ public class BaseTreeEntity<E extends BaseTreeEntity<E>> extends BaseEntity<E> i
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "名称不能为空")
     private String name;
     /**
-     * <h2>父级ID</h2>
+     * 父级ID
      */
     @Description("父级ID")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '父级ID'")
     @Search(Search.Mode.EQUALS)
     private Long parentId;
     /**
-     * <h2>树子集节点数组</h2>
+     * 树子集节点数组
      */
     @Transient
     private List<E> children;
 
     /**
-     * <h2>设置名称</h2>
+     * 设置名称
      *
      * @param name 名称
      * @return 实例
@@ -67,7 +67,7 @@ public class BaseTreeEntity<E extends BaseTreeEntity<E>> extends BaseEntity<E> i
     }
 
     /**
-     * <h2>设置父级ID</h2>
+     * 设置父级ID
      *
      * @param parentId 父级ID
      * @return 实例

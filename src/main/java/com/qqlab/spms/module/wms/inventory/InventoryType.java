@@ -12,12 +12,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum InventoryType implements IEnum {
     /**
-     * <h2>存储资源</h2>
+     * 存储资源
      */
     STORAGE(1, "存储资源"),
 
     /**
-     * <h2>工厂结构</h2>
+     * 工厂结构
      */
     STRUCTURE(2, "工厂结构");
 

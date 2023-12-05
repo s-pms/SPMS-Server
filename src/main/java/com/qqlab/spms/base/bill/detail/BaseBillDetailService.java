@@ -15,7 +15,7 @@ import java.util.List;
 public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends BaseBillDetailRepository<E>> extends BaseService<E, R> {
 
     /**
-     * <h2>根据单据ID删除所有明细</h2>
+     * 根据单据ID删除所有明细
      *
      * @param billId 单据ID
      */
@@ -27,7 +27,7 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
     }
 
     /**
-     * <h2>查询指定单据的所有明细</h2>
+     * 查询指定单据的所有明细
      *
      * @param billId 单据ID
      * @return 明细
@@ -37,7 +37,7 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
     }
 
     /**
-     * <h2>保存指定单据的明细</h2>
+     * 保存指定单据的明细
      *
      * @param billId  单据ID
      * @param details 明细

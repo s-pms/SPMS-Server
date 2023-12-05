@@ -18,7 +18,7 @@ public class WebsocketMessage<T> {
     private T body;
 
     /**
-     * <h2>设置消息类型</h2>
+     * 设置消息类型
      *
      * @param type 消息类型
      * @return 消息对象
@@ -29,7 +29,7 @@ public class WebsocketMessage<T> {
     }
 
     /**
-     * <h2>设置消息体</h2>
+     * 设置消息体
      *
      * @param body 消息体
      * @return 消息对象

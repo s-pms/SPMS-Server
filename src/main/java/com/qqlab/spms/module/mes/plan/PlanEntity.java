@@ -51,21 +51,21 @@ public class PlanEntity extends AbstractBaseBillEntity<PlanEntity, PlanDetailEnt
     private Integer type;
 
     /**
-     * <h2>交付时间</h2>
+     * 交付时间
      */
     @Description("交付时间")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '交付时间'")
     private Long deliverTime;
 
     /**
-     * <h2>开始时间</h2>
+     * 开始时间
      */
     @Description("开始时间")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '开始时间'")
     private Long startTime;
 
     /**
-     * <h2>完成时间</h2>
+     * 完成时间
      */
     @Description("完成时间")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -73,7 +73,7 @@ public class PlanEntity extends AbstractBaseBillEntity<PlanEntity, PlanDetailEnt
     private Long finishTime;
 
     /**
-     * <h2>客户信息</h2>
+     * 客户信息
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload

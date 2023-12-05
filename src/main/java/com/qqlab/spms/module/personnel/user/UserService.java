@@ -33,22 +33,22 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     @Autowired
     private SecurityUtil securityUtil;
     /**
-     * <h2>邮箱验证码key</h2>
+     * 邮箱验证码key
      */
     private static final String REDIS_EMAIL_CODE_KEY = "email_code_";
 
     /**
-     * <h2>短信验证码key</h2>
+     * 短信验证码key
      */
     private static final String REDIS_PHONE_CODE_KEY = "phone_code_";
 
     /**
-     * <h2>OAUTH存储的key前缀</h2>
+     * OAUTH存储的key前缀
      */
     private static final String OAUTH_CODE_KEY = "oauth_code_";
 
     /**
-     * <h2>COOKIE前缀</h2>
+     * COOKIE前缀
      */
     private static final String COOKIE_CODE_KEY = "cookie_code_";
 
@@ -58,7 +58,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     private static final int CACHE_CODE_EXPIRE_SECOND = 300;
 
     /**
-     * <h2>Cookie缓存</h2>
+     * Cookie缓存
      */
     private static final int CACHE_COOKIE_EXPIRE_SECOND = 86400;
 
@@ -69,7 +69,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     private PermissionService permissionService;
 
     /**
-     * <h2>获取登录用户的菜单列表</h2>
+     * 获取登录用户的菜单列表
      *
      * @return 菜单树列表
      */
@@ -101,7 +101,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>获取登录用户的权限列表</h2>
+     * 获取登录用户的权限列表
      *
      * @return 权限列表
      */
@@ -133,7 +133,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>修改密码</h2>
+     * 修改密码
      *
      * @param userEntity vo
      */
@@ -155,7 +155,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>删除指定邮箱的验证码缓存</h2>
+     * 删除指定邮箱的验证码缓存
      *
      * @param email 邮箱
      */
@@ -164,7 +164,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>发送邮箱验证码</h2>
+     * 发送邮箱验证码
      *
      * @param email 邮箱
      */
@@ -176,7 +176,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>存储Oauth的一次性Code</h2>
+     * 存储Oauth的一次性Code
      *
      * @param userId    用户ID
      * @param appEntity 保存的应用信息
@@ -186,7 +186,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>获取指定应用的OauthCode缓存Key</h2>
+     * 获取指定应用的OauthCode缓存Key
      *
      * @param appKey 应用Key
      * @param code   Code
@@ -197,7 +197,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>通过AppKey和Code获取用户ID</h2>
+     * 通过AppKey和Code获取用户ID
      *
      * @param appKey AppKey
      * @param code   Code
@@ -210,7 +210,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>删除AppOauthCode缓存</h2>
+     * 删除AppOauthCode缓存
      *
      * @param appKey AppKey
      * @param code   Code
@@ -220,7 +220,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>存储Cookie</h2>
+     * 存储Cookie
      *
      * @param userId UserId
      * @param cookie Cookie
@@ -230,7 +230,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>通过Cookie获取一个用户</h2>
+     * 通过Cookie获取一个用户
      *
      * @param cookie Cookie
      * @return UserId
@@ -244,7 +244,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>ID+密码 账号+密码</h2>
+     * ID+密码 账号+密码
      *
      * @param userEntity 用户实体
      * @return AccessToken
@@ -268,7 +268,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>邮箱验证码登录</h2>
+     * 邮箱验证码登录
      *
      * @param userEntity 用户实体
      * @return AccessToken
@@ -282,7 +282,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>短信验证码登录</h2>
+     * 短信验证码登录
      *
      * @param userEntity 用户实体
      * @return AccessToken
@@ -296,7 +296,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>将验证码暂存到Redis</h2>
+     * 将验证码暂存到Redis
      *
      * @param email 邮箱
      * @param code  验证码
@@ -306,7 +306,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>获取指定邮箱发送的验证码</h2>
+     * 获取指定邮箱发送的验证码
      *
      * @param email 邮箱
      * @return 验证码
@@ -317,7 +317,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>获取指定邮箱发送的验证码</h2>
+     * 获取指定邮箱发送的验证码
      *
      * @param email 邮箱
      * @return 验证码
@@ -329,7 +329,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
 
 
     /**
-     * <h2>指定邮箱验证码是否还在缓存内</h2>
+     * 指定邮箱验证码是否还在缓存内
      *
      * @param email 邮箱
      * @return 是否在缓存内

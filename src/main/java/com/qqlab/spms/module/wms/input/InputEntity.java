@@ -57,28 +57,28 @@ public class InputEntity extends AbstractBaseBillEntity<InputEntity, InputDetail
     private Integer type;
 
     /**
-     * <h2>采购信息</h2>
+     * 采购信息
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     private PurchaseEntity purchase;
 
     /**
-     * <h2>退料位置</h2>
+     * 退料位置
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     private StructureEntity structure;
 
     /**
-     * <h2>生产订单</h2>
+     * 生产订单
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     private OrderEntity order;
 
     /**
-     * <h2>移库单</h2>
+     * 移库单
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload

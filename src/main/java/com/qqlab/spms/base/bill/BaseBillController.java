@@ -77,7 +77,7 @@ public class BaseBillController<
     }
 
     /**
-     * <h2>审核后置方法</h2>
+     * 审核后置方法
      *
      * @param bill 单据
      */

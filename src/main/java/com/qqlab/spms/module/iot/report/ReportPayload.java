@@ -40,7 +40,7 @@ public class ReportPayload {
 
 
     /**
-     * <h2>值的布尔值</h2>
+     * 值的布尔值
      *
      * @return 布尔值
      */
@@ -49,7 +49,7 @@ public class ReportPayload {
     }
 
     /**
-     * <h2>值的数值</h2>
+     * 值的数值
      *
      * @return 数值
      */

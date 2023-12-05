@@ -46,7 +46,7 @@ public class MoveEntity extends AbstractBaseBillEntity<MoveEntity, MoveDetailEnt
     private Integer status;
 
     /**
-     * <h2>入库存储资源</h2>
+     * 入库存储资源
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload

@@ -34,7 +34,7 @@ import java.util.Objects;
 @Slf4j
 public class PermissionService extends BaseService<PermissionEntity, PermissionRepository> {
     /**
-     * <h2>通过标识获取一个权限</h2>
+     * 通过标识获取一个权限
      *
      * @param identity 权限标识
      * @return 权限
@@ -44,7 +44,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     }
 
     /**
-     * <h2>强制重载所有权限</h2>
+     * 强制重载所有权限
      */
     @SuppressWarnings("UnusedReturnValue")
     public List<PermissionEntity> forceReloadAllPermissions() {
@@ -100,9 +100,9 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                     PostMapping postMappingMethod = method.getAnnotation(PostMapping.class);
 
                     AccessConfig accessConfig = AccessUtil.getWhatNeedAccess(clazz, method);
+                    //noinspection StatementWithEmptyBody
                     if (!accessConfig.login || !accessConfig.authorize) {
                         // 这里可以选择是否不读取这些接口的权限，但前端可能需要
-                        log.info("不需要的权限");
                     }
                     if (Objects.nonNull(postMappingMethod) && postMappingMethod.value().length > 0) {
                         String subIdentity = (!"".equalsIgnoreCase(pathClass) ? (pathClass + "_") : "") + postMappingMethod.value()[0];

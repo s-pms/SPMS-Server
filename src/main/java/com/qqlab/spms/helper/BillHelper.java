@@ -25,7 +25,7 @@ public class BillHelper {
     private static OutputService outputService;
 
     /**
-     * <h2>添加入库单</h2>
+     * 添加入库单
      *
      * @param inputEntity 入库单
      * @return 入库单
@@ -35,7 +35,7 @@ public class BillHelper {
     }
 
     /**
-     * <h2>添加出库单</h2>
+     * 添加出库单
      *
      * @param outputEntity 出库单
      * @return 出库单
@@ -45,7 +45,7 @@ public class BillHelper {
     }
 
     /**
-     * <h2>更新采购单</h2>
+     * 更新采购单
      *
      * @param purchaseEntity 采购单
      * @return 采购单
@@ -55,7 +55,7 @@ public class BillHelper {
     }
 
     /**
-     * <h2>更新销售单</h2>
+     * 更新销售单
      *
      * @param saleEntity 销售单
      * @return 销售单

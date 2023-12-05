@@ -12,12 +12,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum MaterialType implements IEnum {
     /**
-     * <h2>自产品</h2>
+     * 自产品
      */
     PRODUCT(1, "自产品"),
 
     /**
-     * <h2>外购品</h2>
+     * 外购品
      */
     PURCHASE(2, "外购品");
 

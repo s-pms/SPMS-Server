@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
     private AccessResolver accessResolver;
 
     /**
-     * <h2>获取一个拦截器实例</h2>
+     * 获取一个拦截器实例
      *
      * @return 拦截器实例
      */

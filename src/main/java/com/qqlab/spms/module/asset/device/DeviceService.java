@@ -3,6 +3,7 @@ package com.qqlab.spms.module.asset.device;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.qqlab.spms.base.BaseService;
+import com.qqlab.spms.module.iot.parameter.ParameterEntity;
 import com.qqlab.spms.module.iot.parameter.ParameterService;
 import com.qqlab.spms.module.iot.report.ReportData;
 import com.qqlab.spms.module.iot.report.ReportEvent;
@@ -13,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author zfy
@@ -38,7 +37,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
      */
     public List<ReportPayload> getCurrentReport(DeviceEntity device) {
         device = getById(device.getId());
-        Object data = redisTemplate.opsForValue().get(ReportEvent.PREFIX + device.getUuid());
+        Object data = redisTemplate.opsForValue().get(ReportEvent.CACHE_PREFIX + device.getUuid());
         if (Objects.isNull(data)) {
             return new ArrayList<>();
         }
@@ -46,7 +45,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     }
 
     /**
-     * <h2>通过UUID查询设备</h2>
+     * 通过UUID查询设备
      *
      * @param uuid UUID
      * @return 设备
@@ -55,15 +54,37 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
         return repository.getByUuid(uuid);
     }
 
-    @Override
-    protected DeviceEntity beforeSaveToDatabase(DeviceEntity entity) {
-        if (StrUtil.isBlank(entity.getCode())) {
-            entity.setCode(createCode(CodeRuleField.DeviceCode));
+    /**
+     * 获取设备的参数列表
+     *
+     * @param device 设备
+     * @return 设备
+     */
+    public DeviceEntity getDeviceParameters(DeviceEntity device) {
+        Set<ParameterEntity> parameters = new HashSet<>();
+        if (Objects.nonNull(device.getParameters())) {
+            for (ParameterEntity parameter : device.getParameters()) {
+                parameter = parameterService.getById(parameter.getId());
+                if (!parameter.getIsSystem()) {
+                    parameters.add(parameter);
+                }
+            }
         }
-        if (StrUtil.isBlank(entity.getUuid())) {
-            entity.setUuid(entity.getCode());
-        }
-        return super.beforeSaveToDatabase(entity);
+        parameters.add(parameterService.getByCode(ReportEvent.REPORT_KEY_OF_STATUS));
+        parameters.add(parameterService.getByCode(ReportEvent.REPORT_KEY_OF_ALARM));
+        parameters.add(parameterService.getByCode(ReportEvent.REPORT_KEY_OF_PART_COUNT));
+        device.setParameters(parameters);
+        return device;
     }
 
+    @Override
+    protected DeviceEntity beforeSaveToDatabase(DeviceEntity device) {
+        if (StrUtil.isBlank(device.getCode())) {
+            device.setCode(createCode(CodeRuleField.DeviceCode));
+        }
+        if (StrUtil.isBlank(device.getUuid())) {
+            device.setUuid(device.getCode());
+        }
+        return super.beforeSaveToDatabase(device);
+    }
 }

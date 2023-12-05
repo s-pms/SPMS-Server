@@ -12,12 +12,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum OrderType implements IEnum {
     /**
-     * <h2>计划订单</h2>
+     * 计划订单
      */
     PLAN(1, "计划订单"),
 
     /**
-     * <h2>其他订单</h2>
+     * 其他订单
      */
     OTHER(2, "其他订单");
 

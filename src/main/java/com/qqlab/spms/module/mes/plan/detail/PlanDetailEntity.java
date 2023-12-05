@@ -32,7 +32,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Description("计划明细")
 public class PlanDetailEntity extends BaseBillDetailEntity<PlanDetailEntity> {
     /**
-     * <h2>物料信息</h2>
+     * 物料信息
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload

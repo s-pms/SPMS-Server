@@ -17,7 +17,6 @@ import com.qqlab.spms.module.factory.structure.StructureEntity;
 import com.qqlab.spms.module.factory.structure.StructureService;
 import com.qqlab.spms.module.iot.parameter.ParameterEntity;
 import com.qqlab.spms.module.iot.parameter.ParameterService;
-import com.qqlab.spms.module.iot.report.ReportData;
 import com.qqlab.spms.module.iot.report.ReportEvent;
 import com.qqlab.spms.module.personnel.role.RoleEntity;
 import com.qqlab.spms.module.personnel.role.RoleService;
@@ -113,13 +112,13 @@ public class Initializer {
 
     private void initParameters() {
         parameterService.add(new ParameterEntity()
-                .setId(1L).setCode(ReportData.STATUS).setLabel("运行状态").setIsSystem(true)
+                .setId(1L).setCode(ReportEvent.REPORT_KEY_OF_STATUS).setLabel("运行状态").setIsSystem(true)
         );
         parameterService.add(new ParameterEntity()
-                .setId(1L).setCode(ReportData.ALARM).setLabel("报警状态").setIsSystem(true)
+                .setId(1L).setCode(ReportEvent.REPORT_KEY_OF_ALARM).setLabel("报警状态").setIsSystem(true)
         );
         parameterService.add(new ParameterEntity()
-                .setId(1L).setCode(ReportData.PART_COUNT).setLabel("实时产量").setIsSystem(true)
+                .setId(1L).setCode(ReportEvent.REPORT_KEY_OF_PART_COUNT).setLabel("实时产量").setIsSystem(true)
         );
     }
 

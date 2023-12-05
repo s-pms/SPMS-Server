@@ -14,4 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("permission")
 @Description("权限")
 public class PermissionController extends BaseController<PermissionEntity, PermissionService, PermissionRepository> {
+    @Override
+    protected PermissionEntity beforeAdd(PermissionEntity entity) {
+        return entity.setIsSystem(null);
+    }
+
+    @Override
+    protected PermissionEntity beforeUpdate(PermissionEntity entity) {
+        return entity.setIsSystem(null);
+    }
 }

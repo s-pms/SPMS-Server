@@ -29,7 +29,7 @@ public abstract class AbstractBaseBillService<
 
 
     /**
-     * <h2>添加完成数量</h2>
+     * 添加完成数量
      *
      * @param detail 明细
      * @return 存储后的明细
@@ -53,7 +53,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h2>所有明细数量全部完成后置方法</h2>
+     * 所有明细数量全部完成后置方法
      *
      * @param id 单据ID
      */
@@ -75,7 +75,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h2>单据明细保存后置方法</h2>
+     * 单据明细保存后置方法
      *
      * @param bill 单据
      * @return 单据
@@ -93,7 +93,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h2>保存单据明细</h2>
+     * 保存单据明细
      *
      * @param bill    单据
      * @param details 明细
@@ -107,7 +107,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h2>设置为已审核状态</h2>
+     * 设置为已审核状态
      *
      * @param bill 单据
      * @return 实体
@@ -115,7 +115,7 @@ public abstract class AbstractBaseBillService<
     public abstract E setAudited(E bill);
 
     /**
-     * <h2>设置为审核中状态</h2>
+     * 设置为审核中状态
      *
      * @param bill 单据
      * @return 实体
@@ -123,7 +123,7 @@ public abstract class AbstractBaseBillService<
     public abstract E setAuditing(E bill);
 
     /**
-     * <h2>单据是否已审核</h2>
+     * 单据是否已审核
      *
      * @param bill 单据
      * @return 是否审核
@@ -131,7 +131,7 @@ public abstract class AbstractBaseBillService<
     public abstract boolean isAudited(E bill);
 
     /**
-     * <h2>单据是否可驳回</h2>
+     * 单据是否可驳回
      *
      * @param bill 单据
      * @return 是否可驳回
@@ -139,7 +139,7 @@ public abstract class AbstractBaseBillService<
     public abstract boolean canReject(E bill);
 
     /**
-     * <h2>设置单据为驳回状态</h2>
+     * 设置单据为驳回状态
      *
      * @param bill 单据
      * @return 单据
@@ -147,7 +147,7 @@ public abstract class AbstractBaseBillService<
     public abstract E setReject(E bill);
 
     /**
-     * <h2>单据是否可编辑</h2>
+     * 单据是否可编辑
      *
      * @param bill 单据
      * @return 是否可编辑

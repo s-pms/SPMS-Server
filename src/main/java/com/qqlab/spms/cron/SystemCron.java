@@ -38,7 +38,7 @@ public class SystemCron {
     }
 
     /**
-     * <h2>重置自定义编码规则序列号</h2>
+     * 重置自定义编码规则序列号
      *
      * @param codeRule 编码规则
      */

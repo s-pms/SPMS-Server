@@ -36,7 +36,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Description("BOM")
 public class BomEntity extends AbstractBaseBillEntity<BomEntity, BomDetailEntity> {
     /**
-     * <h2>物料信息</h2>
+     * 物料信息
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload

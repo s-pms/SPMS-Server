@@ -32,14 +32,14 @@ import org.hibernate.annotations.DynamicUpdate;
 @Description("出库明细")
 public class OutputDetailEntity extends BaseBillDetailEntity<OutputDetailEntity> {
     /**
-     * <h2>库存信息</h2>
+     * 库存信息
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "库存信息")
     private InventoryEntity inventory;
 
     /**
-     * <h2>物料信息</h2>
+     * 物料信息
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料信息")

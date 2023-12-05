@@ -22,7 +22,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -44,7 +43,7 @@ public class Oauth2Controller extends RootController {
     private AppService appService;
 
     /**
-     * <h2>环境变量配置的登录地址 OAuth2时使用</h2>
+     * 环境变量配置的登录地址 OAuth2时使用
      */
     @Value("${application.loginUrl}")
     private String loginUrl;
@@ -136,7 +135,7 @@ public class Oauth2Controller extends RootController {
     }
 
     /**
-     * <h2>显示一个错误页面</h2>
+     * 显示一个错误页面
      *
      * @param error 错误信息
      * @return 错误页面
@@ -148,7 +147,7 @@ public class Oauth2Controller extends RootController {
     }
 
     /**
-     * <h2>重定向到指定的URL</h2>
+     * 重定向到指定的URL
      *
      * @param response 响应体
      * @param url      目标URL

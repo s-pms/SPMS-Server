@@ -3,12 +3,16 @@ package com.qqlab.spms.module.personnel.role;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Exclude;
 import cn.hamm.airpower.annotation.Payload;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.annotation.AutoGenerateCode;
 import com.qqlab.spms.base.BaseEntity;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
 import com.qqlab.spms.module.system.menu.MenuEntity;
 import com.qqlab.spms.module.system.permission.PermissionEntity;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,10 +21,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import java.util.Set;
 
 /**
@@ -40,7 +40,7 @@ import java.util.Set;
 @Description("角色")
 public class RoleEntity extends BaseEntity<RoleEntity> {
     /**
-     * <h2>角色名称</h2>
+     * 角色名称
      */
     @Description("角色名称")
     @Column(columnDefinition = "varchar(255) default '' comment '角色名称'", unique = true)
@@ -48,7 +48,7 @@ public class RoleEntity extends BaseEntity<RoleEntity> {
     private String name;
 
     /**
-     * <h2>角色编码</h2>
+     * 角色编码
      */
     @Description("角色编码")
     @Column(columnDefinition = "varchar(255) default '' comment '角色编码'", unique = true)
@@ -56,7 +56,7 @@ public class RoleEntity extends BaseEntity<RoleEntity> {
     private String code;
 
     /**
-     * <h2>是否系统角色</h2>
+     * 是否系统角色
      */
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Description("是否系统角色")
@@ -66,7 +66,7 @@ public class RoleEntity extends BaseEntity<RoleEntity> {
     private Boolean isSystem;
 
     /**
-     * <h2>角色的菜单列表</h2>
+     * 角色的菜单列表
      */
     @ManyToMany(fetch = FetchType.EAGER)
     @Payload
@@ -76,7 +76,7 @@ public class RoleEntity extends BaseEntity<RoleEntity> {
     private Set<MenuEntity> menuList;
 
     /**
-     * <h2>角色的权限列表</h2>
+     * 角色的权限列表
      */
     @ManyToMany(fetch = FetchType.EAGER)
     @Payload
@@ -85,13 +85,13 @@ public class RoleEntity extends BaseEntity<RoleEntity> {
     private Set<PermissionEntity> permissionList;
 
     /**
-     * <h2>当授权菜单时</h2>
+     * 当授权菜单时
      */
     public interface WhenAuthorizeMenu {
     }
 
     /**
-     * <h2>当授权权限时</h2>
+     * 当授权权限时
      */
     public interface WhenAuthorizePermission {
     }

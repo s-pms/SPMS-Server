@@ -46,7 +46,7 @@ public class PickoutEntity extends AbstractBaseBillEntity<PickoutEntity, Pickout
     private Integer status;
 
     /**
-     * <h2>领料位置</h2>
+     * 领料位置
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload

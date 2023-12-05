@@ -4,6 +4,10 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.base.BaseEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,11 +17,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * <h1>编码规则实体</h1>
@@ -36,7 +35,7 @@ import jakarta.validation.constraints.NotNull;
 @Description("编码规则")
 public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     /**
-     * <h2>规则字段</h2>
+     * 规则字段
      */
     @Description("规则字段")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '规则字段'", unique = true)
@@ -45,7 +44,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     private Integer ruleField;
 
     /**
-     * <h2>流水号更新方式</h2>
+     * 流水号更新方式
      */
     @Description("流水号更新方式")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '流水号更新方式'")
@@ -54,7 +53,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     private Integer snType;
 
     /**
-     * <h2>流水号起始长度</h2>
+     * 流水号起始长度
      */
     @Description("流水号起始长度")
     @Column(columnDefinition = "tinyint UNSIGNED default 4 comment '流水号起始长度'")
@@ -63,7 +62,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     private Integer snLength;
 
     /**
-     * <h2>编码前缀</h2>
+     * 编码前缀
      */
     @Description("编码前缀")
     @Column(columnDefinition = "varchar(255) default '' comment '编码前缀'")
@@ -73,7 +72,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
 
 
     /**
-     * <h2>编码规则模板</h2>
+     * 编码规则模板
      */
     @Description("编码规则模板")
     @Column(columnDefinition = "varchar(255) default '' comment '编码规则模板'")
@@ -82,7 +81,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     private String template;
 
     /**
-     * <h2>当前序列号</h2>
+     * 当前序列号
      */
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(columnDefinition = "int UNSIGNED default 0 comment '当前序列号'")

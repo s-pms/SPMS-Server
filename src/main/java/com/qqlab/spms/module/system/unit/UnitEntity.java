@@ -5,6 +5,9 @@ import cn.hamm.airpower.annotation.Search;
 import com.qqlab.spms.annotation.AutoGenerateCode;
 import com.qqlab.spms.base.BaseEntity;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,10 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
 /**
  * <h1>单位实体</h1>
@@ -34,7 +33,7 @@ import jakarta.persistence.Table;
 @Description("单位")
 public class UnitEntity extends BaseEntity<UnitEntity> {
     /**
-     * <h2>单位名称</h2>
+     * 单位名称
      */
     @Description("单位名称")
     @Search(Search.Mode.EQUALS)

@@ -2,18 +2,17 @@ package com.qqlab.spms.module.system.permission;
 
 import cn.hamm.airpower.annotation.Description;
 import com.qqlab.spms.base.BaseTreeEntity;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
@@ -31,7 +30,7 @@ import java.util.List;
 @Description("权限")
 public class PermissionEntity extends BaseTreeEntity<PermissionEntity> {
     /**
-     * <h2>权限标识</h2>
+     * 权限标识
      */
     @Description("权限标识")
     @Column(columnDefinition = "varchar(255) default '' comment '权限标识'", unique = true)
@@ -39,15 +38,14 @@ public class PermissionEntity extends BaseTreeEntity<PermissionEntity> {
     private String identity;
 
     /**
-     * <h2>系统权限</h2>
+     * 系统权限
      */
     @Description("系统权限")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '系统权限'")
     private Boolean isSystem;
 
     /**
-     * <h2>子菜单</h2>
+     * 子菜单
      */
     @Transient
     private List<PermissionEntity> children;

@@ -33,14 +33,14 @@ import org.hibernate.annotations.DynamicUpdate;
 @Description("入库明细")
 public class InputDetailEntity extends BaseBillDetailEntity<InputDetailEntity> {
     /**
-     * <h2>存储资源</h2>
+     * 存储资源
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     private StorageEntity storage;
 
     /**
-     * <h2>物料信息</h2>
+     * 物料信息
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload

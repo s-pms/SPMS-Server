@@ -31,7 +31,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Description("移库明细")
 public class MoveDetailEntity extends BaseBillDetailEntity<MoveDetailEntity> {
     /**
-     * <h2>库存信息</h2>
+     * 库存信息
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "库存信息")

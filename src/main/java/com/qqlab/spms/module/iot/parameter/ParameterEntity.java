@@ -1,7 +1,8 @@
 package com.qqlab.spms.module.iot.parameter;
 
 import cn.hamm.airpower.annotation.Description;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import cn.hamm.airpower.annotation.ReadOnly;
+import cn.hamm.airpower.annotation.Search;
 import com.qqlab.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,12 +43,13 @@ public class ParameterEntity extends BaseEntity<ParameterEntity> {
     private String label;
 
     @Description("内置参数")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Search(Search.Mode.EQUALS)
+    @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否内置参数'")
     private Boolean isSystem;
 
     /**
-     * <h2>设置是系统内置参数</h2>
+     * 设置是系统内置参数
      *
      * @param isSystem 内置参数
      * @return 实体

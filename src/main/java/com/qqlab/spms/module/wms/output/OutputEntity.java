@@ -55,14 +55,14 @@ public class OutputEntity extends AbstractBaseBillEntity<OutputEntity, OutputDet
     private Integer type;
 
     /**
-     * <h2>销售单</h2>
+     * 销售单
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     private SaleEntity sale;
 
     /**
-     * <h2>移库单</h2>
+     * 移库单
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload

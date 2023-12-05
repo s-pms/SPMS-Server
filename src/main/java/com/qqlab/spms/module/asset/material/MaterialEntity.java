@@ -38,7 +38,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Description("物料")
 public class MaterialEntity extends BaseEntity<MaterialEntity> {
     /**
-     * <h2>物料名称</h2>
+     * 物料名称
      */
     @Description("物料名称")
     @Search
@@ -52,7 +52,7 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
     private String code;
 
     /**
-     * <h2>规格型号</h2>
+     * 规格型号
      */
     @Description("规格型号")
     @Search
@@ -60,7 +60,7 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
     private String spc;
 
     /**
-     * <h2>物料类型</h2>
+     * 物料类型
      */
     @Description("物料类型")
     @Search(Search.Mode.EQUALS)
@@ -70,7 +70,7 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
     private Integer materialType;
 
     /**
-     * <h2>默认单位</h2>
+     * 默认单位
      */
     @ManyToOne
     @Search(Search.Mode.JOIN)

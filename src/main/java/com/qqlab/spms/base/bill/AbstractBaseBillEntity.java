@@ -37,7 +37,7 @@ import java.util.List;
 @Description("")
 public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E, D>, D extends BaseBillDetailEntity<D>> extends BaseEntity<E> {
     /**
-     * <h2>单据明细</h2>
+     * 单据明细
      */
     @Payload
     @Transient
@@ -53,7 +53,7 @@ public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E,
 
 
     /**
-     * <h2>设置驳回原因</h2>
+     * 设置驳回原因
      *
      * @param rejectReason 驳回原因
      * @return 单据实体
@@ -67,7 +67,7 @@ public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E,
 
 
     /**
-     * <h2>设置单据明细</h2>
+     * 设置单据明细
      *
      * @param details 明细
      * @return 单据实体
@@ -82,7 +82,7 @@ public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E,
     }
 
     /**
-     * <h2>设置状态</h2>
+     * 设置状态
      *
      * @param status 状态值
      * @return 单据实体

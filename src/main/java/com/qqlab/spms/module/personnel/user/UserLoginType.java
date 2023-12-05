@@ -7,17 +7,17 @@ package com.qqlab.spms.module.personnel.user;
  */
 public enum UserLoginType {
     /**
-     * <h2>ID+密码 账号+密码</h2>
+     * ID+密码 账号+密码
      */
     VIA_ACCOUNT_PASSWORD,
 
     /**
-     * <h2>邮箱+验证码</h2>
+     * 邮箱+验证码
      */
     VIA_EMAIL_CODE,
 
     /**
-     * <h2>手机+验证码</h2>
+     * 手机+验证码
      */
     VIA_PHONE_CODE,
 }

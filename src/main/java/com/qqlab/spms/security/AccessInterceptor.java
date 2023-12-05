@@ -42,7 +42,7 @@ public class AccessInterceptor extends AbstractAccessInterceptor {
     private SecurityUtil securityUtil;
 
     /**
-     * <h2>验证指定的用户是否有指定权限标识的权限</h2>
+     * 验证指定的用户是否有指定权限标识的权限
      *
      * @param userId             用户ID
      * @param permissionIdentity 权限标识

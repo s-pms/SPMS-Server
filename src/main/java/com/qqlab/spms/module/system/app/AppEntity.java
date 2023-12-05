@@ -5,6 +5,12 @@ import cn.hamm.airpower.annotation.Exclude;
 import cn.hamm.airpower.annotation.Search;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qqlab.spms.base.BaseEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,13 +18,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Null;
 
 /**
  * <h1>系统应用实体</h1>
@@ -37,14 +36,14 @@ import jakarta.validation.constraints.Null;
 @Description("应用")
 public class AppEntity extends BaseEntity<AppEntity> {
     /**
-     * <h2>应用Key</h2>
+     * 应用Key
      */
     @Column(columnDefinition = "varchar(255) default '' comment 'AppKey'", unique = true)
     @NotBlank(groups = {WhenAdd.class, WhenUpdate.class, WhenCode2AccessToken.class}, message = "AppKey必须填写")
     private String appKey;
 
     /**
-     * <h2>应用密钥</h2>
+     * 应用密钥
      */
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(columnDefinition = "varchar(255) default '' comment 'AppSecret'", unique = true)
@@ -54,7 +53,7 @@ public class AppEntity extends BaseEntity<AppEntity> {
     private String appSecret;
 
     /**
-     * <h2>应用名称</h2>
+     * 应用名称
      */
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '应用名称'")
@@ -62,14 +61,14 @@ public class AppEntity extends BaseEntity<AppEntity> {
     private String appName;
 
     /**
-     * <h2>应用地址</h2>
+     * 应用地址
      */
     @Column(columnDefinition = "varchar(255) default '' comment '应用地址'")
     @NotBlank(groups = {WhenAdd.class, WhenUpdate.class}, message = "应用地址必须填写")
     private String url;
 
     /**
-     * <h2>临时code</h2>
+     * 临时code
      */
     @Description("临时码")
     @NotBlank(groups = {AppEntity.WhenCode2AccessToken.class})
@@ -78,7 +77,7 @@ public class AppEntity extends BaseEntity<AppEntity> {
     private String code;
 
     /**
-     * <h2>Cookie</h2>
+     * Cookie
      */
     @Transient
     private String cookie;

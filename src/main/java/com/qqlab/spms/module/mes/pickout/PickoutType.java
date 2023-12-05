@@ -12,12 +12,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PickoutType implements IEnum {
     /**
-     * <h2>生产领料</h2>
+     * 生产领料
      */
     PRODUCE(1, "生产领料"),
 
     /**
-     * <h2>其他领料</h2>
+     * 其他领料
      */
     OTHER(2, "其他领料");
 

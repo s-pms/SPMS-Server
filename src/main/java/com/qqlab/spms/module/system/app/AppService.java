@@ -15,7 +15,7 @@ import java.util.Objects;
 @Service
 public class AppService extends BaseService<AppEntity, AppRepository> {
     /**
-     * <h2>通过AppKey获取一个应用</h2>
+     * 通过AppKey获取一个应用
      *
      * @param appKey AppKey
      * @return AppEntity
@@ -27,7 +27,8 @@ public class AppService extends BaseService<AppEntity, AppRepository> {
     }
 
     /**
-     * <h2>通过应用ID重置秘钥</h2>
+     * 通过应用ID重置秘钥
+     *
      * @param id 应用ID
      * @return 应用新秘钥
      */

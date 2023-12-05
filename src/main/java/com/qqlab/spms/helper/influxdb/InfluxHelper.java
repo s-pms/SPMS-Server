@@ -16,25 +16,25 @@ import java.util.Objects;
 @Configuration
 public class InfluxHelper {
     /**
-     * <h2>连接地址</h2>
+     * 连接地址
      */
     @Value("${spring.influxdb.url:''}")
     private String url;
 
     /**
-     * <h2>连接令牌</h2>
+     * 连接令牌
      */
     @Value("${spring.influxdb.token:''}")
     private String token;
 
     /**
-     * <h2>使用的组织名</h2>
+     * 使用的组织名
      */
     @Value("${spring.influxdb.org:''}")
     private String org;
 
     /**
-     * <h2>使用的存储库</h2>
+     * 使用的存储库
      */
     @Value("${spring.influxdb.bucket:''}")
     private String bucket;
@@ -42,7 +42,7 @@ public class InfluxHelper {
     private InfluxDBClient influxDbClient;
 
     /**
-     * <h2>保存数据</h2>
+     * 保存数据
      *
      * @param data 数据
      */

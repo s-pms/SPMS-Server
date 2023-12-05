@@ -18,13 +18,13 @@ public enum CustomResult implements IResult {
     ;
 
     /**
-     * <h2>错误代码</h2>
+     * 错误代码
      */
     @Getter
     private final int code;
 
     /**
-     * <h2>错误信息</h2>
+     * 错误信息
      */
     @Getter
     private final String message;

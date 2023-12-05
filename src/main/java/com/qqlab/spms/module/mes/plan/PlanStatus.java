@@ -12,22 +12,22 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PlanStatus implements IEnum {
     /**
-     * <h2>审核中</h2>
+     * 审核中
      */
     AUDITING(1, "审核中"),
 
     /**
-     * <h2>已驳回</h2>
+     * 已驳回
      */
     REJECTED(2, "已驳回"),
 
     /**
-     * <h2>生产中</h2>
+     * 生产中
      */
     PRODUCING(3, "生产中"),
 
     /**
-     * <h2>已完成</h2>
+     * 已完成
      */
     DONE(4, "已完成");
 

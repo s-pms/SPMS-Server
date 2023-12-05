@@ -29,45 +29,67 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Slf4j
 public class ReportEvent {
-    @Autowired
-    private MqttHelper mqttHelper;
+    /**
+     * 数据上报毫秒最小
+     */
+    public static final int REPORT_RATE_MIN = 200;
+    /**
+     * 运行状态
+     */
+    public static final String REPORT_KEY_OF_STATUS = "Status";
 
     /**
-     * <h2>订阅Topic</h2>
+     * 产量事件
+     */
+    public static final String REPORT_KEY_OF_PART_COUNT = "PartCnt";
+
+    /**
+     * 报警事件
+     */
+    public static final String REPORT_KEY_OF_ALARM = "Alarm";
+
+    /**
+     * 订阅Topic
      */
     public final static String IOT_REPORT_TOPIC_V1 = "/sys/msg/v1";
 
-    @Autowired
-    private DeviceService deviceService;
-
     /**
-     * <h2>Redis存IOT采集数据的前缀</h2>
+     * Redis存IOT采集数据的前缀
      */
-    public final static String PREFIX = "iot_";
+    public final static String CACHE_PREFIX = "iot_";
     /**
      * 下划线
      */
-    public final static String UNDERLINE = "_";
+    public final static String CACHE_UNDERLINE = "_";
+
     /**
      * 报告缓存时长
      */
     private final int REPORT_CACHE_SECOND = 10;
+
+    @Autowired
+    private MqttHelper mqttHelper;
+
+    @Autowired
+    private DeviceService deviceService;
+
     @Autowired
     private ParameterService parameterService;
+
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
+
     @Autowired
     private InfluxHelper influxHelper;
 
 
     /**
-     * <h2>开始监听MQTT</h2>
+     * 开始监听MQTT
      *
      * @throws MqttException 异常
      * @noinspection AlibabaMethodTooLong
      */
     public void listen() throws MqttException {
-
         MqttClient mqttClient = mqttHelper.createClient();
         mqttClient.connect(mqttHelper.createOption());
         mqttClient.subscribe(ReportEvent.IOT_REPORT_TOPIC_V1);
@@ -103,13 +125,13 @@ public class ReportEvent {
                         payload.setUuid(reportData.getDeviceId());
                         //noinspection EnhancedSwitchMigration
                         switch (payload.getCode()) {
-                            case ReportData.STATUS:
-                                lastDataInCache = (String) redisTemplate.opsForValue().get(PREFIX + ReportData.STATUS + UNDERLINE + reportData.getDeviceId());
+                            case REPORT_KEY_OF_STATUS:
+                                lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_STATUS + CACHE_UNDERLINE + reportData.getDeviceId());
                                 if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
                                     // 查到了数据 没过期 跳过
                                     continue;
                                 }
-                                redisTemplate.opsForValue().set(PREFIX + ReportData.STATUS + UNDERLINE + reportData.getDeviceId(), payload
+                                redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_STATUS + CACHE_UNDERLINE + reportData.getDeviceId(), payload
                                         .getValue(), REPORT_CACHE_SECOND, TimeUnit.SECONDS);
                                 if (Objects.isNull(device)) {
                                     device = deviceService.getByUuid(reportData.getDeviceId());
@@ -119,13 +141,13 @@ public class ReportEvent {
                                     }
                                 }
                                 break;
-                            case ReportData.ALARM:
-                                lastDataInCache = (String) redisTemplate.opsForValue().get(PREFIX + ReportData.ALARM + UNDERLINE + reportData.getDeviceId());
+                            case REPORT_KEY_OF_ALARM:
+                                lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_ALARM + CACHE_UNDERLINE + reportData.getDeviceId());
                                 if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
                                     // 查到了数据 没过期 跳过
                                     continue;
                                 }
-                                redisTemplate.opsForValue().set(PREFIX + ReportData.ALARM + UNDERLINE + reportData.getDeviceId(), payload
+                                redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_ALARM + CACHE_UNDERLINE + reportData.getDeviceId(), payload
                                         .getValue(), REPORT_CACHE_SECOND, TimeUnit.SECONDS);
                                 if (Objects.isNull(device)) {
                                     device = deviceService.getByUuid(reportData.getDeviceId());
@@ -135,13 +157,13 @@ public class ReportEvent {
                                     }
                                 }
                                 break;
-                            case ReportData.PART_COUNT:
-                                lastDataInCache = (String) redisTemplate.opsForValue().get(PREFIX + ReportData.PART_COUNT + UNDERLINE + reportData.getDeviceId());
+                            case REPORT_KEY_OF_PART_COUNT:
+                                lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_PART_COUNT + CACHE_UNDERLINE + reportData.getDeviceId());
                                 if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
                                     // 查到了数据 没过期 跳过
                                     continue;
                                 }
-                                redisTemplate.opsForValue().set(PREFIX + ReportData.PART_COUNT + UNDERLINE + reportData.getDeviceId(), payload
+                                redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_PART_COUNT + CACHE_UNDERLINE + reportData.getDeviceId(), payload
                                         .getValue(), REPORT_CACHE_SECOND, TimeUnit.SECONDS);
                                 if (Objects.isNull(device)) {
                                     device = deviceService.getByUuid(reportData.getDeviceId());
@@ -152,18 +174,18 @@ public class ReportEvent {
                                 }
                                 break;
                             default:
-                                lastDataInCache = (String) redisTemplate.opsForValue().get(PREFIX + payload.getCode() + UNDERLINE + reportData.getDeviceId());
+                                lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + payload.getCode() + CACHE_UNDERLINE + reportData.getDeviceId());
                                 if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
                                     // 查到了数据 没过期 跳过
                                     continue;
                                 }
-                                redisTemplate.opsForValue().set(PREFIX + payload.getCode() + UNDERLINE + reportData.getDeviceId(), payload
+                                redisTemplate.opsForValue().set(CACHE_PREFIX + payload.getCode() + CACHE_UNDERLINE + reportData.getDeviceId(), payload
                                         .getValue(), REPORT_CACHE_SECOND, TimeUnit.SECONDS);
                         }
                         influxHelper.save(payload);
                     }
                     reportData.setPayloads(payloadList);
-                    redisTemplate.opsForValue().set(PREFIX + reportData.getDeviceId(), JSON.toJSONString(reportData));
+                    redisTemplate.opsForValue().set(CACHE_PREFIX + reportData.getDeviceId(), JSON.toJSONString(reportData));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -12,27 +12,27 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PurchaseStatus implements IEnum {
     /**
-     * <h2>审核中</h2>
+     * 审核中
      */
     AUDITING(1, "审核中"),
 
     /**
-     * <h2>已驳回</h2>
+     * 已驳回
      */
     REJECTED(2, "已驳回"),
 
     /**
-     * <h2>采购中</h2>
+     * 采购中
      */
     PURCHASING(3, "采购中"),
 
     /**
-     * <h2>已完成</h2>
+     * 已完成
      */
     DONE(4, "已完成"),
 
     /**
-     * <h2>已入库</h2>
+     * 已入库
      */
     FINISHED(5, "已入库");
 

@@ -13,22 +13,22 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum DeviceAlarm implements IEnum {
     /**
-     * <h2>正常</h2>
+     * 正常
      */
     NONE(0, "正常"),
 
     /**
-     * <h2>系统报警</h2>
+     * 系统报警
      */
     SYSTEM(1, "系统报警"),
 
     /**
-     * <h2>手动报警</h2>
+     * 手动报警
      */
     MANUAL(2, "手动报警"),
 
     /**
-     * <h2>规则报警</h2>
+     * 规则报警
      */
     RULE(3, "规则报警"),
     ;

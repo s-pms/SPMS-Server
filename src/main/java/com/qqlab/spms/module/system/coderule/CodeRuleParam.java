@@ -13,27 +13,27 @@ import lombok.Getter;
 public enum CodeRuleParam implements IEnum {
 
     /**
-     * <h2>完整年份</h2>
+     * 完整年份
      */
     FULL_YEAR(1, "yyyy", "完整年份", "2023"),
 
     /**
-     * <h2>年份</h2>
+     * 年份
      */
     YEAR(2, "yy", "年份", "23"),
 
     /**
-     * <h2>月份</h2>
+     * 月份
      */
     MONTH(3, "mm", "月份", "12"),
 
     /**
-     * <h2>日期</h2>
+     * 日期
      */
     DATE(4, "dd", "日期", "31"),
 
     /**
-     * <h2>小时</h2>
+     * 小时
      */
     HOUR(5, "hh", "小时", "20"),
     ;

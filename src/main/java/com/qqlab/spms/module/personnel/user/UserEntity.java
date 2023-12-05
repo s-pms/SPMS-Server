@@ -37,7 +37,7 @@ import java.util.Set;
 @Description("用户")
 public class UserEntity extends BaseEntity<UserEntity> {
     /**
-     * <h2>邮箱(唯一)</h2>
+     * 邮箱(唯一)
      */
     @Description("账号")
     @Column(columnDefinition = "varchar(255) default '' comment '账号'", unique = true)
@@ -45,7 +45,7 @@ public class UserEntity extends BaseEntity<UserEntity> {
     private String account;
 
     /**
-     * <h2>邮箱(唯一)</h2>
+     * 邮箱(唯一)
      */
     @Description("邮箱")
     @Column(columnDefinition = "varchar(255) default '' comment '邮箱'", unique = true)
@@ -55,7 +55,7 @@ public class UserEntity extends BaseEntity<UserEntity> {
     private String email;
 
     /**
-     * <h2>手机(唯一)</h2>
+     * 手机(唯一)
      */
     @Description("手机")
     @Column(columnDefinition = "varchar(255) default '' comment '手机'", unique = true)
@@ -65,7 +65,7 @@ public class UserEntity extends BaseEntity<UserEntity> {
     private String phone;
 
     /**
-     * <h2>用户的密码(不返回给前端)</h2>
+     * 用户的密码(不返回给前端)
      */
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Description("密码")
@@ -76,7 +76,7 @@ public class UserEntity extends BaseEntity<UserEntity> {
     private String password;
 
     /**
-     * <h2>用户昵称</h2>
+     * 用户昵称
      */
     @Column(columnDefinition = "varchar(255) default '' comment '昵称'")
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class, WhenUpdateMyInfo.class}, message = "昵称不能为空")
@@ -84,7 +84,7 @@ public class UserEntity extends BaseEntity<UserEntity> {
     private String nickname;
 
     /**
-     * <h2>是否系统用户</h2>
+     * 是否系统用户
      */
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否系统用户'")
@@ -93,14 +93,14 @@ public class UserEntity extends BaseEntity<UserEntity> {
     private Boolean isSystem;
 
     /**
-     * <h2>密码盐</h2>
+     * 密码盐
      */
     @JsonIgnore
     @Column(columnDefinition = "varchar(255) default '' comment '密码盐'")
     private String salt;
 
     /**
-     * <h2>角色列表</h2>
+     * 角色列表
      */
     @ManyToMany(fetch = FetchType.EAGER)
     @Payload
@@ -108,18 +108,18 @@ public class UserEntity extends BaseEntity<UserEntity> {
     private Set<RoleEntity> roleList;
 
     /**
-     * <h2>登录使用的App秘钥</h2>
+     * 登录使用的App秘钥
      */
     private String appKey;
 
     /**
-     * <h2>邮箱验证码</h2>
+     * 邮箱验证码
      */
     @NotBlank(groups = {WhenLoginViaEmail.class, WhenLoginViaPhone.class}, message = "验证码不能为空")
     private String code;
 
     /**
-     * <h2>修改密码时使用的原始密码</h2>
+     * 修改密码时使用的原始密码
      */
     @NotBlank(groups = {WhenUpdateMyPassword.class}, message = "原始密码不能为空")
     private String oldPassword;
