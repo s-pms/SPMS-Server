@@ -97,7 +97,12 @@ public enum CodeRuleField implements IEnum {
     /**
      * 设备编码
      */
-    DeviceCode(17, "设备编码", "DE");
+    DeviceCode(17, "设备编码", "DE"),
+
+    /**
+     * 工序编码
+     */
+    OperationCode(18, "工序编码", "OP");
 
     @Getter
     private final int value;

@@ -199,6 +199,9 @@ public class Initializer {
         codeRuleService.add(
                 new CodeRuleEntity().setRuleField(CodeRuleField.DeviceCode.getValue()).setPrefix(CodeRuleField.DeviceCode.getDefaultPrefix()).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmdd")
         );
+        codeRuleService.add(
+                new CodeRuleEntity().setRuleField(CodeRuleField.OperationCode.getValue()).setPrefix(CodeRuleField.OperationCode.getDefaultPrefix()).setSnType(SerialNumberUpdate.DAY.getValue()).setTemplate("yyyymmdd")
+        );
     }
 
     @SuppressWarnings("AlibabaMethodTooLong")
