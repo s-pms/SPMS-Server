@@ -17,12 +17,6 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReportInfluxPayload {
     /**
-     * 属性名
-     */
-    @Column(tag = true)
-    private String code;
-
-    /**
      * 属性值
      */
     @Column
@@ -31,8 +25,14 @@ public class ReportInfluxPayload {
     /**
      * 时序存储设备ID
      */
-    @Column
+    @Column(tag = true)
     private String uuid;
 
     private Long timestamp;
+
+    private Boolean boolValue;
+
+    private Integer intValue;
+
+    private String strValue;
 }

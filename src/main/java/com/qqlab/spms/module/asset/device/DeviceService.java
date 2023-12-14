@@ -60,7 +60,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     }
 
     public List<ReportInfluxPayload> getDevicePayloadHistory(ReportPayload reportPayload) {
-        return influxHelper.query(reportPayload.getUuid(), reportPayload.getCode());
+        return influxHelper.queryDouble(reportPayload.getUuid(), reportPayload.getCode());
     }
 
     /**

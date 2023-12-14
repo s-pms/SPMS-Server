@@ -119,11 +119,6 @@ public class ReportEvent {
                         if (Objects.isNull(parameterEntity)) {
                             continue;
                         }
-                        influxHelper.save(new ReportInfluxPayload()
-                                .setCode(payload.getCode())
-                                .setValue(Double.valueOf(payload.getValue()))
-                                .setUuid(reportData.getDeviceId())
-                        );
                         payload.setUuid(reportData.getDeviceId());
                         ReportPayload newPayload = new ReportPayload().setCode(payload.getCode()).setValue(payload.getValue()).setLabel(parameterEntity.getLabel());
                         payloadList.add(newPayload);
@@ -131,6 +126,7 @@ public class ReportEvent {
                         //noinspection EnhancedSwitchMigration
                         switch (payload.getCode()) {
                             case REPORT_KEY_OF_STATUS:
+                                influxHelper.save(payload.getCode(), Integer.parseInt(payload.getValue()), reportData.getDeviceId());
                                 lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_STATUS + CACHE_UNDERLINE + reportData.getDeviceId());
                                 if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
                                     // 查到了数据 没过期 跳过
@@ -147,6 +143,7 @@ public class ReportEvent {
                                 }
                                 break;
                             case REPORT_KEY_OF_ALARM:
+                                influxHelper.save(payload.getCode(), Integer.parseInt(payload.getValue()), reportData.getDeviceId());
                                 lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_ALARM + CACHE_UNDERLINE + reportData.getDeviceId());
                                 if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
                                     // 查到了数据 没过期 跳过
@@ -163,6 +160,7 @@ public class ReportEvent {
                                 }
                                 break;
                             case REPORT_KEY_OF_PART_COUNT:
+                                influxHelper.save(payload.getCode(), Double.parseDouble(payload.getValue()), reportData.getDeviceId());
                                 lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_PART_COUNT + CACHE_UNDERLINE + reportData.getDeviceId());
                                 if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
                                     // 查到了数据 没过期 跳过
@@ -179,6 +177,7 @@ public class ReportEvent {
                                 }
                                 break;
                             default:
+                                influxHelper.save(payload.getCode(), payload.getValue(), reportData.getDeviceId());
                                 lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + payload.getCode() + CACHE_UNDERLINE + reportData.getDeviceId());
                                 if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
                                     // 查到了数据 没过期 跳过
