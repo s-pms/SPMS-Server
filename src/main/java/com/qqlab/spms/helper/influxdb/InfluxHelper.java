@@ -3,11 +3,15 @@ package com.qqlab.spms.helper.influxdb;
 import com.influxdb.LogLevel;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.QueryApi;
 import com.influxdb.client.WriteApiBlocking;
+import com.influxdb.client.domain.Query;
 import com.influxdb.client.domain.WritePrecision;
+import com.qqlab.spms.module.iot.report.ReportPayload;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -59,11 +63,18 @@ public class InfluxHelper {
         }
     }
 
-//    public List<FluxTable> findAll() {
-//        InfluxDBClient influxDbClient = InfluxDBClientFactory.create(url, token.toCharArray(), org, bucket);
-//        influxDbClient.setLogLevel(LogLevel.BASIC);
-//        String flux = String.format("from(bucket: \"%s\") |> range(start: 0)", bucket);
-//        QueryApi queryApi = influxDbClient.getQueryApi();
-//        return queryApi.query(flux, org);
-//    }
+    /**
+     * 查询数据
+     *
+     * @param query 查询语句
+     * @return 返回结果
+     */
+    public List<ReportPayload> query(String query) {
+        if (Objects.isNull(influxDbClient)) {
+            influxDbClient = InfluxDBClientFactory.create(url, token.toCharArray(), org, bucket);
+            influxDbClient.setLogLevel(LogLevel.NONE);
+        }
+        QueryApi queryApi = influxDbClient.getQueryApi();
+        return queryApi.query(new Query().query(query), ReportPayload.class);
+    }
 }

@@ -8,6 +8,7 @@ import cn.hamm.airpower.security.Permission;
 import com.qqlab.spms.base.BaseController;
 import com.qqlab.spms.module.iot.parameter.ParameterEntity;
 import com.qqlab.spms.module.iot.parameter.ParameterService;
+import com.qqlab.spms.module.iot.report.ReportPayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,6 +59,13 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
         }
         device.setParameters(parameters);
         return jsonData(device);
+    }
+
+    @Description("获取指定设备某个参数的历史")
+    @PostMapping("getDevicePayloadHistory")
+    @Permission(login = false)
+    public Json getDevicePayloadHistory(@RequestBody @Validated({ReportPayload.WhenGetDevicePayloadHistory.class}) ReportPayload payload) {
+        return jsonData(service.getDevicePayloadHistory(payload));
     }
 
     @Override

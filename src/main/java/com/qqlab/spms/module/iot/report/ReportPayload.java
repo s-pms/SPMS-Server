@@ -1,7 +1,10 @@
 package com.qqlab.spms.module.iot.report;
 
+import cn.hamm.airpower.validate.dictionary.Dictionary;
 import com.influxdb.annotations.Column;
 import com.influxdb.annotations.Measurement;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -18,6 +21,7 @@ public class ReportPayload {
      * 属性名
      */
     @Column(tag = true)
+    @NotBlank(groups = {WhenGetDevicePayloadHistory.class}, message = "参数名不能为空")
     private String code;
 
     /**
@@ -36,7 +40,12 @@ public class ReportPayload {
      * 时序存储设备ID
      */
     @Column
+    @NotBlank(groups = {WhenGetDevicePayloadHistory.class}, message = "设备采集ID不能为空")
     private String uuid;
+
+    @NotNull(groups = {WhenGetDevicePayloadHistory.class}, message = "粒度不能为空")
+    @Dictionary(ReportGranularity.class)
+    private int granularity;
 
 
     /**
@@ -55,5 +64,8 @@ public class ReportPayload {
      */
     public double parseNumberValue() {
         return Double.parseDouble(value);
+    }
+
+    public interface WhenGetDevicePayloadHistory {
     }
 }

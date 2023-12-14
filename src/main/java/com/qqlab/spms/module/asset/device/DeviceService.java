@@ -3,6 +3,7 @@ package com.qqlab.spms.module.asset.device;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.qqlab.spms.base.BaseService;
+import com.qqlab.spms.helper.influxdb.InfluxHelper;
 import com.qqlab.spms.module.iot.parameter.ParameterEntity;
 import com.qqlab.spms.module.iot.parameter.ParameterService;
 import com.qqlab.spms.module.iot.report.ReportData;
@@ -29,6 +30,9 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
+    @Autowired
+    private InfluxHelper influxHelper;
+
     /**
      * 查询指定设备uuid的当前报告
      *
@@ -52,6 +56,11 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
      */
     public DeviceEntity getByUuid(String uuid) {
         return repository.getByUuid(uuid);
+    }
+
+    public List<ReportPayload> getDevicePayloadHistory(ReportPayload reportPayload) {
+        return influxHelper.query("select label,value,code,uuid from payload where uuid = '" + reportPayload.getUuid() +
+                "' and code = '" + reportPayload.getCode() + "' order by time desc limit 20");
     }
 
     /**
