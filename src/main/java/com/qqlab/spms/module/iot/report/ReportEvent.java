@@ -51,7 +51,7 @@ public class ReportEvent {
     /**
      * 订阅Topic
      */
-    public final static String IOT_REPORT_TOPIC_V1 = "/sys/msg/v1";
+    public final static String IOT_REPORT_TOPIC_V1 = "sys/msg/v1";
 
     /**
      * Redis存IOT采集数据的前缀
