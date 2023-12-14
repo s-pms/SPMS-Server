@@ -5,12 +5,14 @@ import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.QueryApi;
 import com.influxdb.client.WriteApiBlocking;
-import com.influxdb.client.domain.Query;
 import com.influxdb.client.domain.WritePrecision;
-import com.qqlab.spms.module.iot.report.ReportPayload;
+import com.influxdb.query.FluxRecord;
+import com.influxdb.query.FluxTable;
+import com.qqlab.spms.module.iot.report.ReportInfluxPayload;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -63,18 +65,33 @@ public class InfluxHelper {
         }
     }
 
-    /**
-     * 查询数据
-     *
-     * @param query 查询语句
-     * @return 返回结果
-     */
-    public List<ReportPayload> query(String query) {
+    public List<ReportInfluxPayload> query(String uuid, String code) {
         if (Objects.isNull(influxDbClient)) {
             influxDbClient = InfluxDBClientFactory.create(url, token.toCharArray(), org, bucket);
-            influxDbClient.setLogLevel(LogLevel.NONE);
+            influxDbClient.setLogLevel(LogLevel.BASIC);
         }
+        List<ReportInfluxPayload> result = new ArrayList<>();
         QueryApi queryApi = influxDbClient.getQueryApi();
-        return queryApi.query(new Query().query(query), ReportPayload.class);
+        List<String> queryParams = new ArrayList<>();
+        queryParams.add(String.format("from(bucket:\"%s\")", bucket));
+        queryParams.add("range(start: -2h)");
+        queryParams.add(String.format("filter(fn: (r) => r._measurement == \"report\" and r.code == \"%s\")", code));
+        queryParams.add("filter(fn: (r) => r._measurement == \"report\" and r._field == \"value\")");
+        queryParams.add("aggregateWindow(every: 1m, fn: min)");
+        queryParams.add("fill(usePrevious: true)");
+        List<FluxTable> tables = queryApi.query(String.join("|>", queryParams));
+        for (FluxTable table : tables) {
+            for (FluxRecord record : table.getRecords()) {
+                Object value = record.getValueByKey("_value");
+                if (Objects.isNull(value)) {
+                    value = 0;
+                }
+                result.add(new ReportInfluxPayload()
+                        .setValue(Double.valueOf(value.toString()))
+                        .setTimestamp(Objects.requireNonNull(record.getTime()).toEpochMilli())
+                );
+            }
+        }
+        return result;
     }
 }

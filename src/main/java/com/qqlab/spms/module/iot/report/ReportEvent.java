@@ -119,6 +119,11 @@ public class ReportEvent {
                         if (Objects.isNull(parameterEntity)) {
                             continue;
                         }
+                        influxHelper.save(new ReportInfluxPayload()
+                                .setCode(payload.getCode())
+                                .setValue(Double.valueOf(payload.getValue()))
+                                .setUuid(reportData.getDeviceId())
+                        );
                         payload.setUuid(reportData.getDeviceId());
                         ReportPayload newPayload = new ReportPayload().setCode(payload.getCode()).setValue(payload.getValue()).setLabel(parameterEntity.getLabel());
                         payloadList.add(newPayload);
@@ -182,7 +187,6 @@ public class ReportEvent {
                                 redisTemplate.opsForValue().set(CACHE_PREFIX + payload.getCode() + CACHE_UNDERLINE + reportData.getDeviceId(), payload
                                         .getValue(), REPORT_CACHE_SECOND, TimeUnit.SECONDS);
                         }
-                        influxHelper.save(payload);
                     }
                     reportData.setPayloads(payloadList);
                     redisTemplate.opsForValue().set(CACHE_PREFIX + reportData.getDeviceId(), JSON.toJSONString(reportData));

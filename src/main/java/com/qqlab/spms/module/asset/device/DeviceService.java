@@ -8,6 +8,7 @@ import com.qqlab.spms.module.iot.parameter.ParameterEntity;
 import com.qqlab.spms.module.iot.parameter.ParameterService;
 import com.qqlab.spms.module.iot.report.ReportData;
 import com.qqlab.spms.module.iot.report.ReportEvent;
+import com.qqlab.spms.module.iot.report.ReportInfluxPayload;
 import com.qqlab.spms.module.iot.report.ReportPayload;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
 import jakarta.annotation.Resource;
@@ -58,9 +59,8 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
         return repository.getByUuid(uuid);
     }
 
-    public List<ReportPayload> getDevicePayloadHistory(ReportPayload reportPayload) {
-        return influxHelper.query("select label,value,code,uuid from payload where uuid = '" + reportPayload.getUuid() +
-                "' and code = '" + reportPayload.getCode() + "' order by time desc limit 20");
+    public List<ReportInfluxPayload> getDevicePayloadHistory(ReportPayload reportPayload) {
+        return influxHelper.query(reportPayload.getUuid(), reportPayload.getCode());
     }
 
     /**
