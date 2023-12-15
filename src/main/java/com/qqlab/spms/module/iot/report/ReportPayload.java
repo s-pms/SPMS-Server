@@ -1,6 +1,8 @@
 package com.qqlab.spms.module.iot.report;
 
+import cn.hamm.airpower.validate.dictionary.Dictionary;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -33,6 +35,10 @@ public class ReportPayload {
      */
     @NotBlank(groups = {WhenGetDevicePayloadHistory.class}, message = "设备采集ID不能为空")
     private String uuid;
+
+    @NotNull(groups = {WhenGetDevicePayloadHistory.class}, message = "颗粒度不允许为空")
+    @Dictionary(ReportGranularity.class)
+    private Integer reportGranularity;
 
     public interface WhenGetDevicePayloadHistory {
     }

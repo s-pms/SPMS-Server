@@ -14,17 +14,16 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: create-drop
-  data:
-    redis:
-      host: 127.0.0.1
-      port: 6379
-      password:
-
   mqtt:
     host: md4.cn
     port: 1883
     user: mqttroot
     pass: asdfew12345
+  influxdb:
+    url: http://md4.cn:8086
+    token: spms
+    org: spms
+    bucket: spms
 #应用配置
 application:
   loginUrl: "http://localhost:3000/login"

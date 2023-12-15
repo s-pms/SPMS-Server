@@ -18,12 +18,16 @@ spring:
       host: 127.0.0.1
       port: 6379
       password: asdfew12345
-
   mqtt:
     host: 127.0.0.1
     port: 1883
     user: mqttroot
     pass: asdfew12345
+  influxdb:
+    url: http://127.0.0.1:8086
+    token: spms
+    org: spms
+    bucket: spms
 #应用配置
 application:
   loginUrl: "https://md4.cn:888/login"

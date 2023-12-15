@@ -1,6 +1,7 @@
 package com.qqlab.spms.module.asset.device;
 
 import cn.hamm.airpower.result.Result;
+import cn.hamm.airpower.util.EnumHelper;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.qqlab.spms.base.BaseService;
@@ -18,7 +19,6 @@ import java.util.*;
 
 /**
  * @author zfy
- * @date 2023/11/28
  */
 @Service
 public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
@@ -31,6 +31,9 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
 
     @Autowired
     private InfluxHelper influxHelper;
+
+    @Autowired
+    private EnumHelper enumHelper;
 
     /**
      * 查询指定设备uuid的当前报告
@@ -60,11 +63,12 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     public List<ReportInfluxPayload> getDevicePayloadHistory(ReportPayload reportPayload) {
         ParameterEntity parameter = parameterService.getByCode(reportPayload.getCode());
         Result.PARAM_INVALID.whenNull(parameter, "不支持的参数");
+        ReportGranularity reportGranularity = enumHelper.getEnumByValue(ReportGranularity.class, reportPayload.getReportGranularity());
         // todo
         if (ReportDataType.QUANTITY.getValue() == parameter.getDataType()) {
-            return influxHelper.queryQuantity(reportPayload.getUuid(), reportPayload.getCode());
+            return influxHelper.queryQuantity(reportPayload.getUuid(), reportPayload.getCode(), reportGranularity);
         }
-        return influxHelper.queryInformation(reportPayload.getUuid(), reportPayload.getCode());
+        return influxHelper.queryInformation(reportPayload.getUuid(), reportPayload.getCode(), reportGranularity);
     }
 
     /**
