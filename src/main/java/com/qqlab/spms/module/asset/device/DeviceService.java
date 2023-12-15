@@ -1,15 +1,13 @@
 package com.qqlab.spms.module.asset.device;
 
+import cn.hamm.airpower.result.Result;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.qqlab.spms.base.BaseService;
 import com.qqlab.spms.helper.influxdb.InfluxHelper;
 import com.qqlab.spms.module.iot.parameter.ParameterEntity;
 import com.qqlab.spms.module.iot.parameter.ParameterService;
-import com.qqlab.spms.module.iot.report.ReportData;
-import com.qqlab.spms.module.iot.report.ReportEvent;
-import com.qqlab.spms.module.iot.report.ReportInfluxPayload;
-import com.qqlab.spms.module.iot.report.ReportPayload;
+import com.qqlab.spms.module.iot.report.*;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +58,13 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     }
 
     public List<ReportInfluxPayload> getDevicePayloadHistory(ReportPayload reportPayload) {
-        return influxHelper.queryDouble(reportPayload.getUuid(), reportPayload.getCode());
+        ParameterEntity parameter = parameterService.getByCode(reportPayload.getCode());
+        Result.PARAM_INVALID.whenNull(parameter, "不支持的参数");
+        // todo
+        if (ReportDataType.QUANTITY.getValue() == parameter.getDataType()) {
+            return influxHelper.queryQuantity(reportPayload.getUuid(), reportPayload.getCode());
+        }
+        return influxHelper.queryInformation(reportPayload.getUuid(), reportPayload.getCode());
     }
 
     /**

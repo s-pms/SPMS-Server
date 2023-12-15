@@ -3,11 +3,14 @@ package com.qqlab.spms.module.iot.parameter;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
+import cn.hamm.airpower.validate.dictionary.Dictionary;
 import com.qqlab.spms.base.BaseEntity;
+import com.qqlab.spms.module.iot.report.ReportDataType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -47,6 +50,12 @@ public class ParameterEntity extends BaseEntity<ParameterEntity> {
     @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否内置参数'")
     private Boolean isSystem;
+
+    @Description("数据类型")
+    @Search(Search.Mode.EQUALS)
+    @Dictionary(ReportDataType.class)
+    @NotNull(groups = {WhenAdd.class, WhenUpdate.class}, message = "数据类型不允许为空")
+    private int dataType;
 
     /**
      * 设置是系统内置参数

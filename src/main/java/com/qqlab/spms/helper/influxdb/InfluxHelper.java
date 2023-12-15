@@ -10,6 +10,7 @@ import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 import com.qqlab.spms.module.iot.report.ReportDataType;
 import com.qqlab.spms.module.iot.report.ReportEvent;
+import com.qqlab.spms.module.iot.report.ReportGranularity;
 import com.qqlab.spms.module.iot.report.ReportInfluxPayload;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -116,23 +117,23 @@ public class InfluxHelper {
         return null;
     }
 
-    public List<ReportInfluxPayload> queryDouble(String uuid, String code) {
-        return query(uuid, code, ReportDataType.DOUBLE);
+    public List<ReportInfluxPayload> queryQuantity(String uuid, String code, ReportGranularity reportGranularity) {
+        return query(uuid, code, ReportDataType.QUANTITY, reportGranularity);
     }
 
-    public List<ReportInfluxPayload> queryBool(String uuid, String code) {
-        return query(uuid, code, ReportDataType.BOOL);
+    public List<ReportInfluxPayload> querySwitch(String uuid, String code, ReportGranularity reportGranularity) {
+        return query(uuid, code, ReportDataType.SWITCH, reportGranularity);
     }
 
-    public List<ReportInfluxPayload> queryString(String uuid, String code) {
-        return query(uuid, code, ReportDataType.STRING);
+    public List<ReportInfluxPayload> queryInformation(String uuid, String code, ReportGranularity reportGranularity) {
+        return query(uuid, code, ReportDataType.INFORMATION, reportGranularity);
     }
 
-    public List<ReportInfluxPayload> queryInt(String uuid, String code) {
-        return query(uuid, code, ReportDataType.INT);
+    public List<ReportInfluxPayload> queryStatus(String uuid, String code, ReportGranularity reportGranularity) {
+        return query(uuid, code, ReportDataType.STATUS, reportGranularity);
     }
 
-    private List<ReportInfluxPayload> query(String uuid, String code, ReportDataType reportDataType) {
+    private List<ReportInfluxPayload> query(String uuid, String code, ReportDataType reportDataType, ReportGranularity reportGranularity) {
         if (Objects.isNull(influxDbClient)) {
             influxDbClient = InfluxDBClientFactory.create(url, token.toCharArray(), org, bucket);
             influxDbClient.setLogLevel(LogLevel.BASIC);
@@ -145,8 +146,13 @@ public class InfluxHelper {
         queryParams.add(String.format("filter(fn: (r) => r._measurement == \"%s\" and r.uuid == \"%s\")", ReportEvent.CACHE_PREFIX + code, uuid));
         queryParams.add("filter(fn: (r) => r._field == \"value\")");
         switch (reportDataType) {
-            case DOUBLE:
-                queryParams.add("aggregateWindow(every: 1m, fn: min)");
+            case QUANTITY:
+                queryParams.add("aggregateWindow(every: " + reportGranularity.getMark() + ", fn: mean)");
+                queryParams.add("fill(usePrevious: true)");
+                break;
+            case STATUS:
+            case SWITCH:
+                queryParams.add("aggregateWindow(every: " + reportGranularity.getMark() + ", fn: min)");
                 queryParams.add("fill(usePrevious: true)");
                 break;
             default:
@@ -158,16 +164,16 @@ public class InfluxHelper {
                 ReportInfluxPayload payload = new ReportInfluxPayload()
                         .setTimestamp(Objects.requireNonNull(record.getTime()).toEpochMilli());
                 switch (reportDataType) {
-                    case DOUBLE:
+                    case QUANTITY:
                         payload.setValue(Objects.isNull(value) ? 0 : Double.parseDouble(value.toString()));
                         break;
-                    case STRING:
+                    case INFORMATION:
                         payload.setStrValue(Objects.isNull(value) ? "" : value.toString());
                         break;
-                    case BOOL:
+                    case SWITCH:
                         payload.setBoolValue(!Objects.isNull(value) && "1".equals(value.toString()));
                         break;
-                    case INT:
+                    case STATUS:
                         payload.setIntValue(Objects.isNull(value) ? 0 : Integer.parseInt(value.toString()));
                         break;
                     default:
