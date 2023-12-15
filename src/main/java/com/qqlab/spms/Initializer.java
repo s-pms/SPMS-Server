@@ -1,6 +1,7 @@
 package com.qqlab.spms;
 
 import cn.hamm.airpower.security.PasswordUtil;
+import cn.hamm.airpower.util.redis.RedisUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.qqlab.spms.module.asset.device.DeviceEntity;
 import com.qqlab.spms.module.asset.device.DeviceService;
@@ -90,7 +91,11 @@ public class Initializer {
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddlAuto;
 
+    @Autowired
+    private RedisUtil redisUtil;
+
     public void run() throws MqttException {
+        redisUtil.clearAll();
         if ("create-drop".equals(ddlAuto)) {
             permissionService.forceReloadAllPermissions();
             initUserAndRole();
