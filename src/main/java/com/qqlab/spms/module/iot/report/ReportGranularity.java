@@ -13,10 +13,6 @@ import lombok.Getter;
 @SuppressWarnings("AlibabaEnumConstantsMustHaveComment")
 @Getter
 public enum ReportGranularity implements IEnum {
-    FIVE_SECONDS(5, "每五秒", "5s"),
-
-    THIRTY_SECONDS(30, "每半分钟", "30s"),
-
     ONE_MINUTE(60, "每分钟", "1m"),
 
     FIVE_MINUTES(300, "每五分钟", "5m"),
@@ -25,7 +21,11 @@ public enum ReportGranularity implements IEnum {
 
     ONE_HOUR(3600, "每小时", "1h"),
 
-    ONE_MONTH(86400, "每天", "24h"),
+    ONE_DAY(86400, "每天", "24h"),
+
+    ONE_WEEK(604800, "每周", "168h"),
+
+    ONE_MONTH(2678400, "每月", "744h"),
     ;
 
     private final int value;

@@ -64,11 +64,18 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
         ParameterEntity parameter = parameterService.getByCode(reportPayload.getCode());
         Result.PARAM_INVALID.whenNull(parameter, "不支持的参数");
         ReportGranularity reportGranularity = enumHelper.getEnumByValue(ReportGranularity.class, reportPayload.getReportGranularity());
-        // todo
-        if (ReportDataType.QUANTITY.getValue() == parameter.getDataType()) {
-            return influxHelper.queryQuantity(reportPayload.getUuid(), reportPayload.getCode(), reportGranularity);
+        ReportDataType reportDataType = enumHelper.getEnumByValue(ReportDataType.class, parameter.getDataType());
+        //noinspection EnhancedSwitchMigration
+        switch (reportDataType) {
+            case QUANTITY:
+                return influxHelper.queryQuantity(reportPayload, reportGranularity);
+            case STATUS:
+                return influxHelper.queryStatus(reportPayload, reportGranularity);
+            case SWITCH:
+                return influxHelper.querySwitch(reportPayload, reportGranularity);
+            default:
         }
-        return influxHelper.queryInformation(reportPayload.getUuid(), reportPayload.getCode(), reportGranularity);
+        return influxHelper.queryInformation(reportPayload, reportGranularity);
     }
 
     /**

@@ -40,6 +40,15 @@ public class ReportPayload {
     @Dictionary(ReportGranularity.class)
     private Integer reportGranularity;
 
+    private Integer dataType;
+
+
+    @NotNull(groups = {WhenGetDevicePayloadHistory.class}, message = "开始时间不允许为空")
+    private Long startTime;
+
+    @NotNull(groups = {WhenGetDevicePayloadHistory.class}, message = "结束时间不允许为空")
+    private Long endTime;
+
     public interface WhenGetDevicePayloadHistory {
     }
 }

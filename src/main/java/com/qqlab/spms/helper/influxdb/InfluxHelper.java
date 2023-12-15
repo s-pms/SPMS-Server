@@ -8,10 +8,8 @@ import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.write.Point;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
-import com.qqlab.spms.module.iot.report.ReportDataType;
-import com.qqlab.spms.module.iot.report.ReportEvent;
-import com.qqlab.spms.module.iot.report.ReportGranularity;
-import com.qqlab.spms.module.iot.report.ReportInfluxPayload;
+import com.qqlab.spms.module.iot.report.*;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -117,46 +115,30 @@ public class InfluxHelper {
         return null;
     }
 
-    public List<ReportInfluxPayload> queryQuantity(String uuid, String code, ReportGranularity reportGranularity) {
-        return query(uuid, code, ReportDataType.QUANTITY, reportGranularity);
+    public List<ReportInfluxPayload> queryQuantity(ReportPayload payload, ReportGranularity reportGranularity) {
+        return query(payload, ReportDataType.QUANTITY, reportGranularity);
     }
 
-    public List<ReportInfluxPayload> querySwitch(String uuid, String code, ReportGranularity reportGranularity) {
-        return query(uuid, code, ReportDataType.SWITCH, reportGranularity);
+    public List<ReportInfluxPayload> querySwitch(ReportPayload payload, ReportGranularity reportGranularity) {
+        return query(payload, ReportDataType.SWITCH, reportGranularity);
     }
 
-    public List<ReportInfluxPayload> queryInformation(String uuid, String code, ReportGranularity reportGranularity) {
-        return query(uuid, code, ReportDataType.INFORMATION, reportGranularity);
+    public List<ReportInfluxPayload> queryInformation(ReportPayload payload, ReportGranularity reportGranularity) {
+        return query(payload, ReportDataType.INFORMATION, reportGranularity);
     }
 
-    public List<ReportInfluxPayload> queryStatus(String uuid, String code, ReportGranularity reportGranularity) {
-        return query(uuid, code, ReportDataType.STATUS, reportGranularity);
+    public List<ReportInfluxPayload> queryStatus(ReportPayload payload, ReportGranularity reportGranularity) {
+        return query(payload, ReportDataType.STATUS, reportGranularity);
     }
 
-    private List<ReportInfluxPayload> query(String uuid, String code, ReportDataType reportDataType, ReportGranularity reportGranularity) {
+    private List<ReportInfluxPayload> query(ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
         if (Objects.isNull(influxDbClient)) {
             influxDbClient = InfluxDBClientFactory.create(url, token.toCharArray(), org, bucket);
             influxDbClient.setLogLevel(LogLevel.BASIC);
         }
         List<ReportInfluxPayload> result = new ArrayList<>();
         QueryApi queryApi = influxDbClient.getQueryApi();
-        List<String> queryParams = new ArrayList<>();
-        queryParams.add(String.format("from(bucket:\"%s\")", bucket));
-        queryParams.add("range(start: -24h)");
-        queryParams.add(String.format("filter(fn: (r) => r._measurement == \"%s\" and r.uuid == \"%s\")", ReportEvent.CACHE_PREFIX + code, uuid));
-        queryParams.add("filter(fn: (r) => r._field == \"value\")");
-        switch (reportDataType) {
-            case QUANTITY:
-                queryParams.add("aggregateWindow(every: " + reportGranularity.getMark() + ", fn: mean)");
-                queryParams.add("fill(usePrevious: true)");
-                break;
-            case STATUS:
-            case SWITCH:
-                queryParams.add("aggregateWindow(every: " + reportGranularity.getMark() + ", fn: min)");
-                queryParams.add("fill(usePrevious: true)");
-                break;
-            default:
-        }
+        List<String> queryParams = getFluxQuery(reportPayload, reportDataType, reportGranularity);
         List<FluxTable> tables = queryApi.query(String.join("|>", queryParams));
         for (FluxTable table : tables) {
             for (FluxRecord record : table.getRecords()) {
@@ -183,6 +165,20 @@ public class InfluxHelper {
             }
         }
         return result;
+    }
+
+    @NotNull
+    private List<String> getFluxQuery(ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
+        List<String> queryParams = new ArrayList<>();
+        queryParams.add(String.format("from(bucket:\"%s\")", bucket));
+        queryParams.add(String.format("range(start: %s, stop: %s)", Integer.parseInt(String.valueOf(reportPayload.getStartTime() / 1000)), Integer.parseInt(String.valueOf(reportPayload.getEndTime() / 1000))));
+        queryParams.add(String.format("filter(fn: (r) => r._measurement == \"%s\" and r.uuid == \"%s\")", ReportEvent.CACHE_PREFIX + reportPayload.getCode(), reportPayload.getUuid()));
+        queryParams.add("filter(fn: (r) => r._field == \"value\")");
+        if (Objects.requireNonNull(reportDataType) == ReportDataType.QUANTITY) {
+            queryParams.add("aggregateWindow(every: " + reportGranularity.getMark() + ", fn: mean)");
+            queryParams.add("fill(usePrevious: true)");
+        }
+        return queryParams;
     }
 
 }

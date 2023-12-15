@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <h1>上报事件</h1>
@@ -56,16 +55,11 @@ public class ReportEvent {
     /**
      * Redis存IOT采集数据的前缀
      */
-    public final static String CACHE_PREFIX = "iot_";
+    public final static String CACHE_PREFIX = "iot_report_";
     /**
      * 下划线
      */
     public final static String CACHE_UNDERLINE = "_";
-
-    /**
-     * 报告缓存时长
-     */
-    private final int REPORT_CACHE_SECOND = 10;
 
     @Autowired
     private MqttHelper mqttHelper;
@@ -120,20 +114,24 @@ public class ReportEvent {
                             continue;
                         }
                         payload.setUuid(reportData.getDeviceId());
-                        ReportPayload newPayload = new ReportPayload().setCode(payload.getCode()).setValue(payload.getValue()).setLabel(parameterEntity.getLabel());
+                        ReportPayload newPayload = new ReportPayload()
+                                .setCode(payload.getCode())
+                                .setValue(payload.getValue())
+                                .setLabel(parameterEntity.getLabel())
+                                .setDataType(parameterEntity.getDataType());
                         payloadList.add(newPayload);
                         payload.setUuid(reportData.getDeviceId());
                         //noinspection EnhancedSwitchMigration
                         switch (payload.getCode()) {
                             case REPORT_KEY_OF_STATUS:
-                                influxHelper.save(payload.getCode(), Integer.parseInt(payload.getValue()), reportData.getDeviceId());
                                 lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_STATUS + CACHE_UNDERLINE + reportData.getDeviceId());
                                 if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
                                     // 查到了数据 没过期 跳过
                                     continue;
                                 }
+                                influxHelper.save(payload.getCode(), Integer.parseInt(payload.getValue()), reportData.getDeviceId());
                                 redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_STATUS + CACHE_UNDERLINE + reportData.getDeviceId(), payload
-                                        .getValue(), REPORT_CACHE_SECOND, TimeUnit.SECONDS);
+                                        .getValue());
                                 if (Objects.isNull(device)) {
                                     device = deviceService.getByUuid(reportData.getDeviceId());
                                     if (Objects.nonNull(device) && device.getIsReporting()) {
@@ -143,14 +141,14 @@ public class ReportEvent {
                                 }
                                 break;
                             case REPORT_KEY_OF_ALARM:
-                                influxHelper.save(payload.getCode(), Integer.parseInt(payload.getValue()), reportData.getDeviceId());
                                 lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_ALARM + CACHE_UNDERLINE + reportData.getDeviceId());
                                 if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
                                     // 查到了数据 没过期 跳过
                                     continue;
                                 }
+                                influxHelper.save(payload.getCode(), Integer.parseInt(payload.getValue()), reportData.getDeviceId());
                                 redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_ALARM + CACHE_UNDERLINE + reportData.getDeviceId(), payload
-                                        .getValue(), REPORT_CACHE_SECOND, TimeUnit.SECONDS);
+                                        .getValue());
                                 if (Objects.isNull(device)) {
                                     device = deviceService.getByUuid(reportData.getDeviceId());
                                     if (Objects.nonNull(device) && device.getIsReporting()) {
@@ -160,14 +158,14 @@ public class ReportEvent {
                                 }
                                 break;
                             case REPORT_KEY_OF_PART_COUNT:
-                                influxHelper.save(payload.getCode(), Double.parseDouble(payload.getValue()), reportData.getDeviceId());
                                 lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_PART_COUNT + CACHE_UNDERLINE + reportData.getDeviceId());
                                 if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
                                     // 查到了数据 没过期 跳过
                                     continue;
                                 }
+                                influxHelper.save(payload.getCode(), Double.parseDouble(payload.getValue()), reportData.getDeviceId());
                                 redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_PART_COUNT + CACHE_UNDERLINE + reportData.getDeviceId(), payload
-                                        .getValue(), REPORT_CACHE_SECOND, TimeUnit.SECONDS);
+                                        .getValue());
                                 if (Objects.isNull(device)) {
                                     device = deviceService.getByUuid(reportData.getDeviceId());
                                     if (Objects.nonNull(device) && device.getIsReporting()) {
@@ -184,13 +182,13 @@ public class ReportEvent {
                                     continue;
                                 }
                                 redisTemplate.opsForValue().set(CACHE_PREFIX + payload.getCode() + CACHE_UNDERLINE + reportData.getDeviceId(), payload
-                                        .getValue(), REPORT_CACHE_SECOND, TimeUnit.SECONDS);
+                                        .getValue());
                         }
                     }
                     reportData.setPayloads(payloadList);
                     redisTemplate.opsForValue().set(CACHE_PREFIX + reportData.getDeviceId(), JSON.toJSONString(reportData));
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage());
                 }
             }
 
