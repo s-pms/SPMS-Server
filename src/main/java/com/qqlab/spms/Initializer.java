@@ -97,7 +97,6 @@ public class Initializer {
     public void run() throws MqttException {
         redisUtil.clearAll();
         if ("create-drop".equals(ddlAuto)) {
-            permissionService.forceReloadAllPermissions();
             initUserAndRole();
             initCodeRules();
             initUnitAndMaterial();
@@ -106,6 +105,7 @@ public class Initializer {
             initOtherData();
             initParameters();
             initDevices();
+            permissionService.forceReloadAllPermissions();
         }
         reportEvent.listen();
     }
