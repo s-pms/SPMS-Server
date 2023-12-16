@@ -34,6 +34,5 @@ public enum DeviceAlarm implements IEnum {
     ;
 
     private final int value;
-
     private final String label;
 }

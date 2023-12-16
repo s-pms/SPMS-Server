@@ -10,6 +10,7 @@ import lombok.Getter;
  * @author Hamm
  */
 @AllArgsConstructor
+@Getter
 public enum InputType implements IEnum {
     /**
      * 普通入库
@@ -29,10 +30,6 @@ public enum InputType implements IEnum {
     PURCHASE(3, "采购入库"),
     ;
 
-
-    @Getter
     private final int value;
-
-    @Getter
     private final String label;
 }

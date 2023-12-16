@@ -9,6 +9,7 @@ import lombok.Getter;
  * @author hamm
  */
 @SuppressWarnings("AlibabaEnumConstantsMustHaveComment")
+@Getter
 public enum CustomResult implements IResult {
     EMAIL_SEND_BUSY(1, "发送邮件过于频繁，请稍后再试"),
 
@@ -20,13 +21,11 @@ public enum CustomResult implements IResult {
     /**
      * 错误代码
      */
-    @Getter
     private final int code;
 
     /**
      * 错误信息
      */
-    @Getter
     private final String message;
 
     CustomResult(int code, String message) {

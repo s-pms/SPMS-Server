@@ -10,6 +10,7 @@ import lombok.Getter;
  * @author Hamm
  */
 @AllArgsConstructor
+@Getter
 public enum PickoutStatus implements IEnum {
     /**
      * 审核中
@@ -36,10 +37,6 @@ public enum PickoutStatus implements IEnum {
      */
     CANCELED(5, "已取消");
 
-
-    @Getter
     private final int value;
-
-    @Getter
     private final String label;
 }

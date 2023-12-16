@@ -10,6 +10,7 @@ import lombok.Getter;
  * @author Hamm
  */
 @AllArgsConstructor
+@Getter
 public enum SerialNumberUpdate implements IEnum {
 
     /**
@@ -33,9 +34,6 @@ public enum SerialNumberUpdate implements IEnum {
     NEVER(4, "不更新"),
     ;
 
-    @Getter
     private final int value;
-
-    @Getter
     private final String label;
 }

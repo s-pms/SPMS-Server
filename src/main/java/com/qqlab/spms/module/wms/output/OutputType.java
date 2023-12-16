@@ -10,6 +10,7 @@ import lombok.Getter;
  * @author Hamm
  */
 @AllArgsConstructor
+@Getter
 public enum OutputType implements IEnum {
     /**
      * 其他出库
@@ -29,10 +30,6 @@ public enum OutputType implements IEnum {
     SALE(3, "销售出库"),
     ;
 
-
-    @Getter
     private final int value;
-
-    @Getter
     private final String label;
 }

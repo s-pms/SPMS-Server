@@ -20,6 +20,5 @@ public enum ReportDataType implements IEnum {
     INFORMATION(4, "信息"),
     ;
     private final int value;
-
     private final String label;
 }

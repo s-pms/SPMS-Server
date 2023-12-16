@@ -10,6 +10,7 @@ import lombok.Getter;
  * @author Hamm
  */
 @AllArgsConstructor
+@Getter
 public enum PurchaseStatus implements IEnum {
     /**
      * 审核中
@@ -36,10 +37,6 @@ public enum PurchaseStatus implements IEnum {
      */
     FINISHED(5, "已入库");
 
-
-    @Getter
     private final int value;
-
-    @Getter
     private final String label;
 }

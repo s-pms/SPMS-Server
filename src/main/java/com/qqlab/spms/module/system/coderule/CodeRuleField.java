@@ -10,13 +10,12 @@ import lombok.Getter;
  * @author Hamm
  */
 @AllArgsConstructor
+@Getter
 public enum CodeRuleField implements IEnum {
-
     /**
      * 角色
      */
     RoleCode(1, "角色编码", "RO"),
-
 
     /**
      * 供应商编码
@@ -104,12 +103,7 @@ public enum CodeRuleField implements IEnum {
      */
     OperationCode(18, "工序编码", "OP");
 
-    @Getter
     private final int value;
-
-    @Getter
     private final String label;
-
-    @Getter
     private final String defaultPrefix;
 }

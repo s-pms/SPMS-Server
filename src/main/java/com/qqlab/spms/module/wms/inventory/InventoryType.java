@@ -10,6 +10,7 @@ import lombok.Getter;
  * @author Hamm
  */
 @AllArgsConstructor
+@Getter
 public enum InventoryType implements IEnum {
     /**
      * 存储资源
@@ -22,9 +23,6 @@ public enum InventoryType implements IEnum {
     STRUCTURE(2, "工厂结构");
 
 
-    @Getter
     private final int value;
-
-    @Getter
     private final String label;
 }

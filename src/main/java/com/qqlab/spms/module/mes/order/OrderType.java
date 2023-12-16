@@ -10,6 +10,7 @@ import lombok.Getter;
  * @author Hamm
  */
 @AllArgsConstructor
+@Getter
 public enum OrderType implements IEnum {
     /**
      * 计划订单
@@ -21,10 +22,6 @@ public enum OrderType implements IEnum {
      */
     OTHER(2, "其他订单");
 
-
-    @Getter
     private final int value;
-
-    @Getter
     private final String label;
 }

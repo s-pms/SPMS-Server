@@ -10,6 +10,7 @@ import lombok.Getter;
  * @author Hamm
  */
 @AllArgsConstructor
+@Getter
 public enum PlanType implements IEnum {
     /**
      * 内部计划
@@ -21,10 +22,6 @@ public enum PlanType implements IEnum {
      */
     SALE(2, "外销计划");
 
-
-    @Getter
     private final int value;
-
-    @Getter
     private final String label;
 }

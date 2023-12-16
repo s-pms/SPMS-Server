@@ -10,6 +10,7 @@ import lombok.Getter;
  * @author Hamm
  */
 @AllArgsConstructor
+@Getter
 public enum MaterialType implements IEnum {
     /**
      * 自产品
@@ -21,9 +22,6 @@ public enum MaterialType implements IEnum {
      */
     PURCHASE(2, "外购品");
 
-    @Getter
     private final int value;
-
-    @Getter
     private final String label;
 }

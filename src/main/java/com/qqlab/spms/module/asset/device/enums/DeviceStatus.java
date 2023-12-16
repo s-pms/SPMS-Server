@@ -43,10 +43,6 @@ public enum DeviceStatus implements IEnum {
     DEBUG(5, "调试"),
     ;
 
-
-    @Getter
     private final int value;
-
-    @Getter
     private final String label;
 }

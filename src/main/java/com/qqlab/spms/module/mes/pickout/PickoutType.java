@@ -10,6 +10,7 @@ import lombok.Getter;
  * @author Hamm
  */
 @AllArgsConstructor
+@Getter
 public enum PickoutType implements IEnum {
     /**
      * 生产领料
@@ -21,10 +22,6 @@ public enum PickoutType implements IEnum {
      */
     OTHER(2, "其他领料");
 
-
-    @Getter
     private final int value;
-
-    @Getter
     private final String label;
 }

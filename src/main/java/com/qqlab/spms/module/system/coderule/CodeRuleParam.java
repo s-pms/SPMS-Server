@@ -10,6 +10,7 @@ import lombok.Getter;
  * @author Hamm
  */
 @AllArgsConstructor
+@Getter
 public enum CodeRuleParam implements IEnum {
 
     /**
@@ -38,15 +39,8 @@ public enum CodeRuleParam implements IEnum {
     HOUR(5, "hh", "小时", "20"),
     ;
 
-    @Getter
     private final int value;
-
-    @Getter
     private final String label;
-
-    @Getter
     private final String desc;
-
-    @Getter
     private final String demo;
 }
