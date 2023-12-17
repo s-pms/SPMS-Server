@@ -31,10 +31,10 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "operation")
 @EqualsAndHashCode(callSuper = true)
 public class OperationEntity extends BaseEntity<OperationEntity> {
-    
+
     @Description("工序名称")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "工序名称不能为空")
-    @Column(columnDefinition = "varchar(255) default '' comment '工序名称'")
+    @Column(columnDefinition = "varchar(255) default '' comment '工序名称'", unique = true)
     private String name;
 
     @Description("工序编码")

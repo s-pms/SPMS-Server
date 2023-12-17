@@ -11,7 +11,7 @@ spring:
       suffix: .html
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
-    show-sql: false
+    show-sql: true
     hibernate:
       ddl-auto: create-drop
   mqtt:
