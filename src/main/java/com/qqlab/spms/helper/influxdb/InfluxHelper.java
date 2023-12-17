@@ -177,6 +177,8 @@ public class InfluxHelper {
         if (Objects.requireNonNull(reportDataType) == ReportDataType.QUANTITY) {
             queryParams.add("aggregateWindow(every: " + reportGranularity.getMark() + ", fn: mean)");
             queryParams.add("fill(usePrevious: true)");
+        } else {
+            queryParams.add("limit(n: 200)");
         }
         return queryParams;
     }
