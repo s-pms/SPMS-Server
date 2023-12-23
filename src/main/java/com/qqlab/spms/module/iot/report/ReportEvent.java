@@ -121,7 +121,6 @@ public class ReportEvent {
                                 .setDataType(parameterEntity.getDataType());
                         payloadList.add(newPayload);
                         payload.setUuid(reportData.getDeviceId());
-                        //noinspection EnhancedSwitchMigration
                         switch (payload.getCode()) {
                             case REPORT_KEY_OF_STATUS:
                                 lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_STATUS + CACHE_UNDERLINE + reportData.getDeviceId());

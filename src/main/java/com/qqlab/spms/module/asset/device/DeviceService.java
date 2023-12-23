@@ -1,7 +1,7 @@
 package com.qqlab.spms.module.asset.device;
 
 import cn.hamm.airpower.result.Result;
-import cn.hamm.airpower.util.EnumHelper;
+import cn.hamm.airpower.util.EnumUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.qqlab.spms.base.BaseService;
@@ -32,9 +32,6 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     @Autowired
     private InfluxHelper influxHelper;
 
-    @Autowired
-    private EnumHelper enumHelper;
-
     /**
      * 查询指定设备uuid的当前报告
      *
@@ -63,17 +60,19 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     public List<ReportInfluxPayload> getDevicePayloadHistory(ReportPayload reportPayload) {
         ParameterEntity parameter = parameterService.getByCode(reportPayload.getCode());
         Result.PARAM_INVALID.whenNull(parameter, "不支持的参数");
-        ReportGranularity reportGranularity = enumHelper.getEnumByValue(ReportGranularity.class, reportPayload.getReportGranularity());
-        ReportDataType reportDataType = enumHelper.getEnumByValue(ReportDataType.class, parameter.getDataType());
-        //noinspection EnhancedSwitchMigration
-        switch (reportDataType) {
-            case QUANTITY:
-                return influxHelper.queryQuantity(reportPayload, reportGranularity);
-            case STATUS:
-                return influxHelper.queryStatus(reportPayload, reportGranularity);
-            case SWITCH:
-                return influxHelper.querySwitch(reportPayload, reportGranularity);
-            default:
+        ReportGranularity reportGranularity = EnumUtil.getEnumByValue(ReportGranularity.class, reportPayload.getReportGranularity());
+        ReportDataType reportDataType = EnumUtil.getEnumByValue(ReportDataType.class, parameter.getDataType());
+        if (reportDataType != null) {
+            //noinspection EnhancedSwitchMigration
+            switch (reportDataType) {
+                case QUANTITY:
+                    return influxHelper.queryQuantity(reportPayload, reportGranularity);
+                case STATUS:
+                    return influxHelper.queryStatus(reportPayload, reportGranularity);
+                case SWITCH:
+                    return influxHelper.querySwitch(reportPayload, reportGranularity);
+                default:
+            }
         }
         return influxHelper.queryInformation(reportPayload, reportGranularity);
     }

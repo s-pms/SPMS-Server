@@ -92,7 +92,7 @@ public class Initializer {
     private String ddlAuto;
 
     @Autowired
-    private RedisUtil redisUtil;
+    private RedisUtil<?> redisUtil;
 
     public void run() throws MqttException {
         redisUtil.clearAll();

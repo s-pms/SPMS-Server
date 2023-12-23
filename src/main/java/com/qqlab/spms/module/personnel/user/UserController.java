@@ -109,7 +109,6 @@ public class UserController extends BaseController<UserEntity, UserService, User
      */
     private JsonData doLogin(UserLoginType userLoginType, UserEntity userEntity, HttpServletResponse response) {
         String accessToken = "";
-        //noinspection EnhancedSwitchMigration
         switch (userLoginType) {
             case VIA_ACCOUNT_PASSWORD:
                 accessToken = service.login(userEntity);

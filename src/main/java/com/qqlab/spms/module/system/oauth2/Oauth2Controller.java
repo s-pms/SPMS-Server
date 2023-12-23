@@ -16,6 +16,7 @@ import com.qqlab.spms.module.system.app.AppService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.Objects;
@@ -35,6 +35,7 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("oauth2")
+@Slf4j
 public class Oauth2Controller extends RootController {
     @Autowired
     private UserService userService;
@@ -96,11 +97,7 @@ public class Oauth2Controller extends RootController {
         appEntity.setCode(code).setAppKey(appKey);
         userService.saveOauthCode(userEntity.getId(), appEntity);
         String redirectTarget;
-        try {
-            redirectTarget = URLDecoder.decode(redirectUri, Charset.defaultCharset().toString());
-        } catch (UnsupportedEncodingException e) {
-            return redirectLogin(response, appKey, redirectUri);
-        }
+        redirectTarget = URLDecoder.decode(redirectUri, Charset.defaultCharset());
         String querySplit = "?";
         if (redirectTarget.contains(querySplit)) {
             redirectTarget += "&code=" + code;
@@ -156,7 +153,7 @@ public class Oauth2Controller extends RootController {
         try {
             response.sendRedirect(url);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 }

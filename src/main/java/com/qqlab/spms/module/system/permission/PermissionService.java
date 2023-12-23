@@ -124,7 +124,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return permissionList;
     }
@@ -136,7 +136,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
         QueryRequest<PermissionEntity> queryRequest = new QueryRequest<>();
         queryRequest.setFilter(new PermissionEntity().setParentId(id));
         List<PermissionEntity> children = getList(queryRequest);
-        Result.FORBIDDEN_DELETE.when(children.size() > 0, "含有子权限,无法删除!");
+        Result.FORBIDDEN_DELETE.when(!children.isEmpty(), "含有子权限,无法删除!");
     }
 
     @Override

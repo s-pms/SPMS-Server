@@ -21,7 +21,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         QueryRequest<MenuEntity> queryRequest = new QueryRequest<>();
         queryRequest.setFilter(new MenuEntity().setParentId(id));
         List<MenuEntity> children = getList(queryRequest);
-        Result.FORBIDDEN_DELETE.when(children.size() > 0, "含有子菜单,无法删除!");
+        Result.FORBIDDEN_DELETE.when(!children.isEmpty(), "含有子菜单,无法删除!");
     }
 
     @Override
