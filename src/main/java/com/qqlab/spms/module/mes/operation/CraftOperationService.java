@@ -10,6 +10,6 @@ import org.springframework.stereotype.Service;
  * @date 2023/12/14
  */
 @Service
-public class OperationService extends BaseService<OperationEntity, OperationRepository> {
+public class CraftOperationService extends BaseService<CraftOperationEntity, CraftOperationRepository> {
 
 }

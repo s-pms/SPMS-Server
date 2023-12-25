@@ -28,9 +28,9 @@ import org.hibernate.annotations.DynamicUpdate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-@Table(name = "operation")
+@Table(name = "craft_operation")
 @EqualsAndHashCode(callSuper = true)
-public class OperationEntity extends BaseEntity<OperationEntity> {
+public class CraftOperationEntity extends BaseEntity<CraftOperationEntity> {
 
     @Description("工序名称")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "工序名称不能为空")
