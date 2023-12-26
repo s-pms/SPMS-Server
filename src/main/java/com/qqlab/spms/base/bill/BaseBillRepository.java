@@ -9,7 +9,7 @@ import org.springframework.data.repository.NoRepositoryBean;
  *
  * @param <E> 单据实体
  * @param <D> 明细实体
- * @author hamm
+ * @author Hamm
  */
 @NoRepositoryBean
 public interface BaseBillRepository<E extends AbstractBaseBillEntity<E, D>, D extends BaseBillDetailEntity<D>> extends BaseRepository<E> {

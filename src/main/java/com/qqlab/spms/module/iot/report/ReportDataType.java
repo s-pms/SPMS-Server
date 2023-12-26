@@ -7,7 +7,7 @@ import lombok.Getter;
 /**
  * 数据类型
  *
- * @author hamm
+ * @author Hamm
  */
 
 @SuppressWarnings("AlibabaEnumConstantsMustHaveComment")

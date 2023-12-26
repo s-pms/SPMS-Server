@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @param <E> 明细实体
  * @param <R> 明细数据源
- * @author hamm
+ * @author Hamm
  */
 public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends BaseBillDetailRepository<E>> extends BaseService<E, R> {
 

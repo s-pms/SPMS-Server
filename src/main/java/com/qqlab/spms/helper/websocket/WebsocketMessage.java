@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 /**
  * <h1>Websocket消息体</h1>
  *
- * @author hamm
+ * @author Hamm
  */
 @AllArgsConstructor
 @NoArgsConstructor

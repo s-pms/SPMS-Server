@@ -14,7 +14,7 @@ import org.hibernate.annotations.DynamicUpdate;
 /**
  * <h1>应用实体基类</h1>
  *
- * @author hamm
+ * @author Hamm
  */
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

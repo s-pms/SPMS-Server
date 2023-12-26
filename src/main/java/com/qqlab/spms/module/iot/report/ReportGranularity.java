@@ -7,7 +7,7 @@ import lombok.Getter;
 /**
  * 报告颗粒度
  *
- * @author hamm
+ * @author Hamm
  */
 @AllArgsConstructor
 @SuppressWarnings("AlibabaEnumConstantsMustHaveComment")

@@ -16,7 +16,7 @@ import org.hibernate.annotations.DynamicUpdate;
  * <h1>单据明细基类</h1>
  *
  * @param <E> 明细实体
- * @author hamm
+ * @author Hamm
  */
 @SuppressWarnings({"unchecked", "UnusedReturnValue"})
 @EqualsAndHashCode(callSuper = true)

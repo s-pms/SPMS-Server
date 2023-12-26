@@ -49,7 +49,7 @@ import java.util.Set;
 /**
  * <h1>初始化</h1>
  *
- * @author hamm
+ * @author Hamm
  */
 @Component
 public class Initializer {

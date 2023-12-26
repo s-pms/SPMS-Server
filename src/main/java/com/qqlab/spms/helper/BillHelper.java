@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 /**
  * <h1>采购入库助手类</h1>
  *
- * @author hamm
+ * @author Hamm
  */
 @Component
 @SuppressWarnings("UnusedReturnValue")
