@@ -139,7 +139,7 @@ public class InfluxHelper {
         List<ReportInfluxPayload> result = new ArrayList<>();
         QueryApi queryApi = influxDbClient.getQueryApi();
         List<String> queryParams = getFluxQuery(reportPayload, reportDataType, reportGranularity);
-        List<FluxTable> tables = queryApi.query(String.join("|>", queryParams));
+        List<FluxTable> tables = queryApi.query(String.join(" |> ", queryParams));
         for (FluxTable table : tables) {
             for (FluxRecord record : table.getRecords()) {
                 Object value = record.getValueByKey("_value");
@@ -178,7 +178,7 @@ public class InfluxHelper {
             queryParams.add("aggregateWindow(every: " + reportGranularity.getMark() + ", fn: mean)");
             queryParams.add("fill(usePrevious: true)");
         } else {
-            queryParams.add("limit(n: 200)");
+            queryParams.add("limit(n: 500)");
         }
         return queryParams;
     }

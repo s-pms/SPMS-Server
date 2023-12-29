@@ -57,6 +57,12 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
         return repository.getByUuid(uuid);
     }
 
+    /**
+     * 查询指定设备指定参数的历史记录
+     *
+     * @param reportPayload 传入参数
+     * @return 查询历史
+     */
     public List<ReportInfluxPayload> getDevicePayloadHistory(ReportPayload reportPayload) {
         ParameterEntity parameter = parameterService.getByCode(reportPayload.getCode());
         Result.PARAM_INVALID.whenNull(parameter, "不支持的参数");

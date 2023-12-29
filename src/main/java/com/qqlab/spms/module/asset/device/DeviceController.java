@@ -8,8 +8,11 @@ import cn.hamm.airpower.security.Permission;
 import com.qqlab.spms.base.BaseController;
 import com.qqlab.spms.module.iot.parameter.ParameterEntity;
 import com.qqlab.spms.module.iot.parameter.ParameterService;
+import com.qqlab.spms.module.iot.report.ReportEvent;
 import com.qqlab.spms.module.iot.report.ReportPayload;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +32,9 @@ import java.util.Set;
 public class DeviceController extends BaseController<DeviceEntity, DeviceService, DeviceRepository> {
     @Autowired
     private ParameterService parameterService;
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     protected DeviceEntity afterGetDetail(DeviceEntity device) {
@@ -70,6 +76,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
 
     @Override
     protected DeviceEntity beforeUpdate(DeviceEntity device) {
+        redisTemplate.delete(ReportEvent.CACHE_PREFIX + device.getUuid());
         return service.getDeviceParameters(device);
     }
 
