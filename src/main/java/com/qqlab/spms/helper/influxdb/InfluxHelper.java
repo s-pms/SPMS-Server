@@ -179,7 +179,7 @@ public class InfluxHelper {
             queryParams.add("aggregateWindow(every: " + reportGranularity.getMark() + ", fn: mean)");
             queryParams.add("fill(usePrevious: true)");
         } else {
-            queryParams.add("limit(n: 200, offset: 0)");
+            queryParams.add("limit(n: 10, offset: 0)");
         }
         return queryParams;
     }
