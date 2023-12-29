@@ -175,7 +175,7 @@ public class InfluxHelper {
         queryParams.add(String.format("range(start: %s, stop: %s)", Integer.parseInt(String.valueOf(reportPayload.getStartTime() / 1000)), Integer.parseInt(String.valueOf(reportPayload.getEndTime() / 1000))));
         queryParams.add(String.format("filter(fn: (r) => r._measurement == \"%s\" and r.uuid == \"%s\")", ReportEvent.CACHE_PREFIX + reportPayload.getCode(), reportPayload.getUuid()));
         queryParams.add("filter(fn: (r) => r._field == \"value\")");
-        queryParams.add("sort(columns: [\"\"])");
+        queryParams.add("sort(columns: [\"timestamp\"], desc: true)");
         if (Objects.requireNonNull(reportDataType) == ReportDataType.QUANTITY) {
             queryParams.add("aggregateWindow(every: " + reportGranularity.getMark() + ", fn: mean)");
             queryParams.add("fill(usePrevious: true)");
