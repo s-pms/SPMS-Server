@@ -182,9 +182,6 @@ public class InfluxHelper {
         } else {
             queryParams.add("limit(n: 500, offset: 0)");
         }
-        if (Objects.requireNonNull(reportDataType) == ReportDataType.INFORMATION) {
-            queryParams.add("reverse()");
-        }
         return queryParams;
     }
 
