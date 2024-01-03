@@ -1,13 +1,11 @@
 package com.qqlab.spms.module.mes.craft.relation;
 
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.annotation.Exclude;
 import cn.hamm.airpower.annotation.Payload;
 import com.qqlab.spms.base.BaseEntity;
 import com.qqlab.spms.module.mes.operation.CraftOperationEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,5 +36,10 @@ public class CraftRouterOperationEntity extends BaseEntity<CraftRouterOperationE
     @ManyToOne(fetch = FetchType.EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "工序不能为空")
     private CraftOperationEntity operation;
+
+    @Description("排序号")
+    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '排序号'")
+    @Exclude(filters = {WhenPayLoad.class})
+    private Integer orderNo;
 
 }
