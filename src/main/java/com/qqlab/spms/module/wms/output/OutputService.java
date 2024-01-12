@@ -73,8 +73,8 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
             Result.FORBIDDEN.show("请传入库存信息");
             return null;
         }
-        inventory = inventoryService.getById(inventory.getId());
-        detail = detailService.getById(detail.getId());
+        inventory = inventoryService.get(inventory.getId());
+        detail = detailService.get(detail.getId());
         Result.FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), detail.getMaterial().getId(), "物料信息不匹配");
         if (inventory.getQuantity() < detail.getQuantity()) {
             // 判断库存

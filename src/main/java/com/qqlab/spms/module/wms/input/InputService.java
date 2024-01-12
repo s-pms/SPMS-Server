@@ -69,7 +69,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
 
     @Override
     public InputDetailEntity addFinish(InputDetailEntity detail) {
-        InputDetailEntity savedDetail = detailService.getById(detail.getId());
+        InputDetailEntity savedDetail = detailService.get(detail.getId());
         if (Objects.isNull(detail.getStorage()) || Objects.isNull(detail.getStorage().getId())) {
             Result.FORBIDDEN.show("请传入入库存储资源");
             return null;

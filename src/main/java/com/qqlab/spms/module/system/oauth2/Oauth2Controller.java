@@ -92,7 +92,7 @@ public class Oauth2Controller extends RootController {
             // cookie没有找到用户
             return redirectLogin(response, appKey, redirectUri);
         }
-        UserEntity userEntity = userService.getById(userId);
+        UserEntity userEntity = userService.get(userId);
         String code = RandomUtil.randomString(32);
         appEntity.setCode(code).setAppKey(appKey);
         userService.saveOauthCode(userEntity.getId(), appEntity);

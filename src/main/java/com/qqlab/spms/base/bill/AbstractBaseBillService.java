@@ -35,7 +35,7 @@ public abstract class AbstractBaseBillService<
      * @return 存储后的明细
      */
     public D addFinish(D detail) {
-        D savedDetail = detailService.getById(detail.getId());
+        D savedDetail = detailService.get(detail.getId());
         detail.setFinishQuantity(savedDetail.getFinishQuantity() + detail.getQuantity());
         detail = detailService.update(detail);
         List<D> details = detailService.getAllByBillId(detail.getBillId());
@@ -85,8 +85,10 @@ public abstract class AbstractBaseBillService<
         return bill;
     }
 
+
     @Override
-    protected E afterGetById(E bill) {
+    public E get(Long id) {
+        E bill = getById(id);
         List<D> details = detailService.getAllByBillId(bill.getId());
         bill.setDetails(details);
         return bill;

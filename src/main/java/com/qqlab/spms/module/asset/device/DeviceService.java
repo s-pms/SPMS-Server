@@ -93,7 +93,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
         Set<ParameterEntity> parameters = new HashSet<>();
         if (Objects.nonNull(device.getParameters())) {
             for (ParameterEntity parameter : device.getParameters()) {
-                parameter = parameterService.getById(parameter.getId());
+                parameter = parameterService.get(parameter.getId());
                 if (!parameter.getIsSystem()) {
                     parameters.add(parameter);
                 }

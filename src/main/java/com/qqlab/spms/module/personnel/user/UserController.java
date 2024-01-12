@@ -42,7 +42,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @PostMapping("getMyInfo")
     @Filter(UserEntity.WhenGetMyInfo.class)
     public JsonData getMyInfo(Long userId) {
-        return jsonData(service.getById(userId));
+        return jsonData(service.get(userId));
     }
 
     @Description("修改我的信息")

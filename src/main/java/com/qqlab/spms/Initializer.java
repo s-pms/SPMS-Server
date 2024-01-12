@@ -145,14 +145,14 @@ public class Initializer {
 
 
         inventoryService.add(new InventoryEntity()
-                .setMaterial(materialService.getById(1L))
+                .setMaterial(materialService.get(1L))
                 .setQuantity(2D)
-                .setStorage(storageService.getById(1L))
+                .setStorage(storageService.get(1L))
         );
         inventoryService.add(new InventoryEntity()
-                .setMaterial(materialService.getById(1L))
+                .setMaterial(materialService.get(1L))
                 .setQuantity(10D)
-                .setStorage(storageService.getById(2L))
+                .setStorage(storageService.get(2L))
         );
 
     }
@@ -349,7 +349,7 @@ public class Initializer {
 
     private void initUserAndRole() {
         // 初始化角色
-        RoleEntity firstRole = roleService.getByIdMaybeNull(1L);
+        RoleEntity firstRole = roleService.getMaybeNull(1L);
         if (Objects.nonNull(firstRole)) {
             return;
         }
@@ -360,7 +360,7 @@ public class Initializer {
                 .setRemark("超级管理员角色组,请勿数据库暴力直接删除"));
 
         // 初始化用户
-        UserEntity userEntity = userService.getByIdMaybeNull(1L);
+        UserEntity userEntity = userService.getMaybeNull(1L);
         if (Objects.nonNull(userEntity)) {
             return;
         }
