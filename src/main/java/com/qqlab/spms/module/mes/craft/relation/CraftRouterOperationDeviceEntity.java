@@ -25,7 +25,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-@Table(name = "craft_router_opertion_device")
+@Table(name = "craft_router_operation_device")
 @EqualsAndHashCode(callSuper = true)
 public class CraftRouterOperationDeviceEntity extends BaseEntity<CraftRouterOperationDeviceEntity> {
 
