@@ -69,7 +69,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
 
     @Override
     public MoveDetailEntity addFinish(MoveDetailEntity detail) {
-        detail = detailService.getById(detail.getId());
+        detail = detailService.get(detail.getId());
         if (detail.getInventory().getQuantity() < detail.getQuantity()) {
             // 判断来源库存
             Result.FORBIDDEN.show("库存信息不足" + detail.getQuantity());

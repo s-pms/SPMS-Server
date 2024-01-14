@@ -339,9 +339,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     @Override
-    protected void beforeDelete(Long id) {
+    public void delete(Long id) {
         UserEntity entity = getById(id);
         Result.FORBIDDEN_DELETE.when(entity.getIsSystem(), "系统内置用户无法被删除!");
+        deleteById(id);
     }
 
     @Override

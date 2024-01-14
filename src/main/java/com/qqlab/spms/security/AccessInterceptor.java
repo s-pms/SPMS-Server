@@ -50,7 +50,7 @@ public class AccessInterceptor extends AbstractAccessInterceptor {
      */
     @Override
     public boolean checkPermissionAccess(Long userId, String permissionIdentity) {
-        UserEntity existUser = userService.getById(userId);
+        UserEntity existUser = userService.get(userId);
         if (existUser.getIsSystem()) {
             return true;
         }

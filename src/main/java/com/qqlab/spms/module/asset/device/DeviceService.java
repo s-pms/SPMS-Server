@@ -69,7 +69,6 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
         ReportGranularity reportGranularity = EnumUtil.getEnumByValue(ReportGranularity.class, reportPayload.getReportGranularity());
         ReportDataType reportDataType = EnumUtil.getEnumByValue(ReportDataType.class, parameter.getDataType());
         if (reportDataType != null) {
-            //noinspection EnhancedSwitchMigration
             switch (reportDataType) {
                 case QUANTITY:
                     return influxHelper.queryQuantity(reportPayload, reportGranularity);
@@ -93,7 +92,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
         Set<ParameterEntity> parameters = new HashSet<>();
         if (Objects.nonNull(device.getParameters())) {
             for (ParameterEntity parameter : device.getParameters()) {
-                parameter = parameterService.getById(parameter.getId());
+                parameter = parameterService.get(parameter.getId());
                 if (!parameter.getIsSystem()) {
                     parameters.add(parameter);
                 }

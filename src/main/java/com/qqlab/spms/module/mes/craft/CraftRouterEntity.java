@@ -20,7 +20,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * @author zfy
- * @date 2023/12/24
  */
 @Data
 @Entity

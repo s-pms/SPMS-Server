@@ -35,7 +35,7 @@ public class BaseBillController<
     @PostMapping("audit")
     @Filter(RootEntity.WhenGetDetail.class)
     public Json audit(@RequestBody @Validated(RootEntity.WhenIdRequired.class) E bill) {
-        E savedBill = service.getById(bill.getId());
+        E savedBill = service.get(bill.getId());
         Result.FORBIDDEN.when(service.isAudited(savedBill), "该单据状态无法审核");
         service.setAudited(savedBill);
         savedBill = service.update(savedBill);
@@ -47,7 +47,7 @@ public class BaseBillController<
     @PostMapping("reject")
     @Filter(RootEntity.WhenGetDetail.class)
     public Json reject(@RequestBody @Validated(AbstractBaseBillEntity.WhenReject.class) E bill) {
-        E savedBill = service.getById(bill.getId());
+        E savedBill = service.get(bill.getId());
         Result.FORBIDDEN.when(!service.canReject(savedBill), "该单据状态无法驳回");
         savedBill.setRejectReason(bill.getRejectReason());
         service.setReject(savedBill);
@@ -66,7 +66,7 @@ public class BaseBillController<
 
     @Override
     protected E beforeUpdate(E bill) {
-        E savedBill = service.getById(bill.getId());
+        E savedBill = service.get(bill.getId());
         Result.FORBIDDEN.when(!service.canEdit(savedBill), "该单据状态下无法编辑");
         service.setAuditing(bill.setStatus(null));
         return bill;
