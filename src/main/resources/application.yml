@@ -1,17 +1,25 @@
+server:
+  port: 8080
 spring:
   profiles:
     active: production
   jackson:
     deserialization:
       fail-on-unknown-properties: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: asdfew12345
   jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: false
     generate-ddl: true
   data:
     redis:
       host: 127.0.0.1
       port: 6379
-      password:
+      password: asdfew12345
   web:
     resources:
       add-mappings: false
@@ -19,3 +27,16 @@ spring:
     view:
       suffix: .html
       prefix: /
+
+airpower:
+  mqtt:
+    host: 127.0.0.1
+    port: 1883
+    user: mqttroot
+    pass: asdfew12345
+app:
+  influxdb:
+    url: http://md4.cn:8086
+    token: spms
+    org: spms
+    bucket: spms
