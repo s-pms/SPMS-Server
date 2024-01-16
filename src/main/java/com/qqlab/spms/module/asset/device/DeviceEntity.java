@@ -2,8 +2,8 @@ package com.qqlab.spms.module.asset.device;
 
 import cn.hamm.airpower.annotation.*;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
-import com.qqlab.spms.annotation.AutoGenerateCode;
 import com.qqlab.spms.base.BaseEntity;
+import com.qqlab.spms.common.annotation.AutoGenerateCode;
 import com.qqlab.spms.module.asset.device.enums.DeviceAlarm;
 import com.qqlab.spms.module.asset.device.enums.DeviceStatus;
 import com.qqlab.spms.module.iot.parameter.ParameterEntity;

@@ -1,9 +1,12 @@
 package com.qqlab.spms.module.factory.storage;
 
 import cn.hamm.airpower.annotation.Description;
-import com.qqlab.spms.annotation.AutoGenerateCode;
 import com.qqlab.spms.base.BaseTreeEntity;
+import com.qqlab.spms.common.annotation.AutoGenerateCode;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,10 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
 /**
  * <h1>存储资源实体</h1>

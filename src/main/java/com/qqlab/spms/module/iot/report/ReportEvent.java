@@ -4,7 +4,7 @@ import cn.hamm.airpower.mqtt.MqttHelper;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.qqlab.spms.helper.influxdb.InfluxHelper;
+import com.qqlab.spms.common.helper.influxdb.InfluxHelper;
 import com.qqlab.spms.module.asset.device.DeviceEntity;
 import com.qqlab.spms.module.asset.device.DeviceService;
 import com.qqlab.spms.module.iot.parameter.ParameterEntity;

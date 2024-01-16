@@ -8,7 +8,7 @@ import cn.hamm.airpower.security.SecurityUtil;
 import cn.hamm.airpower.util.EmailUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.qqlab.spms.base.BaseService;
-import com.qqlab.spms.exception.CustomResult;
+import com.qqlab.spms.common.exception.CustomResult;
 import com.qqlab.spms.module.personnel.role.RoleEntity;
 import com.qqlab.spms.module.system.app.AppEntity;
 import com.qqlab.spms.module.system.menu.MenuEntity;

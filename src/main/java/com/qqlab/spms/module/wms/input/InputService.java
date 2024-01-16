@@ -2,7 +2,7 @@ package com.qqlab.spms.module.wms.input;
 
 import cn.hamm.airpower.result.Result;
 import com.qqlab.spms.base.bill.AbstractBaseBillService;
-import com.qqlab.spms.helper.BillHelper;
+import com.qqlab.spms.common.helper.BillHelper;
 import com.qqlab.spms.module.channel.purchase.PurchaseEntity;
 import com.qqlab.spms.module.channel.purchase.PurchaseStatus;
 import com.qqlab.spms.module.wms.input.detail.InputDetailEntity;

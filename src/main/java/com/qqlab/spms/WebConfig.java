@@ -1,7 +1,7 @@
 package com.qqlab.spms;
 
 import cn.hamm.airpower.security.AccessResolver;
-import com.qqlab.spms.security.AccessInterceptor;
+import com.qqlab.spms.common.security.AccessInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

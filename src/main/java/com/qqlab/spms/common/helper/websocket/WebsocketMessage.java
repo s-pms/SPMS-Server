@@ -1,4 +1,4 @@
-package com.qqlab.spms.helper.websocket;
+package com.qqlab.spms.common.helper.websocket;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
  *
  * @author Hamm
  */
+@SuppressWarnings("unused")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

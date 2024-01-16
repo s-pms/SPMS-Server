@@ -14,16 +14,17 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+
+#应用配置
+airpower:
   mqtt:
     host: md4.cn
-    port: 1883
     user: mqttroot
     pass: asdfew12345
+app:
+  loginUrl: "http://localhost:3000/login"
   influxdb:
     url: http://md4.cn:8086
     token: spms
     org: spms
     bucket: spms
-#应用配置
-application:
-  loginUrl: "http://localhost:3000/login"

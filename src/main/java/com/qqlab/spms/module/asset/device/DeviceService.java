@@ -5,7 +5,7 @@ import cn.hamm.airpower.util.EnumUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.qqlab.spms.base.BaseService;
-import com.qqlab.spms.helper.influxdb.InfluxHelper;
+import com.qqlab.spms.common.helper.influxdb.InfluxHelper;
 import com.qqlab.spms.module.iot.parameter.ParameterEntity;
 import com.qqlab.spms.module.iot.parameter.ParameterService;
 import com.qqlab.spms.module.iot.report.*;

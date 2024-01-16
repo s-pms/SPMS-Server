@@ -1,4 +1,4 @@
-package com.qqlab.spms.exception;
+package com.qqlab.spms.common.exception;
 
 import cn.hamm.airpower.result.IResult;
 import lombok.Getter;

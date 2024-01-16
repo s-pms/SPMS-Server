@@ -6,7 +6,7 @@ import cn.hamm.airpower.result.json.JsonData;
 import cn.hamm.airpower.root.RootController;
 import cn.hamm.airpower.security.Permission;
 import cn.hamm.airpower.util.ReflectUtil;
-import com.qqlab.spms.exception.CustomResult;
+import com.qqlab.spms.common.exception.CustomResult;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;

@@ -1,7 +1,7 @@
 package com.qqlab.spms.module.channel.purchase;
 
 import com.qqlab.spms.base.bill.AbstractBaseBillService;
-import com.qqlab.spms.helper.BillHelper;
+import com.qqlab.spms.common.helper.BillHelper;
 import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailEntity;
 import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailRepository;
 import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailService;

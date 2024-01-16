@@ -1,4 +1,4 @@
-package com.qqlab.spms.helper;
+package com.qqlab.spms.common.helper;
 
 import com.qqlab.spms.module.channel.purchase.PurchaseEntity;
 import com.qqlab.spms.module.channel.purchase.PurchaseService;

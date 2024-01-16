@@ -1,4 +1,4 @@
-package com.qqlab.spms.cron;
+package com.qqlab.spms.common.cron;
 
 import cn.hamm.airpower.config.GlobalConfig;
 import cn.hamm.airpower.query.QueryRequest;
@@ -23,9 +23,12 @@ public class SystemCron {
     @Autowired
     private CodeRuleService codeRuleService;
 
+    @Autowired
+    private GlobalConfig globalConfig;
+
     @Scheduled(cron = "59 59 23 * * *")
     void softShutdownService() {
-        GlobalConfig.isServiceRunning = false;
+        globalConfig.setServiceRunning(false);
     }
 
     @Scheduled(cron = "0 0 0 * * *")
@@ -34,7 +37,7 @@ public class SystemCron {
         for (CodeRuleEntity codeRule : codeRules) {
             resetSn(codeRule);
         }
-        GlobalConfig.isServiceRunning = true;
+        globalConfig.setServiceRunning(true);
     }
 
     /**

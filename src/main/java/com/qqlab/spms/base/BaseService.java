@@ -4,7 +4,7 @@ import cn.hamm.airpower.result.Result;
 import cn.hamm.airpower.root.RootService;
 import cn.hamm.airpower.util.ReflectUtil;
 import cn.hutool.core.date.DateTime;
-import com.qqlab.spms.annotation.AutoGenerateCode;
+import com.qqlab.spms.common.annotation.AutoGenerateCode;
 import com.qqlab.spms.module.system.coderule.CodeRuleEntity;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
 import com.qqlab.spms.module.system.coderule.CodeRuleParam;

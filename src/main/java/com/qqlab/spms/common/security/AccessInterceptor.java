@@ -1,4 +1,4 @@
-package com.qqlab.spms.security;
+package com.qqlab.spms.common.security;
 
 import cn.hamm.airpower.config.GlobalConfig;
 import cn.hamm.airpower.request.RequestUtil;
@@ -41,6 +41,9 @@ public class AccessInterceptor extends AbstractAccessInterceptor {
     @Autowired
     private SecurityUtil securityUtil;
 
+    @Autowired
+    private GlobalConfig globalConfig;
+
     /**
      * 验证指定的用户是否有指定权限标识的权限
      *
@@ -75,7 +78,7 @@ public class AccessInterceptor extends AbstractAccessInterceptor {
         //取出控制器和方法
         Class<?> clazz = handlerMethod.getBeanType();
         Method method = handlerMethod.getMethod();
-        String accessToken = request.getHeader(GlobalConfig.authorizeHeader);
+        String accessToken = request.getHeader(globalConfig.getAuthorizeHeader());
         Long userId = null;
         if (StringUtils.hasLength(accessToken)) {
             try {
@@ -86,7 +89,7 @@ public class AccessInterceptor extends AbstractAccessInterceptor {
         }
         Integer appVersion = null;
         try {
-            appVersion = request.getIntHeader(GlobalConfig.appVersionHeader);
+            appVersion = request.getIntHeader(globalConfig.getAppVersionHeader());
             if (appVersion <= 0) {
                 appVersion = null;
             }

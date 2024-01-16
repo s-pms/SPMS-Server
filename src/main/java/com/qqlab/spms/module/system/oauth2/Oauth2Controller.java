@@ -9,6 +9,7 @@ import cn.hamm.airpower.security.Permission;
 import cn.hamm.airpower.security.SecurityUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import com.qqlab.spms.common.config.AppConfig;
 import com.qqlab.spms.module.personnel.user.UserEntity;
 import com.qqlab.spms.module.personnel.user.UserService;
 import com.qqlab.spms.module.system.app.AppEntity;
@@ -18,7 +19,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -43,11 +43,8 @@ public class Oauth2Controller extends RootController {
     @Autowired
     private AppService appService;
 
-    /**
-     * 环境变量配置的登录地址 OAuth2时使用
-     */
-    @Value("${application.loginUrl}")
-    private String loginUrl;
+    @Autowired
+    private AppConfig appConfig;
 
     @Autowired
     private SecurityUtil securityUtil;
@@ -122,7 +119,7 @@ public class Oauth2Controller extends RootController {
     }
 
     private ModelAndView redirectLogin(HttpServletResponse response, String appKey, String redirectUri) {
-        String url = loginUrl +
+        String url = appConfig.getLoginUrl() +
                 "?appKey=" +
                 appKey +
                 "&redirectUri=" +

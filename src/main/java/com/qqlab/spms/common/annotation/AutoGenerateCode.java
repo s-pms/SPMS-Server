@@ -1,4 +1,4 @@
-package com.qqlab.spms.annotation;
+package com.qqlab.spms.common.annotation;
 
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
 

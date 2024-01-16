@@ -2,8 +2,8 @@ package com.qqlab.spms.module.channel.customer;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.validate.phone.Phone;
-import com.qqlab.spms.annotation.AutoGenerateCode;
 import com.qqlab.spms.base.BaseEntity;
+import com.qqlab.spms.common.annotation.AutoGenerateCode;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

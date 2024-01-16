@@ -1,8 +1,8 @@
 package com.qqlab.spms.module.mes.operation;
 
 import cn.hamm.airpower.annotation.Description;
-import com.qqlab.spms.annotation.AutoGenerateCode;
 import com.qqlab.spms.base.BaseEntity;
+import com.qqlab.spms.common.annotation.AutoGenerateCode;
 import com.qqlab.spms.module.system.coderule.CodeRuleField;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
