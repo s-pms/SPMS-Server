@@ -1,5 +1,7 @@
 package com.qqlab.spms.module.system.permission;
 
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.Extends;
 import cn.hamm.airpower.query.QueryRequest;
 import cn.hamm.airpower.result.Result;
 import cn.hamm.airpower.root.RootEntityController;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,7 +48,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
 
     @Override
     public void delete(Long id) {
-        PermissionEntity entity = getById(id);
+        PermissionEntity entity = get(id);
         Result.FORBIDDEN_DELETE.when(entity.getIsSystem(), "系统内置权限无法被删除!");
         QueryRequest<PermissionEntity> queryRequest = new QueryRequest<>();
         queryRequest.setFilter(new PermissionEntity().setParentId(id));
@@ -63,10 +66,10 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     }
 
     /**
-     * 强制重载所有权限
+     * 初始化所有权限
      */
-    @SuppressWarnings("UnusedReturnValue")
-    public List<PermissionEntity> forceReloadAllPermissions() {
+    @SuppressWarnings({"AlibabaMethodTooLong", "UnusedReturnValue"})
+    public List<PermissionEntity> initPermission() {
         String packageName = "com.qqlab.spms";
         // 遍历所有接口
         List<PermissionEntity> permissionList = new ArrayList<>();
@@ -101,7 +104,6 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                     permissionEntity = add(permissionEntity);
                 } else {
                     permissionEntity.setName(customClassName)
-                            .setName(customClassName)
                             .setIdentity(identity)
                             .setIsSystem(true);
                     permissionEntity = update(permissionEntity);
@@ -117,27 +119,73 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                 // 取出所有控制器方法
                 Method[] methods = clazz.getMethods();
                 for (Method method : methods) {
+                    Extends extendsApi = clazz.getAnnotation(Extends.class);
+                    if (Objects.nonNull(extendsApi)) {
+                        List<Api> apis = Arrays.asList(extendsApi.exclude());
+                        switch (method.getName()) {
+                            case "add":
+                                if (apis.contains(Api.Add)) {
+                                    continue;
+                                }
+                                break;
+                            case "delete":
+                                if (apis.contains(Api.Delete)) {
+                                    continue;
+                                }
+                                break;
+                            case "disable":
+                                if (apis.contains(Api.Disable)) {
+                                    continue;
+                                }
+                                break;
+                            case "enable":
+                                if (apis.contains(Api.Enable)) {
+                                    continue;
+                                }
+                                break;
+                            case "getDetail":
+                                if (apis.contains(Api.GetDetail)) {
+                                    continue;
+                                }
+                                break;
+                            case "getList":
+                                if (apis.contains(Api.GetList)) {
+                                    continue;
+                                }
+                                break;
+                            case "getPage":
+                                if (apis.contains(Api.GetPage)) {
+                                    continue;
+                                }
+                                break;
+                            case "update":
+                                if (apis.contains(Api.Update)) {
+                                    continue;
+                                }
+                                break;
+                            default:
+                        }
+                    }
                     String customMethodName = ReflectUtil.getDescription(method);
                     PostMapping postMappingMethod = ReflectUtil.getPostMapping(method);
 
                     AccessConfig accessConfig = AccessUtil.getWhatNeedAccess(clazz, method);
-                    //noinspection StatementWithEmptyBody
                     if (!accessConfig.login || !accessConfig.authorize) {
                         // 这里可以选择是否不读取这些接口的权限，但前端可能需要
+                        continue;
                     }
                     if (Objects.nonNull(postMappingMethod) && postMappingMethod.value().length > 0) {
                         String subIdentity = (!"".equalsIgnoreCase(pathClass) ? (pathClass + "_") : "") + postMappingMethod.value()[0];
                         PermissionEntity subPermission = getPermissionByIdentity(subIdentity);
                         if (Objects.isNull(subPermission)) {
                             subPermission = new PermissionEntity()
-                                    .setName(customClassName + "_" + customMethodName)
+                                    .setName(customClassName + "-" + customMethodName)
                                     .setIdentity(subIdentity)
                                     .setIsSystem(true)
                                     .setParentId(permissionEntity.getId());
                             add(subPermission);
                         } else {
-                            subPermission
-                                    .setName(customClassName + "_" + customMethodName)
+                            subPermission.setName(customClassName + "-" + customMethodName)
                                     .setIdentity(subIdentity)
                                     .setIsSystem(true)
                                     .setParentId(permissionEntity.getId());

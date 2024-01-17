@@ -105,7 +105,7 @@ public class Initializer {
             initOtherData();
             initParameters();
             initDevices();
-            permissionService.forceReloadAllPermissions();
+            permissionService.initPermission();
         }
         reportEvent.listen();
     }
