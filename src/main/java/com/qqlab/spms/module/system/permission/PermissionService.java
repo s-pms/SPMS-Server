@@ -43,6 +43,25 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
         return repository.getByIdentity(identity);
     }
 
+    @Override
+    public void delete(Long id) {
+        PermissionEntity entity = getById(id);
+        Result.FORBIDDEN_DELETE.when(entity.getIsSystem(), "系统内置权限无法被删除!");
+        QueryRequest<PermissionEntity> queryRequest = new QueryRequest<>();
+        queryRequest.setFilter(new PermissionEntity().setParentId(id));
+        List<PermissionEntity> children = getList(queryRequest);
+        Result.FORBIDDEN_DELETE.when(!children.isEmpty(), "含有子权限,无法删除!");
+        deleteById(id);
+    }
+
+    @Override
+    protected List<PermissionEntity> afterGetList(List<PermissionEntity> list) {
+        for (PermissionEntity item : list) {
+            item.excludeBaseData();
+        }
+        return list;
+    }
+
     /**
      * 强制重载所有权限
      */
@@ -127,30 +146,5 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
             log.error(e.getMessage());
         }
         return permissionList;
-    }
-
-    @Override
-    public void delete(Long id) {
-        PermissionEntity entity = getById(id);
-        Result.FORBIDDEN_DELETE.when(entity.getIsSystem(), "系统内置权限无法被删除!");
-        QueryRequest<PermissionEntity> queryRequest = new QueryRequest<>();
-        queryRequest.setFilter(new PermissionEntity().setParentId(id));
-        List<PermissionEntity> children = getList(queryRequest);
-        Result.FORBIDDEN_DELETE.when(!children.isEmpty(), "含有子权限,无法删除!");
-        deleteById(id);
-    }
-
-    @Override
-    protected QueryRequest<PermissionEntity> beforeGetList(QueryRequest<PermissionEntity> queryRequest) {
-        PermissionEntity filter = queryRequest.getFilter();
-        return queryRequest.setFilter(filter);
-    }
-
-    @Override
-    protected List<PermissionEntity> afterGetList(List<PermissionEntity> list) {
-        for (PermissionEntity item : list) {
-            item.excludeBaseData();
-        }
-        return list;
     }
 }

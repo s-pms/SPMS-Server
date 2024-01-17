@@ -81,12 +81,12 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         Long userId = getCurrentUserId();
         UserEntity userEntity = getById(userId);
         if (userEntity.getIsSystem()) {
-            return menuService.getList(new QueryRequest<MenuEntity>().setSort(new Sort().setField("orderNo")));
+            return treeUtil.buildTreeList(menuService.getList(new QueryRequest<MenuEntity>().setSort(new Sort().setField("orderNo"))));
         }
         List<MenuEntity> menuList = new ArrayList<>();
         for (RoleEntity roleEntity : userEntity.getRoleList()) {
             if (roleEntity.getIsSystem()) {
-                return menuService.getList(new QueryRequest<MenuEntity>().setSort(new Sort().setField("orderNo")));
+                return treeUtil.buildTreeList(menuService.getList(new QueryRequest<MenuEntity>().setSort(new Sort().setField("orderNo"))));
             }
             roleEntity.getMenuList().forEach(menuItem -> {
                 boolean isExist = false;
@@ -101,7 +101,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
                 }
             });
         }
-        return list2TreeList(menuList);
+        return treeUtil.buildTreeList(menuList);
     }
 
     /**
@@ -113,12 +113,12 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         Long userId = getCurrentUserId();
         UserEntity userEntity = getById(userId);
         if (userEntity.getIsSystem()) {
-            return treeUtil.buildTreeList(permissionService.getList(null));
+            return permissionService.getList(null);
         }
         List<PermissionEntity> permissionList = new ArrayList<>();
         for (RoleEntity roleEntity : userEntity.getRoleList()) {
             if (roleEntity.getIsSystem()) {
-                return treeUtil.buildTreeList(permissionService.getList(null));
+                return permissionService.getList(null);
             }
             roleEntity.getPermissionList().forEach(permissionItem -> {
                 boolean isExist = false;
