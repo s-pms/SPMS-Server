@@ -1,7 +1,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
 
 app:
   loginUrl: "https://md4.cn:888/login"

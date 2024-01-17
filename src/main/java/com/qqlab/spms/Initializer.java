@@ -95,17 +95,17 @@ public class Initializer {
     private RedisUtil<?> redisUtil;
 
     public void run() throws MqttException {
-        redisUtil.clearAll();
         if ("create-drop".equals(ddlAuto)) {
+            redisUtil.clearAll();
             initUserAndRole();
             initCodeRules();
             initUnitAndMaterial();
             initFactory();
-            initMenu();
             initOtherData();
             initParameters();
             initDevices();
             permissionService.initPermission();
+            initMenu();
         }
         reportEvent.listen();
     }
