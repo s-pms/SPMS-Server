@@ -6,6 +6,7 @@ import cn.hamm.airpower.result.Result;
 import cn.hamm.airpower.security.PasswordUtil;
 import cn.hamm.airpower.security.SecurityUtil;
 import cn.hamm.airpower.util.EmailUtil;
+import cn.hamm.airpower.util.TreeUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.qqlab.spms.base.BaseService;
 import com.qqlab.spms.common.exception.CustomResult;
@@ -68,6 +69,9 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     @Autowired
     private PermissionService permissionService;
 
+    @Autowired
+    private TreeUtil treeUtil;
+
     /**
      * 获取登录用户的菜单列表
      *
@@ -109,12 +113,12 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         Long userId = getCurrentUserId();
         UserEntity userEntity = getById(userId);
         if (userEntity.getIsSystem()) {
-            return permissionService.getList(null);
+            return treeUtil.buildTreeList(permissionService.getList(null));
         }
         List<PermissionEntity> permissionList = new ArrayList<>();
         for (RoleEntity roleEntity : userEntity.getRoleList()) {
             if (roleEntity.getIsSystem()) {
-                return permissionService.getList(null);
+                return treeUtil.buildTreeList(permissionService.getList(null));
             }
             roleEntity.getPermissionList().forEach(permissionItem -> {
                 boolean isExist = false;
@@ -347,7 +351,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
 
     @Override
     public UserEntity add(UserEntity entity) {
-
         UserEntity existUser = repository.getByEmail(entity.getEmail());
         Result.FORBIDDEN_EXIST.whenNotNull(existUser, "邮箱已经存在，请勿重复添加用户");
         if (!StringUtils.hasLength(entity.getPassword())) {

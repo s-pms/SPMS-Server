@@ -31,18 +31,12 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         if (Objects.isNull(queryRequest.getSort())) {
             queryRequest.setSort(new Sort().setField("orderNo"));
         }
-        if (Objects.isNull(filter.getParentId())) {
-            filter.setParentId(0L);
-        }
         return queryRequest.setFilter(filter);
     }
 
     @Override
     protected List<MenuEntity> afterGetList(List<MenuEntity> list) {
         for (MenuEntity item : list) {
-            QueryRequest<MenuEntity> queryRequest = new QueryRequest<>();
-            queryRequest.setFilter(new MenuEntity().setParentId(item.getId()));
-            item.setChildren(this.getList(queryRequest));
             item.excludeBaseData();
         }
         return list;

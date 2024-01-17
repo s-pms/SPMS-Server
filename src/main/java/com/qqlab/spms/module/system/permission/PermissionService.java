@@ -143,18 +143,12 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     @Override
     protected QueryRequest<PermissionEntity> beforeGetList(QueryRequest<PermissionEntity> queryRequest) {
         PermissionEntity filter = queryRequest.getFilter();
-        if (Objects.isNull(filter.getParentId())) {
-            filter.setParentId(0L);
-        }
         return queryRequest.setFilter(filter);
     }
 
     @Override
     protected List<PermissionEntity> afterGetList(List<PermissionEntity> list) {
         for (PermissionEntity item : list) {
-            QueryRequest<PermissionEntity> queryRequest = new QueryRequest<>();
-            queryRequest.setFilter(new PermissionEntity().setParentId(item.getId()));
-            item.setChildren(this.getList(queryRequest));
             item.excludeBaseData();
         }
         return list;
