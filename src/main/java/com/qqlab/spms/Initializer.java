@@ -1,8 +1,6 @@
 package com.qqlab.spms;
 
-import cn.hamm.airpower.config.GlobalConfig;
 import cn.hamm.airpower.security.PasswordUtil;
-import cn.hamm.airpower.util.redis.RedisUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.qqlab.spms.common.config.AppConfig;
 import com.qqlab.spms.module.asset.device.DeviceEntity;
@@ -41,7 +39,6 @@ import com.qqlab.spms.module.wms.inventory.InventoryEntity;
 import com.qqlab.spms.module.wms.inventory.InventoryService;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
