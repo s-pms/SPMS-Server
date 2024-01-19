@@ -35,7 +35,7 @@ public class ParameterService extends BaseService<ParameterEntity, ParameterRepo
         if (Objects.isNull(parameterEntity)) {
             parameterEntity = new ParameterEntity();
         }
-        redisUtil.saveEntityCacheData(PARAM_CODE_CACHE_PREFIX + code, parameterEntity);
+        redisUtil.saveEntity(PARAM_CODE_CACHE_PREFIX + code, parameterEntity);
         if (Objects.isNull(parameterEntity.getId())) {
             return null;
         }

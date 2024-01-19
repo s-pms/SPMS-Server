@@ -96,7 +96,7 @@ public class Initializer {
 
     public void run() throws MqttException {
         if ("create-drop".equals(ddlAuto)) {
-            redisUtil.clearAll();
+            redisUtil.clearAll("*");
             initUserAndRole();
             initCodeRules();
             initUnitAndMaterial();

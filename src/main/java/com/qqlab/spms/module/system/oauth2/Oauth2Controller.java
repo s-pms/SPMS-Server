@@ -49,6 +49,9 @@ public class Oauth2Controller extends RootController {
     @Autowired
     private SecurityUtil securityUtil;
 
+    @Autowired
+    private CookieConfig cookieConfig;
+
     @GetMapping("authorize")
     public ModelAndView index(
             HttpServletRequest request,
@@ -75,7 +78,7 @@ public class Oauth2Controller extends RootController {
         }
         String cookieString = null;
         for (Cookie c : cookies) {
-            if (CookieConfig.authCookieName.equals(c.getName())) {
+            if (cookieConfig.getAuthCookieName().equals(c.getName())) {
                 cookieString = c.getValue();
                 break;
             }
