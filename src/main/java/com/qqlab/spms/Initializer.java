@@ -1,8 +1,10 @@
 package com.qqlab.spms;
 
+import cn.hamm.airpower.config.GlobalConfig;
 import cn.hamm.airpower.security.PasswordUtil;
 import cn.hamm.airpower.util.redis.RedisUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.qqlab.spms.common.config.AppConfig;
 import com.qqlab.spms.module.asset.device.DeviceEntity;
 import com.qqlab.spms.module.asset.device.DeviceService;
 import com.qqlab.spms.module.asset.material.MaterialEntity;
@@ -55,48 +57,57 @@ import java.util.Set;
 public class Initializer {
     @Autowired
     private UserService userService;
+
     @Autowired
     private RoleService roleService;
+
     @Autowired
     private PermissionService permissionService;
+
     @Autowired
     private AppService appService;
+
     @Autowired
     private MenuService menuService;
+
     @Autowired
     private CodeRuleService codeRuleService;
+
     @Autowired
     private MaterialService materialService;
+
     @Autowired
     private UnitService unitService;
+
     @Autowired
     private StorageService storageService;
+
     @Autowired
     private StructureService structureService;
+
     @Autowired
     private CustomerService customerService;
+
     @Autowired
     private SupplierService supplierService;
+
     @Autowired
     private InventoryService inventoryService;
 
     @Autowired
     private ParameterService parameterService;
+
     @Autowired
     private DeviceService deviceService;
 
     @Autowired
     private ReportEvent reportEvent;
 
-    @Value("${spring.jpa.hibernate.ddl-auto}")
-    private String ddlAuto;
-
     @Autowired
-    private RedisUtil<?> redisUtil;
+    private AppConfig appConfig;
 
     public void run() throws MqttException {
-        if ("create-drop".equals(ddlAuto)) {
-            redisUtil.clearAll("*");
+        if (appConfig.isInitData()) {
             initUserAndRole();
             initCodeRules();
             initUnitAndMaterial();

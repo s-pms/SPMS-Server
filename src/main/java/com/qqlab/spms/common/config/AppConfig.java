@@ -26,4 +26,9 @@ public class AppConfig {
      * Influx配置
      */
     private InfluxConfig influxdb = new InfluxConfig();
+
+    /**
+     * 是否初始化数据
+     */
+    private boolean initData = false;
 }
