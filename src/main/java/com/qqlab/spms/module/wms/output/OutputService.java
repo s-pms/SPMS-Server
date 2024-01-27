@@ -2,7 +2,7 @@ package com.qqlab.spms.module.wms.output;
 
 import cn.hamm.airpower.result.Result;
 import com.qqlab.spms.base.bill.AbstractBaseBillService;
-import com.qqlab.spms.common.helper.BillHelper;
+import com.qqlab.spms.common.helper.CommonServiceHelper;
 import com.qqlab.spms.module.channel.sale.SaleEntity;
 import com.qqlab.spms.module.channel.sale.SaleStatus;
 import com.qqlab.spms.module.wms.inventory.InventoryEntity;
@@ -62,7 +62,7 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
         updateToDatabase(bill);
         if (bill.getType() == OutputType.SALE.getValue()) {
             SaleEntity saleEntity = bill.getSale();
-            BillHelper.updateSaleBill(saleEntity.setStatus(SaleStatus.DONE.getValue()));
+            CommonServiceHelper.getSaleService().update(saleEntity.setStatus(SaleStatus.DONE.getValue()));
         }
     }
 

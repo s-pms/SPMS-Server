@@ -25,12 +25,13 @@ public class StructureService extends BaseService<StructureEntity, StructureRepo
     }
 
     @Override
-    protected QueryRequest<StructureEntity> beforeGetList(QueryRequest<StructureEntity> queryRequest) {
-        StructureEntity filter = queryRequest.getFilter();
+    protected <T extends QueryRequest<StructureEntity>> T beforeGetList(T sourceRequestData) {
+        StructureEntity filter = sourceRequestData.getFilter();
         if (Objects.isNull(filter.getParentId())) {
             filter.setParentId(0L);
         }
-        return queryRequest.setFilter(filter);
+        sourceRequestData.setFilter(filter);
+        return sourceRequestData;
     }
 
     /**

@@ -75,10 +75,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * 获取登录用户的菜单列表
      *
+     * @param userId 用户id
      * @return 菜单树列表
      */
-    public List<MenuEntity> getMyMenuList() {
-        Long userId = getCurrentUserId();
+    public List<MenuEntity> getMenuListByUserId(long userId) {
         UserEntity userEntity = getById(userId);
         if (userEntity.getIsSystem()) {
             return treeUtil.buildTreeList(menuService.getList(new QueryRequest<MenuEntity>().setSort(new Sort().setField("orderNo"))));
@@ -107,10 +107,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * 获取登录用户的权限列表
      *
+     * @param userId 用户ID
      * @return 权限列表
      */
-    public List<PermissionEntity> getMyPermissionList() {
-        Long userId = getCurrentUserId();
+    public List<PermissionEntity> getPermissionListByUserId(long userId) {
         UserEntity userEntity = getById(userId);
         if (userEntity.getIsSystem()) {
             return permissionService.getList(null);

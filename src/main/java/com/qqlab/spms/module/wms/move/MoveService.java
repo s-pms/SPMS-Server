@@ -2,7 +2,7 @@ package com.qqlab.spms.module.wms.move;
 
 import cn.hamm.airpower.result.Result;
 import com.qqlab.spms.base.bill.AbstractBaseBillService;
-import com.qqlab.spms.common.helper.BillHelper;
+import com.qqlab.spms.common.helper.CommonServiceHelper;
 import com.qqlab.spms.module.wms.input.InputEntity;
 import com.qqlab.spms.module.wms.input.InputStatus;
 import com.qqlab.spms.module.wms.input.InputType;
@@ -132,8 +132,8 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
             );
         }
         inputBill.setDetails(inputDetails);
-        BillHelper.addInputBill(inputBill);
+        CommonServiceHelper.getInputService().add(inputBill);
         outputBill.setDetails(outputDetails);
-        BillHelper.addOutputBill(outputBill);
+        CommonServiceHelper.getOutputService().add(outputBill);
     }
 }

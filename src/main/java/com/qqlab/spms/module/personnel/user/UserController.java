@@ -62,14 +62,14 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Permission(authorize = false)
     @PostMapping("getMyMenuList")
     public JsonData getMyMenuList() {
-        return jsonData(service.getMyMenuList());
+        return jsonData(service.getMenuListByUserId(getCurrentUserId()));
     }
 
     @Description("获取我的权限")
     @Permission(authorize = false)
     @PostMapping("getMyPermissionList")
     public JsonData getMyPermissionList() {
-        return jsonData(service.getMyPermissionList());
+        return jsonData(service.getPermissionListByUserId(getCurrentUserId()));
     }
 
     @Description("修改我的密码")

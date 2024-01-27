@@ -26,12 +26,13 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     }
 
     @Override
-    protected QueryRequest<MenuEntity> beforeGetList(QueryRequest<MenuEntity> queryRequest) {
-        MenuEntity filter = queryRequest.getFilter();
-        if (Objects.isNull(queryRequest.getSort())) {
-            queryRequest.setSort(new Sort().setField("orderNo"));
+    protected <T extends QueryRequest<MenuEntity>> T beforeGetList(T sourceRequestData) {
+        MenuEntity filter = sourceRequestData.getFilter();
+        if (Objects.isNull(sourceRequestData.getSort())) {
+            sourceRequestData.setSort(new Sort().setField("orderNo"));
         }
-        return queryRequest.setFilter(filter);
+        sourceRequestData.setFilter(filter);
+        return sourceRequestData;
     }
 
     @Override

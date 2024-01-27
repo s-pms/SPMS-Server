@@ -2,7 +2,7 @@ package com.qqlab.spms.module.channel.sale;
 
 import cn.hamm.airpower.annotation.Description;
 import com.qqlab.spms.base.bill.BaseBillController;
-import com.qqlab.spms.common.helper.BillHelper;
+import com.qqlab.spms.common.helper.CommonServiceHelper;
 import com.qqlab.spms.module.channel.sale.detail.SaleDetailEntity;
 import com.qqlab.spms.module.channel.sale.detail.SaleDetailRepository;
 import com.qqlab.spms.module.channel.sale.detail.SaleDetailService;
@@ -42,6 +42,6 @@ public class SaleController extends BaseBillController<SaleEntity, SaleService, 
             );
         }
         outputBill.setDetails(outputDetails);
-        BillHelper.addOutputBill(outputBill);
+        CommonServiceHelper.getOutputService().add(outputBill);
     }
 }

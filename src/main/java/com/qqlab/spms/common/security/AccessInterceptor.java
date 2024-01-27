@@ -49,10 +49,11 @@ public class AccessInterceptor extends AbstractAccessInterceptor {
      *
      * @param userId             用户ID
      * @param permissionIdentity 权限标识
+     * @param request            请求对象
      * @return 验证结果
      */
     @Override
-    public boolean checkPermissionAccess(Long userId, String permissionIdentity) {
+    public boolean checkPermissionAccess(Long userId, String permissionIdentity, HttpServletRequest request) {
         UserEntity existUser = userService.get(userId);
         if (existUser.getIsSystem()) {
             return true;

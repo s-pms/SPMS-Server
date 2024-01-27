@@ -1,7 +1,7 @@
 package com.qqlab.spms.module.channel.purchase;
 
 import com.qqlab.spms.base.bill.AbstractBaseBillService;
-import com.qqlab.spms.common.helper.BillHelper;
+import com.qqlab.spms.common.helper.CommonServiceHelper;
 import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailEntity;
 import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailRepository;
 import com.qqlab.spms.module.channel.purchase.detail.PurchaseDetailService;
@@ -73,7 +73,7 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
                 .setStatus(InputStatus.AUDITING.getValue())
                 .setPurchase(bill)
                 .setDetails(inputDetails);
-        BillHelper.addInputBill(inputBill);
+        CommonServiceHelper.getInputService().add(inputBill);
     }
 
     @Override
