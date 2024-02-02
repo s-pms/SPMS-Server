@@ -1,7 +1,6 @@
 package com.qqlab.spms.module.personnel.user;
 
 import cn.hamm.airpower.annotation.*;
-import cn.hamm.airpower.validate.password.Password;
 import cn.hamm.airpower.validate.phone.Phone;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -69,7 +68,6 @@ public class UserEntity extends BaseEntity<UserEntity> {
     @Column(columnDefinition = "varchar(255) default '' comment '密码'")
     @NotBlank(groups = {WhenLogin.class}, message = "密码不能为空")
     @Null(groups = {WhenUpdateMyInfo.class}, message = "请勿传入password字段")
-    @Password(message = "密码要求6-16位且至少包含大小写字母和数字")
     private String password;
 
     /**

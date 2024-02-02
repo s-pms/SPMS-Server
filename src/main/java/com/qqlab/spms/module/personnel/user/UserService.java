@@ -257,7 +257,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         UserEntity existUser = null;
         if (Objects.nonNull(userEntity.getId())) {
             // ID登录
-            existUser = getById(userEntity.getId());
+            existUser = getByIdMaybeNull(userEntity.getId());
         } else if (Objects.nonNull(userEntity.getAccount())) {
             // 账号登录
             existUser = repository.getByAccount(userEntity.getAccount());
@@ -266,6 +266,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         }
         CustomResult.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNull(existUser);
         // 将用户传入的密码加密与数据库存储匹配
+        assert existUser != null;
         String encodePassword = PasswordUtil.encode(userEntity.getPassword(), existUser.getSalt());
         CustomResult.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNotEqualsIgnoreCase(encodePassword, existUser.getPassword());
         return securityUtil.createAccessToken(existUser.getId());
