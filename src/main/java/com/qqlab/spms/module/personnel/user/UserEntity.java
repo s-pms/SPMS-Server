@@ -107,17 +107,20 @@ public class UserEntity extends BaseEntity<UserEntity> {
     /**
      * 登录使用的App秘钥
      */
+    @Transient
     private String appKey;
 
     /**
      * 邮箱验证码
      */
+    @Transient
     @NotBlank(groups = {WhenLoginViaEmail.class, WhenLoginViaPhone.class}, message = "验证码不能为空")
     private String code;
 
     /**
      * 修改密码时使用的原始密码
      */
+    @Transient
     @NotBlank(groups = {WhenUpdateMyPassword.class}, message = "原始密码不能为空")
     private String oldPassword;
 

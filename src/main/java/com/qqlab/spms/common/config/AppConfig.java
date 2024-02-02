@@ -18,6 +18,16 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("app")
 public class AppConfig {
     /**
+     * 应用版本Header
+     */
+    private String appVersionHeader = "app-version";
+
+    /**
+     * 应用版本平台
+     */
+    private String appPlatformHeader = "app-platform";
+
+    /**
      * 登录地址 用于Oauth2
      */
     private String loginUrl;

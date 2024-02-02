@@ -32,6 +32,12 @@ public class LogEntity extends BaseEntity<LogEntity> {
     private String action;
 
     /**
+     * 客户端平台
+     */
+    @Column(columnDefinition = "varchar(255) default '' comment '客户端平台'")
+    private String platform;
+
+    /**
      * IP地址
      */
     @Column(columnDefinition = "varchar(255) default '' comment 'IP地址'")
