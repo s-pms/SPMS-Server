@@ -1,3 +1,4 @@
+#file: noinspection SpellCheckingInspection
 server:
   port: 8080
 spring:

@@ -33,7 +33,7 @@ public class SalePriceService extends BaseService<SalePriceEntity, SalePriceRepo
 
     protected SalePriceEntity getByMaterialAndCustomer(MaterialEntity materialEntity, CustomerEntity customerEntity) {
         SalePriceEntity exist = repository.getByCustomerAndMaterial(customerEntity, materialEntity);
-        Result.NOT_FOUND.whenNull(exist, "没有查询到该物料在此客户下提供的销售价格，请参考物料标准销售价填写。");
+        Result.DATA_NOT_FOUND.whenNull(exist, "没有查询到该物料在此客户下提供的销售价格，请参考物料标准销售价填写。");
         return exist;
     }
 }

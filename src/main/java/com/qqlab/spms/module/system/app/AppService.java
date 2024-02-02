@@ -22,7 +22,7 @@ public class AppService extends BaseService<AppEntity, AppRepository> {
      */
     public AppEntity getByAppKey(String appKey) {
         AppEntity appEntity = repository.getByAppKey(appKey);
-        Result.NOT_FOUND.whenNull(appEntity, "没有查到指定AppKey的应用");
+        Result.DATA_NOT_FOUND.whenNull(appEntity, "没有查到指定AppKey的应用");
         return appEntity;
     }
 

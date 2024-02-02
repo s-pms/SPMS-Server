@@ -26,7 +26,7 @@ public class PurchasePriceService extends BaseService<PurchasePriceEntity, Purch
 
     protected PurchasePriceEntity getByMaterialAndSupplier(MaterialEntity materialEntity, SupplierEntity supplierEntity) {
         PurchasePriceEntity exist = repository.getBySupplierAndMaterial(supplierEntity, materialEntity);
-        Result.NOT_FOUND.whenNull(exist, "没有查询到该物料在此供应商下提供的采购价格，请参考物料标准采购价填写。");
+        Result.DATA_NOT_FOUND.whenNull(exist, "没有查询到该物料在此供应商下提供的采购价格，请参考物料标准采购价填写。");
         return exist;
     }
 }

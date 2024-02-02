@@ -7,11 +7,9 @@ import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.security.Permission;
 import com.qqlab.spms.base.BaseController;
 import com.qqlab.spms.module.iot.parameter.ParameterEntity;
-import com.qqlab.spms.module.iot.parameter.ParameterService;
 import com.qqlab.spms.module.iot.report.ReportEvent;
 import com.qqlab.spms.module.iot.report.ReportPayload;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,9 +28,6 @@ import java.util.Set;
 @Description("设备")
 @Permission(login = false)
 public class DeviceController extends BaseController<DeviceEntity, DeviceService, DeviceRepository> {
-    @Autowired
-    private ParameterService parameterService;
-
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -52,7 +47,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
     @Permission(login = false)
     public Json getDevice(@RequestBody @Validated({DeviceEntity.WhenGetDevice.class}) DeviceEntity device) {
         device = service.getByUuid(device.getUuid());
-        Result.NOT_FOUND.whenNull(device);
+        Result.DATA_NOT_FOUND.whenNull(device);
         device = device.setPartCount(null)
                 .setAlarm(null)
                 .setStatus(null)
