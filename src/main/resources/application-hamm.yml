@@ -7,3 +7,4 @@ spring:
 #应用配置
 app:
   loginUrl: "http://localhost:3000/login"
+  init-data: true

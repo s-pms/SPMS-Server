@@ -4,7 +4,6 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.api.Extends;
 import cn.hamm.airpower.result.json.Json;
-import cn.hamm.airpower.security.Permission;
 import com.qqlab.spms.base.BaseController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("supplier")
 @Description("供应商")
-@Permission(login = false)
 @Extends(exclude = Api.Delete)
 public class SupplierController extends BaseController<SupplierEntity, SupplierService, SupplierRepository> {
     @RequestMapping("test")

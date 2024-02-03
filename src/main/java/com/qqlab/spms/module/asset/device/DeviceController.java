@@ -26,7 +26,6 @@ import java.util.Set;
 @RestController
 @RequestMapping("device")
 @Description("设备")
-@Permission(login = false)
 public class DeviceController extends BaseController<DeviceEntity, DeviceService, DeviceRepository> {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
@@ -38,6 +37,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
 
     @Description("获取实时采集数据")
     @PostMapping("getCurrentReport")
+    @Permission(login = false)
     public Json getCurrentReport(@RequestBody @Validated({RootEntity.WhenIdRequired.class}) DeviceEntity device) {
         return jsonData(service.getCurrentReport(device));
     }

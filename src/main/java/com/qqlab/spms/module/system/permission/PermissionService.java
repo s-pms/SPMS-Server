@@ -68,7 +68,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     /**
      * 初始化所有权限
      */
-    @SuppressWarnings({"AlibabaMethodTooLong", "UnusedReturnValue"})
+    @SuppressWarnings({"AlibabaMethodTooLong", "UnusedReturnValue", "CallToPrintStackTrace"})
     public List<PermissionEntity> initPermission() {
         String packageName = "com.qqlab.spms";
         // 遍历所有接口
@@ -121,45 +121,44 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                 for (Method method : methods) {
                     Extends extendsApi = clazz.getAnnotation(Extends.class);
                     if (Objects.nonNull(extendsApi)) {
-                        List<Api> apis = Arrays.asList(extendsApi.exclude());
                         switch (method.getName()) {
                             case "add":
-                                if (apis.contains(Api.Add)) {
+                                if (checkApiBand(Api.Add, extendsApi)) {
                                     continue;
                                 }
                                 break;
                             case "delete":
-                                if (apis.contains(Api.Delete)) {
+                                if (checkApiBand(Api.Delete, extendsApi)) {
                                     continue;
                                 }
                                 break;
                             case "disable":
-                                if (apis.contains(Api.Disable)) {
+                                if (checkApiBand(Api.Disable, extendsApi)) {
                                     continue;
                                 }
                                 break;
                             case "enable":
-                                if (apis.contains(Api.Enable)) {
+                                if (checkApiBand(Api.Enable, extendsApi)) {
                                     continue;
                                 }
                                 break;
                             case "getDetail":
-                                if (apis.contains(Api.GetDetail)) {
+                                if (checkApiBand(Api.GetDetail, extendsApi)) {
                                     continue;
                                 }
                                 break;
                             case "getList":
-                                if (apis.contains(Api.GetList)) {
+                                if (checkApiBand(Api.GetList, extendsApi)) {
                                     continue;
                                 }
                                 break;
                             case "getPage":
-                                if (apis.contains(Api.GetPage)) {
+                                if (checkApiBand(Api.GetPage, extendsApi)) {
                                     continue;
                                 }
                                 break;
                             case "update":
-                                if (apis.contains(Api.Update)) {
+                                if (checkApiBand(Api.Update, extendsApi)) {
                                     continue;
                                 }
                                 break;
@@ -195,8 +194,21 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             log.error(e.getMessage());
         }
         return permissionList;
+    }
+
+    private boolean checkApiBand(Api api, Extends extend) {
+        List<Api> excludeList = Arrays.asList(extend.exclude());
+        List<Api> includeList = Arrays.asList(extend.value());
+        if (excludeList.contains(api)) {
+            return true;
+        }
+        if (includeList.isEmpty()) {
+            return false;
+        }
+        return !includeList.contains(api);
     }
 }
