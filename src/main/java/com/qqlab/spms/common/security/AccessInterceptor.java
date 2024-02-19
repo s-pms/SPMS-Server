@@ -7,6 +7,7 @@ import cn.hamm.airpower.security.AbstractAccessInterceptor;
 import cn.hamm.airpower.security.AccessUtil;
 import cn.hamm.airpower.security.SecurityUtil;
 import com.qqlab.spms.common.config.AppConfig;
+import com.qqlab.spms.common.config.Constant;
 import com.qqlab.spms.module.personnel.role.RoleEntity;
 import com.qqlab.spms.module.personnel.user.UserEntity;
 import com.qqlab.spms.module.personnel.user.UserService;
@@ -88,8 +89,8 @@ public class AccessInterceptor extends AbstractAccessInterceptor {
         String platform = "";
         try {
             userId = securityUtil.getUserIdFromAccessToken(accessToken);
-            appVersion = request.getIntHeader(appConfig.getAppVersionHeader());
-            platform = request.getHeader(appConfig.getAppPlatformHeader());
+            appVersion = request.getIntHeader(Constant.APP_VERSION_HEADER);
+            platform = request.getHeader(Constant.APP_PLATFORM_HEADER);
         } catch (Exception ignored) {
 
         }
