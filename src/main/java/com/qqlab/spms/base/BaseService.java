@@ -2,6 +2,7 @@ package com.qqlab.spms.base;
 
 import cn.hamm.airpower.result.Result;
 import cn.hamm.airpower.root.RootService;
+import cn.hamm.airpower.util.EnumUtil;
 import cn.hamm.airpower.util.ReflectUtil;
 import cn.hutool.core.date.DateTime;
 import com.qqlab.spms.common.annotation.AutoGenerateCode;
@@ -59,7 +60,7 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
         CodeRuleEntity codeRuleEntity = codeRuleRepository.getByRuleField(codeRuleField.getValue());
         Result.ERROR.whenNull(codeRuleEntity, "保存失败,请先配置自定义编码规则!");
         String template = codeRuleEntity.getTemplate();
-        List<Map<String, String>> mapList = ReflectUtil.getEnumMapList(CodeRuleParam.class);
+        List<Map<String, String>> mapList = EnumUtil.getEnumMapList(CodeRuleParam.class);
         for (Map<String, String> map : mapList) {
             String param = map.get("label");
             if (CodeRuleParam.FULL_YEAR.getLabel().equals(param)) {
