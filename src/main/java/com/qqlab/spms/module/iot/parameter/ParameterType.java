@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.iot.parameter;
 
-import cn.hamm.airpower.interfaces.IEnum;
+import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum ParameterType implements IEnum {
+public enum ParameterType implements IDictionary {
     /**
      * 数字
      */
@@ -29,6 +29,6 @@ public enum ParameterType implements IEnum {
 
     ;
 
-    private final int value;
+    private final int key;
     private final String label;
 }

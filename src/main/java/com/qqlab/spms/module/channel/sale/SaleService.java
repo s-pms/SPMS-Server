@@ -17,32 +17,32 @@ import java.util.List;
 public class SaleService extends AbstractBaseBillService<SaleEntity, SaleRepository, SaleDetailEntity, SaleDetailService, SaleDetailRepository> {
     @Override
     public SaleEntity setAudited(SaleEntity bill) {
-        return bill.setStatus(SaleStatus.OUTPUTTING.getValue());
+        return bill.setStatus(SaleStatus.OUTPUTTING.getKey());
     }
 
     @Override
     public SaleEntity setAuditing(SaleEntity bill) {
-        return bill.setStatus(SaleStatus.AUDITING.getValue());
+        return bill.setStatus(SaleStatus.AUDITING.getKey());
     }
 
     @Override
     public boolean isAudited(SaleEntity bill) {
-        return bill.getStatus() != SaleStatus.AUDITING.getValue();
+        return bill.getStatus() != SaleStatus.AUDITING.getKey();
     }
 
     @Override
     public boolean canReject(SaleEntity bill) {
-        return bill.getStatus() == SaleStatus.AUDITING.getValue();
+        return bill.getStatus() == SaleStatus.AUDITING.getKey();
     }
 
     @Override
     public SaleEntity setReject(SaleEntity bill) {
-        return bill.setStatus(SaleStatus.REJECTED.getValue());
+        return bill.setStatus(SaleStatus.REJECTED.getKey());
     }
 
     @Override
     public boolean canEdit(SaleEntity bill) {
-        return bill.getStatus() == SaleStatus.REJECTED.getValue();
+        return bill.getStatus() == SaleStatus.REJECTED.getKey();
     }
 
     @Override

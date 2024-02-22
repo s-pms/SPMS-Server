@@ -84,7 +84,7 @@ public class StatusController extends RootController {
                     continue;
                 }
                 try {
-                    Method getValue = clazz.getMethod("getValue");
+                    Method getKey = clazz.getMethod("getKey");
                     Method getLabel = clazz.getMethod("getLabel");
 
                     //取出所有枚举类型
@@ -92,7 +92,7 @@ public class StatusController extends RootController {
                     List<Map<String, String>> enumTypeList = new ArrayList<>();
                     for (Object obj : objs) {
                         enumTypeList.add(new HashMap<>(2) {{
-                            put("flag", getValue.invoke(obj).toString());
+                            put("flag", getKey.invoke(obj).toString());
                             put("description", getLabel.invoke(obj).toString());
                         }});
                     }

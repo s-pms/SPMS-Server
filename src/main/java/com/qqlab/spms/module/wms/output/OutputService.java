@@ -27,42 +27,42 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
 
     @Override
     public OutputEntity setAudited(OutputEntity bill) {
-        return bill.setStatus(OutputStatus.OUTPUTTING.getValue());
+        return bill.setStatus(OutputStatus.OUTPUTTING.getKey());
     }
 
     @Override
     public OutputEntity setAuditing(OutputEntity bill) {
-        return bill.setStatus(OutputStatus.AUDITING.getValue());
+        return bill.setStatus(OutputStatus.AUDITING.getKey());
     }
 
     @Override
     public boolean isAudited(OutputEntity bill) {
-        return bill.getStatus() != OutputStatus.AUDITING.getValue();
+        return bill.getStatus() != OutputStatus.AUDITING.getKey();
     }
 
     @Override
     public boolean canReject(OutputEntity bill) {
-        return bill.getStatus() == OutputStatus.AUDITING.getValue();
+        return bill.getStatus() == OutputStatus.AUDITING.getKey();
     }
 
     @Override
     public OutputEntity setReject(OutputEntity bill) {
-        return bill.setStatus(OutputStatus.REJECTED.getValue());
+        return bill.setStatus(OutputStatus.REJECTED.getKey());
     }
 
     @Override
     public boolean canEdit(OutputEntity bill) {
-        return bill.getStatus() == OutputStatus.REJECTED.getValue();
+        return bill.getStatus() == OutputStatus.REJECTED.getKey();
     }
 
     @Override
     public void afterAllDetailsFinished(Long id) {
         OutputEntity bill = getById(id);
-        bill.setStatus(OutputStatus.DONE.getValue());
+        bill.setStatus(OutputStatus.DONE.getKey());
         updateToDatabase(bill);
-        if (bill.getType() == OutputType.SALE.getValue()) {
+        if (bill.getType() == OutputType.SALE.getKey()) {
             SaleEntity saleEntity = bill.getSale();
-            CommonServiceHelper.getSaleService().update(saleEntity.setStatus(SaleStatus.DONE.getValue()));
+            CommonServiceHelper.getSaleService().update(saleEntity.setStatus(SaleStatus.DONE.getKey()));
         }
     }
 

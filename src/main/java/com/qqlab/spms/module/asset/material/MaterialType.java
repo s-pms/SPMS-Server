@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.asset.material;
 
-import cn.hamm.airpower.interfaces.IEnum;
+import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum MaterialType implements IEnum {
+public enum MaterialType implements IDictionary {
     /**
      * 自产品
      */
@@ -22,6 +22,6 @@ public enum MaterialType implements IEnum {
      */
     PURCHASE(2, "外购品");
 
-    private final int value;
+    private final int key;
     private final String label;
 }

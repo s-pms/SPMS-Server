@@ -39,32 +39,32 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
 
     @Override
     public MoveEntity setAudited(MoveEntity bill) {
-        return bill.setStatus(MoveStatus.MOVING.getValue());
+        return bill.setStatus(MoveStatus.MOVING.getKey());
     }
 
     @Override
     public MoveEntity setAuditing(MoveEntity bill) {
-        return bill.setStatus(MoveStatus.AUDITING.getValue());
+        return bill.setStatus(MoveStatus.AUDITING.getKey());
     }
 
     @Override
     public boolean isAudited(MoveEntity bill) {
-        return bill.getStatus() != MoveStatus.AUDITING.getValue();
+        return bill.getStatus() != MoveStatus.AUDITING.getKey();
     }
 
     @Override
     public boolean canReject(MoveEntity bill) {
-        return bill.getStatus() == MoveStatus.AUDITING.getValue();
+        return bill.getStatus() == MoveStatus.AUDITING.getKey();
     }
 
     @Override
     public MoveEntity setReject(MoveEntity bill) {
-        return bill.setStatus(MoveStatus.REJECTED.getValue());
+        return bill.setStatus(MoveStatus.REJECTED.getKey());
     }
 
     @Override
     public boolean canEdit(MoveEntity bill) {
-        return bill.getStatus() == MoveStatus.REJECTED.getValue();
+        return bill.getStatus() == MoveStatus.REJECTED.getKey();
     }
 
     @Override
@@ -93,7 +93,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
                     .setQuantity(detail.getQuantity())
                     .setMaterial(detail.getInventory().getMaterial())
                     .setStorage(bill.getStorage())
-                    .setType(InventoryType.STORAGE.getValue());
+                    .setType(InventoryType.STORAGE.getKey());
             inventoryService.add(to);
         }
         return super.addFinish(detail);
@@ -102,18 +102,18 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
     @Override
     public void afterAllDetailsFinished(Long id) {
         MoveEntity moveBill = getById(id);
-        moveBill.setStatus(MoveStatus.DONE.getValue());
+        moveBill.setStatus(MoveStatus.DONE.getKey());
         moveBill = updateToDatabase(moveBill);
 
 
         InputEntity inputBill = new InputEntity()
-                .setType(InputType.MOVE.getValue())
+                .setType(InputType.MOVE.getKey())
                 .setMove(moveBill)
-                .setStatus(InputStatus.DONE.getValue());
+                .setStatus(InputStatus.DONE.getKey());
         OutputEntity outputBill = new OutputEntity()
-                .setType(OutputType.MOVE.getValue())
+                .setType(OutputType.MOVE.getKey())
                 .setMove(moveBill)
-                .setStatus(OutputStatus.DONE.getValue());
+                .setStatus(OutputStatus.DONE.getKey());
         List<MoveDetailEntity> details = moveDetailService.getAllByBillId(moveBill.getId());
         List<OutputDetailEntity> outputDetails = new ArrayList<>();
         List<InputDetailEntity> inputDetails = new ArrayList<>();

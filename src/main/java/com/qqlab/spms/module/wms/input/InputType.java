@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.wms.input;
 
-import cn.hamm.airpower.interfaces.IEnum;
+import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum InputType implements IEnum {
+public enum InputType implements IDictionary {
     /**
      * 普通入库
      *
@@ -30,6 +30,6 @@ public enum InputType implements IEnum {
     PURCHASE(3, "采购入库"),
     ;
 
-    private final int value;
+    private final int key;
     private final String label;
 }

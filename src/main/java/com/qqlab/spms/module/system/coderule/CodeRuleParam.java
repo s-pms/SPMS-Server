@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.system.coderule;
 
-import cn.hamm.airpower.interfaces.IEnum;
+import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum CodeRuleParam implements IEnum {
+public enum CodeRuleParam implements IDictionary {
 
     /**
      * 完整年份
@@ -39,7 +39,7 @@ public enum CodeRuleParam implements IEnum {
     HOUR(5, "hh", "小时", "20"),
     ;
 
-    private final int value;
+    private final int key;
     private final String label;
     private final String desc;
     private final String demo;

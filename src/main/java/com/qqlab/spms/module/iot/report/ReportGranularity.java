@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.iot.report;
 
-import cn.hamm.airpower.interfaces.IEnum;
+import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,7 +12,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @SuppressWarnings("AlibabaEnumConstantsMustHaveComment")
 @Getter
-public enum ReportGranularity implements IEnum {
+public enum ReportGranularity implements IDictionary {
     ONE_MINUTE(60, "每分钟", "1m"),
 
     FIVE_MINUTES(300, "每五分钟", "5m"),
@@ -28,7 +28,7 @@ public enum ReportGranularity implements IEnum {
     ONE_MONTH(2678400, "每月", "744h"),
     ;
 
-    private final int value;
+    private final int key;
     private final String label;
     private final String mark;
 }

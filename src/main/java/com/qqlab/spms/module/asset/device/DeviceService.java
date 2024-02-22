@@ -1,7 +1,7 @@
 package com.qqlab.spms.module.asset.device;
 
 import cn.hamm.airpower.result.Result;
-import cn.hamm.airpower.util.EnumUtil;
+import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.qqlab.spms.base.BaseService;
@@ -22,7 +22,6 @@ import java.util.*;
  */
 @Service
 public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
-
     @Autowired
     private ParameterService parameterService;
 
@@ -66,8 +65,8 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     public List<ReportInfluxPayload> getDevicePayloadHistory(ReportPayload reportPayload) {
         ParameterEntity parameter = parameterService.getByCode(reportPayload.getCode());
         Result.PARAM_INVALID.whenNull(parameter, "不支持的参数");
-        ReportGranularity reportGranularity = EnumUtil.getEnumByValue(ReportGranularity.class, reportPayload.getReportGranularity());
-        ReportDataType reportDataType = EnumUtil.getEnumByValue(ReportDataType.class, parameter.getDataType());
+        ReportGranularity reportGranularity = DictionaryUtil.getDictionaryByKey(ReportGranularity.class, reportPayload.getReportGranularity());
+        ReportDataType reportDataType = DictionaryUtil.getDictionaryByKey(ReportDataType.class, parameter.getDataType());
         if (reportDataType != null) {
             switch (reportDataType) {
                 case QUANTITY:

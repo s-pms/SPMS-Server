@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.asset.device.enums;
 
-import cn.hamm.airpower.interfaces.IEnum;
+import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum DeviceAlarm implements IEnum {
+public enum DeviceAlarm implements IDictionary {
     /**
      * 正常
      */
@@ -33,6 +33,6 @@ public enum DeviceAlarm implements IEnum {
     RULE(3, "规则报警"),
     ;
 
-    private final int value;
+    private final int key;
     private final String label;
 }

@@ -59,11 +59,11 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
         List<InventoryEntity> list;
         if (Objects.isNull(storageEntity)) {
             return getList(new QueryRequest<InventoryEntity>().setFilter(
-                    new InventoryEntity().setType(InventoryType.STORAGE.getValue())
+                    new InventoryEntity().setType(InventoryType.STORAGE.getKey())
             ));
         }
         list = getList(new QueryRequest<InventoryEntity>().setFilter(
-                new InventoryEntity().setStorage(storageEntity).setType(InventoryType.STORAGE.getValue())
+                new InventoryEntity().setStorage(storageEntity).setType(InventoryType.STORAGE.getKey())
         ));
         List<StorageEntity> storageList = storageService.getByPid(storageEntity.getId());
         for (StorageEntity storage : storageList) {
@@ -83,11 +83,11 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
         List<InventoryEntity> list;
         if (Objects.isNull(structureEntity)) {
             return getList(new QueryRequest<InventoryEntity>().setFilter(
-                    new InventoryEntity().setType(InventoryType.STRUCTURE.getValue())
+                    new InventoryEntity().setType(InventoryType.STRUCTURE.getKey())
             ));
         }
         list = getList(new QueryRequest<InventoryEntity>().setFilter(
-                new InventoryEntity().setStructure(structureEntity).setType(InventoryType.STRUCTURE.getValue())
+                new InventoryEntity().setStructure(structureEntity).setType(InventoryType.STRUCTURE.getKey())
         ));
         List<StructureEntity> structureList = structureService.getByPid(structureEntity.getId());
         for (StructureEntity structure : structureList) {

@@ -28,42 +28,42 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
 
     @Override
     public InputEntity setAudited(InputEntity bill) {
-        return bill.setStatus(InputStatus.INPUTTING.getValue());
+        return bill.setStatus(InputStatus.INPUTTING.getKey());
     }
 
     @Override
     public InputEntity setAuditing(InputEntity bill) {
-        return bill.setStatus(InputStatus.AUDITING.getValue());
+        return bill.setStatus(InputStatus.AUDITING.getKey());
     }
 
     @Override
     public boolean isAudited(InputEntity bill) {
-        return bill.getStatus() != InputStatus.AUDITING.getValue();
+        return bill.getStatus() != InputStatus.AUDITING.getKey();
     }
 
     @Override
     public boolean canReject(InputEntity bill) {
-        return bill.getStatus() == InputStatus.AUDITING.getValue();
+        return bill.getStatus() == InputStatus.AUDITING.getKey();
     }
 
     @Override
     public InputEntity setReject(InputEntity bill) {
-        return bill.setStatus(InputStatus.REJECTED.getValue());
+        return bill.setStatus(InputStatus.REJECTED.getKey());
     }
 
     @Override
     public boolean canEdit(InputEntity bill) {
-        return bill.getStatus() == InputStatus.REJECTED.getValue();
+        return bill.getStatus() == InputStatus.REJECTED.getKey();
     }
 
     @Override
     public void afterAllDetailsFinished(Long id) {
         InputEntity bill = getById(id);
-        bill.setStatus(InputStatus.DONE.getValue());
+        bill.setStatus(InputStatus.DONE.getKey());
         updateToDatabase(bill);
-        if (bill.getType() == InputType.PURCHASE.getValue()) {
+        if (bill.getType() == InputType.PURCHASE.getKey()) {
             PurchaseEntity purchaseEntity = bill.getPurchase();
-            CommonServiceHelper.getPurchaseService().update(purchaseEntity.setStatus(PurchaseStatus.FINISHED.getValue()));
+            CommonServiceHelper.getPurchaseService().update(purchaseEntity.setStatus(PurchaseStatus.FINISHED.getKey()));
         }
     }
 
@@ -82,7 +82,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
             inventory = new InventoryEntity()
                     .setQuantity(detail.getQuantity())
                     .setMaterial(detail.getMaterial())
-                    .setType(InventoryType.STORAGE.getValue());
+                    .setType(InventoryType.STORAGE.getKey());
             inventoryService.add(inventory);
         }
         return super.addFinish(detail);

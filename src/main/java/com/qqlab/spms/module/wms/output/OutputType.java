@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.wms.output;
 
-import cn.hamm.airpower.interfaces.IEnum;
+import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum OutputType implements IEnum {
+public enum OutputType implements IDictionary {
     /**
      * 其他出库
      *
@@ -30,6 +30,6 @@ public enum OutputType implements IEnum {
     SALE(3, "销售出库"),
     ;
 
-    private final int value;
+    private final int key;
     private final String label;
 }

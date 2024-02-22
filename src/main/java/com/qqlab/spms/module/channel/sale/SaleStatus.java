@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.channel.sale;
 
-import cn.hamm.airpower.interfaces.IEnum;
+import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum SaleStatus implements IEnum {
+public enum SaleStatus implements IDictionary {
     /**
      * 审核中
      */
@@ -32,6 +32,6 @@ public enum SaleStatus implements IEnum {
      */
     DONE(4, "已完成");
 
-    private final int value;
+    private final int key;
     private final String label;
 }

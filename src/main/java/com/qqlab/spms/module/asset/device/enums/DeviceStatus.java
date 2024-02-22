@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.asset.device.enums;
 
-import cn.hamm.airpower.interfaces.IEnum;
+import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum DeviceStatus implements IEnum {
+public enum DeviceStatus implements IDictionary {
     /**
      * 未知
      */
@@ -43,6 +43,6 @@ public enum DeviceStatus implements IEnum {
     DEBUG(5, "调试"),
     ;
 
-    private final int value;
+    private final int key;
     private final String label;
 }

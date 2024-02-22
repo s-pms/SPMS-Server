@@ -15,31 +15,31 @@ import org.springframework.stereotype.Service;
 public class PlanService extends AbstractBaseBillService<PlanEntity, PlanRepository, PlanDetailEntity, PlanDetailService, PlanDetailRepository> {
     @Override
     public PlanEntity setAudited(PlanEntity bill) {
-        return bill.setStatus(PlanStatus.PRODUCING.getValue());
+        return bill.setStatus(PlanStatus.PRODUCING.getKey());
     }
 
     @Override
     public PlanEntity setAuditing(PlanEntity bill) {
-        return bill.setStatus(PlanStatus.AUDITING.getValue());
+        return bill.setStatus(PlanStatus.AUDITING.getKey());
     }
 
     @Override
     public boolean isAudited(PlanEntity bill) {
-        return bill.getStatus() != PlanStatus.AUDITING.getValue();
+        return bill.getStatus() != PlanStatus.AUDITING.getKey();
     }
 
     @Override
     public boolean canReject(PlanEntity bill) {
-        return bill.getStatus() == PlanStatus.AUDITING.getValue();
+        return bill.getStatus() == PlanStatus.AUDITING.getKey();
     }
 
     @Override
     public PlanEntity setReject(PlanEntity bill) {
-        return bill.setStatus(PlanStatus.REJECTED.getValue());
+        return bill.setStatus(PlanStatus.REJECTED.getKey());
     }
 
     @Override
     public boolean canEdit(PlanEntity bill) {
-        return bill.getStatus() == PlanStatus.REJECTED.getValue();
+        return bill.getStatus() == PlanStatus.REJECTED.getKey();
     }
 }

@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.wms.inventory;
 
-import cn.hamm.airpower.interfaces.IEnum;
+import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum InventoryType implements IEnum {
+public enum InventoryType implements IDictionary {
     /**
      * 存储资源
      */
@@ -23,6 +23,6 @@ public enum InventoryType implements IEnum {
     STRUCTURE(2, "工厂结构");
 
 
-    private final int value;
+    private final int key;
     private final String label;
 }

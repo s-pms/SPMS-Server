@@ -31,7 +31,7 @@ public class SaleController extends BaseBillController<SaleEntity, SaleService, 
     @Override
     public void afterAudit(SaleEntity bill) {
         OutputEntity outputBill = new OutputEntity()
-                .setStatus(OutputStatus.AUDITING.getValue())
+                .setStatus(OutputStatus.AUDITING.getKey())
                 .setSale(bill);
         List<SaleDetailEntity> details = saleDetailService.getAllByBillId(bill.getId());
         List<OutputDetailEntity> outputDetails = new ArrayList<>();

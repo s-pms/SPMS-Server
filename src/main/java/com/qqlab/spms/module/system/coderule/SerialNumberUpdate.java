@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.system.coderule;
 
-import cn.hamm.airpower.interfaces.IEnum;
+import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum SerialNumberUpdate implements IEnum {
+public enum SerialNumberUpdate implements IDictionary {
 
     /**
      * 按日更新
@@ -34,6 +34,6 @@ public enum SerialNumberUpdate implements IEnum {
     NEVER(4, "不更新"),
     ;
 
-    private final int value;
+    private final int key;
     private final String label;
 }

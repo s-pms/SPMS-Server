@@ -23,38 +23,38 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
 
     @Override
     public PurchaseEntity setAudited(PurchaseEntity bill) {
-        return bill.setStatus(PurchaseStatus.PURCHASING.getValue());
+        return bill.setStatus(PurchaseStatus.PURCHASING.getKey());
     }
 
     @Override
     public boolean isAudited(PurchaseEntity bill) {
-        return bill.getStatus() != PurchaseStatus.AUDITING.getValue();
+        return bill.getStatus() != PurchaseStatus.AUDITING.getKey();
     }
 
     @Override
     public boolean canReject(PurchaseEntity bill) {
-        return bill.getStatus() == PurchaseStatus.AUDITING.getValue();
+        return bill.getStatus() == PurchaseStatus.AUDITING.getKey();
     }
 
     @Override
     public PurchaseEntity setReject(PurchaseEntity bill) {
-        return bill.setStatus(PurchaseStatus.REJECTED.getValue());
+        return bill.setStatus(PurchaseStatus.REJECTED.getKey());
     }
 
     @Override
     public boolean canEdit(PurchaseEntity bill) {
-        return bill.getStatus() == PurchaseStatus.REJECTED.getValue();
+        return bill.getStatus() == PurchaseStatus.REJECTED.getKey();
     }
 
     @Override
     public PurchaseEntity setAuditing(PurchaseEntity bill) {
-        return bill.setStatus(PurchaseStatus.AUDITING.getValue());
+        return bill.setStatus(PurchaseStatus.AUDITING.getKey());
     }
 
     @Override
     public void afterAllDetailsFinished(Long id) {
         PurchaseEntity bill = getById(id);
-        bill.setStatus(PurchaseStatus.DONE.getValue());
+        bill.setStatus(PurchaseStatus.DONE.getKey());
         List<PurchaseDetailEntity> details = detailService.getAllByBillId(bill.getId());
         List<InputDetailEntity> inputDetails = new ArrayList<>();
         double totalRealPrice = 0D;
@@ -70,7 +70,7 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
 
         // 创建采购入库单
         InputEntity inputBill = new InputEntity()
-                .setStatus(InputStatus.AUDITING.getValue())
+                .setStatus(InputStatus.AUDITING.getKey())
                 .setPurchase(bill)
                 .setDetails(inputDetails);
         CommonServiceHelper.getInputService().add(inputBill);

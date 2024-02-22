@@ -28,11 +28,11 @@ public class InventoryController extends BaseController<InventoryEntity, Invento
         List<InventoryEntity> list;
         InventoryEntity filter = queryRequest.getFilter();
         if (Objects.nonNull(filter)) {
-            if (filter.getType() == InventoryType.STORAGE.getValue()) {
+            if (filter.getType() == InventoryType.STORAGE.getKey()) {
                 list = service.getListByStorage(filter.getStorage());
                 return jsonData(list);
             }
-            if (filter.getType() == InventoryType.STRUCTURE.getValue()) {
+            if (filter.getType() == InventoryType.STRUCTURE.getKey()) {
                 list = service.getListByStructure(filter.getStructure());
                 return jsonData(list);
             }

@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.mes.plan;
 
-import cn.hamm.airpower.interfaces.IEnum;
+import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum PlanType implements IEnum {
+public enum PlanType implements IDictionary {
     /**
      * 内部计划
      */
@@ -22,6 +22,6 @@ public enum PlanType implements IEnum {
      */
     SALE(2, "外销计划");
 
-    private final int value;
+    private final int key;
     private final String label;
 }

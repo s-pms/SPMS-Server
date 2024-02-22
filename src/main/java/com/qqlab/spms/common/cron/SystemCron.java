@@ -49,19 +49,19 @@ public class SystemCron {
         DateTime dateTime = DateUtil.date();
         int month = dateTime.monthBaseOne();
         int day = dateTime.dayOfMonth();
-        if (codeRule.getSnType().equals(SerialNumberUpdate.YEAR.getValue()) && month == 1 && day == 1) {
+        if (codeRule.getSnType().equals(SerialNumberUpdate.YEAR.getKey()) && month == 1 && day == 1) {
             // 按年更新 且是1月1号
             codeRule.setCurrentSn(0);
             codeRuleService.update(codeRule);
             return;
         }
-        if (codeRule.getSnType().equals(SerialNumberUpdate.MONTH.getValue()) && day == 1) {
+        if (codeRule.getSnType().equals(SerialNumberUpdate.MONTH.getKey()) && day == 1) {
             // 按月更新 且是1号
             codeRule.setCurrentSn(0);
             codeRuleService.update(codeRule);
             return;
         }
-        if (codeRule.getSnType().equals(SerialNumberUpdate.DAY.getValue())) {
+        if (codeRule.getSnType().equals(SerialNumberUpdate.DAY.getKey())) {
             // 按日更新 直接更新
             codeRule.setCurrentSn(0);
             codeRuleService.update(codeRule);

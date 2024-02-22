@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.wms.output;
 
-import cn.hamm.airpower.interfaces.IEnum;
+import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum OutputStatus implements IEnum {
+public enum OutputStatus implements IDictionary {
     /**
      * 审核中
      */
@@ -32,6 +32,6 @@ public enum OutputStatus implements IEnum {
      */
     DONE(4, "已完成");
 
-    private final int value;
+    private final int key;
     private final String label;
 }

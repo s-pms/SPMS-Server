@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.mes.pickout;
 
-import cn.hamm.airpower.interfaces.IEnum;
+import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum PickoutStatus implements IEnum {
+public enum PickoutStatus implements IDictionary {
     /**
      * 审核中
      */
@@ -37,6 +37,6 @@ public enum PickoutStatus implements IEnum {
      */
     CANCELED(5, "已取消");
 
-    private final int value;
+    private final int key;
     private final String label;
 }

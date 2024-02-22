@@ -1,6 +1,6 @@
 package com.qqlab.spms.module.system.coderule;
 
-import cn.hamm.airpower.interfaces.IEnum;
+import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum CodeRuleField implements IEnum {
+public enum CodeRuleField implements IDictionary {
     /**
      * 角色
      */
@@ -103,7 +103,7 @@ public enum CodeRuleField implements IEnum {
      */
     OperationCode(18, "工序编码", "OP");
 
-    private final int value;
+    private final int key;
     private final String label;
     private final String defaultPrefix;
 }
