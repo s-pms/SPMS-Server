@@ -45,6 +45,6 @@ public class SupplierEntity extends BaseEntity<SupplierEntity> {
 
     @Description("联系电话")
     @Column(columnDefinition = "varchar(255) default '' comment '联系电话'")
-    @Phone
+    @Phone(groups = {WhenAdd.class, WhenUpdate.class})
     private String phone;
 }

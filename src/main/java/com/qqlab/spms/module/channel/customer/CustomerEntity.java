@@ -18,7 +18,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 
-
 /**
  * <h1>供应商实体</h1>
  *
@@ -47,6 +46,6 @@ public class CustomerEntity extends BaseEntity<CustomerEntity> {
 
     @Description("联系电话")
     @Column(columnDefinition = "varchar(255) default '' comment '联系电话'")
-    @Phone
+    @Phone(groups = {WhenAdd.class, WhenUpdate.class})
     private String phone;
 }
