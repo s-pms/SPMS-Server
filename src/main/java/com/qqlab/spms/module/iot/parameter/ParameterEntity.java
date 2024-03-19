@@ -53,7 +53,7 @@ public class ParameterEntity extends BaseEntity<ParameterEntity> {
 
     @Description("数据类型")
     @Search(Search.Mode.EQUALS)
-    @Dictionary(ReportDataType.class)
+    @Dictionary(value = ReportDataType.class,groups = {WhenAdd.class, WhenUpdate.class})
     @NotNull(groups = {WhenAdd.class, WhenUpdate.class}, message = "数据类型不允许为空")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '数据类型'")
     private Integer dataType;

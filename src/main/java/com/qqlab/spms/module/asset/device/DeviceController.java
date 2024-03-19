@@ -48,7 +48,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
     public Json getDevice(@RequestBody @Validated({DeviceEntity.WhenGetDevice.class}) DeviceEntity device) {
         device = service.getByUuid(device.getUuid());
         Result.DATA_NOT_FOUND.whenNull(device);
-        device = device.setPartCount(null)
+        device.setPartCount(null)
                 .setAlarm(null)
                 .setStatus(null)
                 .excludeBaseData();

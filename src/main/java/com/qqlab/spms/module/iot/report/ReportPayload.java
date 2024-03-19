@@ -1,5 +1,6 @@
 package com.qqlab.spms.module.iot.report;
 
+import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -37,7 +38,7 @@ public class ReportPayload {
     private String uuid;
 
     @NotNull(groups = {WhenGetDevicePayloadHistory.class}, message = "颗粒度不允许为空")
-    @Dictionary(ReportGranularity.class)
+    @Dictionary(value = ReportGranularity.class,groups = {RootEntity.WhenAdd.class, RootEntity.WhenUpdate.class})
     private Integer reportGranularity;
 
     private Integer dataType;

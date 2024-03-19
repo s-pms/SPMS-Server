@@ -64,7 +64,7 @@ public class PurchaseEntity extends AbstractBaseBillEntity<PurchaseEntity, Purch
 
     @Description("采购状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '采购状态'")
-    @Dictionary(PurchaseStatus.class)
+    @Dictionary(value = PurchaseStatus.class,groups = {WhenAdd.class, WhenUpdate.class})
     @Search(Search.Mode.EQUALS)
     private Integer status;
 }

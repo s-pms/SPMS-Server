@@ -42,12 +42,12 @@ public class PlanEntity extends AbstractBaseBillEntity<PlanEntity, PlanDetailEnt
 
     @Description("计划状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '计划状态'")
-    @Dictionary(PlanStatus.class)
+    @Dictionary(value = PlanStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer status;
 
     @Description("计划类型")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '计划类型'")
-    @Dictionary(PlanType.class)
+    @Dictionary(value = PlanType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 
     /**

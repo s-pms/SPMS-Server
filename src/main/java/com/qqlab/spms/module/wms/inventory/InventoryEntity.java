@@ -49,7 +49,7 @@ public class InventoryEntity extends BaseEntity<InventoryEntity> {
 
     @Description("存储类型")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '存储类型'")
-    @Dictionary(InventoryType.class)
+    @Dictionary(value = InventoryType.class,groups = {WhenAdd.class, WhenUpdate.class})
     @Search(Search.Mode.EQUALS)
     private Integer type;
 

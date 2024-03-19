@@ -57,13 +57,13 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> {
     @Description("设备状态")
     @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 4 comment '设备状态'")
-    @Dictionary(DeviceStatus.class)
+    @Dictionary(value = DeviceStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer status;
 
     @Description("报警状态")
     @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '报警状态'")
-    @Dictionary(DeviceAlarm.class)
+    @Dictionary(value = DeviceAlarm.class,groups = {WhenAdd.class, WhenUpdate.class})
     private Integer alarm;
 
     @Description("实时产量")

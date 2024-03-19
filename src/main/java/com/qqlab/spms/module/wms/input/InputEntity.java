@@ -46,13 +46,13 @@ public class InputEntity extends AbstractBaseBillEntity<InputEntity, InputDetail
 
     @Description("入库状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '入库状态'")
-    @Dictionary(InputStatus.class)
+    @Dictionary(value = InputStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Search(Search.Mode.EQUALS)
     private Integer status;
 
     @Description("入库类型")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '入库类型'")
-    @Dictionary(InputType.class)
+    @Dictionary(value = InputType.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Search(Search.Mode.EQUALS)
     private Integer type;
 

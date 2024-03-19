@@ -66,7 +66,7 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
     @Search(Search.Mode.EQUALS)
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '物料类型'")
     @NotNull(groups = {WhenAdd.class, WhenUpdate.class}, message = "物料类型不能为空")
-    @Dictionary(MaterialType.class)
+    @Dictionary(value = MaterialType.class,groups = {WhenAdd.class, WhenUpdate.class})
     private Integer materialType;
 
     /**

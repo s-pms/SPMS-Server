@@ -42,7 +42,7 @@ public class PickoutEntity extends AbstractBaseBillEntity<PickoutEntity, Pickout
 
     @Description("领料状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '领料状态'")
-    @Dictionary(PickoutStatus.class)
+    @Dictionary(value = PickoutStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer status;
 
     /**

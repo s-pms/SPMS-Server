@@ -45,12 +45,12 @@ public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetail
 
     @Description("订单状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '订单状态'")
-    @Dictionary(OrderStatus.class)
+    @Dictionary(value = OrderStatus.class,groups = {WhenAdd.class, WhenUpdate.class})
     private Integer status;
 
     @Description("订单类型")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '订单类型'")
-    @Dictionary(OrderType.class)
+    @Dictionary(value = OrderType.class,groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 
     /**

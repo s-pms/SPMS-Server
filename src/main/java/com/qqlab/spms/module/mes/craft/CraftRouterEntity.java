@@ -47,7 +47,7 @@ public class CraftRouterEntity extends BaseEntity<CraftRouterEntity> {
 
     @Description("工艺路线状态")
     @Search(Search.Mode.EQUALS)
-    @Dictionary(PurchaseStatus.class)
+    @Dictionary(value = PurchaseStatus.class,groups = {WhenAdd.class, WhenUpdate.class})
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '工艺路线状态'")
     private Integer status;
 

@@ -5,12 +5,12 @@
     <parent>
         <groupId>cn.hamm</groupId>
         <artifactId>airpower</artifactId>
-        <version>1.0.3</version>
+        <version>1.1.10</version>
     </parent>
-    <groupId>com.qqlab.spms</groupId>
+    <groupId>com.qqlab</groupId>
     <artifactId>SPMS</artifactId>
     <version>1.0.0</version>
-    <name>smart-production-manage-system</name>
+    <name>SPMS</name>
     <description>smart-production-manage-system</description>
     <dependencies>
         <dependency>
