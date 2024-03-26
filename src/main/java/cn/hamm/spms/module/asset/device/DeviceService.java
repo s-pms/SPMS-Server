@@ -35,7 +35,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     /**
      * 查询指定设备uuid的当前报告
      *
-     * @param device 设备
+     * @param deviceId 设备ID
      * @return 报告列表
      */
     public List<ReportPayload> getCurrentReport(long deviceId) {
