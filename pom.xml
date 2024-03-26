@@ -7,10 +7,10 @@
         <artifactId>airpower</artifactId>
         <version>1.2.1</version>
     </parent>
-    <groupId>com.qqlab.spms</groupId>
-    <artifactId>SPMS</artifactId>
+    <groupId>cn.hamm.spms</groupId>
+    <artifactId>server</artifactId>
     <version>1.0.0</version>
-    <name>smart-production-manage-system</name>
+    <name>SPMS</name>
     <description>smart-production-manage-system</description>
     <dependencies>
         <dependency>
@@ -31,7 +31,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${springboot.version}</version>
                 <configuration>
-                    <mainClass>com.qqlab.spms.Application</mainClass>
+                    <mainClass>cn.hamm.spms.Application</mainClass>
                 </configuration>
                 <executions>
                     <execution>
