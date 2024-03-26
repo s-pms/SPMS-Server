@@ -2,7 +2,7 @@ package cn.hamm.spms.module.channel.sale;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.spms.base.bill.BaseBillController;
-import cn.hamm.spms.common.helper.CommonServiceHelper;
+import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailEntity;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailRepository;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailService;
@@ -42,6 +42,6 @@ public class SaleController extends BaseBillController<SaleEntity, SaleService, 
             );
         }
         outputBill.setDetails(outputDetails);
-        CommonServiceHelper.getOutputService().add(outputBill);
+        Services.getOutputService().add(outputBill);
     }
 }

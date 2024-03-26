@@ -1,7 +1,8 @@
-package cn.hamm.spms.common.helper;
+package cn.hamm.spms.common;
 
 import cn.hamm.spms.module.channel.purchase.PurchaseService;
 import cn.hamm.spms.module.channel.sale.SaleService;
+import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import cn.hamm.spms.module.wms.input.InputService;
 import cn.hamm.spms.module.wms.output.OutputService;
 import lombok.Getter;
@@ -9,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <h1>采购入库助手类</h1>
+ * <h1>服务整合助手类</h1>
  *
  * @author Hamm
  */
 @Component
 @SuppressWarnings("UnusedReturnValue")
-public class CommonServiceHelper {
+public class Services {
     @Getter
     private static PurchaseService purchaseService;
 
@@ -28,16 +29,21 @@ public class CommonServiceHelper {
     @Getter
     private static OutputService outputService;
 
+    @Getter
+    private static CodeRuleService codeRuleService;
+
     @Autowired
     private void initService(
+            CodeRuleService codeRuleService,
             PurchaseService purchaseService,
             SaleService saleService,
             InputService inputService,
             OutputService outputService
     ) {
-        CommonServiceHelper.purchaseService = purchaseService;
-        CommonServiceHelper.saleService = saleService;
-        CommonServiceHelper.inputService = inputService;
-        CommonServiceHelper.outputService = outputService;
+        Services.codeRuleService = codeRuleService;
+        Services.purchaseService = purchaseService;
+        Services.saleService = saleService;
+        Services.inputService = inputService;
+        Services.outputService = outputService;
     }
 }

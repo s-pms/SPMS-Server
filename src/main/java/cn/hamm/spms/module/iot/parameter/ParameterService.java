@@ -43,8 +43,8 @@ public class ParameterService extends BaseService<ParameterEntity, ParameterRepo
     }
 
     @Override
-    protected ParameterEntity beforeSaveToDatabase(ParameterEntity entity) {
-        redisUtil.del(PARAM_CODE_CACHE_PREFIX + entity.getCode());
-        return super.beforeSaveToDatabase(entity);
+    protected ParameterEntity beforeAppSaveToDatabase(ParameterEntity parameter) {
+        redisUtil.del(PARAM_CODE_CACHE_PREFIX + parameter.getCode());
+        return parameter;
     }
 }

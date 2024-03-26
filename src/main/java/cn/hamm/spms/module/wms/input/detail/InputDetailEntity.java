@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.wms.input.detail;
 
-
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;

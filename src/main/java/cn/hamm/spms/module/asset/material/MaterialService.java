@@ -14,13 +14,13 @@ import java.util.Objects;
 public class MaterialService extends BaseService<MaterialEntity, MaterialRepository> {
 
     @Override
-    protected MaterialEntity beforeSaveToDatabase(MaterialEntity entity) {
-        if(Objects.isNull(entity.getPurchasePrice())){
-            entity.setPurchasePrice(0D);
+    protected MaterialEntity beforeAppSaveToDatabase(MaterialEntity material) {
+        if (Objects.isNull(material.getPurchasePrice())) {
+            material.setPurchasePrice(0D);
         }
-        if(Objects.isNull(entity.getSalePrice())){
-            entity.setSalePrice(0D);
+        if (Objects.isNull(material.getSalePrice())) {
+            material.setSalePrice(0D);
         }
-        return super.beforeSaveToDatabase(entity);
+        return material;
     }
 }

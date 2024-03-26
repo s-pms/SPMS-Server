@@ -31,14 +31,15 @@ public abstract class AbstractBaseBillService<
     /**
      * 添加完成数量
      *
-     * @param detail 明细
+     * @param sourceDetail 提交明细
      * @return 存储后的明细
      */
-    public D addFinish(D detail) {
-        D savedDetail = detailService.get(detail.getId());
-        detail.setFinishQuantity(savedDetail.getFinishQuantity() + detail.getQuantity());
-        detailService.update(detail);
-        List<D> details = detailService.getAllByBillId(detail.getBillId());
+    public final void addFinish(D sourceDetail) {
+        sourceDetail = beforeAddFinish(sourceDetail);
+        D savedDetail = detailService.get(sourceDetail.getId());
+        sourceDetail.setFinishQuantity(savedDetail.getFinishQuantity() + sourceDetail.getQuantity());
+        detailService.update(sourceDetail);
+        List<D> details = detailService.getAllByBillId(sourceDetail.getBillId());
         boolean isAllFinished = true;
         for (D d : details) {
             if (d.getFinishQuantity() < d.getQuantity()) {
@@ -47,9 +48,18 @@ public abstract class AbstractBaseBillService<
             }
         }
         if (isAllFinished) {
-            afterAllDetailsFinished(detail.getBillId());
+            afterAllDetailsFinished(sourceDetail.getBillId());
         }
-        return detail;
+    }
+
+    /**
+     * 添加完成数量前置方法
+     *
+     * @param sourceDetail 提交明细
+     * @return 提交明细
+     */
+    protected D beforeAddFinish(D sourceDetail) {
+        return sourceDetail;
     }
 
     /**
@@ -57,9 +67,7 @@ public abstract class AbstractBaseBillService<
      *
      * @param id 单据ID
      */
-    @SuppressWarnings("unused")
-    public void afterAllDetailsFinished(Long id) {
-
+    protected void afterAllDetailsFinished(Long id) {
     }
 
     /**
@@ -68,7 +76,6 @@ public abstract class AbstractBaseBillService<
      * @param bill 单据
      * @return 单据
      */
-    @SuppressWarnings("UnusedReturnValue")
     protected void afterDetailSaved(E bill) {
     }
 

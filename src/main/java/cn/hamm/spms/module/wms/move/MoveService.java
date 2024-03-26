@@ -2,7 +2,7 @@ package cn.hamm.spms.module.wms.move;
 
 import cn.hamm.airpower.result.Result;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
-import cn.hamm.spms.common.helper.CommonServiceHelper;
+import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.wms.input.InputEntity;
 import cn.hamm.spms.module.wms.input.InputStatus;
 import cn.hamm.spms.module.wms.input.InputType;
@@ -68,35 +68,36 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
     }
 
     @Override
-    public MoveDetailEntity addFinish(MoveDetailEntity detail) {
-        detail = detailService.get(detail.getId());
-        if (detail.getInventory().getQuantity() < detail.getQuantity()) {
+    protected MoveDetailEntity beforeAddFinish(MoveDetailEntity sourceDetail) {
+
+        sourceDetail = detailService.get(sourceDetail.getId());
+        if (sourceDetail.getInventory().getQuantity() < sourceDetail.getQuantity()) {
             // 判断来源库存
-            Result.FORBIDDEN.show("库存信息不足" + detail.getQuantity());
+            Result.FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
         }
 
         // 扣除来源库存
-        InventoryEntity from = detail.getInventory();
-        from.setQuantity(from.getQuantity() - detail.getQuantity());
+        InventoryEntity from = sourceDetail.getInventory();
+        from.setQuantity(from.getQuantity() - sourceDetail.getQuantity());
         inventoryService.update(from);
 
         // 查询移库单
-        MoveEntity bill = get(detail.getBillId());
-        InventoryEntity to = inventoryService.getByMaterialIdAndStorageId(detail.getInventory().getMaterial().getId(), bill.getStorage().getId());
+        MoveEntity bill = get(sourceDetail.getBillId());
+        InventoryEntity to = inventoryService.getByMaterialIdAndStorageId(sourceDetail.getInventory().getMaterial().getId(), bill.getStorage().getId());
         if (Objects.nonNull(to)) {
             // 更新目标库存
-            to.setQuantity(to.getQuantity() + detail.getQuantity());
+            to.setQuantity(to.getQuantity() + sourceDetail.getQuantity());
             inventoryService.update(to);
         } else {
             // 创建目标库存
             to = new InventoryEntity()
-                    .setQuantity(detail.getQuantity())
-                    .setMaterial(detail.getInventory().getMaterial())
+                    .setQuantity(sourceDetail.getQuantity())
+                    .setMaterial(sourceDetail.getInventory().getMaterial())
                     .setStorage(bill.getStorage())
                     .setType(InventoryType.STORAGE.getKey());
             inventoryService.add(to);
         }
-        return super.addFinish(detail);
+        return sourceDetail;
     }
 
     @Override
@@ -132,8 +133,8 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
             );
         }
         inputBill.setDetails(inputDetails);
-        CommonServiceHelper.getInputService().add(inputBill);
+        Services.getInputService().add(inputBill);
         outputBill.setDetails(outputDetails);
-        CommonServiceHelper.getOutputService().add(outputBill);
+        Services.getOutputService().add(outputBill);
     }
 }

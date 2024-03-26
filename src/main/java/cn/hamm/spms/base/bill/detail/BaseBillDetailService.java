@@ -19,7 +19,7 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
      *
      * @param billId 单据ID
      */
-    public void deleteAllByBillId(Long billId) {
+    public final void deleteAllByBillId(Long billId) {
         List<E> details = getAllByBillId(billId);
         for (E detail : details) {
             repository.deleteById(detail.getId());
@@ -32,7 +32,7 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
      * @param billId 单据ID
      * @return 明细
      */
-    public List<E> getAllByBillId(Long billId) {
+    public final List<E> getAllByBillId(Long billId) {
         return repository.getAllByBillId(billId);
     }
 
@@ -43,7 +43,7 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
      * @param details 明细
      * @return 存储后的明细
      */
-    public List<E> saveDetails(Long billId, List<E> details) {
+    public final List<E> saveDetails(Long billId, List<E> details) {
         deleteAllByBillId(billId);
         List<E> savedDetails = new ArrayList<>(details.size());
         deleteAllByBillId(billId);

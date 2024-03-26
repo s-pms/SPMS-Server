@@ -82,6 +82,6 @@ public class BaseBillController<
      *
      * @param bill 单据
      */
-    public void afterAudit(E bill) {
+    protected void afterAudit(E bill) {
     }
 }

@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.channel.purchase;
 
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
-import cn.hamm.spms.common.helper.CommonServiceHelper;
+import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailEntity;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailRepository;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailService;
@@ -73,7 +73,7 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
                 .setStatus(InputStatus.AUDITING.getKey())
                 .setPurchase(bill)
                 .setDetails(inputDetails);
-        CommonServiceHelper.getInputService().add(inputBill);
+        Services.getInputService().add(inputBill);
     }
 
     @Override

@@ -2,7 +2,7 @@ package cn.hamm.spms.module.wms.output;
 
 import cn.hamm.airpower.result.Result;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
-import cn.hamm.spms.common.helper.CommonServiceHelper;
+import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.sale.SaleEntity;
 import cn.hamm.spms.module.channel.sale.SaleStatus;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
@@ -62,26 +62,26 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
         updateToDatabase(bill);
         if (bill.getType() == OutputType.SALE.getKey()) {
             SaleEntity saleEntity = bill.getSale();
-            CommonServiceHelper.getSaleService().update(saleEntity.setStatus(SaleStatus.DONE.getKey()));
+            Services.getSaleService().update(saleEntity.setStatus(SaleStatus.DONE.getKey()));
         }
     }
 
     @Override
-    public OutputDetailEntity addFinish(OutputDetailEntity outputDetail) {
-        InventoryEntity inventory = outputDetail.getInventory();
+    protected OutputDetailEntity beforeAddFinish(OutputDetailEntity sourceDetail) {
+        InventoryEntity inventory = sourceDetail.getInventory();
         if (Objects.isNull(inventory)) {
             Result.FORBIDDEN.show("请传入库存信息");
             return null;
         }
         inventory = inventoryService.get(inventory.getId());
-        outputDetail = detailService.get(outputDetail.getId());
-        Result.FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), outputDetail.getMaterial().getId(), "物料信息不匹配");
-        if (inventory.getQuantity() < outputDetail.getQuantity()) {
+        sourceDetail = detailService.get(sourceDetail.getId());
+        Result.FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), sourceDetail.getMaterial().getId(), "物料信息不匹配");
+        if (inventory.getQuantity() < sourceDetail.getQuantity()) {
             // 判断库存
-            Result.FORBIDDEN.show("库存信息不足" + outputDetail.getQuantity());
+            Result.FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
         }
-        inventory.setQuantity(inventory.getQuantity() - outputDetail.getQuantity());
+        inventory.setQuantity(inventory.getQuantity() - sourceDetail.getQuantity());
         inventoryService.update(inventory);
-        return super.addFinish(outputDetail);
+        return sourceDetail;
     }
 }

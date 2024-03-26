@@ -2,7 +2,7 @@ package cn.hamm.spms.module.wms.input;
 
 import cn.hamm.airpower.result.Result;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
-import cn.hamm.spms.common.helper.CommonServiceHelper;
+import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.purchase.PurchaseEntity;
 import cn.hamm.spms.module.channel.purchase.PurchaseStatus;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
@@ -63,28 +63,28 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
         updateToDatabase(bill);
         if (bill.getType() == InputType.PURCHASE.getKey()) {
             PurchaseEntity purchaseEntity = bill.getPurchase();
-            CommonServiceHelper.getPurchaseService().update(purchaseEntity.setStatus(PurchaseStatus.FINISHED.getKey()));
+            Services.getPurchaseService().update(purchaseEntity.setStatus(PurchaseStatus.FINISHED.getKey()));
         }
     }
 
     @Override
-    public InputDetailEntity addFinish(InputDetailEntity inputDetail) {
-        InputDetailEntity savedDetail = detailService.get(inputDetail.getId());
-        if (Objects.isNull(inputDetail.getStorage()) || Objects.isNull(inputDetail.getStorage().getId())) {
+    protected InputDetailEntity beforeAddFinish(InputDetailEntity sourceDetail) {
+        InputDetailEntity savedDetail = detailService.get(sourceDetail.getId());
+        if (Objects.isNull(sourceDetail.getStorage()) || Objects.isNull(sourceDetail.getStorage().getId())) {
             Result.FORBIDDEN.show("请传入入库存储资源");
             return null;
         }
-        InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(savedDetail.getMaterial().getId(), inputDetail.getStorage().getId());
+        InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(savedDetail.getMaterial().getId(), sourceDetail.getStorage().getId());
         if (Objects.nonNull(inventory)) {
-            inventory.setQuantity(inventory.getQuantity() + inputDetail.getQuantity());
+            inventory.setQuantity(inventory.getQuantity() + sourceDetail.getQuantity());
             inventoryService.update(inventory);
         } else {
             inventory = new InventoryEntity()
-                    .setQuantity(inputDetail.getQuantity())
-                    .setMaterial(inputDetail.getMaterial())
+                    .setQuantity(sourceDetail.getQuantity())
+                    .setMaterial(sourceDetail.getMaterial())
                     .setType(InventoryType.STORAGE.getKey());
             inventoryService.add(inventory);
         }
-        return super.addFinish(inputDetail);
+        return sourceDetail;
     }
 }
