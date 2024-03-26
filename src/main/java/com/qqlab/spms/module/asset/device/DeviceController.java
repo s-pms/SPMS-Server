@@ -39,7 +39,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
     @PostMapping("getCurrentReport")
     @Permission(login = false)
     public Json getCurrentReport(@RequestBody @Validated({RootEntity.WhenIdRequired.class}) DeviceEntity device) {
-        return jsonData(service.getCurrentReport(device));
+        return jsonData(service.getCurrentReport(device.getId()));
     }
 
     @Description("获取采集配置")
@@ -48,7 +48,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
     public Json getDevice(@RequestBody @Validated({DeviceEntity.WhenGetDevice.class}) DeviceEntity device) {
         device = service.getByUuid(device.getUuid());
         Result.DATA_NOT_FOUND.whenNull(device);
-        device = device.setPartCount(null)
+        device.setPartCount(null)
                 .setAlarm(null)
                 .setStatus(null)
                 .excludeBaseData();

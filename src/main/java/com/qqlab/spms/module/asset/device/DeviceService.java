@@ -37,8 +37,8 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
      * @param device 设备
      * @return 报告列表
      */
-    public List<ReportPayload> getCurrentReport(DeviceEntity device) {
-        device = getById(device.getId());
+    public List<ReportPayload> getCurrentReport(long deviceId) {
+        DeviceEntity device = get(deviceId);
         Object data = redisTemplate.opsForValue().get(ReportEvent.CACHE_PREFIX + device.getUuid());
         if (Objects.isNull(data)) {
             return new ArrayList<>();

@@ -79,7 +79,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return 菜单树列表
      */
     public List<MenuEntity> getMenuListByUserId(long userId) {
-        UserEntity userEntity = getById(userId);
+        UserEntity userEntity = get(userId);
         if (userEntity.getIsSystem()) {
             return treeUtil.buildTreeList(menuService.getList(new QueryRequest<MenuEntity>().setSort(new Sort().setField("orderNo"))));
         }
@@ -111,7 +111,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return 权限列表
      */
     public List<PermissionEntity> getPermissionListByUserId(long userId) {
-        UserEntity userEntity = getById(userId);
+        UserEntity userEntity = get(userId);
         if (userEntity.getIsSystem()) {
             return permissionService.getList(null);
         }
@@ -142,7 +142,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param userEntity vo
      */
     public void modifyUserPassword(UserEntity userEntity) {
-        UserEntity existUser = getById(userEntity.getId());
+        UserEntity existUser = get(userEntity.getId());
         String code = getEmailCode(existUser.getEmail());
         Result.PARAM_INVALID.whenNotEquals(code, userEntity.getCode(), "验证码输入错误");
         String oldPassword = userEntity.getOldPassword();
@@ -257,7 +257,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         UserEntity existUser = null;
         if (Objects.nonNull(userEntity.getId())) {
             // ID登录
-            existUser = getByIdMaybeNull(userEntity.getId());
+            existUser = getMaybeNull(userEntity.getId());
         } else if (Objects.nonNull(userEntity.getAccount())) {
             // 账号登录
             existUser = repository.getByAccount(userEntity.getAccount());
@@ -344,22 +344,21 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     @Override
-    public void delete(Long id) {
-        UserEntity entity = getById(id);
+    protected void beforeDelete(long id) {
+        UserEntity entity = get(id);
         Result.FORBIDDEN_DELETE.when(entity.getIsSystem(), "系统内置用户无法被删除!");
-        deleteById(id);
     }
 
     @Override
-    public UserEntity add(UserEntity entity) {
-        UserEntity existUser = repository.getByEmail(entity.getEmail());
+    protected UserEntity beforeAdd(UserEntity source) {
+        UserEntity existUser = repository.getByEmail(source.getEmail());
         Result.FORBIDDEN_EXIST.whenNotNull(existUser, "邮箱已经存在，请勿重复添加用户");
-        if (!StringUtils.hasLength(entity.getPassword())) {
+        if (!StringUtils.hasLength(source.getPassword())) {
             // 创建时没有设置密码的话 随机一个密码
             String salt = RandomUtil.randomString(4);
-            entity.setPassword(PasswordUtil.encode("123123", salt));
-            entity.setSalt(salt);
+            source.setPassword(PasswordUtil.encode("123123", salt));
+            source.setSalt(salt);
         }
-        return addToDatabase(entity);
+        return source;
     }
 }

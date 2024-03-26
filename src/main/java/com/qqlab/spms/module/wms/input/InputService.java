@@ -58,7 +58,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
 
     @Override
     public void afterAllDetailsFinished(Long id) {
-        InputEntity bill = getById(id);
+        InputEntity bill = get(id);
         bill.setStatus(InputStatus.DONE.getKey());
         updateToDatabase(bill);
         if (bill.getType() == InputType.PURCHASE.getKey()) {
@@ -68,23 +68,23 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
     }
 
     @Override
-    public InputDetailEntity addFinish(InputDetailEntity detail) {
-        InputDetailEntity savedDetail = detailService.get(detail.getId());
-        if (Objects.isNull(detail.getStorage()) || Objects.isNull(detail.getStorage().getId())) {
+    public InputDetailEntity addFinish(InputDetailEntity inputDetail) {
+        InputDetailEntity savedDetail = detailService.get(inputDetail.getId());
+        if (Objects.isNull(inputDetail.getStorage()) || Objects.isNull(inputDetail.getStorage().getId())) {
             Result.FORBIDDEN.show("请传入入库存储资源");
             return null;
         }
-        InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(savedDetail.getMaterial().getId(), detail.getStorage().getId());
+        InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(savedDetail.getMaterial().getId(), inputDetail.getStorage().getId());
         if (Objects.nonNull(inventory)) {
-            inventory.setQuantity(inventory.getQuantity() + detail.getQuantity());
+            inventory.setQuantity(inventory.getQuantity() + inputDetail.getQuantity());
             inventoryService.update(inventory);
         } else {
             inventory = new InventoryEntity()
-                    .setQuantity(detail.getQuantity())
-                    .setMaterial(detail.getMaterial())
+                    .setQuantity(inputDetail.getQuantity())
+                    .setMaterial(inputDetail.getMaterial())
                     .setType(InventoryType.STORAGE.getKey());
             inventoryService.add(inventory);
         }
-        return super.addFinish(detail);
+        return super.addFinish(inputDetail);
     }
 }

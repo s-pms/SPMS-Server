@@ -81,7 +81,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
         inventoryService.update(from);
 
         // 查询移库单
-        MoveEntity bill = getById(detail.getBillId());
+        MoveEntity bill = get(detail.getBillId());
         InventoryEntity to = inventoryService.getByMaterialIdAndStorageId(detail.getInventory().getMaterial().getId(), bill.getStorage().getId());
         if (Objects.nonNull(to)) {
             // 更新目标库存
@@ -101,9 +101,9 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
 
     @Override
     public void afterAllDetailsFinished(Long id) {
-        MoveEntity moveBill = getById(id);
+        MoveEntity moveBill = get(id);
         moveBill.setStatus(MoveStatus.DONE.getKey());
-        moveBill = updateToDatabase(moveBill);
+        updateToDatabase(moveBill);
 
 
         InputEntity inputBill = new InputEntity()

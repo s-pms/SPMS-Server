@@ -15,13 +15,14 @@ import java.util.Objects;
  */
 @Service
 public class PurchasePriceService extends BaseService<PurchasePriceEntity, PurchasePriceRepository> {
+
     @Override
-    public PurchasePriceEntity add(PurchasePriceEntity entity) {
-        PurchasePriceEntity exist = repository.getBySupplierAndMaterial(entity.getSupplier(), entity.getMaterial());
+    protected PurchasePriceEntity beforeAdd(PurchasePriceEntity source) {
+        PurchasePriceEntity exist = repository.getBySupplierAndMaterial(source.getSupplier(), source.getMaterial());
         if (Objects.nonNull(exist)) {
             Result.FORBIDDEN_EXIST.show(exist.getSupplier().getName() + "-" + exist.getMaterial().getName() + " 采购价已存在!");
         }
-        return addToDatabase(entity);
+        return source;
     }
 
     protected PurchasePriceEntity getByMaterialAndSupplier(MaterialEntity materialEntity, SupplierEntity supplierEntity) {

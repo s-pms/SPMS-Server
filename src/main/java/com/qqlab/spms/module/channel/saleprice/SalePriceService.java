@@ -15,20 +15,19 @@ import java.util.Objects;
  */
 @Service
 public class SalePriceService extends BaseService<SalePriceEntity, SalePriceRepository> {
+
     @Override
-    public SalePriceEntity add(SalePriceEntity entity) {
-        SalePriceEntity exist = repository.getByCustomerAndMaterial(entity.getCustomer(), entity.getMaterial());
+    protected SalePriceEntity beforeAdd(SalePriceEntity source) {
+        SalePriceEntity exist = repository.getByCustomerAndMaterial(source.getCustomer(), source.getMaterial());
         if (Objects.nonNull(exist)) {
             Result.FORBIDDEN_EXIST.show(exist.getCustomer().getName() + "-" + exist.getMaterial().getName() + " 销售价已存在!");
         }
-        return addToDatabase(entity);
+        return source;
     }
 
-
     @Override
-    public SalePriceEntity update(SalePriceEntity entity) {
-        entity.setMaterial(null).setCustomer(null);
-        return updateToDatabase(entity);
+    protected SalePriceEntity beforeUpdate(SalePriceEntity source) {
+        return source.setMaterial(null).setCustomer(null);
     }
 
     protected SalePriceEntity getByMaterialAndCustomer(MaterialEntity materialEntity, CustomerEntity customerEntity) {

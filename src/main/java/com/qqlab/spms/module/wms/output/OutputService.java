@@ -57,7 +57,7 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
 
     @Override
     public void afterAllDetailsFinished(Long id) {
-        OutputEntity bill = getById(id);
+        OutputEntity bill = get(id);
         bill.setStatus(OutputStatus.DONE.getKey());
         updateToDatabase(bill);
         if (bill.getType() == OutputType.SALE.getKey()) {
@@ -67,21 +67,21 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
     }
 
     @Override
-    public OutputDetailEntity addFinish(OutputDetailEntity detail) {
-        InventoryEntity inventory = detail.getInventory();
+    public OutputDetailEntity addFinish(OutputDetailEntity outputDetail) {
+        InventoryEntity inventory = outputDetail.getInventory();
         if (Objects.isNull(inventory)) {
             Result.FORBIDDEN.show("请传入库存信息");
             return null;
         }
         inventory = inventoryService.get(inventory.getId());
-        detail = detailService.get(detail.getId());
-        Result.FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), detail.getMaterial().getId(), "物料信息不匹配");
-        if (inventory.getQuantity() < detail.getQuantity()) {
+        outputDetail = detailService.get(outputDetail.getId());
+        Result.FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), outputDetail.getMaterial().getId(), "物料信息不匹配");
+        if (inventory.getQuantity() < outputDetail.getQuantity()) {
             // 判断库存
-            Result.FORBIDDEN.show("库存信息不足" + detail.getQuantity());
+            Result.FORBIDDEN.show("库存信息不足" + outputDetail.getQuantity());
         }
-        inventory.setQuantity(inventory.getQuantity() - detail.getQuantity());
+        inventory.setQuantity(inventory.getQuantity() - outputDetail.getQuantity());
         inventoryService.update(inventory);
-        return super.addFinish(detail);
+        return super.addFinish(outputDetail);
     }
 }

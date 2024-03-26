@@ -34,11 +34,11 @@ public class BaseBillController<
     @Description("审核")
     @PostMapping("audit")
     @Filter(RootEntity.WhenGetDetail.class)
-    public Json audit(@RequestBody @Validated(RootEntity.WhenIdRequired.class) E bill) {
+    public final Json audit(@RequestBody @Validated(RootEntity.WhenIdRequired.class) E bill) {
         E savedBill = service.get(bill.getId());
         Result.FORBIDDEN.when(service.isAudited(savedBill), "该单据状态无法审核");
         service.setAudited(savedBill);
-        savedBill = service.update(savedBill);
+        service.update(savedBill);
         afterAudit(savedBill);
         return json("审核成功");
     }
@@ -46,7 +46,7 @@ public class BaseBillController<
     @Description("驳回")
     @PostMapping("reject")
     @Filter(RootEntity.WhenGetDetail.class)
-    public Json reject(@RequestBody @Validated(AbstractBaseBillEntity.WhenReject.class) E bill) {
+    public final Json reject(@RequestBody @Validated(AbstractBaseBillEntity.WhenReject.class) E bill) {
         E savedBill = service.get(bill.getId());
         Result.FORBIDDEN.when(!service.canReject(savedBill), "该单据状态无法驳回");
         savedBill.setRejectReason(bill.getRejectReason());
@@ -58,23 +58,23 @@ public class BaseBillController<
     @Description("添加完成数量")
     @PostMapping("addFinish")
     @Filter(RootEntity.WhenGetDetail.class)
-    public Json finish(@RequestBody @Validated(BaseBillDetailEntity.WhenAddFinish.class) D detail) {
+    public final Json finish(@RequestBody @Validated(BaseBillDetailEntity.WhenAddFinish.class) D detail) {
         service.addFinish(detail);
         return json("添加完成数量成功");
     }
-
 
     @Override
     protected E beforeUpdate(E bill) {
         E savedBill = service.get(bill.getId());
         Result.FORBIDDEN.when(!service.canEdit(savedBill), "该单据状态下无法编辑");
-        service.setAuditing(bill.setStatus(null));
-        return bill;
+        service.setAuditing(savedBill.setStatus(null));
+        return savedBill;
     }
 
+
     @Override
-    protected E beforeAdd(E entity) {
-        return super.beforeAdd(entity.setStatus(null));
+    protected E beforeAdd(E bill) {
+        return super.beforeAdd(bill.setStatus(null));
     }
 
     /**

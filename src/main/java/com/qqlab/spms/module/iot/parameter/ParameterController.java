@@ -22,7 +22,8 @@ public class ParameterController extends BaseController<ParameterEntity, Paramet
     }
 
     @Override
-    protected void beforeDelete(ParameterEntity entity) {
-        Result.FORBIDDEN_DELETE.when(entity.getIsSystem(), "系统内置参数不允许删除!");
+    protected void beforeDelete(long id) {
+        ParameterEntity parameter = service.get(id);
+        Result.FORBIDDEN_DELETE.when(parameter.getIsSystem(), "系统内置参数不允许删除!");
     }
 }

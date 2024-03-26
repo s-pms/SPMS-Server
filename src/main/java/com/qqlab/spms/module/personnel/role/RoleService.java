@@ -12,9 +12,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoleService extends BaseService<RoleEntity, RoleRepository> {
     @Override
-    public void delete(Long id) {
-        RoleEntity entity = getById(id);
+    protected void beforeDelete(long id) {
+        RoleEntity entity = get(id);
         Result.FORBIDDEN_DELETE.when(entity.getIsSystem(), "系统内置角色无法被删除!");
-        deleteById(id);
     }
 }

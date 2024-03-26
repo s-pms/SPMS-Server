@@ -5,16 +5,12 @@ import cn.hutool.core.util.RandomUtil;
 import com.qqlab.spms.common.config.AppConfig;
 import com.qqlab.spms.module.asset.device.DeviceEntity;
 import com.qqlab.spms.module.asset.device.DeviceService;
-import com.qqlab.spms.module.asset.material.MaterialEntity;
 import com.qqlab.spms.module.asset.material.MaterialService;
-import com.qqlab.spms.module.asset.material.MaterialType;
 import com.qqlab.spms.module.channel.customer.CustomerEntity;
 import com.qqlab.spms.module.channel.customer.CustomerService;
 import com.qqlab.spms.module.channel.supplier.SupplierEntity;
 import com.qqlab.spms.module.channel.supplier.SupplierService;
-import com.qqlab.spms.module.factory.storage.StorageEntity;
 import com.qqlab.spms.module.factory.storage.StorageService;
-import com.qqlab.spms.module.factory.structure.StructureEntity;
 import com.qqlab.spms.module.factory.structure.StructureService;
 import com.qqlab.spms.module.iot.parameter.ParameterEntity;
 import com.qqlab.spms.module.iot.parameter.ParameterService;
@@ -33,7 +29,6 @@ import com.qqlab.spms.module.system.coderule.SerialNumberUpdate;
 import com.qqlab.spms.module.system.menu.MenuEntity;
 import com.qqlab.spms.module.system.menu.MenuService;
 import com.qqlab.spms.module.system.permission.PermissionService;
-import com.qqlab.spms.module.system.unit.UnitEntity;
 import com.qqlab.spms.module.system.unit.UnitService;
 import com.qqlab.spms.module.wms.inventory.InventoryEntity;
 import com.qqlab.spms.module.wms.inventory.InventoryService;
@@ -107,8 +102,6 @@ public class Initializer {
         if (appConfig.isInitData()) {
             initUserAndRole();
             initCodeRules();
-            initUnitAndMaterial();
-            initFactory();
             initOtherData();
             initParameters();
             initDevices();
@@ -163,11 +156,6 @@ public class Initializer {
                 .setStorage(storageService.get(2L))
         );
 
-    }
-
-    private void initFactory() {
-        storageService.add(new StorageEntity().setCode("sw01").setName("西南一区").setParentId(storageService.add(new StorageEntity().setName("西南大仓").setCode("east")).getId()));
-        structureService.add(new StructureEntity().setCode("room1").setName("车间1").setParentId(structureService.add(new StructureEntity().setName("产线1").setCode("line1")).getId()));
     }
 
     private void initCodeRules() {
@@ -239,10 +227,10 @@ public class Initializer {
 
         // 基础数据
         firstMenu = new MenuEntity().setName("基础数据").setOrderNo(88).setParentId(0L);
-        firstMenu = menuService.add(firstMenu);
+        firstMenu = menuService.get(menuService.add(firstMenu));
 
         secondMenu = new MenuEntity().setName("人事管理").setParentId(firstMenu.getId());
-        secondMenu = menuService.add(secondMenu);
+        secondMenu = menuService.get(menuService.add(secondMenu));
 
         thirdMenu = new MenuEntity().setName("员工管理").setPath("/console/personnel/user/list").setParentId(secondMenu.getId());
         menuService.add(thirdMenu);
@@ -250,7 +238,7 @@ public class Initializer {
         menuService.add(thirdMenu);
 
         secondMenu = new MenuEntity().setName("资产管理").setParentId(firstMenu.getId());
-        secondMenu = menuService.add(secondMenu);
+        secondMenu = menuService.get(menuService.add(secondMenu));
 
         thirdMenu = new MenuEntity().setName("物料管理").setPath("/console/asset/material/list").setParentId(secondMenu.getId());
         menuService.add(thirdMenu);
@@ -258,7 +246,7 @@ public class Initializer {
         menuService.add(thirdMenu);
 
         secondMenu = new MenuEntity().setName("工厂模型").setParentId(firstMenu.getId());
-        secondMenu = menuService.add(secondMenu);
+        secondMenu = menuService.get(menuService.add(secondMenu));
 
         thirdMenu = new MenuEntity().setName("存储资源").setPath("/console/factory/storage/list").setParentId(secondMenu.getId());
         menuService.add(thirdMenu);
@@ -268,7 +256,7 @@ public class Initializer {
 
         // 渠道管理
         firstMenu = new MenuEntity().setName("渠道管理").setOrderNo(77).setParentId(0L);
-        firstMenu = menuService.add(firstMenu);
+        firstMenu = menuService.get(menuService.add(firstMenu));
 
         secondMenu = new MenuEntity().setName("采购管理").setPath("/console/channel/purchase/list").setParentId(firstMenu.getId());
         menuService.add(secondMenu);
@@ -286,7 +274,7 @@ public class Initializer {
 
         // 仓储管理 - WMS
         firstMenu = new MenuEntity().setName("仓储管理").setOrderNo(66).setParentId(0L);
-        firstMenu = menuService.add(firstMenu);
+        firstMenu = menuService.get(menuService.add(firstMenu));
 
         secondMenu = new MenuEntity().setName("库存概览").setPath("/console/wms/inventory/list").setParentId(firstMenu.getId());
         menuService.add(secondMenu);
@@ -300,10 +288,10 @@ public class Initializer {
 
         // 生产管理 - MES
         firstMenu = new MenuEntity().setName("生产管理").setOrderNo(55).setParentId(0L);
-        firstMenu = menuService.add(firstMenu);
+        firstMenu = menuService.get(menuService.add(firstMenu));
 
         secondMenu = new MenuEntity().setName("生产资源").setParentId(firstMenu.getId());
-        secondMenu = menuService.add(secondMenu);
+        secondMenu = menuService.get(menuService.add(secondMenu));
 
         thirdMenu = new MenuEntity().setName("物料领取").setPath("/console/mes/pickout/list").setParentId(secondMenu.getId());
         menuService.add(thirdMenu);
@@ -311,7 +299,7 @@ public class Initializer {
         menuService.add(thirdMenu);
 
         secondMenu = new MenuEntity().setName("工艺工序").setParentId(firstMenu.getId());
-        secondMenu = menuService.add(secondMenu);
+        secondMenu = menuService.get(menuService.add(secondMenu));
 
         thirdMenu = new MenuEntity().setName("工艺流程").setPath("/console/mes/process/list").setParentId(secondMenu.getId());
         menuService.add(thirdMenu);
@@ -321,7 +309,7 @@ public class Initializer {
         menuService.add(thirdMenu);
 
         secondMenu = new MenuEntity().setName("生产执行").setParentId(firstMenu.getId());
-        secondMenu = menuService.add(secondMenu);
+        secondMenu = menuService.get(menuService.add(secondMenu));
 
         thirdMenu = new MenuEntity().setName("生产计划").setPath("/console/mes/plan/list").setParentId(secondMenu.getId());
         menuService.add(thirdMenu);
@@ -331,7 +319,7 @@ public class Initializer {
 
         // 物联网
         firstMenu = new MenuEntity().setName("物联网").setOrderNo(44).setParentId(0L);
-        firstMenu = menuService.add(firstMenu);
+        firstMenu = menuService.get(menuService.add(firstMenu));
 
         MenuEntity iotSubMenu;
         iotSubMenu = new MenuEntity().setName("设备概览").setPath("/console/iot/monitor/preview").setParentId(firstMenu.getId());
@@ -341,7 +329,7 @@ public class Initializer {
 
         // 系统设置
         firstMenu = new MenuEntity().setName("系统设置").setOrderNo(2).setParentId(0L);
-        firstMenu = menuService.add(firstMenu);
+        firstMenu = menuService.get(menuService.add(firstMenu));
 
         secondMenu = new MenuEntity().setName("计量单位").setPath("/console/system/unit/list").setParentId(firstMenu.getId());
         menuService.add(secondMenu);
@@ -361,11 +349,12 @@ public class Initializer {
         if (Objects.nonNull(firstRole)) {
             return;
         }
-        firstRole = roleService.add(new RoleEntity()
+        long roleId = roleService.add(new RoleEntity()
                 .setName("超级管理员")
                 .setCode("ROOT")
                 .setIsSystem(true)
                 .setRemark("超级管理员角色组,请勿数据库暴力直接删除"));
+        firstRole = roleService.get(roleId);
 
         // 初始化用户
         UserEntity userEntity = userService.getMaybeNull(1L);
@@ -388,18 +377,5 @@ public class Initializer {
                 .setRemark("超级管理员,请勿数据库暴力直接删除"));
 
         System.out.println("---------------------------------");
-    }
-
-    private void initUnitAndMaterial() {
-        UnitEntity unitEntity = unitService.add(new UnitEntity().setCode("kg").setName("kg"));
-        materialService.add(
-                new MaterialEntity()
-                        .setMaterialType(MaterialType.PRODUCT.getKey())
-                        .setName("MacBookPro")
-                        .setSpc("M1Pro-16G-512G-16Inch")
-                        .setCode("macbook")
-                        .setPurchasePrice(200D)
-                        .setUnitInfo(unitEntity)
-        );
     }
 }

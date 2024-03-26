@@ -37,7 +37,7 @@ public abstract class AbstractBaseBillService<
     public D addFinish(D detail) {
         D savedDetail = detailService.get(detail.getId());
         detail.setFinishQuantity(savedDetail.getFinishQuantity() + detail.getQuantity());
-        detail = detailService.update(detail);
+        detailService.update(detail);
         List<D> details = detailService.getAllByBillId(detail.getBillId());
         boolean isAllFinished = true;
         for (D d : details) {
@@ -62,18 +62,6 @@ public abstract class AbstractBaseBillService<
 
     }
 
-    @Override
-    public E add(E bill) {
-        E savedBill = addToDatabase(bill);
-        return saveDetails(savedBill, bill.getDetails());
-    }
-
-    @Override
-    public E update(E bill) {
-        E savedBill = updateToDatabase(bill);
-        return saveDetails(savedBill, bill.getDetails());
-    }
-
     /**
      * 单据明细保存后置方法
      *
@@ -81,31 +69,37 @@ public abstract class AbstractBaseBillService<
      * @return 单据
      */
     @SuppressWarnings("UnusedReturnValue")
-    protected E afterDetailSaved(E bill) {
-        return bill;
+    protected void afterDetailSaved(E bill) {
     }
 
-
     @Override
-    public E get(Long id) {
-        E bill = getById(id);
+    protected E afterGet(E bill) {
         List<D> details = detailService.getAllByBillId(bill.getId());
         bill.setDetails(details);
         return bill;
     }
 
+    @Override
+    protected void afterAdd(long id, E source) {
+        saveDetails(id, source.getDetails());
+    }
+
+    @Override
+    protected void afterUpdate(long id, E source) {
+        saveDetails(id, source.getDetails());
+    }
+
     /**
      * 保存单据明细
      *
-     * @param bill    单据
-     * @param details 明细
-     * @return 单据
+     * @param billId  单据ID
+     * @param details 明细列表
      */
-    private E saveDetails(E bill, List<D> details) {
+    private void saveDetails(long billId, List<D> details) {
+        E bill = get(billId);
         details = detailService.saveDetails(bill.getId(), details);
         bill.setDetails(details);
         afterDetailSaved(bill);
-        return getById(bill.getId());
     }
 
     /**

@@ -53,7 +53,7 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
 
     @Override
     public void afterAllDetailsFinished(Long id) {
-        PurchaseEntity bill = getById(id);
+        PurchaseEntity bill = get(id);
         bill.setStatus(PurchaseStatus.DONE.getKey());
         List<PurchaseDetailEntity> details = detailService.getAllByBillId(bill.getId());
         List<InputDetailEntity> inputDetails = new ArrayList<>();
@@ -77,13 +77,13 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
     }
 
     @Override
-    protected PurchaseEntity afterDetailSaved(PurchaseEntity bill) {
-        List<PurchaseDetailEntity> details = detailService.getAllByBillId(bill.getId());
+    protected void afterDetailSaved(PurchaseEntity purchase) {
+        List<PurchaseDetailEntity> details = detailService.getAllByBillId(purchase.getId());
         double totalPrice = 0D;
         for (PurchaseDetailEntity detail : details) {
             totalPrice += detail.getPrice() * detail.getQuantity();
         }
-        bill.setTotalPrice(totalPrice);
-        return updateToDatabase(bill);
+        purchase.setTotalPrice(totalPrice);
+        updateToDatabase(purchase);
     }
 }

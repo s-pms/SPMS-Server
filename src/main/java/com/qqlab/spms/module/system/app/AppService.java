@@ -34,7 +34,7 @@ public class AppService extends BaseService<AppEntity, AppRepository> {
      */
     public String resetSecretById(Long id) {
         String newSecret = RandomUtil.randomString(32).toUpperCase();
-        AppEntity entity = getById(id);
+        AppEntity entity = get(id);
         entity.setAppSecret(newSecret);
         update(entity);
         return newSecret;

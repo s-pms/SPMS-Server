@@ -17,12 +17,11 @@ import java.util.Objects;
 @Service
 public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     @Override
-    public void delete(Long id) {
+    protected void beforeDelete(long id) {
         QueryRequest<MenuEntity> queryRequest = new QueryRequest<>();
         queryRequest.setFilter(new MenuEntity().setParentId(id));
         List<MenuEntity> children = getList(queryRequest);
         Result.FORBIDDEN_DELETE.when(!children.isEmpty(), "含有子菜单,无法删除!");
-        deleteById(id);
     }
 
     @Override
