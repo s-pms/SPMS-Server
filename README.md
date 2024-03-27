@@ -3,17 +3,17 @@
 </p>
 
 <p align="center">
-  <img src="//svg.hamm.cn?key=Core&value=AirPower4T"/>
-  <img src="//svg.hamm.cn?key=Lang&value=TypeScript&bg=green"/>
-  <img src="//svg.hamm.cn?key=Base&value=Vue3"/>
-  <img src="//svg.hamm.cn?key=Build&value=Vite"/>
-  <img src="//svg.hamm.cn?key=UI&value=ElementPlus"/>
+  <img src="//svg.hamm.cn?key=Core&value=AirPower4J"/>
+  <img src="//svg.hamm.cn?key=Lang&value=Java17&bg=green"/>
+  <img src="//svg.hamm.cn?key=Base&value=SpringBoot3"/>
+  <img src="//svg.hamm.cn?key=Data&value=MySQL8"/>
+  <img src="//svg.hamm.cn?key=ORM.&value=JPA"/>
 </p>
 <p align="center">
-<a href="//github.com/s-pms/SPMS-Web">@Github</a> <a href="//gitee.com/s-pms/SPMS-Web">@Gitee</a> <a href="/s-pms/SPMS-Docs/SPMS-RELEASE.md">版本发布</a> <a href="/s-pms/SPMS-Docs/SPMS-PLAN.md">开发计划</a> <a href="/s-pms/SPMS-Docs/issues">反馈与建议</a>
+<a href="//github.com/s-pms/SPMS-Server">@Github</a> <a href="//gitee.com/s-pms/SPMS-Server">@Gitee</a>
 </p>
 
-## S-PMS介绍（前端项目）
+## S-PMS介绍（后端项目）
 
 **S-PMS** `(Smart Production Management System)` 即 **智能生产管理系统** ，是一个集成化、智能化的企业级应用软件，它集成了多个核心的生产管理模块，包括 **制造执行系统** `(MES, Manufacturing Execution System)`、**仓库管理系统** `(WMS, Warehouse Management System)`、**企业资源计划系统** `(ERP, Enterprise Resource Planning)`、**质量管理系统** `(QMS, Quality Management System)` 以及 **物联网管理系统** `(IoTS,Internet of Things System)` 等。
 
@@ -35,11 +35,11 @@ soon...
 
 ## 开发者指南
 
-本仓库为 **S-PMS** Server后端项目仓库，你可以查看 [开发说明](./docs/DEV.md)、[部署说明](/s-pms/SPMS-Docs/SPMS-PUBLISH.md)、[常见问题](/s-pms/SPMS-Docs/SPMS-QA.md) 等帮助文档。
+本仓库为 **S-PMS** Server后端项目仓库，你可以查看 [开发者指南@Github](https://github.com/s-pms/SPMS-Docs)、[开发者指南@Gitee](https://gitee.com/s-pms/SPMS-Docs) 等帮助文档。
 
 ## 联系我们
 
-**S-PMS** 由国际知名团队 **UnNamed** 组织开发，所有代码均在 **MIT** 开源协议规范下免费提供，你可以放心使用。
+**S-PMS** 所有代码均在 **MIT** 开源协议规范下免费提供，你可以放心使用。
 
 如果有定制需求，欢迎联系我们：
 
