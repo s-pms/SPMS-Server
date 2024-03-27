@@ -2,6 +2,7 @@ package cn.hamm.spms.module.system.coderule;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
+import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
@@ -77,7 +78,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     @Description("编码规则模板")
     @Column(columnDefinition = "varchar(255) default '' comment '编码规则模板'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "编码规则模板")
-    @Length(max = 64,message = "模板最多允许{max}个字符")
+    @Length(max = 64, message = "模板最多允许{max}个字符")
     private String template;
 
     /**
@@ -86,4 +87,21 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     @ReadOnly
     @Column(columnDefinition = "int UNSIGNED default 0 comment '当前序列号'")
     private Integer currentSn;
+
+    @Description("内置参数")
+    @Search(Search.Mode.EQUALS)
+    @ReadOnly
+    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否内置参数'")
+    private Boolean isSystem;
+
+    /**
+     * 设置是系统内置规则
+     *
+     * @param isSystem 内置规则
+     * @return 编码规则
+     */
+    public CodeRuleEntity setIsSystem(Boolean isSystem) {
+        this.isSystem = isSystem;
+        return this;
+    }
 }

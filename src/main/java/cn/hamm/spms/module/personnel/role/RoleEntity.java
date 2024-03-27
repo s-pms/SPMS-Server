@@ -3,7 +3,6 @@ package cn.hamm.spms.module.personnel.role;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Exclude;
 import cn.hamm.airpower.annotation.Payload;
-import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
@@ -12,7 +11,6 @@ import cn.hamm.spms.module.system.permission.PermissionEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -54,16 +52,6 @@ public class RoleEntity extends BaseEntity<RoleEntity> {
     @Column(columnDefinition = "varchar(255) default '' comment '角色编码'", unique = true)
     @AutoGenerateCode(CodeRuleField.RoleCode)
     private String code;
-
-    /**
-     * 是否系统角色
-     */
-    @ReadOnly
-    @Description("是否系统角色")
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否系统角色'")
-    @Null(groups = {WhenUpdate.class, WhenAdd.class}, message = "是否系统角色这是个只读字段")
-    @Exclude(filters = {WhenPayLoad.class})
-    private Boolean isSystem;
 
     /**
      * 角色的菜单列表

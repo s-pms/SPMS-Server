@@ -1,11 +1,14 @@
 package cn.hamm.spms.module.personnel.user;
 
-import cn.hamm.airpower.annotation.*;
+import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.annotation.Exclude;
+import cn.hamm.airpower.annotation.Payload;
+import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.phone.Phone;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -79,15 +82,6 @@ public class UserEntity extends BaseEntity<UserEntity> {
     private String nickname;
 
     /**
-     * 是否系统用户
-     */
-    @ReadOnly
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否系统用户'")
-    @Null(groups = {WhenUpdateMyInfo.class}, message = "请勿传入isSystem字段")
-    @Search(Search.Mode.EQUALS)
-    private Boolean isSystem;
-
-    /**
      * 密码盐
      */
     @JsonIgnore
@@ -153,5 +147,15 @@ public class UserEntity extends BaseEntity<UserEntity> {
     }
 
     public interface WhenGetMyInfo {
+    }
+
+
+    /**
+     * <h2>用户是否是初始化的超管</h2>
+     *
+     * @return 是否超管
+     */
+    public final boolean isRootUser() {
+        return this.getId() == 1L;
     }
 }

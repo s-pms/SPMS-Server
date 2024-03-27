@@ -6,7 +6,6 @@ import cn.hamm.airpower.result.Result;
 import cn.hamm.airpower.security.AbstractAccessInterceptor;
 import cn.hamm.airpower.security.AccessUtil;
 import cn.hamm.airpower.security.SecurityUtil;
-import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.common.config.Constant;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
@@ -45,9 +44,6 @@ public class AccessInterceptor extends AbstractAccessInterceptor {
     @Autowired
     private GlobalConfig globalConfig;
 
-    @Autowired
-    private AppConfig appConfig;
-
     /**
      * 验证指定的用户是否有指定权限标识的权限
      *
@@ -59,14 +55,11 @@ public class AccessInterceptor extends AbstractAccessInterceptor {
     @Override
     public boolean checkPermissionAccess(Long userId, String permissionIdentity, HttpServletRequest request) {
         UserEntity existUser = userService.get(userId);
-        if (existUser.getIsSystem()) {
+        if (existUser.isRootUser()) {
             return true;
         }
         PermissionEntity needPermission = permissionService.getPermissionByIdentity(permissionIdentity);
         for (RoleEntity role : existUser.getRoleList()) {
-            if (role.getIsSystem()) {
-                return true;
-            }
             for (PermissionEntity permission : role.getPermissionList()) {
                 if (needPermission.getId().equals(permission.getId())) {
                     return true;

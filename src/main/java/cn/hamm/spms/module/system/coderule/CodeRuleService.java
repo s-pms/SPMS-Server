@@ -54,4 +54,20 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
         repository.saveAndFlush(codeRuleEntity);
         return codeRuleEntity.getPrefix() + template + String.format("%0" + codeRuleEntity.getSnLength() + "d", serialNumber);
     }
+
+    /**
+     * 根据规则字段获取自定义编码规则
+     *
+     * @param ruleField 规则字段
+     * @return 自定义编码规则
+     */
+    public final CodeRuleEntity getByRuleField(Integer ruleField) {
+        return repository.getByRuleField(ruleField);
+    }
+
+    @Override
+    protected void beforeDelete(long id) {
+        CodeRuleEntity codeRule = get(id);
+        Result.FORBIDDEN_DELETE.when(codeRule.getIsSystem(), "内置编码规则不能删除!");
+    }
 }

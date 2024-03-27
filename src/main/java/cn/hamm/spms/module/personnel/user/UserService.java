@@ -7,7 +7,6 @@ import cn.hamm.airpower.security.PasswordUtil;
 import cn.hamm.airpower.security.SecurityUtil;
 import cn.hamm.airpower.util.EmailUtil;
 import cn.hamm.airpower.util.TreeUtil;
-import cn.hutool.core.util.RandomUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.exception.CustomResult;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
@@ -16,6 +15,7 @@ import cn.hamm.spms.module.system.menu.MenuEntity;
 import cn.hamm.spms.module.system.menu.MenuService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import cn.hamm.spms.module.system.permission.PermissionService;
+import cn.hutool.core.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -80,14 +80,11 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public List<MenuEntity> getMenuListByUserId(long userId) {
         UserEntity userEntity = get(userId);
-        if (userEntity.getIsSystem()) {
+        if (userEntity.isRootUser()) {
             return treeUtil.buildTreeList(menuService.getList(new QueryRequest<MenuEntity>().setSort(new Sort().setField("orderNo"))));
         }
         List<MenuEntity> menuList = new ArrayList<>();
         for (RoleEntity roleEntity : userEntity.getRoleList()) {
-            if (roleEntity.getIsSystem()) {
-                return treeUtil.buildTreeList(menuService.getList(new QueryRequest<MenuEntity>().setSort(new Sort().setField("orderNo"))));
-            }
             roleEntity.getMenuList().forEach(menuItem -> {
                 boolean isExist = false;
                 for (MenuEntity existItem : menuList) {
@@ -112,14 +109,11 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public List<PermissionEntity> getPermissionListByUserId(long userId) {
         UserEntity userEntity = get(userId);
-        if (userEntity.getIsSystem()) {
+        if (userEntity.isRootUser()) {
             return permissionService.getList(null);
         }
         List<PermissionEntity> permissionList = new ArrayList<>();
         for (RoleEntity roleEntity : userEntity.getRoleList()) {
-            if (roleEntity.getIsSystem()) {
-                return permissionService.getList(null);
-            }
             roleEntity.getPermissionList().forEach(permissionItem -> {
                 boolean isExist = false;
                 for (PermissionEntity existItem : permissionList) {
@@ -346,7 +340,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     @Override
     protected void beforeDelete(long id) {
         UserEntity entity = get(id);
-        Result.FORBIDDEN_DELETE.when(entity.getIsSystem(), "系统内置用户无法被删除!");
+        Result.FORBIDDEN_DELETE.when(entity.isRootUser(), "该超级管理员用户无法被删除!");
     }
 
     @Override
