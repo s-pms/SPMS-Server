@@ -2,12 +2,9 @@ package cn.hamm.spms;
 
 import cn.hamm.airpower.security.PasswordUtil;
 import cn.hamm.spms.common.config.AppConfig;
-import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.asset.device.DeviceService;
 import cn.hamm.spms.module.asset.material.MaterialService;
-import cn.hamm.spms.module.channel.customer.CustomerEntity;
 import cn.hamm.spms.module.channel.customer.CustomerService;
-import cn.hamm.spms.module.channel.supplier.SupplierEntity;
 import cn.hamm.spms.module.channel.supplier.SupplierService;
 import cn.hamm.spms.module.factory.storage.StorageService;
 import cn.hamm.spms.module.factory.structure.StructureService;
@@ -19,7 +16,6 @@ import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.personnel.role.RoleService;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
-import cn.hamm.spms.module.system.app.AppEntity;
 import cn.hamm.spms.module.system.app.AppService;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
@@ -29,7 +25,6 @@ import cn.hamm.spms.module.system.menu.MenuEntity;
 import cn.hamm.spms.module.system.menu.MenuService;
 import cn.hamm.spms.module.system.permission.PermissionService;
 import cn.hamm.spms.module.system.unit.UnitService;
-import cn.hamm.spms.module.wms.inventory.InventoryEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryService;
 import cn.hutool.core.util.RandomUtil;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -104,17 +99,10 @@ public class Initializer {
             initCodeRules();
             initOtherData();
             initParameters();
-            initDevices();
             permissionService.initPermission();
             initMenu();
         }
         reportEvent.listen();
-    }
-
-    private void initDevices() {
-        for (int i = 0; i < 10; i++) {
-            deviceService.add(new DeviceEntity().setCode("Simulator00" + (i + 1)).setName("设备" + (i + 1)));
-        }
     }
 
     private void initParameters() {
@@ -139,23 +127,6 @@ public class Initializer {
     }
 
     private void initOtherData() {
-        appService.add(new AppEntity().setAppKey("airpower").setAppName("第三方应用").setUrl("").setAppSecret("abcdefghijklmnopqrstuvwxyz"));
-
-        supplierService.add(new SupplierEntity().setCode("SP01").setName("三星屏幕套件"));
-        customerService.add(new CustomerEntity().setCode("CUS01").setName("重庆解放碑AppleStore"));
-
-
-        inventoryService.add(new InventoryEntity()
-                .setMaterial(materialService.get(1L))
-                .setQuantity(2D)
-                .setStorage(storageService.get(1L))
-        );
-        inventoryService.add(new InventoryEntity()
-                .setMaterial(materialService.get(1L))
-                .setQuantity(10D)
-                .setStorage(storageService.get(2L))
-        );
-
     }
 
     private void initCodeRules() {
