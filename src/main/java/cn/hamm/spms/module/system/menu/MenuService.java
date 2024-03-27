@@ -144,7 +144,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
 
 
         // 物联网
-        firstMenu = new MenuEntity().setName("物联网").setOrderNo(44).setParentId(0L);
+        firstMenu = new MenuEntity().setName("设备物联").setOrderNo(44).setParentId(0L);
         firstMenu = get(add(firstMenu));
 
         MenuEntity iotSubMenu;
