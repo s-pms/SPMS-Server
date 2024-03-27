@@ -32,7 +32,6 @@ public abstract class AbstractBaseBillService<
      * 添加完成数量
      *
      * @param sourceDetail 提交明细
-     * @return 存储后的明细
      */
     public final void addFinish(D sourceDetail) {
         sourceDetail = beforeAddFinish(sourceDetail);
@@ -74,7 +73,6 @@ public abstract class AbstractBaseBillService<
      * 单据明细保存后置方法
      *
      * @param bill 单据
-     * @return 单据
      */
     protected void afterDetailSaved(E bill) {
     }
