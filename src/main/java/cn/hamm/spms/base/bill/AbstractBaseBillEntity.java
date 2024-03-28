@@ -88,4 +88,11 @@ public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E,
      * @return 单据实体
      */
     public abstract E setStatus(Integer status);
+
+    /**
+     * 获取状态
+     *
+     * @return 状态
+     */
+    public abstract Integer getStatus();
 }

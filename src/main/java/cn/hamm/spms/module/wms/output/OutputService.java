@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.wms.output;
 
+import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.airpower.result.Result;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
@@ -26,33 +27,18 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
     private InventoryService inventoryService;
 
     @Override
-    public OutputEntity setAudited(OutputEntity bill) {
-        return bill.setStatus(OutputStatus.OUTPUTTING.getKey());
+    public IDictionary getAuditedStatus() {
+        return OutputStatus.OUTPUTTING;
     }
 
     @Override
-    public OutputEntity setAuditing(OutputEntity bill) {
-        return bill.setStatus(OutputStatus.AUDITING.getKey());
+    public IDictionary getAuditingStatus() {
+        return OutputStatus.AUDITING;
     }
 
     @Override
-    public boolean isAudited(OutputEntity bill) {
-        return bill.getStatus() != OutputStatus.AUDITING.getKey();
-    }
-
-    @Override
-    public boolean canReject(OutputEntity bill) {
-        return bill.getStatus() == OutputStatus.AUDITING.getKey();
-    }
-
-    @Override
-    public OutputEntity setReject(OutputEntity bill) {
-        return bill.setStatus(OutputStatus.REJECTED.getKey());
-    }
-
-    @Override
-    public boolean canEdit(OutputEntity bill) {
-        return bill.getStatus() == OutputStatus.REJECTED.getKey();
+    public IDictionary getRejectedStatus() {
+        return OutputStatus.REJECTED;
     }
 
     @Override

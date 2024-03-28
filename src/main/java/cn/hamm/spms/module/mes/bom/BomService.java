@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.mes.bom;
 
+import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.module.mes.bom.detail.BomDetailEntity;
 import cn.hamm.spms.module.mes.bom.detail.BomDetailRepository;
@@ -13,34 +14,18 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BomService extends AbstractBaseBillService<BomEntity, BomRepository, BomDetailEntity, BomDetailService, BomDetailRepository> {
-
     @Override
-    public BomEntity setAudited(BomEntity bill) {
-        return bill;
+    public IDictionary getAuditedStatus() {
+        return BomStatus.PUBLISHED;
     }
 
     @Override
-    public BomEntity setAuditing(BomEntity bill) {
-        return bill;
+    public IDictionary getAuditingStatus() {
+        return BomStatus.AUDITING;
     }
 
     @Override
-    public boolean isAudited(BomEntity bill) {
-        return false;
-    }
-
-    @Override
-    public boolean canReject(BomEntity bill) {
-        return false;
-    }
-
-    @Override
-    public BomEntity setReject(BomEntity bill) {
-        return bill;
-    }
-
-    @Override
-    public boolean canEdit(BomEntity bill) {
-        return false;
+    public IDictionary getRejectedStatus() {
+        return BomStatus.REJECTED;
     }
 }

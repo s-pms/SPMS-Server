@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.mes.plan;
 
+import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.module.mes.plan.detail.PlanDetailEntity;
 import cn.hamm.spms.module.mes.plan.detail.PlanDetailRepository;
@@ -14,32 +15,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class PlanService extends AbstractBaseBillService<PlanEntity, PlanRepository, PlanDetailEntity, PlanDetailService, PlanDetailRepository> {
     @Override
-    public PlanEntity setAudited(PlanEntity bill) {
-        return bill.setStatus(PlanStatus.PRODUCING.getKey());
+    public IDictionary getAuditedStatus() {
+        return PlanStatus.PRODUCING;
     }
 
     @Override
-    public PlanEntity setAuditing(PlanEntity bill) {
-        return bill.setStatus(PlanStatus.AUDITING.getKey());
+    public IDictionary getAuditingStatus() {
+        return PlanStatus.AUDITING;
     }
 
     @Override
-    public boolean isAudited(PlanEntity bill) {
-        return bill.getStatus() != PlanStatus.AUDITING.getKey();
-    }
-
-    @Override
-    public boolean canReject(PlanEntity bill) {
-        return bill.getStatus() == PlanStatus.AUDITING.getKey();
-    }
-
-    @Override
-    public PlanEntity setReject(PlanEntity bill) {
-        return bill.setStatus(PlanStatus.REJECTED.getKey());
-    }
-
-    @Override
-    public boolean canEdit(PlanEntity bill) {
-        return bill.getStatus() == PlanStatus.REJECTED.getKey();
+    public IDictionary getRejectedStatus() {
+        return PlanStatus.REJECTED;
     }
 }

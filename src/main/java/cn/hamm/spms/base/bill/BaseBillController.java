@@ -36,7 +36,7 @@ public class BaseBillController<
     @Filter(RootEntity.WhenGetDetail.class)
     public Json audit(@RequestBody @Validated(RootEntity.WhenIdRequired.class) E bill) {
         E savedBill = service.get(bill.getId());
-        Result.FORBIDDEN.when(service.isAudited(savedBill), "该单据状态无法审核");
+        Result.FORBIDDEN.when(service.canAudit(savedBill), "该单据状态无法审核");
         service.setAudited(savedBill);
         service.update(savedBill);
         afterAudit(savedBill);
