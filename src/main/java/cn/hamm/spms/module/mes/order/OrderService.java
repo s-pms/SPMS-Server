@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.mes.order;
 
+import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailEntity;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailRepository;
@@ -14,32 +15,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepository, OrderDetailEntity, OrderDetailService, OrderDetailRepository> {
     @Override
-    public OrderEntity setAudited(OrderEntity bill) {
-        return bill.setStatus(OrderStatus.PRODUCING.getKey());
+    public IDictionary getAuditedStatus() {
+        return OrderStatus.PRODUCING;
     }
 
     @Override
-    public OrderEntity setAuditing(OrderEntity bill) {
-        return bill.setStatus(OrderStatus.AUDITING.getKey());
+    public IDictionary getAuditingStatus() {
+        return OrderStatus.AUDITING;
     }
 
     @Override
-    public boolean isAudited(OrderEntity bill) {
-        return bill.getStatus() != OrderStatus.AUDITING.getKey();
-    }
-
-    @Override
-    public boolean canReject(OrderEntity bill) {
-        return bill.getStatus() == OrderStatus.AUDITING.getKey();
-    }
-
-    @Override
-    public OrderEntity setReject(OrderEntity bill) {
-        return bill.setStatus(OrderStatus.REJECTED.getKey());
-    }
-
-    @Override
-    public boolean canEdit(OrderEntity bill) {
-        return bill.getStatus() == OrderStatus.REJECTED.getKey();
+    public IDictionary getRejectedStatus() {
+        return OrderStatus.REJECTED;
     }
 }

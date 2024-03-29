@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.wms.move;
 
+import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.airpower.result.Result;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
@@ -38,33 +39,18 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
     private MoveDetailService moveDetailService;
 
     @Override
-    public MoveEntity setAudited(MoveEntity bill) {
-        return bill.setStatus(MoveStatus.MOVING.getKey());
+    public IDictionary getAuditedStatus() {
+        return MoveStatus.MOVING;
     }
 
     @Override
-    public MoveEntity setAuditing(MoveEntity bill) {
-        return bill.setStatus(MoveStatus.AUDITING.getKey());
+    public IDictionary getAuditingStatus() {
+        return MoveStatus.AUDITING;
     }
 
     @Override
-    public boolean isAudited(MoveEntity bill) {
-        return bill.getStatus() != MoveStatus.AUDITING.getKey();
-    }
-
-    @Override
-    public boolean canReject(MoveEntity bill) {
-        return bill.getStatus() == MoveStatus.AUDITING.getKey();
-    }
-
-    @Override
-    public MoveEntity setReject(MoveEntity bill) {
-        return bill.setStatus(MoveStatus.REJECTED.getKey());
-    }
-
-    @Override
-    public boolean canEdit(MoveEntity bill) {
-        return bill.getStatus() == MoveStatus.REJECTED.getKey();
+    public IDictionary getRejectedStatus() {
+        return MoveStatus.REJECTED;
     }
 
     @Override

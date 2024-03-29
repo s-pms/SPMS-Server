@@ -1,5 +1,6 @@
 package cn.hamm.spms.base.bill;
 
+import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.spms.base.BaseRepository;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
@@ -111,25 +112,29 @@ public abstract class AbstractBaseBillService<
      * 设置为已审核状态
      *
      * @param bill 单据
-     * @return 实体
      */
-    public abstract E setAudited(E bill);
+    public final void setAudited(E bill) {
+        bill.setStatus(getAuditedStatus().getKey());
+    }
 
     /**
      * 设置为审核中状态
      *
      * @param bill 单据
-     * @return 实体
      */
-    public abstract E setAuditing(E bill);
+    public final void setAuditing(E bill) {
+        bill.setStatus(getAuditingStatus().getKey());
+    }
 
     /**
-     * 单据是否已审核
+     * 单据是否可审核
      *
      * @param bill 单据
      * @return 是否审核
      */
-    public abstract boolean isAudited(E bill);
+    public final boolean canAudit(E bill) {
+        return bill.getStatus() == getAuditingStatus().getKey();
+    }
 
     /**
      * 单据是否可驳回
@@ -137,15 +142,18 @@ public abstract class AbstractBaseBillService<
      * @param bill 单据
      * @return 是否可驳回
      */
-    public abstract boolean canReject(E bill);
+    public final boolean canReject(E bill) {
+        return bill.getStatus() == getRejectedStatus().getKey();
+    }
 
     /**
      * 设置单据为驳回状态
      *
      * @param bill 单据
-     * @return 单据
      */
-    public abstract E setReject(E bill);
+    public final void setReject(E bill) {
+        bill.setStatus(getRejectedStatus().getKey());
+    }
 
     /**
      * 单据是否可编辑
@@ -153,5 +161,28 @@ public abstract class AbstractBaseBillService<
      * @param bill 单据
      * @return 是否可编辑
      */
-    public abstract boolean canEdit(E bill);
+    public final boolean canEdit(E bill) {
+        return bill.getStatus() == getRejectedStatus().getKey();
+    }
+
+    /**
+     * 获取审核中状态
+     *
+     * @return 审核中状态
+     */
+    public abstract IDictionary getAuditingStatus();
+
+    /**
+     * 获取已审核状态
+     *
+     * @return 已审核状态
+     */
+    public abstract IDictionary getAuditedStatus();
+
+    /**
+     * 获取驳回状态
+     *
+     * @return 驳回状态
+     */
+    public abstract IDictionary getRejectedStatus();
 }

@@ -5,9 +5,11 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Exclude;
 import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.annotation.Search;
+import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.mes.bom.detail.BomDetailEntity;
+import cn.hamm.spms.module.wms.input.InputStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -55,8 +57,9 @@ public class BomEntity extends AbstractBaseBillEntity<BomEntity, BomDetailEntity
     @Exclude(filters = {WhenPayLoad.class})
     private Boolean defaultVersion;
 
-    @Override
-    public BomEntity setStatus(Integer status) {
-        return null;
-    }
+    @Description("BOM状态")
+    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '入库状态'")
+    @Dictionary(value = InputStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
+    @Search(Search.Mode.EQUALS)
+    private Integer status;
 }

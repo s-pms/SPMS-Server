@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.channel.purchase;
 
+import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailEntity;
@@ -20,35 +21,19 @@ import java.util.List;
  */
 @Service
 public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, PurchaseRepository, PurchaseDetailEntity, PurchaseDetailService, PurchaseDetailRepository> {
-
     @Override
-    public PurchaseEntity setAudited(PurchaseEntity bill) {
-        return bill.setStatus(PurchaseStatus.PURCHASING.getKey());
+    public IDictionary getAuditingStatus() {
+        return PurchaseStatus.AUDITING;
     }
 
     @Override
-    public boolean isAudited(PurchaseEntity bill) {
-        return bill.getStatus() != PurchaseStatus.AUDITING.getKey();
+    public IDictionary getAuditedStatus() {
+        return PurchaseStatus.PURCHASING;
     }
 
     @Override
-    public boolean canReject(PurchaseEntity bill) {
-        return bill.getStatus() == PurchaseStatus.AUDITING.getKey();
-    }
-
-    @Override
-    public PurchaseEntity setReject(PurchaseEntity bill) {
-        return bill.setStatus(PurchaseStatus.REJECTED.getKey());
-    }
-
-    @Override
-    public boolean canEdit(PurchaseEntity bill) {
-        return bill.getStatus() == PurchaseStatus.REJECTED.getKey();
-    }
-
-    @Override
-    public PurchaseEntity setAuditing(PurchaseEntity bill) {
-        return bill.setStatus(PurchaseStatus.AUDITING.getKey());
+    public IDictionary getRejectedStatus() {
+        return PurchaseStatus.REJECTED;
     }
 
     @Override

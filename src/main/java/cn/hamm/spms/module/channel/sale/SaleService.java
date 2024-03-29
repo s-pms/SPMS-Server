@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.channel.sale;
 
+import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailEntity;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailRepository;
@@ -16,33 +17,18 @@ import java.util.List;
 @Service
 public class SaleService extends AbstractBaseBillService<SaleEntity, SaleRepository, SaleDetailEntity, SaleDetailService, SaleDetailRepository> {
     @Override
-    public SaleEntity setAudited(SaleEntity bill) {
-        return bill.setStatus(SaleStatus.OUTPUTTING.getKey());
+    public IDictionary getRejectedStatus() {
+        return SaleStatus.REJECTED;
     }
 
     @Override
-    public SaleEntity setAuditing(SaleEntity bill) {
-        return bill.setStatus(SaleStatus.AUDITING.getKey());
+    public IDictionary getAuditedStatus() {
+        return SaleStatus.OUTPUTTING;
     }
 
     @Override
-    public boolean isAudited(SaleEntity bill) {
-        return bill.getStatus() != SaleStatus.AUDITING.getKey();
-    }
-
-    @Override
-    public boolean canReject(SaleEntity bill) {
-        return bill.getStatus() == SaleStatus.AUDITING.getKey();
-    }
-
-    @Override
-    public SaleEntity setReject(SaleEntity bill) {
-        return bill.setStatus(SaleStatus.REJECTED.getKey());
-    }
-
-    @Override
-    public boolean canEdit(SaleEntity bill) {
-        return bill.getStatus() == SaleStatus.REJECTED.getKey();
+    public IDictionary getAuditingStatus() {
+        return SaleStatus.AUDITING;
     }
 
     @Override
