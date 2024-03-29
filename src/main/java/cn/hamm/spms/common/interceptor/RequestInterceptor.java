@@ -1,9 +1,10 @@
-package cn.hamm.spms.common.security;
+package cn.hamm.spms.common.interceptor;
 
+import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.config.GlobalConfig;
+import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
 import cn.hamm.airpower.request.RequestUtil;
 import cn.hamm.airpower.result.Result;
-import cn.hamm.airpower.security.AbstractAccessInterceptor;
 import cn.hamm.airpower.security.AccessUtil;
 import cn.hamm.airpower.security.SecurityUtil;
 import cn.hamm.spms.common.config.Constant;
@@ -14,21 +15,22 @@ import cn.hamm.spms.module.system.log.LogEntity;
 import cn.hamm.spms.module.system.log.LogService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import cn.hamm.spms.module.system.permission.PermissionService;
+import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.method.HandlerMethod;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
 
 /**
- * <h1>权限拦截器</h1>
+ * <h1>请求拦截器</h1>
  *
  * @author Hamm
  */
-public class AccessInterceptor extends AbstractAccessInterceptor {
+@Component
+public class RequestInterceptor extends AbstractRequestInterceptor {
     @Autowired
     private UserService userService;
 
@@ -71,31 +73,39 @@ public class AccessInterceptor extends AbstractAccessInterceptor {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object object, Exception ex) {
-        HandlerMethod handlerMethod = (HandlerMethod) object;
-        //取出控制器和方法
-        Class<?> clazz = handlerMethod.getBeanType();
-        Method method = handlerMethod.getMethod();
+    protected void beforeHandleRequest(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Class<?> clazz,
+            Method method
+    ) {
         String accessToken = request.getHeader(globalConfig.getAuthorizeHeader());
         Long userId = null;
-        int appVersion = -1;
+        int appVersion = request.getIntHeader(Constant.APP_VERSION_HEADER);
         String platform = "";
+        String action = request.getRequestURI();
         try {
             userId = securityUtil.getUserIdFromAccessToken(accessToken);
-            appVersion = request.getIntHeader(Constant.APP_VERSION_HEADER);
             platform = request.getHeader(Constant.APP_PLATFORM_HEADER);
+            Description description = method.getAnnotation(Description.class);
+            if (Objects.nonNull(description) && StrUtil.isAllBlank(description.value())) {
+                action = description.value() + "(" + action + ")";
+            }
         } catch (Exception ignored) {
-
         }
         String identity = AccessUtil.getPermissionIdentity(clazz, method);
         PermissionEntity permissionEntity = permissionService.getPermissionByIdentity(identity);
         if (Objects.nonNull(permissionEntity)) {
-            String action = permissionEntity.getName();
-            logService.add(new LogEntity().setIp(RequestUtil.getIpAddress(request))
-                    .setAction(action)
-                    .setPlatform(platform)
-                    .setVersion(Math.max(1, appVersion))
-                    .setUserId(userId));
+            action = permissionEntity.getName();
         }
+        long logId = logService.add(new LogEntity()
+                .setIp(RequestUtil.getIpAddress(request))
+                .setAction(action)
+                .setPlatform(platform)
+                .setRequest(getRequestBody(request))
+                .setVersion(Math.max(1, appVersion))
+                .setUserId(userId)
+        );
+        setShareData("logId", logId);
     }
 }

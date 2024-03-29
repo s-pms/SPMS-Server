@@ -25,33 +25,31 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "log")
 @Description("日志")
 public class LogEntity extends BaseEntity<LogEntity> {
-    /**
-     * 访问动作
-     */
+    @Description("访问动作")
     @Column(columnDefinition = "varchar(255) default '' comment '访问动作'")
     private String action;
 
-    /**
-     * 客户端平台
-     */
+    @Description("客户端平台")
     @Column(columnDefinition = "varchar(255) default '' comment '客户端平台'")
     private String platform;
 
-    /**
-     * IP地址
-     */
+    @Description("IP地址")
     @Column(columnDefinition = "varchar(255) default '' comment 'IP地址'")
     private String ip;
 
-    /**
-     * 客户端版本
-     */
+    @Description("请求包体")
+    @Column(columnDefinition = "text comment '请求包体'")
+    private String request;
+
+    @Description("响应数据")
+    @Column(columnDefinition = "text comment '响应数据'")
+    private String response;
+
+    @Description("客户端版本")
     @Column(columnDefinition = "int UNSIGNED default 10000 comment '客户端版本'")
     private Integer version;
 
-    /**
-     * 用户ID
-     */
+    @Description("用户ID")
     @Column(columnDefinition = "bigint UNSIGNED comment '用户ID'")
     private Long userId;
 }
