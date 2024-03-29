@@ -3,12 +3,10 @@ package cn.hamm.spms.module.asset.device;
 import cn.hamm.airpower.result.Result;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.helper.influxdb.InfluxHelper;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
 import cn.hamm.spms.module.iot.report.*;
-import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import jakarta.annotation.Resource;
@@ -107,9 +105,6 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
 
     @Override
     protected DeviceEntity beforeAppSaveToDatabase(DeviceEntity device) {
-        if (StrUtil.isBlank(device.getCode())) {
-            device.setCode(Services.getCodeRuleService().createCode(CodeRuleField.DeviceCode));
-        }
         if (StrUtil.isBlank(device.getUuid())) {
             device.setUuid(device.getCode());
         }

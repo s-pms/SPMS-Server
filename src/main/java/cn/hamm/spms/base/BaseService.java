@@ -5,6 +5,7 @@ import cn.hamm.airpower.root.RootService;
 import cn.hamm.airpower.util.ReflectUtil;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
+import cn.hutool.core.util.StrUtil;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -30,7 +31,6 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
 
     @Override
     protected final E beforeSaveToDatabase(E entity) {
-        entity = beforeAppSaveToDatabase(entity);
         List<Field> fields = ReflectUtil.getFieldList(entity.getClass());
         for (Field field : fields) {
             AutoGenerateCode autoGenerateCode = field.getAnnotation(AutoGenerateCode.class);
@@ -39,7 +39,8 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
             }
             field.setAccessible(true);
             try {
-                if (Objects.isNull(field.get(entity))) {
+                Object value = field.get(entity);
+                if (Objects.isNull(field.get(entity)) || StrUtil.isAllBlank(value.toString())) {
                     String code = Services.getCodeRuleService().createCode(autoGenerateCode.value());
                     field.set(entity, code);
                     break;
@@ -48,6 +49,7 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
                 Result.ERROR.show("生成编码规则失败，反射字段出现异常");
             }
         }
+        entity = beforeAppSaveToDatabase(entity);
         return entity;
     }
 }
