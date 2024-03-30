@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @Description("工序")
-@RequestMapping("craftOperation")
-public class CraftOperationController extends BaseController<CraftOperationEntity, CraftOperationService, CraftOperationRepository> {
+@RequestMapping("operation")
+public class OperationController extends BaseController<OperationEntity, OperationService, OperationRepository> {
 
 }

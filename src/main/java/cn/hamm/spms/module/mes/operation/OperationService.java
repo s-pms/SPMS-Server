@@ -9,6 +9,6 @@ import org.springframework.stereotype.Service;
  * @author zfy
  */
 @Service
-public class CraftOperationService extends BaseService<CraftOperationEntity, CraftOperationRepository> {
+public class OperationService extends BaseService<OperationEntity, OperationRepository> {
 
 }

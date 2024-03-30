@@ -28,7 +28,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "craft_router_operation_material")
 @EqualsAndHashCode(callSuper = true)
 public class CraftRouterOperationMaterialEntity extends BaseEntity<CraftRouterOperationMaterialEntity> {
-
     @Description("工艺路线工序id")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "工艺路线工序id不能为空")
     @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '工艺路线工序id'")

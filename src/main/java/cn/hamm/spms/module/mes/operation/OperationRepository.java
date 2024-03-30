@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * @author zfy
  */
 @Repository
-public interface CraftOperationRepository extends BaseRepository<CraftOperationEntity> {
+public interface OperationRepository extends BaseRepository<OperationEntity> {
 }

@@ -35,20 +35,14 @@ import java.util.Set;
 @Table(name = "user")
 @Description("用户")
 public class UserEntity extends BaseEntity<UserEntity> {
-    /**
-     * 邮箱(唯一)
-     */
     @Description("账号")
     @Column(columnDefinition = "varchar(255) default '' comment '账号'", unique = true)
+    @NotBlank(groups = {WhenAdd.class, WhenUpdate.class}, message = "账号不能为空")
     @Search()
     private String account;
 
-    /**
-     * 邮箱(唯一)
-     */
     @Description("邮箱")
     @Column(columnDefinition = "varchar(255) default '' comment '邮箱'", unique = true)
-    @NotBlank(groups = {WhenSendEmail.class}, message = "邮箱不能为空")
     @Email(groups = {WhenSendEmail.class}, message = "邮箱格式不正确")
     @Search()
     private String email;
@@ -58,7 +52,6 @@ public class UserEntity extends BaseEntity<UserEntity> {
      */
     @Description("手机")
     @Column(columnDefinition = "varchar(255) default '' comment '手机'", unique = true)
-    @NotBlank(groups = {WhenSendMessage.class}, message = "手机不能为空")
     @Phone(groups = {WhenSendMessage.class}, message = "手机格式不正确", tel = false)
     @Search()
     private String phone;

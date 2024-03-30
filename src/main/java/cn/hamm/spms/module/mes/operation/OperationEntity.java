@@ -19,18 +19,17 @@ import org.hibernate.annotations.DynamicUpdate;
 /**
  * @author zfy
  */
-@Data
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
 @Entity
-@DynamicInsert
-@DynamicUpdate
-@Description("工序")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(chain = true)
-@Table(name = "craft_operation")
-@EqualsAndHashCode(callSuper = true)
-public class CraftOperationEntity extends BaseEntity<CraftOperationEntity> {
-
+@DynamicInsert
+@DynamicUpdate
+@Table(name = "operation")
+@Description("工序")
+public class OperationEntity extends BaseEntity<OperationEntity> {
     @Description("工序名称")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "工序名称不能为空")
     @Column(columnDefinition = "varchar(255) default '' comment '工序名称'", unique = true)

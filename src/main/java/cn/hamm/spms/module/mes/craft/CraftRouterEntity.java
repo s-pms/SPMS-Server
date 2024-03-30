@@ -21,18 +21,17 @@ import org.hibernate.annotations.DynamicUpdate;
 /**
  * @author zfy
  */
-@Data
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
 @Entity
-@DynamicInsert
-@DynamicUpdate
-@Description("工艺路线")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(chain = true)
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "craft_router")
-@EqualsAndHashCode(callSuper = true)
+@Description("工艺路线")
 public class CraftRouterEntity extends BaseEntity<CraftRouterEntity> {
-
     @Payload
     @Description("物料")
     @ManyToOne(fetch = FetchType.EAGER)
