@@ -46,6 +46,8 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     @Autowired
     private GlobalConfig globalConfig;
 
+    public final static String LOG_REQUEST_KEY ="logId";
+
     /**
      * 验证指定的用户是否有指定权限标识的权限
      *
@@ -106,6 +108,6 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
                 .setVersion(Math.max(1, appVersion))
                 .setUserId(userId)
         );
-        setShareData("logId", logId);
+        setShareData(RequestInterceptor.LOG_REQUEST_KEY, logId);
     }
 }

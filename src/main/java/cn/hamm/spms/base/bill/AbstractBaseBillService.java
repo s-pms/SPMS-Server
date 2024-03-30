@@ -143,7 +143,7 @@ public abstract class AbstractBaseBillService<
      * @return 是否可驳回
      */
     public final boolean canReject(E bill) {
-        return bill.getStatus() == getRejectedStatus().getKey();
+        return bill.getStatus() == getAuditingStatus().getKey();
     }
 
     /**
