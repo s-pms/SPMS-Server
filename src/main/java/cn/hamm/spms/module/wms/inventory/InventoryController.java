@@ -6,6 +6,7 @@ import cn.hamm.airpower.api.Extends;
 import cn.hamm.airpower.query.QueryRequest;
 import cn.hamm.airpower.result.json.JsonData;
 import cn.hamm.spms.base.BaseController;
+import cn.hamm.spms.common.annotation.LogDisabled;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,7 @@ import java.util.Objects;
 @Description("入库")
 @Extends({Api.GetDetail, Api.GetList})
 public class InventoryController extends BaseController<InventoryEntity, InventoryService, InventoryRepository> {
+    @LogDisabled
     @Override
     public JsonData getList(@RequestBody QueryRequest<InventoryEntity> queryRequest) {
         List<InventoryEntity> list;

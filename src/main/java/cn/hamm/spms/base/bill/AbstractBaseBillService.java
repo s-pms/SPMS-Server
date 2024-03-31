@@ -48,7 +48,7 @@ public abstract class AbstractBaseBillService<
             }
         }
         if (isAllFinished) {
-            afterAllDetailsFinished(sourceDetail.getBillId());
+            afterAllDetailsFinished(savedDetail.getBillId());
         }
     }
 

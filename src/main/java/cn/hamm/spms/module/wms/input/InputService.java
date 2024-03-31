@@ -62,12 +62,13 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
         }
         InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(savedDetail.getMaterial().getId(), sourceDetail.getStorage().getId());
         if (Objects.nonNull(inventory)) {
-            inventory.setQuantity(inventory.getQuantity() + sourceDetail.getQuantity());
+            inventory.setQuantity(inventory.getQuantity() + savedDetail.getQuantity());
             inventoryService.update(inventory);
         } else {
             inventory = new InventoryEntity()
                     .setQuantity(sourceDetail.getQuantity())
-                    .setMaterial(sourceDetail.getMaterial())
+                    .setMaterial(savedDetail.getMaterial())
+                    .setStorage(sourceDetail.getStorage())
                     .setType(InventoryType.STORAGE.getKey());
             inventoryService.add(inventory);
         }
