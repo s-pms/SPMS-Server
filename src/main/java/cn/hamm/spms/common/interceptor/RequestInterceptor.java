@@ -1,12 +1,13 @@
 package cn.hamm.spms.common.interceptor;
 
-import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.config.GlobalConfig;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
 import cn.hamm.airpower.request.RequestUtil;
 import cn.hamm.airpower.result.Result;
 import cn.hamm.airpower.security.AccessUtil;
 import cn.hamm.airpower.security.SecurityUtil;
+import cn.hamm.airpower.util.ReflectUtil;
+import cn.hamm.spms.common.annotation.LogDisabled;
 import cn.hamm.spms.common.config.Constant;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
@@ -15,7 +16,6 @@ import cn.hamm.spms.module.system.log.LogEntity;
 import cn.hamm.spms.module.system.log.LogService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import cn.hamm.spms.module.system.permission.PermissionService;
-import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     @Autowired
     private GlobalConfig globalConfig;
 
-    public final static String LOG_REQUEST_KEY ="logId";
+    public final static String LOG_REQUEST_KEY = "logId";
 
     /**
      * 验证指定的用户是否有指定权限标识的权限
@@ -81,6 +81,10 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
             Class<?> clazz,
             Method method
     ) {
+        LogDisabled logDisabled = method.getAnnotation(LogDisabled.class);
+        if (Objects.nonNull(logDisabled)) {
+            return;
+        }
         String accessToken = request.getHeader(globalConfig.getAuthorizeHeader());
         Long userId = null;
         int appVersion = request.getIntHeader(Constant.APP_VERSION_HEADER);
@@ -89,9 +93,9 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         try {
             userId = securityUtil.getUserIdFromAccessToken(accessToken);
             platform = request.getHeader(Constant.APP_PLATFORM_HEADER);
-            Description description = method.getAnnotation(Description.class);
-            if (Objects.nonNull(description) && StrUtil.isAllBlank(description.value())) {
-                action = description.value() + "(" + action + ")";
+            String description = ReflectUtil.getDescription(method);
+            if (!description.equals(method.getName())) {
+                action = description;
             }
         } catch (Exception ignored) {
         }
