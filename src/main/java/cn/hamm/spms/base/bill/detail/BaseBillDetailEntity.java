@@ -2,14 +2,9 @@ package cn.hamm.spms.base.bill.detail;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.spms.base.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * <h1>单据明细基类</h1>
@@ -18,13 +13,8 @@ import org.hibernate.annotations.DynamicUpdate;
  * @author Hamm
  */
 @SuppressWarnings({"unchecked", "UnusedReturnValue"})
-@EqualsAndHashCode(callSuper = true)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @MappedSuperclass
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@DynamicInsert
-@DynamicUpdate
 @Description("")
 public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> extends BaseEntity<E> {
     @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '单据号'")

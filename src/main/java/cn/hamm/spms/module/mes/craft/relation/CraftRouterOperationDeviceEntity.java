@@ -6,27 +6,19 @@ import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * @author zfy
  */
-@Data
-@Entity
-@DynamicInsert
-@DynamicUpdate
-@Description("工艺路线工序-设备")
-@NoArgsConstructor
-@AllArgsConstructor
-@Accessors(chain = true)
-@Table(name = "craft_router_operation_device")
 @EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
+@Entity
+@Data
+@Table(name = "craft_router_operation_device")
+@Description("工艺路线工序-设备")
 public class CraftRouterOperationDeviceEntity extends BaseEntity<CraftRouterOperationDeviceEntity> {
 
     @Description("工艺路线工序id")

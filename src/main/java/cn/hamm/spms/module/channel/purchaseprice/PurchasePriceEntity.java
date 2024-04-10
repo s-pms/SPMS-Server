@@ -8,13 +8,9 @@ import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.channel.supplier.SupplierEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 
 /**
@@ -26,10 +22,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @Accessors(chain = true)
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@DynamicInsert
-@DynamicUpdate
 @Table(name = "purchase_price")
 @Description("采购价格")
 public class PurchasePriceEntity extends BaseEntity<PurchasePriceEntity> {

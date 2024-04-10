@@ -13,13 +13,9 @@ import cn.hamm.spms.module.channel.sale.detail.SaleDetailEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -31,10 +27,6 @@ import org.hibernate.validator.constraints.Length;
 @Accessors(chain = true)
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@DynamicInsert
-@DynamicUpdate
 @Table(name = "sale")
 @Description("销售单")
 public class SaleEntity extends AbstractBaseBillEntity<SaleEntity, SaleDetailEntity> {

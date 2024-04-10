@@ -12,13 +12,9 @@ import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import cn.hamm.spms.module.wms.move.MoveEntity;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * <h1>领料单实体</h1>
@@ -29,10 +25,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @Accessors(chain = true)
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@DynamicInsert
-@DynamicUpdate
 @Table(name = "output")
 @Description("出库单")
 public class OutputEntity extends AbstractBaseBillEntity<OutputEntity, OutputDetailEntity> {

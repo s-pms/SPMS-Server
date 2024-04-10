@@ -3,18 +3,13 @@ package cn.hamm.spms.base.bill;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Exclude;
 import cn.hamm.airpower.annotation.Payload;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
@@ -27,13 +22,8 @@ import java.util.List;
  * @param <D> 明细实体
  * @author Hamm
  */
-@EqualsAndHashCode(callSuper = true)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @MappedSuperclass
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@DynamicInsert
-@DynamicUpdate
 @Description("")
 public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E, D>, D extends BaseBillDetailEntity<D>> extends BaseEntity<E> {
     /**

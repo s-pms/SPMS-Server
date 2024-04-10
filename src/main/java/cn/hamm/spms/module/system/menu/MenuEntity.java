@@ -10,8 +10,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * <h1>权限实体</h1>
@@ -22,8 +20,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @Accessors(chain = true)
 @Entity
 @Data
-@DynamicInsert
-@DynamicUpdate
 @Table(name = "menu")
 @Description("菜单")
 public class MenuEntity extends BaseTreeEntity<MenuEntity> {

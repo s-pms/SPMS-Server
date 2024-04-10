@@ -11,13 +11,9 @@ import cn.hamm.spms.module.channel.customer.CustomerEntity;
 import cn.hamm.spms.module.mes.plan.detail.PlanDetailEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * <h1>领料单实体</h1>
@@ -28,10 +24,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @Accessors(chain = true)
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@DynamicInsert
-@DynamicUpdate
 @Table(name = "plan")
 @Description("生产计划")
 public class PlanEntity extends AbstractBaseBillEntity<PlanEntity, PlanDetailEntity> {

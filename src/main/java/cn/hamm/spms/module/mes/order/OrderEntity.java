@@ -14,13 +14,9 @@ import cn.hamm.spms.module.mes.plan.PlanEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * <h1>领料单实体</h1>
@@ -31,10 +27,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @Accessors(chain = true)
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@DynamicInsert
-@DynamicUpdate
 @Table(name = "orders")
 @Description("生产订单")
 public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetailEntity> {

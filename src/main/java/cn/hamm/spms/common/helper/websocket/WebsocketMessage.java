@@ -1,8 +1,7 @@
 package cn.hamm.spms.common.helper.websocket;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * <h1>Websocket消息体</h1>
@@ -10,9 +9,8 @@ import lombok.NoArgsConstructor;
  * @author Hamm
  */
 @SuppressWarnings("unused")
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
+@Data
+@Accessors(chain = true)
 public class WebsocketMessage<T> {
     private String type;
 

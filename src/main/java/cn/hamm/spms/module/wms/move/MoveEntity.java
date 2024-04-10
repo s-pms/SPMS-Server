@@ -11,13 +11,9 @@ import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import cn.hamm.spms.module.wms.move.detail.MoveDetailEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * <h1>移库单实体</h1>
@@ -28,10 +24,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @Accessors(chain = true)
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@DynamicInsert
-@DynamicUpdate
 @Table(name = "move")
 @Description("移库单")
 public class MoveEntity extends AbstractBaseBillEntity<MoveEntity, MoveDetailEntity> {
