@@ -14,6 +14,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * <h1>负载数据实体</h1>
@@ -24,6 +26,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Entity
 @Data
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "parameter")
 @Description("采集参数")
 public class ParameterEntity extends BaseEntity<ParameterEntity> {

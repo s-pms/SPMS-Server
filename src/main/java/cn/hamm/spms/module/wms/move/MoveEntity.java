@@ -14,6 +14,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * <h1>移库单实体</h1>
@@ -24,6 +26,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Entity
 @Data
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "move")
 @Description("移库单")
 public class MoveEntity extends AbstractBaseBillEntity<MoveEntity, MoveDetailEntity> {

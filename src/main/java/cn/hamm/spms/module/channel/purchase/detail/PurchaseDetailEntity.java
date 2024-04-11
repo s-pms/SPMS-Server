@@ -11,7 +11,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 
 /**
@@ -23,6 +24,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Entity
 @Data
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "purchase_detail")
 @Description("采购明细")
 public class PurchaseDetailEntity extends BaseBillDetailEntity<PurchaseDetailEntity> {

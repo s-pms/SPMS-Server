@@ -14,6 +14,8 @@ import jakarta.validation.constraints.Null;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * <h1>系统应用实体</h1>
@@ -24,6 +26,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Entity
 @Data
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "app")
 @Description("应用")
 public class AppEntity extends BaseEntity<AppEntity> {

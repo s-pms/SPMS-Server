@@ -7,20 +7,23 @@ import cn.hamm.airpower.result.json.JsonData;
 import cn.hamm.airpower.root.RootController;
 import cn.hamm.airpower.security.Permission;
 import cn.hamm.airpower.security.SecurityUtil;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
 import cn.hamm.spms.module.system.app.AppEntity;
 import cn.hamm.spms.module.system.app.AppService;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
@@ -110,7 +113,7 @@ public class Oauth2Controller extends RootController {
 
     @Description("Code换取AccessToken")
     @Permission(login = false)
-    @PostMapping("accessToken")
+    @RequestMapping("accessToken")
     public JsonData accessToken(@RequestBody @Validated({AppEntity.WhenCode2AccessToken.class}) AppEntity appEntity) {
         String code = appEntity.getCode();
         Long userId = userService.getUserIdByOauthAppKeyAndCode(appEntity.getAppKey(), code);

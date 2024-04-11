@@ -16,6 +16,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Set;
 
@@ -26,6 +28,8 @@ import java.util.Set;
 @Accessors(chain = true)
 @Entity
 @Data
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "device")
 @Description("设备")
 public class DeviceEntity extends BaseEntity<DeviceEntity> {

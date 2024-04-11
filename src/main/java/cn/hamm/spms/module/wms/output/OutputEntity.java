@@ -15,6 +15,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * <h1>领料单实体</h1>
@@ -25,6 +27,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Entity
 @Data
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "output")
 @Description("出库单")
 public class OutputEntity extends AbstractBaseBillEntity<OutputEntity, OutputDetailEntity> {

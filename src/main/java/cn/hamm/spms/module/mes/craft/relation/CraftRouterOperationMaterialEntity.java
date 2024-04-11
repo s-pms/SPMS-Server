@@ -9,6 +9,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * @author zfy
@@ -17,6 +19,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Entity
 @Data
+@DynamicInsert
+@DynamicUpdate
 @Description("工艺路线工序-物料")
 @Table(name = "craft_router_operation_material")
 public class CraftRouterOperationMaterialEntity extends BaseEntity<CraftRouterOperationMaterialEntity> {

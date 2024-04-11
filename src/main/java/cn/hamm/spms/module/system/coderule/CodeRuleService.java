@@ -21,9 +21,9 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
      * @return 一个自定义编码
      */
     public final String createCode(CodeRuleField codeRuleField) {
-        CodeRuleEntity codeRuleEntity = repository.getByRuleField(codeRuleField.getKey());
-        Result.ERROR.whenNull(codeRuleEntity, "保存失败,请先配置自定义编码规则!");
-        String template = codeRuleEntity.getTemplate();
+        CodeRuleEntity codeRule = repository.getByRuleField(codeRuleField.getKey());
+        Result.ERROR.whenNull(codeRule, "保存失败,请先配置自定义编码规则!");
+        String template = codeRule.getTemplate();
         List<Map<String, String>> mapList = DictionaryUtil.getDictionaryList(CodeRuleParam.class);
         for (Map<String, String> map : mapList) {
             String param = map.get("label");
@@ -48,11 +48,11 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
                 template = template.replaceAll(param, String.format("%02d", DateTime.now().hour(true)));
             }
         }
-        int serialNumber = codeRuleEntity.getCurrentSn();
+        int serialNumber = codeRule.getCurrentSn();
         serialNumber++;
-        codeRuleEntity.setCurrentSn(serialNumber);
-        repository.saveAndFlush(codeRuleEntity);
-        return codeRuleEntity.getPrefix() + template + String.format("%0" + codeRuleEntity.getSnLength() + "d", serialNumber);
+        codeRule.setCurrentSn(serialNumber);
+        repository.saveAndFlush(codeRule);
+        return codeRule.getPrefix() + template + String.format("%0" + codeRule.getSnLength() + "d", serialNumber);
     }
 
     /**

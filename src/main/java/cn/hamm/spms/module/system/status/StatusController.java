@@ -14,7 +14,6 @@ import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.util.ClassUtils;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,7 +34,7 @@ import java.util.Map;
 @Description("系统状态")
 public class StatusController extends RootController {
     @Description("获取所有错误代码")
-    @PostMapping("getErrorCodes")
+    @RequestMapping("getErrorCodes")
     public JsonData getErrorCodes() {
         List<Map<String, Object>> resultList = new ArrayList<>();
         Result[] errorList = Result.class.getEnumConstants();
@@ -62,7 +61,7 @@ public class StatusController extends RootController {
     }
 
     @Description("获取所有枚举数据")
-    @PostMapping("getEnums")
+    @RequestMapping("getEnums")
     public JsonData getEnums() {
         List<Map<String, Object>> resultList = new ArrayList<>();
         try {

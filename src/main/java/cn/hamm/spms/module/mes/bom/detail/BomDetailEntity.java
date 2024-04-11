@@ -10,6 +10,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * <h1>BOM明细实体</h1>
@@ -20,6 +22,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Entity
 @Data
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "bom_detail")
 @Description("BOM明细")
 public class BomDetailEntity extends BaseBillDetailEntity<BomDetailEntity> {

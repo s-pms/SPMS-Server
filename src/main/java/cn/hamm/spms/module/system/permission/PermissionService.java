@@ -159,30 +159,38 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                         }
                     }
                     String customMethodName = ReflectUtil.getDescription(method);
-                    PostMapping postMappingMethod = ReflectUtil.getPostMapping(method);
+
+                    String subIdentity = (!"".equalsIgnoreCase(pathClass) ? (pathClass + "_") : "");
+
+                    RequestMapping requestMapping = ReflectUtil.getAnnotation(RequestMapping.class, method);
+                    if (Objects.nonNull(requestMapping) && requestMapping.value().length > 0) {
+                        subIdentity += requestMapping.value()[0];
+                    }
+
+                    PostMapping postMapping = ReflectUtil.getAnnotation(PostMapping.class, method);
+                    if (Objects.nonNull(postMapping) && postMapping.value().length > 0) {
+                        subIdentity += postMapping.value()[0];
+                    }
 
                     AccessConfig accessConfig = AccessUtil.getWhatNeedAccess(clazz, method);
                     if (!accessConfig.login || !accessConfig.authorize) {
                         // 这里可以选择是否不读取这些接口的权限，但前端可能需要
                         continue;
                     }
-                    if (Objects.nonNull(postMappingMethod) && postMappingMethod.value().length > 0) {
-                        String subIdentity = (!"".equalsIgnoreCase(pathClass) ? (pathClass + "_") : "") + postMappingMethod.value()[0];
-                        PermissionEntity subPermission = getPermissionByIdentity(subIdentity);
-                        if (Objects.isNull(subPermission)) {
-                            subPermission = new PermissionEntity()
-                                    .setName(customClassName + "-" + customMethodName)
-                                    .setIdentity(subIdentity)
-                                    .setIsSystem(true)
-                                    .setParentId(permissionEntity.getId());
-                            add(subPermission);
-                        } else {
-                            subPermission.setName(customClassName + "-" + customMethodName)
-                                    .setIdentity(subIdentity)
-                                    .setIsSystem(true)
-                                    .setParentId(permissionEntity.getId());
-                            update(subPermission);
-                        }
+                    PermissionEntity subPermission = getPermissionByIdentity(subIdentity);
+                    if (Objects.isNull(subPermission)) {
+                        subPermission = new PermissionEntity()
+                                .setName(customClassName + "-" + customMethodName)
+                                .setIdentity(subIdentity)
+                                .setIsSystem(true)
+                                .setParentId(permissionEntity.getId());
+                        add(subPermission);
+                    } else {
+                        subPermission.setName(customClassName + "-" + customMethodName)
+                                .setIdentity(subIdentity)
+                                .setIsSystem(true)
+                                .setParentId(permissionEntity.getId());
+                        update(subPermission);
                     }
                 }
             }

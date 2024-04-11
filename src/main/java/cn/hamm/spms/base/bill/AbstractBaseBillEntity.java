@@ -10,6 +10,8 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
@@ -24,6 +26,8 @@ import java.util.List;
  */
 @MappedSuperclass
 @Getter
+@DynamicInsert
+@DynamicUpdate
 @Description("")
 public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E, D>, D extends BaseBillDetailEntity<D>> extends BaseEntity<E> {
     /**
@@ -40,7 +44,6 @@ public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E,
     @Column(columnDefinition = "varchar(255) default '' comment '驳回原因'")
     @Length(max = 80, message = "驳回原因仅支持{max}个字符")
     private String rejectReason;
-
 
     /**
      * 设置驳回原因
@@ -68,8 +71,12 @@ public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E,
         return (E) this;
     }
 
-    public interface WhenReject {
-    }
+    /**
+     * 获取状态
+     *
+     * @return 状态
+     */
+    public abstract Integer getStatus();
 
     /**
      * 设置状态
@@ -79,10 +86,6 @@ public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E,
      */
     public abstract E setStatus(Integer status);
 
-    /**
-     * 获取状态
-     *
-     * @return 状态
-     */
-    public abstract Integer getStatus();
+    public interface WhenReject {
+    }
 }

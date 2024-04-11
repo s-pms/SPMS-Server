@@ -4,6 +4,8 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.root.RootEntity;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 
 /**
@@ -13,6 +15,8 @@ import lombok.Getter;
  */
 @MappedSuperclass
 @Getter
+@DynamicInsert
+@DynamicUpdate
 @Description("")
 public class BaseEntity<E extends BaseEntity<E>> extends RootEntity<E> {
 }

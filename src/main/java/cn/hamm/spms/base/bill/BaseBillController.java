@@ -11,8 +11,8 @@ import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailService;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * <h1>单据控制器基类</h1>
@@ -32,7 +32,7 @@ public class BaseBillController<
         > extends BaseController<E, S, R> {
 
     @Description("审核")
-    @PostMapping("audit")
+    @RequestMapping("audit")
     @Filter(RootEntity.WhenGetDetail.class)
     public Json audit(@RequestBody @Validated(RootEntity.WhenIdRequired.class) E bill) {
         E savedBill = service.get(bill.getId());
@@ -44,7 +44,7 @@ public class BaseBillController<
     }
 
     @Description("驳回")
-    @PostMapping("reject")
+    @RequestMapping("reject")
     @Filter(RootEntity.WhenGetDetail.class)
     public Json reject(@RequestBody @Validated(AbstractBaseBillEntity.WhenReject.class) E bill) {
         E savedBill = service.get(bill.getId());
@@ -56,7 +56,7 @@ public class BaseBillController<
     }
 
     @Description("添加完成数量")
-    @PostMapping("addFinish")
+    @RequestMapping("addFinish")
     @Filter(RootEntity.WhenGetDetail.class)
     public Json finish(@RequestBody @Validated(BaseBillDetailEntity.WhenAddFinish.class) D detail) {
         service.addFinish(detail);

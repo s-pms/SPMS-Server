@@ -8,15 +8,14 @@ import cn.hamm.airpower.result.json.JsonData;
 import cn.hamm.airpower.security.CookieUtil;
 import cn.hamm.airpower.security.Permission;
 import cn.hamm.airpower.security.SecurityUtil;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.system.app.AppEntity;
 import cn.hamm.spms.module.system.app.AppService;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,7 +41,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
 
     @Description("获取我的信息")
     @Permission(authorize = false)
-    @PostMapping("getMyInfo")
+    @RequestMapping("getMyInfo")
     @Filter(UserEntity.WhenGetMyInfo.class)
     public JsonData getMyInfo(Long userId) {
         return jsonData(service.get(userId));
@@ -50,7 +49,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
 
     @Description("修改我的信息")
     @Permission(authorize = false)
-    @PostMapping("updateMyInfo")
+    @RequestMapping("updateMyInfo")
     public Json updateMyInfo(@RequestBody @Validated({UserEntity.WhenUpdateMyInfo.class}) UserEntity userEntity, Long userId) {
         userEntity.setId(userId);
         userEntity.setRoleList(null);
@@ -60,21 +59,21 @@ public class UserController extends BaseController<UserEntity, UserService, User
 
     @Description("获取我的菜单")
     @Permission(authorize = false)
-    @PostMapping("getMyMenuList")
+    @RequestMapping("getMyMenuList")
     public JsonData getMyMenuList() {
         return jsonData(service.getMenuListByUserId(getCurrentUserId()));
     }
 
     @Description("获取我的权限")
     @Permission(authorize = false)
-    @PostMapping("getMyPermissionList")
+    @RequestMapping("getMyPermissionList")
     public JsonData getMyPermissionList() {
         return jsonData(service.getPermissionListByUserId(getCurrentUserId()));
     }
 
     @Description("修改我的密码")
     @Permission(authorize = false)
-    @PostMapping("updateMyPassword")
+    @RequestMapping("updateMyPassword")
     public Json updateMyPassword(@RequestBody @Validated({UserEntity.WhenUpdateMyPassword.class}) UserEntity userEntity, Long userId) {
         userEntity.setId(userId);
         service.modifyUserPassword(userEntity);
@@ -83,21 +82,21 @@ public class UserController extends BaseController<UserEntity, UserService, User
 
     @Description("账号密码登录")
     @Permission(login = false)
-    @PostMapping("login")
+    @RequestMapping("login")
     public JsonData login(@RequestBody @Validated({UserEntity.WhenLogin.class}) UserEntity userEntity, HttpServletResponse httpServletResponse) {
         return doLogin(UserLoginType.VIA_ACCOUNT_PASSWORD, userEntity, httpServletResponse);
     }
 
     @Description("邮箱验证码登录")
     @Permission(login = false)
-    @PostMapping("loginViaEmail")
+    @RequestMapping("loginViaEmail")
     public JsonData loginViaEmail(@RequestBody @Validated({UserEntity.WhenLoginViaEmail.class}) UserEntity userEntity, HttpServletResponse httpServletResponse) {
         return doLogin(UserLoginType.VIA_EMAIL_CODE, userEntity, httpServletResponse);
     }
 
     @Description("手机验证码登录")
     @Permission(login = false)
-    @PostMapping("loginViaPhone")
+    @RequestMapping("loginViaPhone")
     public JsonData loginViaPhone(@RequestBody @Validated({UserEntity.WhenLoginViaPhone.class}) UserEntity userEntity, HttpServletResponse httpServletResponse) {
         return doLogin(UserLoginType.VIA_PHONE_CODE, userEntity, httpServletResponse);
     }

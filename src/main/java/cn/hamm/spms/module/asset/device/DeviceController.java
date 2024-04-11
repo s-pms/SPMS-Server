@@ -12,7 +12,6 @@ import cn.hamm.spms.module.iot.report.ReportPayload;
 import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,14 +35,14 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
     }
 
     @Description("获取实时采集数据")
-    @PostMapping("getCurrentReport")
+    @RequestMapping("getCurrentReport")
     @Permission(login = false)
     public Json getCurrentReport(@RequestBody @Validated({RootEntity.WhenIdRequired.class}) DeviceEntity device) {
         return jsonData(service.getCurrentReport(device.getId()));
     }
 
     @Description("获取采集配置")
-    @PostMapping("getDevice")
+    @RequestMapping("getDevice")
     @Permission(login = false)
     public Json getDevice(@RequestBody @Validated({DeviceEntity.WhenGetDevice.class}) DeviceEntity device) {
         device = service.getByUuid(device.getUuid());
@@ -63,7 +62,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
     }
 
     @Description("获取指定设备某个参数的历史")
-    @PostMapping("getDevicePayloadHistory")
+    @RequestMapping("getDevicePayloadHistory")
     @Permission(login = false)
     public Json getDevicePayloadHistory(@RequestBody @Validated({ReportPayload.WhenGetDevicePayloadHistory.class}) ReportPayload payload) {
         return jsonData(service.getDevicePayloadHistory(payload));

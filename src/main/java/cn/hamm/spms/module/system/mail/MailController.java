@@ -8,7 +8,6 @@ import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +26,7 @@ public class MailController extends RootController {
 
     @Description("发送邮件")
     @Permission(login = false)
-    @PostMapping("send")
+    @RequestMapping("send")
     public Json send(@RequestBody @Validated({UserEntity.WhenSendEmail.class}) UserEntity userEntity) {
         userService.sendMail(userEntity.getEmail());
         return json("发送成功");

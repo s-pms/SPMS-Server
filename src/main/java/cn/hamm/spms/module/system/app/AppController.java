@@ -7,7 +7,6 @@ import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.security.Permission;
 import cn.hamm.spms.base.BaseController;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Description("应用")
 public class AppController extends BaseController<AppEntity, AppService, AppRepository> {
     @Description("通过AppKey获取应用信息")
-    @PostMapping("getByAppKey")
+    @RequestMapping("getByAppKey")
     @Permission(login = false)
     @Filter(RootEntity.WhenGetDetail.class)
     public JsonData getByAppKey(@RequestBody @Validated({AppEntity.WhenGetByAppKey.class}) AppEntity entity) {
@@ -30,7 +29,7 @@ public class AppController extends BaseController<AppEntity, AppService, AppRepo
     }
 
     @Description("重置指定应用的秘钥")
-    @PostMapping("resetSecret")
+    @RequestMapping("resetSecret")
     public JsonData resetSecret(@RequestBody @Validated({AppEntity.WhenResetSecret.class}) AppEntity entity) {
         return jsonData(service.resetSecretById(entity.getId()), "重置应用秘钥成功");
     }

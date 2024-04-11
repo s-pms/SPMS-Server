@@ -14,6 +14,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * <h1>领料单实体</h1>
@@ -24,6 +26,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Entity
 @Data
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "pickout")
 @Description("领料单")
 public class PickoutEntity extends AbstractBaseBillEntity<PickoutEntity, PickoutDetailEntity> {
