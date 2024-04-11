@@ -37,6 +37,7 @@ airpower:
     port: 1883
     user: mqttroot
     pass: asdfew12345
+  enable-document: true
 app:
   influxdb:
     url: http://md4.cn:8086
