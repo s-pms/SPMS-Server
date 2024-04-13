@@ -30,7 +30,7 @@ public abstract class AbstractBaseBillService<
 
 
     /**
-     * 添加完成数量
+     * <h2>添加完成数量</h2>
      *
      * @param sourceDetail 提交明细
      */
@@ -53,7 +53,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 添加完成数量前置方法
+     * <h2>添加完成数量前置方法</h2>
      *
      * @param sourceDetail 提交明细
      * @return 提交明细
@@ -63,7 +63,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 所有明细数量全部完成后置方法
+     * <h2>所有明细数量全部完成后置方法</h2>
      *
      * @param id 单据ID
      */
@@ -71,7 +71,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 单据明细保存后置方法
+     * <h2>单据明细保存后置方法</h2>
      *
      * @param bill 单据
      */
@@ -96,7 +96,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 保存单据明细
+     * <h2>保存单据明细</h2>
      *
      * @param billId  单据ID
      * @param details 明细列表
@@ -109,7 +109,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 设置为已审核状态
+     * <h2>设置为已审核状态</h2>
      *
      * @param bill 单据
      */
@@ -118,7 +118,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 设置为审核中状态
+     * <h2>设置为审核中状态</h2>
      *
      * @param bill 单据
      */
@@ -127,7 +127,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 单据是否可审核
+     * <h2>单据是否可审核</h2>
      *
      * @param bill 单据
      * @return 是否审核
@@ -137,7 +137,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 单据是否可驳回
+     * <h2>单据是否可驳回</h2>
      *
      * @param bill 单据
      * @return 是否可驳回
@@ -147,7 +147,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 设置单据为驳回状态
+     * <h2>设置单据为驳回状态</h2>
      *
      * @param bill 单据
      */
@@ -156,7 +156,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 单据是否可编辑
+     * <h2>单据是否可编辑</h2>
      *
      * @param bill 单据
      * @return 是否可编辑
@@ -166,21 +166,21 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 获取审核中状态
+     * <h2>获取审核中状态</h2>
      *
      * @return 审核中状态
      */
     public abstract IDictionary getAuditingStatus();
 
     /**
-     * 获取已审核状态
+     * <h2>获取已审核状态</h2>
      *
      * @return 已审核状态
      */
     public abstract IDictionary getAuditedStatus();
 
     /**
-     * 获取驳回状态
+     * <h2>获取驳回状态</h2>
      *
      * @return 驳回状态
      */

@@ -7,7 +7,6 @@ import lombok.Getter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-
 /**
  * <h1>应用实体基类</h1>
  *

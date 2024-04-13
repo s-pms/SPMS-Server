@@ -17,11 +17,12 @@ import lombok.Getter;
 @Getter
 @Description("")
 public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> extends BaseEntity<E> {
-    @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '单据号'")
+    @Description("单据ID")
+    @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '单据ID'")
     private Long billId;
 
     /**
-     * 设置单据ID
+     * <h2>设置单据ID</h2>
      *
      * @param billId 单据ID
      * @return 明细实体
@@ -32,14 +33,14 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
     }
 
     /**
-     * 获取数量
+     * <h2>获取数量</h2>
      *
      * @return 数量
      */
     public abstract Double getQuantity();
 
     /**
-     * 设置数量
+     * <h2>设置数量</h2>
      *
      * @param quantity 数量
      * @return 明细实体
@@ -47,14 +48,14 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
     public abstract E setQuantity(Double quantity);
 
     /**
-     * 获取已完成数量
+     * <h2>获取已完成数量</h2>
      *
      * @return 数量
      */
     public abstract Double getFinishQuantity();
 
     /**
-     * 设置已完成数量
+     * <h2>设置已完成数量</h2>
      *
      * @param finishQuantity 已完成数量
      * @return 明细实体
@@ -62,7 +63,7 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
     public abstract E setFinishQuantity(Double finishQuantity);
 
     /**
-     * 添加完成数量
+     * <h2>添加完成数量</h2>
      *
      * @param quantity 数量
      * @return 明细实体
@@ -71,11 +72,5 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
     public E addFinishQuantity(Double quantity) {
         this.setFinishQuantity(this.getFinishQuantity() + quantity);
         return (E) this;
-    }
-
-    /**
-     * 添加完成数量
-     */
-    public interface WhenAddFinish {
     }
 }

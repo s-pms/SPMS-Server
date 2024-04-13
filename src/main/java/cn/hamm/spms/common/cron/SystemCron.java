@@ -2,11 +2,11 @@ package cn.hamm.spms.common.cron;
 
 import cn.hamm.airpower.config.GlobalConfig;
 import cn.hamm.airpower.query.QueryRequest;
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import cn.hamm.spms.module.system.coderule.SerialNumberUpdate;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -41,7 +41,7 @@ public class SystemCron {
     }
 
     /**
-     * 重置自定义编码规则序列号
+     * <h2>重置自定义编码规则序列号</h2>
      *
      * @param codeRule 编码规则
      */

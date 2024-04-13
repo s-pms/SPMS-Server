@@ -27,18 +27,14 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "sale_price")
 @Description("销售价格")
-public class SalePriceEntity extends BaseEntity<SalePriceEntity> {
-    /**
-     * 物料信息
-     */
+public class SalePriceEntity extends BaseEntity<SalePriceEntity> implements ISalePriceAction {
+    @Description("物料信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料不能为空")
     private MaterialEntity material;
 
-    /**
-     * 客户信息
-     */
+    @Description("客户信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "客户不能为空")
@@ -48,7 +44,4 @@ public class SalePriceEntity extends BaseEntity<SalePriceEntity> {
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '销售单价'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "销售单价不能为空")
     private Double price;
-
-    public interface WhenGetByMaterialAndCustomer {
-    }
 }

@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.channel.purchase.detail;
 
-
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
@@ -13,7 +12,6 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-
 
 /**
  * <h1>采购明细实体</h1>
@@ -29,17 +27,13 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "purchase_detail")
 @Description("采购明细")
 public class PurchaseDetailEntity extends BaseBillDetailEntity<PurchaseDetailEntity> {
-    /**
-     * 物料信息
-     */
+    @Description("物料信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料不能为空")
     private MaterialEntity material;
 
-    /**
-     * 供应商信息
-     */
+    @Description("供应商信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "供应商不能为空")

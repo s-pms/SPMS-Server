@@ -40,26 +40,22 @@ public class OutputEntity extends AbstractBaseBillEntity<OutputEntity, OutputDet
 
     @Description("出库状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '出库状态'")
-    @Dictionary(value = OutputStatus.class,groups = {WhenAdd.class, WhenUpdate.class})
+    @Dictionary(value = OutputStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Search(Search.Mode.EQUALS)
     private Integer status;
 
     @Description("出库类型")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '出库类型'")
-    @Dictionary(value = OutputType.class,groups = {WhenAdd.class, WhenUpdate.class})
+    @Dictionary(value = OutputType.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Search(Search.Mode.EQUALS)
     private Integer type;
 
-    /**
-     * 销售单
-     */
+    @Description("销售单")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     private SaleEntity sale;
 
-    /**
-     * 移库单
-     */
+    @Description("移库单")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     private MoveEntity move;

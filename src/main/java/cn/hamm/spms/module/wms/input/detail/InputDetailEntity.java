@@ -27,16 +27,12 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "input_detail")
 @Description("入库明细")
 public class InputDetailEntity extends BaseBillDetailEntity<InputDetailEntity> {
-    /**
-     * 存储资源
-     */
+    @Description("存储资源")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     private StorageEntity storage;
 
-    /**
-     * 物料信息
-     */
+    @Description("物料信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料不能为空")

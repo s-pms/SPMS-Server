@@ -3,7 +3,6 @@ package cn.hamm.spms.base;
 import cn.hamm.airpower.query.QueryPageRequest;
 import cn.hamm.airpower.query.QueryRequest;
 import cn.hamm.airpower.result.json.JsonData;
-import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.root.RootEntityController;
 import cn.hamm.airpower.security.Permission;
 import cn.hamm.spms.common.annotation.LogDisabled;
@@ -34,7 +33,7 @@ public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>
 
     @LogDisabled
     @Override
-    public JsonData getDetail(@RequestBody @Validated(RootEntity.WhenIdRequired.class) E entity) {
+    public JsonData getDetail(@RequestBody @Validated(WhenIdRequired.class) E entity) {
         return super.getDetail(entity);
     }
 }

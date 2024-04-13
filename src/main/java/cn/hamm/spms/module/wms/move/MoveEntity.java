@@ -41,9 +41,7 @@ public class MoveEntity extends AbstractBaseBillEntity<MoveEntity, MoveDetailEnt
     @Dictionary(value = MoveStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer status;
 
-    /**
-     * 入库存储资源
-     */
+    @Description("入库存储资源")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "入库存储资源")

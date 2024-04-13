@@ -52,30 +52,22 @@ public class InputEntity extends AbstractBaseBillEntity<InputEntity, InputDetail
     @Search(Search.Mode.EQUALS)
     private Integer type;
 
-    /**
-     * 采购信息
-     */
+    @Description("采购信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     private PurchaseEntity purchase;
 
-    /**
-     * 退料位置
-     */
+    @Description("退料位置")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     private StructureEntity structure;
 
-    /**
-     * 生产订单
-     */
+    @Description("生产订单")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     private OrderEntity order;
 
-    /**
-     * 移库单
-     */
+    @Description("移库单")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     private MoveEntity move;

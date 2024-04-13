@@ -1,14 +1,14 @@
 package cn.hamm.spms.module.iot.report;
 
 import cn.hamm.airpower.mqtt.MqttHelper;
-import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import cn.hamm.spms.common.helper.influxdb.InfluxHelper;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.asset.device.DeviceService;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
+import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.*;
@@ -29,35 +29,37 @@ import java.util.Objects;
 @Slf4j
 public class ReportEvent {
     /**
-     * 数据上报毫秒最小
+     * <h2>数据上报毫秒最小</h2>
      */
     public static final int REPORT_RATE_MIN = 200;
+
     /**
-     * 运行状态
+     * <h2>运行状态</h2>
      */
     public static final String REPORT_KEY_OF_STATUS = "Status";
 
     /**
-     * 产量事件
+     * <h2>产量事件</h2>
      */
     public static final String REPORT_KEY_OF_PART_COUNT = "PartCnt";
 
     /**
-     * 报警事件
+     * <h2>报警事件</h2>
      */
     public static final String REPORT_KEY_OF_ALARM = "Alarm";
 
     /**
-     * 订阅Topic
+     * <h2>订阅Topic</h2>
      */
     public final static String IOT_REPORT_TOPIC_V1 = "sys/msg/v1";
 
     /**
-     * Redis存IOT采集数据的前缀
+     * <h2>Redis存IOT采集数据的前缀</h2>
      */
     public final static String CACHE_PREFIX = "iot_report_";
+
     /**
-     * 下划线
+     * <h2>下划线</h2>
      */
     public final static String CACHE_UNDERLINE = "_";
 
@@ -78,7 +80,7 @@ public class ReportEvent {
 
 
     /**
-     * 开始监听MQTT
+     * <h2>开始监听MQTT</h2>
      *
      * @throws MqttException 异常
      * @noinspection AlibabaMethodTooLong

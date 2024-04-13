@@ -30,17 +30,13 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "app")
 @Description("应用")
-public class AppEntity extends BaseEntity<AppEntity> {
-    /**
-     * 应用Key
-     */
+public class AppEntity extends BaseEntity<AppEntity> implements IAppAction {
+    @Description("应用Key")
     @Column(columnDefinition = "varchar(255) default '' comment 'AppKey'", unique = true)
     @NotBlank(groups = {WhenAdd.class, WhenUpdate.class, WhenCode2AccessToken.class}, message = "AppKey必须填写")
     private String appKey;
 
-    /**
-     * 应用密钥
-     */
+    @Description("应用密钥")
     @ReadOnly
     @Column(columnDefinition = "varchar(255) default '' comment 'AppSecret'", unique = true)
     @Null(groups = {WhenAdd.class, WhenUpdate.class}, message = "请不要传入AppSecret")
@@ -48,46 +44,24 @@ public class AppEntity extends BaseEntity<AppEntity> {
     @Exclude(filters = {WhenGetDetail.class})
     private String appSecret;
 
-    /**
-     * 应用名称
-     */
+    @Description("应用名称")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '应用名称'")
     @NotBlank(groups = {WhenAdd.class, WhenUpdate.class}, message = "应用名称必须填写")
     private String appName;
 
-    /**
-     * 应用地址
-     */
+    @Description("应用地址")
     @Column(columnDefinition = "varchar(255) default '' comment '应用地址'")
     @NotBlank(groups = {WhenAdd.class, WhenUpdate.class}, message = "应用地址必须填写")
     private String url;
 
-    /**
-     * 临时code
-     */
     @Description("临时码")
-    @NotBlank(groups = {AppEntity.WhenCode2AccessToken.class})
-    @NotBlank(groups = {AppEntity.WhenAccessToken.class}, message = "Code不能为空")
+    @NotBlank(groups = {WhenCode2AccessToken.class})
+    @NotBlank(groups = {WhenAccessToken.class}, message = "Code不能为空")
     @Transient
     private String code;
 
-    /**
-     * Cookie
-     */
+    @Description("Cookie")
     @Transient
     private String cookie;
-
-    public interface WhenCode2AccessToken {
-    }
-
-    public interface WhenAccessToken {
-    }
-
-    public interface WhenGetByAppKey {
-    }
-
-    public interface WhenResetSecret {
-    }
-
 }

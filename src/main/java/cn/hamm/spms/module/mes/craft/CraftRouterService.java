@@ -4,7 +4,7 @@ import cn.hamm.spms.base.BaseService;
 import org.springframework.stereotype.Service;
 
 /**
- * <h1>服务类</h1>
+ * <h1>Service</h1>
  *
  * @author zfy
  */

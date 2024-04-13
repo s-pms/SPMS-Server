@@ -13,6 +13,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 /**
+ * <h1>实体</h1>
+ *
  * @author zfy
  */
 @EqualsAndHashCode(callSuper = true)
@@ -29,8 +31,8 @@ public class CraftRouterOperationUserEntity extends BaseEntity<CraftRouterOperat
     @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '工艺路线工序id'")
     private Long routerOperationId;
 
-    @Payload
     @Description("人员")
+    @Payload
     @ManyToOne(fetch = FetchType.EAGER)
     private UserEntity user;
 

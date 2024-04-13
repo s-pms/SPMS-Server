@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 /**
+ * <h1>Service</h1>
+ *
  * @author zfy
  */
 @Service
@@ -31,7 +33,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     private InfluxHelper influxHelper;
 
     /**
-     * 查询指定设备uuid的当前报告
+     * <h2>查询指定设备uuid的当前报告</h2>
      *
      * @param deviceId 设备ID
      * @return 报告列表
@@ -46,7 +48,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     }
 
     /**
-     * 通过UUID查询设备
+     * <h2>通过UUID查询设备</h2>
      *
      * @param uuid UUID
      * @return 设备
@@ -56,7 +58,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     }
 
     /**
-     * 查询指定设备指定参数的历史记录
+     * <h2>查询指定设备指定参数的历史记录</h2>
      *
      * @param reportPayload 传入参数
      * @return 查询历史
@@ -81,7 +83,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     }
 
     /**
-     * 获取设备的参数列表
+     * <h2>获取设备的参数列表</h2>
      *
      * @param device 设备
      * @return 设备

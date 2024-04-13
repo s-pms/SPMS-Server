@@ -32,26 +32,18 @@ import java.util.Set;
 @DynamicUpdate
 @Table(name = "role")
 @Description("角色")
-public class RoleEntity extends BaseEntity<RoleEntity> {
-    /**
-     * 角色名称
-     */
+public class RoleEntity extends BaseEntity<RoleEntity> implements IRoleAction {
     @Description("角色名称")
     @Column(columnDefinition = "varchar(255) default '' comment '角色名称'", unique = true)
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "角色名称不能为空")
     private String name;
 
-    /**
-     * 角色编码
-     */
     @Description("角色编码")
     @Column(columnDefinition = "varchar(255) default '' comment '角色编码'", unique = true)
     @AutoGenerateCode(CodeRuleField.RoleCode)
     private String code;
 
-    /**
-     * 角色的菜单列表
-     */
+    @Description("角色的菜单列表")
     @ManyToMany(fetch = FetchType.EAGER)
     @Payload
     @OrderBy("orderNo DESC")
@@ -59,24 +51,10 @@ public class RoleEntity extends BaseEntity<RoleEntity> {
     @NotNull(groups = {WhenAuthorizeMenu.class}, message = "请传入授权的菜单列表")
     private Set<MenuEntity> menuList;
 
-    /**
-     * 角色的权限列表
-     */
+    @Description("角色的权限列表")
     @ManyToMany(fetch = FetchType.EAGER)
     @Payload
     @Exclude(filters = {WhenPayLoad.class})
     @NotNull(groups = {WhenAuthorizeMenu.class}, message = "请传入授权的权限列表")
     private Set<PermissionEntity> permissionList;
-
-    /**
-     * 当授权菜单时
-     */
-    public interface WhenAuthorizeMenu {
-    }
-
-    /**
-     * 当授权权限时
-     */
-    public interface WhenAuthorizePermission {
-    }
 }

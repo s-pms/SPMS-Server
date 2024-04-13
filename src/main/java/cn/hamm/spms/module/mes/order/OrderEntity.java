@@ -41,39 +41,28 @@ public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetail
 
     @Description("订单状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '订单状态'")
-    @Dictionary(value = OrderStatus.class,groups = {WhenAdd.class, WhenUpdate.class})
+    @Dictionary(value = OrderStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer status;
 
     @Description("订单类型")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '订单类型'")
-    @Dictionary(value = OrderType.class,groups = {WhenAdd.class, WhenUpdate.class})
+    @Dictionary(value = OrderType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 
-    /**
-     * 开始时间
-     */
     @Description("开始时间")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '开始时间'")
     private Long startTime;
 
-    /**
-     * 完成时间
-     */
     @Description("完成时间")
     @ReadOnly
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '完成时间'")
     private Long finishTime;
 
-    /**
-     * 交付时间
-     */
     @Description("交付时间")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '交付时间'")
     private Long deliverTime;
 
-    /**
-     * 物料信息
-     */
+    @Description("物料信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料不能为空")
@@ -88,16 +77,12 @@ public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetail
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已完成数量'")
     private Double finishQuantity;
 
-    /**
-     * 计划信息
-     */
+    @Description("计划信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     private PlanEntity plan;
 
-    /**
-     * 客户信息
-     */
+    @Description("客户信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     private CustomerEntity customer;

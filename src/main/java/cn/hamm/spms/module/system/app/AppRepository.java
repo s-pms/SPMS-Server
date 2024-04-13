@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AppRepository extends BaseRepository<AppEntity> {
     /**
-     * 通过AppKey获取一个应用
+     * <h2>通过AppKey获取一个应用</h2>
      *
      * @param appKey AppKey
      * @return AppEntity

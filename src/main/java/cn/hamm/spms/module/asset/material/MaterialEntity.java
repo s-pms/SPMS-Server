@@ -8,7 +8,10 @@ import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import cn.hamm.spms.module.system.unit.UnitEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -16,7 +19,6 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-
 
 /**
  * <h1>物料实体</h1>
@@ -32,9 +34,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "material")
 @Description("物料")
 public class MaterialEntity extends BaseEntity<MaterialEntity> {
-    /**
-     * 物料名称
-     */
     @Description("物料名称")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '物料名称'", unique = true)
@@ -46,30 +45,22 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
     @AutoGenerateCode(CodeRuleField.MaterialCode)
     private String code;
 
-    /**
-     * 规格型号
-     */
     @Description("规格型号")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '规格型号'")
     private String spc;
 
-    /**
-     * 物料类型
-     */
     @Description("物料类型")
     @Search(Search.Mode.EQUALS)
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '物料类型'")
     @NotNull(groups = {WhenAdd.class, WhenUpdate.class}, message = "物料类型不能为空")
-    @Dictionary(value = MaterialType.class,groups = {WhenAdd.class, WhenUpdate.class})
+    @Dictionary(value = MaterialType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer materialType;
 
-    /**
-     * 默认单位
-     */
+    @Description("默认单位")
     @ManyToOne
     @Search(Search.Mode.JOIN)
-    @JoinColumn(nullable = false, name = "unit")
+    @NotNull(groups = {WhenAdd.class, WhenUpdate.class}, message = "物料类型不能为空")
     @Payload
     private UnitEntity unitInfo;
 

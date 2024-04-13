@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.channel.purchase;
 
-
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
@@ -19,7 +18,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
-
 
 /**
  * <h1>采购单实体</h1>
@@ -60,7 +58,7 @@ public class PurchaseEntity extends AbstractBaseBillEntity<PurchaseEntity, Purch
 
     @Description("采购状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '采购状态'")
-    @Dictionary(value = PurchaseStatus.class,groups = {WhenAdd.class, WhenUpdate.class})
+    @Dictionary(value = PurchaseStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Search(Search.Mode.EQUALS)
     private Integer status;
 }

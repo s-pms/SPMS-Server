@@ -15,7 +15,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-
 /**
  * <h1>供应商实体</h1>
  *

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PurchasePriceRepository extends BaseRepository<PurchasePriceEntity> {
     /**
-     * 获取指定供应商和物料的采购价
+     * <h2>获取指定供应商和物料的采购价</h2>
      *
      * @param supplierEntity 供应商
      * @param materialEntity 物料

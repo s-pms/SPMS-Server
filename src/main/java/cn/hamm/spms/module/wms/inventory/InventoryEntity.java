@@ -30,10 +30,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "inventory")
 @Description("库存")
 public class InventoryEntity extends BaseEntity<InventoryEntity> {
-
-    /**
-     * 物料信息
-     */
+    @Description("物料信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     @Search(Search.Mode.JOIN)
@@ -45,21 +42,17 @@ public class InventoryEntity extends BaseEntity<InventoryEntity> {
 
     @Description("存储类型")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '存储类型'")
-    @Dictionary(value = InventoryType.class,groups = {WhenAdd.class, WhenUpdate.class})
+    @Dictionary(value = InventoryType.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Search(Search.Mode.EQUALS)
     private Integer type;
 
-    /**
-     * 存储资源
-     */
+    @Description("存储资源")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     @Search(Search.Mode.JOIN)
     private StorageEntity storage;
 
-    /**
-     * 工厂结构
-     */
+    @Description("工厂结构")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     @Search(Search.Mode.JOIN)

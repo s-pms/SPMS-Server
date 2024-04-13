@@ -31,6 +31,11 @@ import java.util.Objects;
  */
 @Component
 public class RequestInterceptor extends AbstractRequestInterceptor {
+    /**
+     * <h2>日志前缀</h2>
+     */
+    public final static String LOG_REQUEST_KEY = "logId";
+
     @Autowired
     private UserService userService;
 
@@ -46,16 +51,6 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     @Autowired
     private GlobalConfig globalConfig;
 
-    public final static String LOG_REQUEST_KEY = "logId";
-
-    /**
-     * 验证指定的用户是否有指定权限标识的权限
-     *
-     * @param userId             用户ID
-     * @param permissionIdentity 权限标识
-     * @param request            请求对象
-     * @return 验证结果
-     */
     @Override
     public boolean checkPermissionAccess(Long userId, String permissionIdentity, HttpServletRequest request) {
         UserEntity existUser = userService.get(userId);

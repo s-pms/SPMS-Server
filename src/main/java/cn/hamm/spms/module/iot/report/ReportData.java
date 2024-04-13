@@ -16,17 +16,17 @@ import java.util.List;
 public class ReportData {
 
     /**
-     * 设备ID,存入后台uuid字段
+     * <h2>设备ID,存入后台uuid字段</h2>
      */
     private String deviceId;
 
     /**
-     * 时间戳
+     * <h2>时间戳</h2>
      */
     private Long timestamp;
 
     /**
-     * 负载数据
+     * <h2>负载数据</h2>
      */
     private List<ReportPayload> payloads = new ArrayList<>();
 

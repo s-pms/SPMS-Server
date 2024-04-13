@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 /**
- * InfluxDB配置
+ * <h1>InfluxDB配置</h1>
  *
  * @author Hamm
  */
@@ -18,22 +18,22 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("app.influxdb")
 public class InfluxConfig {
     /**
-     * 连接地址
+     * <h2>连接地址</h2>
      */
     private String url = "http://127.0.0.1:8086";
 
     /**
-     * 连接令牌
+     * <h2>连接令牌</h2>
      */
-    private String token = "airpower";
+    private String token = "spms";
 
     /**
-     * 使用的组织名
+     * <h2>使用的组织名</h2>
      */
-    private String org = "airpower";
+    private String org = "spms";
 
     /**
-     * 使用的数据库
+     * <h2>使用的数据库</h2>
      */
-    private String bucket = "airpower";
+    private String bucket = "spms";
 }

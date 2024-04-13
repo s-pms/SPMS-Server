@@ -4,6 +4,7 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.result.json.Json;
 import cn.hamm.airpower.root.RootController;
 import cn.hamm.airpower.security.Permission;
+import cn.hamm.spms.module.personnel.user.IUserAction;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("mail")
 @Description("邮件")
-public class MailController extends RootController {
+public class MailController extends RootController implements IUserAction {
     @Autowired
     private UserService userService;
 
     @Description("发送邮件")
     @Permission(login = false)
     @RequestMapping("send")
-    public Json send(@RequestBody @Validated({UserEntity.WhenSendEmail.class}) UserEntity userEntity) {
+    public Json send(@RequestBody @Validated(WhenSendEmail.class) UserEntity userEntity) {
         userService.sendMail(userEntity.getEmail());
         return json("发送成功");
     }

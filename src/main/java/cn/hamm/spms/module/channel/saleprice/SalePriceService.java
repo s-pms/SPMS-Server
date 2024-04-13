@@ -15,7 +15,6 @@ import java.util.Objects;
  */
 @Service
 public class SalePriceService extends BaseService<SalePriceEntity, SalePriceRepository> {
-
     @Override
     protected SalePriceEntity beforeAdd(SalePriceEntity source) {
         SalePriceEntity exist = repository.getByCustomerAndMaterial(source.getCustomer(), source.getMaterial());

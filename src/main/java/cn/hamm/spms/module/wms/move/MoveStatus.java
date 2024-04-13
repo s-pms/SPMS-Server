@@ -13,22 +13,22 @@ import lombok.Getter;
 @Getter
 public enum MoveStatus implements IDictionary {
     /**
-     * 审核中
+     * <h2>审核中</h2>
      */
     AUDITING(1, "审核中"),
 
     /**
-     * 已驳回
+     * <h2>已驳回</h2>
      */
     REJECTED(2, "已驳回"),
 
     /**
-     * 移动中
+     * <h2>移动中</h2>
      */
     MOVING(3, "移动中"),
 
     /**
-     * 已完成
+     * <h2>已完成</h2>
      */
     DONE(4, "已完成");
 

@@ -12,7 +12,6 @@ import java.util.Objects;
  */
 @Service
 public class MaterialService extends BaseService<MaterialEntity, MaterialRepository> {
-
     @Override
     protected MaterialEntity beforeAppSaveToDatabase(MaterialEntity material) {
         if (Objects.isNull(material.getPurchasePrice())) {

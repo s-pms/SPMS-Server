@@ -29,24 +29,16 @@ import java.util.List;
 @Table(name = "permission")
 @Description("权限")
 public class PermissionEntity extends BaseTreeEntity<PermissionEntity> {
-    /**
-     * 权限标识
-     */
     @Description("权限标识")
     @Column(columnDefinition = "varchar(255) default '' comment '权限标识'", unique = true)
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "权限标识不能为空")
     private String identity;
 
-    /**
-     * 系统权限
-     */
     @Description("系统权限")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '系统权限'")
     private Boolean isSystem;
 
-    /**
-     * 子菜单
-     */
+    @Description("子菜单")
     @Transient
     private List<PermissionEntity> children;
 }

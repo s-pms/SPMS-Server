@@ -13,6 +13,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 /**
+ * <h1>实体</h1>
+ *
  * @author zfy
  */
 @EqualsAndHashCode(callSuper = true)
@@ -24,7 +26,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "craft_router_operation_device")
 @Description("工艺路线工序-设备")
 public class CraftRouterOperationDeviceEntity extends BaseEntity<CraftRouterOperationDeviceEntity> {
-
     @Description("工艺路线工序id")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "工艺路线工序id不能为空")
     @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '工艺路线工序id'")

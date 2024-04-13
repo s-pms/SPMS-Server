@@ -22,6 +22,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.util.Set;
 
 /**
+ * <h1>设备实体</h1>
+ *
  * @author zfy
  */
 @EqualsAndHashCode(callSuper = true)
@@ -32,7 +34,7 @@ import java.util.Set;
 @DynamicUpdate
 @Table(name = "device")
 @Description("设备")
-public class DeviceEntity extends BaseEntity<DeviceEntity> {
+public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAction {
     @Description("设备名称")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '设备名称'", unique = true)
@@ -47,7 +49,7 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> {
     @Description("设备UUID")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '设备UUID'", unique = true)
-    @NotBlank(groups = {WhenGetDevice.class}, message = "请传入设备uuid(采集端deviceId)")
+    @NotBlank(groups = {WhenGetDeviceConfig.class}, message = "请传入设备uuid(采集端deviceId)")
     private String uuid;
 
     @Description("设备状态")
@@ -59,7 +61,7 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> {
     @Description("报警状态")
     @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '报警状态'")
-    @Dictionary(value = DeviceAlarm.class,groups = {WhenAdd.class, WhenUpdate.class})
+    @Dictionary(value = DeviceAlarm.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer alarm;
 
     @Description("实时产量")
@@ -78,11 +80,9 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> {
     @Min(ReportEvent.REPORT_RATE_MIN)
     private Integer rate;
 
+    @Description("参数列表")
     @ManyToMany(fetch = FetchType.EAGER)
     @Payload
     @Exclude(filters = {WhenPayLoad.class})
     private Set<ParameterEntity> parameters;
-
-    public interface WhenGetDevice {
-    }
 }

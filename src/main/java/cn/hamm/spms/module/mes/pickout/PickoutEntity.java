@@ -41,9 +41,7 @@ public class PickoutEntity extends AbstractBaseBillEntity<PickoutEntity, Pickout
     @Dictionary(value = PickoutStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer status;
 
-    /**
-     * 领料位置
-     */
+    @Description("领料位置")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "领料位置不能为空")

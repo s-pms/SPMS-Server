@@ -13,17 +13,17 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ParameterType implements IDictionary {
     /**
-     * 数字
+     * <h2>数字</h2>
      */
     NUMBER(1, "数字"),
 
     /**
-     * 布尔
+     * <h2>布尔</h2>
      */
     BOOLEAN(2, "布尔"),
 
     /**
-     * 字符串
+     * <h2>字符串</h2>
      */
     STRING(3, "字符串"),
 

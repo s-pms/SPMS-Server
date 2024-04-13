@@ -13,19 +13,17 @@ import lombok.Getter;
 @Getter
 public enum InputType implements IDictionary {
     /**
-     * 普通入库
-     *
-     * @noinspection unused
+     * <h2>普通入库</h2>
      */
     NORMAL(1, "普通入库"),
 
     /**
-     * 转移入库
+     * <h2>转移入库</h2>
      */
     MOVE(2, "转移入库"),
 
     /**
-     * 采购入库
+     * <h2>采购入库</h2>
      */
     PURCHASE(3, "采购入库"),
     ;

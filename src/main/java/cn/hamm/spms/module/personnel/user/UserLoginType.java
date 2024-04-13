@@ -7,17 +7,17 @@ package cn.hamm.spms.module.personnel.user;
  */
 public enum UserLoginType {
     /**
-     * ID+密码 账号+密码
+     * <h2>ID+密码 账号+密码</h2>
      */
     VIA_ACCOUNT_PASSWORD,
 
     /**
-     * 邮箱+验证码
+     * <h2>邮箱+验证码</h2>
      */
     VIA_EMAIL_CODE,
 
     /**
-     * 手机+验证码
+     * <h2>手机+验证码</h2>
      */
     VIA_PHONE_CODE,
 }

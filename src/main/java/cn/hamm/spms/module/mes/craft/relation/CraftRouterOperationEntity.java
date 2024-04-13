@@ -13,6 +13,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 /**
+ * <h1>实体</h1>
+ *
  * @author zfy
  */
 @EqualsAndHashCode(callSuper = true)

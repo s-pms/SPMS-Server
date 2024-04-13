@@ -46,31 +46,20 @@ public class PlanEntity extends AbstractBaseBillEntity<PlanEntity, PlanDetailEnt
     @Dictionary(value = PlanType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 
-    /**
-     * 交付时间
-     */
     @Description("交付时间")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '交付时间'")
     private Long deliverTime;
 
-    /**
-     * 开始时间
-     */
     @Description("开始时间")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '开始时间'")
     private Long startTime;
 
-    /**
-     * 完成时间
-     */
     @Description("完成时间")
     @ReadOnly
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '完成时间'")
     private Long finishTime;
 
-    /**
-     * 客户信息
-     */
+    @Description("客户信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     private CustomerEntity customer;

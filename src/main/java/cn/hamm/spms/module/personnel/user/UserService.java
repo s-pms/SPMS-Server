@@ -31,25 +31,23 @@ import java.util.Objects;
  */
 @Service
 public class UserService extends BaseService<UserEntity, UserRepository> {
-    @Autowired
-    private SecurityUtil securityUtil;
     /**
-     * 邮箱验证码key
+     * <h2>邮箱验证码key</h2>
      */
     private static final String REDIS_EMAIL_CODE_KEY = "email_code_";
 
     /**
-     * 短信验证码key
+     * <h2>短信验证码key</h2>
      */
     private static final String REDIS_PHONE_CODE_KEY = "phone_code_";
 
     /**
-     * OAUTH存储的key前缀
+     * <h2>OAUTH存储的key前缀</h2>
      */
     private static final String OAUTH_CODE_KEY = "oauth_code_";
 
     /**
-     * COOKIE前缀
+     * <h2>COOKIE前缀</h2>
      */
     private static final String COOKIE_CODE_KEY = "cookie_code_";
 
@@ -59,9 +57,12 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     private static final int CACHE_CODE_EXPIRE_SECOND = 300;
 
     /**
-     * Cookie缓存
+     * <h2>Cookie缓存</h2>
      */
     private static final int CACHE_COOKIE_EXPIRE_SECOND = 86400;
+
+    @Autowired
+    private SecurityUtil securityUtil;
 
     @Autowired
     private MenuService menuService;
@@ -73,7 +74,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     private TreeUtil treeUtil;
 
     /**
-     * 获取登录用户的菜单列表
+     * <h2>获取登录用户的菜单列表</h2>
      *
      * @param userId 用户id
      * @return 菜单树列表
@@ -102,7 +103,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 获取登录用户的权限列表
+     * <h2>获取登录用户的权限列表</h2>
      *
      * @param userId 用户ID
      * @return 权限列表
@@ -131,29 +132,29 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 修改密码
+     * <h2>修改密码</h2>
      *
-     * @param userEntity vo
+     * @param user 用户信息
      */
-    public void modifyUserPassword(UserEntity userEntity) {
-        UserEntity existUser = get(userEntity.getId());
+    public void modifyUserPassword(UserEntity user) {
+        UserEntity existUser = get(user.getId());
         String code = getEmailCode(existUser.getEmail());
-        Result.PARAM_INVALID.whenNotEquals(code, userEntity.getCode(), "验证码输入错误");
-        String oldPassword = userEntity.getOldPassword();
+        Result.PARAM_INVALID.whenNotEquals(code, user.getCode(), "验证码输入错误");
+        String oldPassword = user.getOldPassword();
         Result.PARAM_INVALID.whenNotEqualsIgnoreCase(
                 PasswordUtil.encode(oldPassword, existUser.getSalt()),
                 existUser.getPassword(),
                 "原密码输入错误，修改密码失败"
         );
         String salt = RandomUtil.randomString(4);
-        userEntity.setSalt(salt);
-        userEntity.setPassword(PasswordUtil.encode(userEntity.getPassword(), salt));
+        user.setSalt(salt);
+        user.setPassword(PasswordUtil.encode(user.getPassword(), salt));
         removeEmailCodeCache(existUser.getEmail());
-        update(userEntity);
+        update(user);
     }
 
     /**
-     * 删除指定邮箱的验证码缓存
+     * <h2>删除指定邮箱的验证码缓存</h2>
      *
      * @param email 邮箱
      */
@@ -162,7 +163,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 发送邮箱验证码
+     * <h2>发送邮箱验证码</h2>
      *
      * @param email 邮箱
      */
@@ -174,7 +175,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 存储Oauth的一次性Code
+     * <h2>存储Oauth的一次性Code</h2>
      *
      * @param userId    用户ID
      * @param appEntity 保存的应用信息
@@ -184,7 +185,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 获取指定应用的OauthCode缓存Key
+     * <h2>获取指定应用的OauthCode缓存Key</h2>
      *
      * @param appKey 应用Key
      * @param code   Code
@@ -195,7 +196,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 通过AppKey和Code获取用户ID
+     * <h2>通过AppKey和Code获取用户ID</h2>
      *
      * @param appKey AppKey
      * @param code   Code
@@ -208,7 +209,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 删除AppOauthCode缓存
+     * <h2>删除AppOauthCode缓存</h2>
      *
      * @param appKey AppKey
      * @param code   Code
@@ -218,7 +219,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 存储Cookie
+     * <h2>存储Cookie</h2>
      *
      * @param userId UserId
      * @param cookie Cookie
@@ -228,7 +229,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 通过Cookie获取一个用户
+     * <h2>通过Cookie获取一个用户</h2>
      *
      * @param cookie Cookie
      * @return UserId
@@ -242,7 +243,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * ID+密码 账号+密码
+     * <h2>ID+密码 账号+密码</h2>
      *
      * @param userEntity 用户实体
      * @return AccessToken
@@ -267,7 +268,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 邮箱验证码登录
+     * <h2>邮箱验证码登录</h2>
      *
      * @param userEntity 用户实体
      * @return AccessToken
@@ -281,7 +282,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 短信验证码登录
+     * <h2>短信验证码登录</h2>
      *
      * @param userEntity 用户实体
      * @return AccessToken
@@ -295,7 +296,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 将验证码暂存到Redis
+     * <h2>将验证码暂存到Redis</h2>
      *
      * @param email 邮箱
      * @param code  验证码
@@ -305,7 +306,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 获取指定邮箱发送的验证码
+     * <h2>获取指定邮箱发送的验证码</h2>
      *
      * @param email 邮箱
      * @return 验证码
@@ -316,7 +317,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 获取指定邮箱发送的验证码
+     * <h2>获取指定邮箱发送的验证码</h2>
      *
      * @param email 邮箱
      * @return 验证码
@@ -328,7 +329,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
 
 
     /**
-     * 指定邮箱验证码是否还在缓存内
+     * <h2>指定邮箱验证码是否还在缓存内</h2>
      *
      * @param email 邮箱
      * @return 是否在缓存内

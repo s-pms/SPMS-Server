@@ -13,27 +13,27 @@ import lombok.Getter;
 @Getter
 public enum PurchaseStatus implements IDictionary {
     /**
-     * 审核中
+     * <h2>审核中</h2>
      */
     AUDITING(1, "审核中"),
 
     /**
-     * 已驳回
+     * <h2>已驳回</h2>
      */
     REJECTED(2, "已驳回"),
 
     /**
-     * 采购中
+     * <h2>采购中</h2>
      */
     PURCHASING(3, "采购中"),
 
     /**
-     * 已完成
+     * <h2>已完成</h2>
      */
     DONE(4, "已完成"),
 
     /**
-     * 已入库
+     * <h2>已入库</h2>
      */
     FINISHED(5, "已入库");
 

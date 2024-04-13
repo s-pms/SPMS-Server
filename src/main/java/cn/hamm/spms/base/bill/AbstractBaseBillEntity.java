@@ -29,10 +29,11 @@ import java.util.List;
 @DynamicInsert
 @DynamicUpdate
 @Description("")
-public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E, D>, D extends BaseBillDetailEntity<D>> extends BaseEntity<E> {
-    /**
-     * 单据明细
-     */
+public abstract class AbstractBaseBillEntity<
+        E extends AbstractBaseBillEntity<E, D>,
+        D extends BaseBillDetailEntity<D>
+        > extends BaseEntity<E> implements IBaseBillAction {
+    @Description("单据明细")
     @Payload
     @Transient
     @Exclude(filters = {WhenPayLoad.class})
@@ -46,7 +47,7 @@ public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E,
     private String rejectReason;
 
     /**
-     * 设置驳回原因
+     * <h2>设置驳回原因</h2>
      *
      * @param rejectReason 驳回原因
      * @return 单据实体
@@ -60,7 +61,7 @@ public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E,
 
 
     /**
-     * 设置单据明细
+     * <h2>设置单据明细</h2>
      *
      * @param details 明细
      * @return 单据实体
@@ -72,20 +73,18 @@ public abstract class AbstractBaseBillEntity<E extends AbstractBaseBillEntity<E,
     }
 
     /**
-     * 获取状态
+     * <h2>获取状态</h2>
      *
      * @return 状态
      */
     public abstract Integer getStatus();
 
     /**
-     * 设置状态
+     * <h2>设置状态</h2>
      *
      * @param status 状态值
      * @return 单据实体
      */
     public abstract E setStatus(Integer status);
 
-    public interface WhenReject {
-    }
 }

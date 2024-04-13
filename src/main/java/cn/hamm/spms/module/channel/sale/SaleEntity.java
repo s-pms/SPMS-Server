@@ -53,13 +53,11 @@ public class SaleEntity extends AbstractBaseBillEntity<SaleEntity, SaleDetailEnt
 
     @Description("销售状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '销售状态'")
-    @Dictionary(value = SaleStatus.class,groups = {WhenAdd.class, WhenUpdate.class})
+    @Dictionary(value = SaleStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Search(Search.Mode.EQUALS)
     private Integer status;
 
-    /**
-     * 客户信息
-     */
+    @Description("客户信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "客户不能为空")

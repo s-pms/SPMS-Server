@@ -1,0 +1,14 @@
+package cn.hamm.spms.module.channel.purchaseprice;
+
+/**
+ * <h1>采购价动作</h1>
+ *
+ * @author Hamm
+ */
+public interface IPurchasePriceAction {
+    /**
+     * <h2>通过物料和供应商查询采购价</h2>
+     */
+    interface WhenGetByMaterialAndSupplier {
+    }
+}

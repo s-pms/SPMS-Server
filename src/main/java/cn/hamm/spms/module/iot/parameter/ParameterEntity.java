@@ -49,13 +49,13 @@ public class ParameterEntity extends BaseEntity<ParameterEntity> {
 
     @Description("数据类型")
     @Search(Search.Mode.EQUALS)
-    @Dictionary(value = ReportDataType.class,groups = {WhenAdd.class, WhenUpdate.class})
+    @Dictionary(value = ReportDataType.class, groups = {WhenAdd.class, WhenUpdate.class})
     @NotNull(groups = {WhenAdd.class, WhenUpdate.class}, message = "数据类型不允许为空")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '数据类型'")
     private Integer dataType;
 
     /**
-     * 设置是系统内置参数
+     * <h2>设置是系统内置参数</h2>
      *
      * @param isSystem 内置参数
      * @return 实体

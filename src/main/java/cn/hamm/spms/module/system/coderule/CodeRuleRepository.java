@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CodeRuleRepository extends BaseRepository<CodeRuleEntity> {
     /**
-     * <h1>查询指定表的编码规则实体</h1>
+     * <h2>查询指定表的编码规则实体</h2>
      *
      * @param ruleField 从枚举字典中传入
      * @return 编码规则实体

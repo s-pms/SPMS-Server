@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 /**
- * 应用配置文件
+ * <h1>应用配置文件</h1>
  *
  * @author Hamm
  */
@@ -18,17 +18,17 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("app")
 public class AppConfig {
     /**
-     * 登录地址 用于Oauth2
+     * <h2>登录地址 用于Oauth2</h2>
      */
     private String loginUrl;
 
     /**
-     * Influx配置
+     * <h2>Influx配置</h2>
      */
     private InfluxConfig influxdb = new InfluxConfig();
 
     /**
-     * 是否初始化数据
+     * <h2>是否初始化数据</h2>
      */
     private boolean initData = false;
 }

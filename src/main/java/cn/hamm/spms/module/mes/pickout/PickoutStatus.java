@@ -13,27 +13,27 @@ import lombok.Getter;
 @Getter
 public enum PickoutStatus implements IDictionary {
     /**
-     * 审核中
+     * <h2>审核中</h2>
      */
     AUDITING(1, "审核中"),
 
     /**
-     * 已驳回
+     * <h2>已驳回</h2>
      */
     REJECTED(2, "已驳回"),
 
     /**
-     * 出库中
+     * <h2>出库中</h2>
      */
     PURCHASING(3, "出库中"),
 
     /**
-     * 已完成
+     * <h2>已完成</h2>
      */
     DONE(4, "已完成"),
 
     /**
-     * 已取消
+     * <h2>已取消</h2>
      */
     CANCELED(5, "已取消");
 

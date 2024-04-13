@@ -17,6 +17,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 /**
+ * <h1>实体</h1>
+ *
  * @author zfy
  */
 @EqualsAndHashCode(callSuper = true)
@@ -28,8 +30,8 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "craft_router")
 @Description("工艺路线")
 public class CraftRouterEntity extends BaseEntity<CraftRouterEntity> {
-    @Payload
     @Description("物料")
+    @Payload
     @ManyToOne(fetch = FetchType.EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料不能为空")
     private MaterialEntity material;
@@ -42,7 +44,7 @@ public class CraftRouterEntity extends BaseEntity<CraftRouterEntity> {
 
     @Description("工艺路线状态")
     @Search(Search.Mode.EQUALS)
-    @Dictionary(value = PurchaseStatus.class,groups = {WhenAdd.class, WhenUpdate.class})
+    @Dictionary(value = PurchaseStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '工艺路线状态'")
     private Integer status;
 

@@ -1,5 +1,7 @@
 package cn.hamm.spms.common.helper.influxdb;
 
+import cn.hamm.spms.common.config.InfluxConfig;
+import cn.hamm.spms.module.iot.report.*;
 import com.influxdb.LogLevel;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
@@ -8,8 +10,6 @@ import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.write.Point;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
-import cn.hamm.spms.common.config.InfluxConfig;
-import cn.hamm.spms.module.iot.report.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -19,18 +19,19 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * <h1>Influx助手类</h1>
+ *
  * @author Hamm
  */
 @Configuration
 public class InfluxHelper {
-
     private InfluxDBClient influxDbClient;
 
     @Autowired
     private InfluxConfig influxConfig;
 
     /**
-     * 保存数据
+     * <h2>保存数据</h2>
      *
      * @param code  参数名
      * @param value 数据
@@ -47,7 +48,7 @@ public class InfluxHelper {
     }
 
     /**
-     * 保存数据
+     * <h2>保存数据</h2>
      *
      * @param code  参数名
      * @param value 数据
@@ -65,7 +66,7 @@ public class InfluxHelper {
 
 
     /**
-     * 保存数据
+     * <h2>保存数据</h2>
      *
      * @param code  参数名
      * @param value 数据
@@ -96,22 +97,59 @@ public class InfluxHelper {
         return null;
     }
 
+    /**
+     * <h2>查询数量</h2>
+     *
+     * @param payload           报告负载
+     * @param reportGranularity 报告颗粒度
+     * @return 数据
+     */
     public List<ReportInfluxPayload> queryQuantity(ReportPayload payload, ReportGranularity reportGranularity) {
         return query(payload, ReportDataType.QUANTITY, reportGranularity);
     }
 
+    /**
+     * <h2>查询是否开启</h2>
+     *
+     * @param payload           报告负载
+     * @param reportGranularity 报告颗粒度
+     * @return 数据
+     */
     public List<ReportInfluxPayload> querySwitch(ReportPayload payload, ReportGranularity reportGranularity) {
         return query(payload, ReportDataType.SWITCH, reportGranularity);
     }
 
+    /**
+     * <h2>查询报告信息</h2>
+     *
+     * @param payload           报告负载
+     * @param reportGranularity 报告颗粒度
+     * @return 数据
+     */
     public List<ReportInfluxPayload> queryInformation(ReportPayload payload, ReportGranularity reportGranularity) {
         return query(payload, ReportDataType.INFORMATION, reportGranularity);
     }
 
+    /**
+     * <h2>查询报告状态</h2>
+     *
+     * @param payload           报告负载
+     * @param reportGranularity 报告颗粒度
+     * @return 数据
+     */
     public List<ReportInfluxPayload> queryStatus(ReportPayload payload, ReportGranularity reportGranularity) {
         return query(payload, ReportDataType.STATUS, reportGranularity);
     }
 
+
+    /**
+     * <h2>查询报告</h2>
+     *
+     * @param reportPayload     报告负载
+     * @param reportDataType    数据类型
+     * @param reportGranularity 报告颗粒度
+     * @return 数据
+     */
     private List<ReportInfluxPayload> query(ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
         if (Objects.isNull(influxDbClient)) {
             influxDbClient = InfluxDBClientFactory.create(influxConfig.getUrl(), influxConfig.getToken().toCharArray(), influxConfig.getUrl(), influxConfig.getBucket());

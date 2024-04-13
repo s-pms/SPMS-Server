@@ -13,12 +13,12 @@ import lombok.Getter;
 @Getter
 public enum PickoutType implements IDictionary {
     /**
-     * 生产领料
+     * <h2>生产领料</h2>
      */
     PRODUCE(1, "生产领料"),
 
     /**
-     * 其他领料
+     * <h2>其他领料</h2>
      */
     OTHER(2, "其他领料");
 

@@ -12,6 +12,7 @@ import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
 import cn.hamm.spms.module.system.app.AppEntity;
 import cn.hamm.spms.module.system.app.AppService;
+import cn.hamm.spms.module.system.app.IAppAction;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.http.Cookie;
@@ -39,7 +40,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("oauth2")
 @Slf4j
-public class Oauth2Controller extends RootController {
+public class Oauth2Controller extends RootController implements IAppAction {
     @Autowired
     private UserService userService;
 
@@ -114,7 +115,7 @@ public class Oauth2Controller extends RootController {
     @Description("Code换取AccessToken")
     @Permission(login = false)
     @RequestMapping("accessToken")
-    public JsonData accessToken(@RequestBody @Validated({AppEntity.WhenCode2AccessToken.class}) AppEntity appEntity) {
+    public JsonData accessToken(@RequestBody @Validated(WhenCode2AccessToken.class) AppEntity appEntity) {
         String code = appEntity.getCode();
         Long userId = userService.getUserIdByOauthAppKeyAndCode(appEntity.getAppKey(), code);
         AppEntity existApp = appService.getByAppKey(appEntity.getAppKey());
@@ -135,7 +136,7 @@ public class Oauth2Controller extends RootController {
     }
 
     /**
-     * 显示一个错误页面
+     * <h2>显示一个错误页面</h2>
      *
      * @param error 错误信息
      * @return 错误页面
@@ -147,7 +148,7 @@ public class Oauth2Controller extends RootController {
     }
 
     /**
-     * 重定向到指定的URL
+     * <h2>重定向到指定的URL</h2>
      *
      * @param response 响应体
      * @param url      目标URL

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends BaseRepository<UserEntity> {
     /**
-     * 根据邮箱查询一个用户
+     * <h2>根据邮箱查询一个用户</h2>
      *
      * @param email 邮箱
      * @return 用户
@@ -19,7 +19,7 @@ public interface UserRepository extends BaseRepository<UserEntity> {
     UserEntity getByEmail(String email);
 
     /**
-     * 根据账号查询一个用户
+     * <h2>根据账号查询一个用户</h2>
      *
      * @param account 账号
      * @return 用户
@@ -27,7 +27,7 @@ public interface UserRepository extends BaseRepository<UserEntity> {
     UserEntity getByAccount(String account);
 
     /**
-     * 根据手机查询一个用户
+     * <h2>根据手机查询一个用户</h2>
      *
      * @param phone 手机
      * @return 用户

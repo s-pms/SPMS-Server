@@ -13,12 +13,12 @@ import lombok.Getter;
 @Getter
 public enum InventoryType implements IDictionary {
     /**
-     * 存储资源
+     * <h2>存储资源</h2>
      */
     STORAGE(1, "存储资源"),
 
     /**
-     * 工厂结构
+     * <h2>工厂结构</h2>
      */
     STRUCTURE(2, "工厂结构");
 

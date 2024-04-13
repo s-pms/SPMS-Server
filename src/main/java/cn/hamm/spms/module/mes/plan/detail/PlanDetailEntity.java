@@ -27,9 +27,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "plan_detail")
 @Description("计划明细")
 public class PlanDetailEntity extends BaseBillDetailEntity<PlanDetailEntity> {
-    /**
-     * 物料信息
-     */
+    @Description("物料信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料不能为空")
