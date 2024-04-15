@@ -1,10 +1,13 @@
 package cn.hamm.spms.module.iot.report;
 
 import cn.hamm.airpower.interfaces.IAction;
+import cn.hamm.airpower.interfaces.IEntityAction;
+import cn.hamm.airpower.root.RootModel;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
@@ -12,9 +15,10 @@ import lombok.experimental.Accessors;
  *
  * @author Hamm
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
-public class ReportPayload implements IReportPayloadAction, IAction {
+public class ReportPayload extends RootModel<ReportPayload> implements IReportPayloadAction, IEntityAction, IAction {
     /**
      * <h2>属性名</h2>
      */

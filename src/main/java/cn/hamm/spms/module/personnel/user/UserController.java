@@ -11,6 +11,7 @@ import cn.hamm.airpower.security.SecurityUtil;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.system.app.AppEntity;
 import cn.hamm.spms.module.system.app.AppService;
+import cn.hamm.spms.module.system.permission.PermissionEntity;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,6 +20,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -68,7 +72,10 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Permission(authorize = false)
     @RequestMapping("getMyPermissionList")
     public JsonData getMyPermissionList() {
-        return jsonData(service.getPermissionListByUserId(getCurrentUserId()));
+        List<PermissionEntity> permissionList = service.getPermissionListByUserId(getCurrentUserId());
+        List<String> permissions = new ArrayList<>();
+        permissionList.forEach(permission -> permissions.add(permission.getIdentity()));
+        return jsonData(permissions);
     }
 
     @Description("修改我的密码")
