@@ -39,6 +39,6 @@ public class SaleService extends AbstractBaseBillService<SaleEntity, SaleReposit
             totalPrice += detail.getQuantity() * detail.getPrice();
         }
         sale.setTotalPrice(totalPrice);
-        updateToDatabase(sale);
+        update(sale);
     }
 }

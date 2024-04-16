@@ -45,7 +45,7 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
     public void afterAllDetailsFinished(Long id) {
         OutputEntity bill = get(id);
         bill.setStatus(OutputStatus.DONE.getKey());
-        updateToDatabase(bill);
+        update(bill);
         if (bill.getType() == OutputType.SALE.getKey()) {
             SaleEntity saleEntity = bill.getSale();
             Services.getSaleService().update(saleEntity.setStatus(SaleStatus.DONE.getKey()));

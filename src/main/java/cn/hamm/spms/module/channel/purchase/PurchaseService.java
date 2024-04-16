@@ -51,7 +51,7 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
             );
         }
         bill.setTotalRealPrice(totalRealPrice);
-        updateToDatabase(bill);
+        update(bill);
 
         // 创建采购入库单
         InputEntity inputBill = new InputEntity()
@@ -69,6 +69,6 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
             totalPrice += detail.getPrice() * detail.getQuantity();
         }
         purchase.setTotalPrice(totalPrice);
-        updateToDatabase(purchase);
+        update(purchase);
     }
 }
