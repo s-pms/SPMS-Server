@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.system.app;
 
 import cn.hamm.airpower.result.Result;
+import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseService;
-import cn.hutool.core.util.RandomUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -33,7 +33,7 @@ public class AppService extends BaseService<AppEntity, AppRepository> {
      * @return 应用新秘钥
      */
     public String resetSecretById(Long id) {
-        String newSecret = RandomUtil.randomString(32).toUpperCase();
+        String newSecret = RandomUtil.randomString().toUpperCase();
         AppEntity entity = get(id);
         entity.setAppSecret(newSecret);
         update(entity);
@@ -43,7 +43,7 @@ public class AppService extends BaseService<AppEntity, AppRepository> {
     @Override
     protected AppEntity beforeAppSaveToDatabase(AppEntity app) {
         if (Objects.isNull(app.getAppSecret())) {
-            app.setAppSecret(RandomUtil.randomString(32).toUpperCase());
+            app.setAppSecret(RandomUtil.randomString().toUpperCase());
         }
         return app;
     }

@@ -1,18 +1,18 @@
 package cn.hamm.spms.module.asset.device;
 
 import cn.hamm.airpower.result.Result;
+import cn.hamm.airpower.result.json.Json;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.helper.influxdb.InfluxHelper;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
 import cn.hamm.spms.module.iot.report.*;
-import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -44,7 +44,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
         if (Objects.isNull(data)) {
             return new ArrayList<>();
         }
-        return JSON.parseObject(data.toString(), ReportData.class).getPayloads();
+        return Objects.requireNonNull(Json.parse(data.toString(), ReportData.class)).getPayloads();
     }
 
     /**
@@ -107,7 +107,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
 
     @Override
     protected DeviceEntity beforeAppSaveToDatabase(DeviceEntity device) {
-        if (StrUtil.isBlank(device.getUuid())) {
+        if (!StringUtils.hasText(device.getUuid())) {
             device.setUuid(device.getCode());
         }
         return device;

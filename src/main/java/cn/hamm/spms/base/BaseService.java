@@ -5,7 +5,7 @@ import cn.hamm.airpower.root.RootService;
 import cn.hamm.airpower.util.ReflectUtil;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
-import cn.hutool.core.util.StrUtil;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -40,7 +40,7 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
             field.setAccessible(true);
             try {
                 Object value = field.get(entity);
-                if (Objects.isNull(field.get(entity)) || StrUtil.isAllBlank(value.toString())) {
+                if (Objects.isNull(field.get(entity)) || !StringUtils.hasText(value.toString())) {
                     String code = Services.getCodeRuleService().createCode(autoGenerateCode.value());
                     field.set(entity, code);
                     break;

@@ -1,6 +1,7 @@
 package cn.hamm.spms;
 
 import cn.hamm.airpower.security.PasswordUtil;
+import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.asset.device.DeviceService;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
@@ -14,7 +15,6 @@ import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import cn.hamm.spms.module.system.menu.MenuService;
 import cn.hamm.spms.module.system.permission.PermissionService;
-import cn.hutool.core.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.env.Environment;
@@ -106,7 +106,7 @@ public class InitializeRunner implements CommandLineRunner {
         if (Objects.nonNull(userEntity)) {
             return;
         }
-        String salt = RandomUtil.randomString(4);
+        String salt = RandomUtil.randomString();
         userService.add(new UserEntity()
                 .setNickname("Hamm")
                 .setAccount("hamm")

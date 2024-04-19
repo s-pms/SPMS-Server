@@ -5,12 +5,11 @@ import cn.hamm.airpower.query.QueryRequest;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import cn.hamm.spms.module.system.coderule.SerialNumberUpdate;
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -46,9 +45,9 @@ public class SystemCron {
      * @param codeRule 编码规则
      */
     private void resetSn(CodeRuleEntity codeRule) {
-        DateTime dateTime = DateUtil.date();
-        int month = dateTime.monthBaseOne();
-        int day = dateTime.dayOfMonth();
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
         if (codeRule.getSnType().equals(SerialNumberUpdate.YEAR.getKey()) && month == 1 && day == 1) {
             // 按年更新 且是1月1号
             codeRule.setCurrentSn(0);

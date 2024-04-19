@@ -1,12 +1,12 @@
 package cn.hamm.spms.module.iot.report;
 
 import cn.hamm.airpower.mqtt.MqttHelper;
+import cn.hamm.airpower.result.json.Json;
 import cn.hamm.spms.common.helper.influxdb.InfluxHelper;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.asset.device.DeviceService;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
-import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
@@ -187,7 +187,7 @@ public class ReportEvent {
                         }
                     }
                     reportData.setPayloads(payloadList);
-                    redisTemplate.opsForValue().set(CACHE_PREFIX + reportData.getDeviceId(), JSON.toJSONString(reportData));
+                    redisTemplate.opsForValue().set(CACHE_PREFIX + reportData.getDeviceId(), Json.toString(reportData));
                 } catch (Exception e) {
                     log.error(e.getMessage());
                 }

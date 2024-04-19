@@ -3,9 +3,9 @@ package cn.hamm.spms.module.system.coderule;
 import cn.hamm.airpower.result.Result;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
-import cn.hutool.core.date.DateTime;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -27,27 +27,28 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
         Result.ERROR.whenNull(codeRule, "保存失败,请先配置自定义编码规则!");
         String template = codeRule.getTemplate();
         List<Map<String, String>> mapList = DictionaryUtil.getDictionaryList(CodeRuleParam.class);
+        Calendar calendar = Calendar.getInstance();
         for (Map<String, String> map : mapList) {
             String param = map.get("label");
             if (CodeRuleParam.FULL_YEAR.getLabel().equals(param)) {
-                template = template.replaceAll(param, String.valueOf(DateTime.now().year()));
+                template = template.replaceAll(param, String.valueOf(calendar.get(Calendar.YEAR)));
                 continue;
             }
             if (CodeRuleParam.YEAR.getLabel().equals(param)) {
-                String fullYear = String.valueOf(DateTime.now().year());
+                String fullYear = String.valueOf(calendar.get(Calendar.YEAR));
                 template = template.replaceAll(param, fullYear.substring(2));
                 continue;
             }
             if (CodeRuleParam.MONTH.getLabel().equals(param)) {
-                template = template.replaceAll(param, String.format("%02d", DateTime.now().monthBaseOne()));
+                template = template.replaceAll(param, String.format("%02d", calendar.get(Calendar.MONTH) + 1));
                 continue;
             }
             if (CodeRuleParam.DATE.getLabel().equals(param)) {
-                template = template.replaceAll(param, String.format("%02d", DateTime.now().dayOfMonth()));
+                template = template.replaceAll(param, String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH)));
                 continue;
             }
             if (CodeRuleParam.HOUR.getLabel().equals(param)) {
-                template = template.replaceAll(param, String.format("%02d", DateTime.now().hour(true)));
+                template = template.replaceAll(param, String.format("%02d", calendar.get(Calendar.HOUR_OF_DAY)));
             }
         }
         int serialNumber = codeRule.getCurrentSn();

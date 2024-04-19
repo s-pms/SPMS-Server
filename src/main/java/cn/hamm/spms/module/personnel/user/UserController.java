@@ -8,14 +8,14 @@ import cn.hamm.airpower.result.json.JsonData;
 import cn.hamm.airpower.security.CookieUtil;
 import cn.hamm.airpower.security.Permission;
 import cn.hamm.airpower.security.SecurityUtil;
+import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.system.app.AppEntity;
 import cn.hamm.spms.module.system.app.AppService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -136,12 +136,12 @@ public class UserController extends BaseController<UserEntity, UserService, User
         Long userId = securityUtil.getUserIdFromAccessToken(accessToken);
 
         // 存储Cookies
-        String cookieString = RandomUtil.randomString(32);
+        String cookieString = RandomUtil.randomString();
         service.saveCookie(userId, cookieString);
         response.addCookie(cookieUtil.getAuthorizeCookie(cookieString));
 
         String appKey = userEntity.getAppKey();
-        if (StrUtil.isAllBlank(appKey)) {
+        if (!StringUtils.hasText(appKey)) {
             return jsonData(accessToken, "登录成功,请存储你的访问凭证");
         }
 
