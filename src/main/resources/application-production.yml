@@ -7,6 +7,7 @@ spring:
     redis:
       host: your_redis_host_default_localhost
       port: your_redis_port_default_6379
+      database: your_redis_database_default_0
       password: your_redis_password
   mail:
     host: your_email_host
