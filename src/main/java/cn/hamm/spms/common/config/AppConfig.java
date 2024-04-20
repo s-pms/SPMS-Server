@@ -26,9 +26,4 @@ public class AppConfig {
      * <h2>Influx配置</h2>
      */
     private InfluxConfig influxdb = new InfluxConfig();
-
-    /**
-     * <h2>是否初始化数据</h2>
-     */
-    private boolean initData = false;
 }

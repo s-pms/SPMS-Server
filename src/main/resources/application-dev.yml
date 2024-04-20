@@ -1,0 +1,27 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    password: your_database_password
+  data:
+    redis:
+      password: your_redis_password
+  mail:
+    username: your_email@your_domain.com
+    password: your_email_password
+
+airpower:
+  mqtt:
+    host: your_mqtt_host
+    user: your_username
+    pass: your_password
+  enable-document: true
+app:
+  loginUrl: "http://localhost:3000/login"
+  influxdb:
+    url: your_influxdb_url
+    token: your_influxdb_token
+    org: your_influxdb_org
+    bucket: your_influxdb_bucket

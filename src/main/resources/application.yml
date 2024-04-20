@@ -11,7 +11,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
-    password: asdfew12345
+    password: your_database_password
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: false
@@ -22,13 +22,13 @@ spring:
     redis:
       host: 127.0.0.1
       port: 6379
-      password: asdfew12345
+      password: your_redis_password
   mail:
     host: smtp.exmail.qq.com
     port: 465
     protocol: smtp
-    username: mail@hamm.cn
-    password: j2UUZZHG6WMX7SGY
+    username: your_email@your_domain.com
+    password: your_password
     properties:
       mail:
         smtp:
@@ -53,14 +53,14 @@ spring:
 
 airpower:
   mqtt:
-    host: 127.0.0.1
+    host: your_mqtt_host
     port: 1883
-    user: mqttroot
-    pass: asdfew12345
+    user: your_username
+    pass: your_password
   enable-document: true
 app:
   influxdb:
-    url: http://md4.cn:8086
-    token: spms
-    org: spms
-    bucket: spms
+    url: your_influxdb_url
+    token: your_influxdb_token
+    org: your_influxdb_org
+    bucket: your_influxdb_bucket

@@ -33,3 +33,6 @@ build/
 ### VS Code ###
 .vscode/
 .DS_Store
+
+### Environment ###
+src/main/resources/application-local-**.yml
