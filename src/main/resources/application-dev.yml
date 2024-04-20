@@ -4,19 +4,25 @@ spring:
     hibernate:
       ddl-auto: create-drop
   datasource:
+    url: jdbc:mysql://localhost:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: your_database_username
     password: your_database_password
   data:
     redis:
+      host: your_redis_host_default_localhost
+      port: your_redis_port_default_6379
       password: your_redis_password
   mail:
+    host: smtp.exmail.qq.com
+    port: 465
     username: your_email@your_domain.com
     password: your_email_password
-
 airpower:
   mqtt:
-    host: your_mqtt_host
-    user: your_username
-    pass: your_password
+    host: your_mqtt_host_default_127.0.0.1
+    port: your_mqtt_port_default_1883
+    user: your_mqtt_username
+    pass: your_mqtt_password
   enable-document: true
 app:
   loginUrl: "http://localhost:3000/login"
