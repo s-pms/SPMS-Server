@@ -69,6 +69,6 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
             totalPrice += detail.getPrice() * detail.getQuantity();
         }
         purchase.setTotalPrice(totalPrice);
-        update(purchase);
+        updateToDatabase(purchase);
     }
 }

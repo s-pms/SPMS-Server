@@ -46,10 +46,10 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
     public final List<E> saveDetails(Long billId, List<E> details) {
         deleteAllByBillId(billId);
         List<E> savedDetails = new ArrayList<>(details.size());
-        deleteAllByBillId(billId);
         for (E detail : details) {
             detail.setBillId(billId);
-            savedDetails.add(repository.save(detail));
+            long detailId = add(detail);
+            savedDetails.add(get(detailId));
         }
         return savedDetails;
     }

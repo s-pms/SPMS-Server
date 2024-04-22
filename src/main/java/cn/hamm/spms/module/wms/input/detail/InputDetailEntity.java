@@ -27,11 +27,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "input_detail")
 @Description("入库明细")
 public class InputDetailEntity extends BaseBillDetailEntity<InputDetailEntity> {
-    @Description("存储资源")
-    @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
-    private StorageEntity storage;
-
     @Description("物料信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @Payload
@@ -46,4 +41,8 @@ public class InputDetailEntity extends BaseBillDetailEntity<InputDetailEntity> {
     @Description("已入库数量")
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已入库数量'")
     private Double finishQuantity;
+
+    @Description("存储资源")
+    @Transient
+    private StorageEntity storage;
 }

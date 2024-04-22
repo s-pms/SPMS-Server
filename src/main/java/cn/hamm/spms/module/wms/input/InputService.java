@@ -54,24 +54,22 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
     }
 
     @Override
-    protected InputDetailEntity beforeAddFinish(InputDetailEntity sourceDetail) {
-        InputDetailEntity savedDetail = detailService.get(sourceDetail.getId());
+    protected void afterAddDetailFinish(long detailId, InputDetailEntity sourceDetail) {
         if (Objects.isNull(sourceDetail.getStorage()) || Objects.isNull(sourceDetail.getStorage().getId())) {
             Result.FORBIDDEN.show("请传入入库存储资源");
-            return null;
+            return;
         }
-        InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(savedDetail.getMaterial().getId(), sourceDetail.getStorage().getId());
+        InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(sourceDetail.getMaterial().getId(), sourceDetail.getStorage().getId());
         if (Objects.nonNull(inventory)) {
-            inventory.setQuantity(inventory.getQuantity() + savedDetail.getQuantity());
+            inventory.setQuantity(inventory.getQuantity() + sourceDetail.getQuantity());
             inventoryService.update(inventory);
         } else {
             inventory = new InventoryEntity()
                     .setQuantity(sourceDetail.getQuantity())
-                    .setMaterial(savedDetail.getMaterial())
+                    .setMaterial(sourceDetail.getMaterial())
                     .setStorage(sourceDetail.getStorage())
                     .setType(InventoryType.STORAGE.getKey());
             inventoryService.add(inventory);
         }
-        return sourceDetail;
     }
 }

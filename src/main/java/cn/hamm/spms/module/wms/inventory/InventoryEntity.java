@@ -17,7 +17,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 /**
- * <h1>领料单实体</h1>
+ * <h1>库存实体</h1>
  *
  * @author Hamm
  */

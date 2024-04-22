@@ -54,9 +54,8 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
     }
 
     @Override
-    protected MoveDetailEntity beforeAddFinish(MoveDetailEntity sourceDetail) {
-
-        sourceDetail = detailService.get(sourceDetail.getId());
+    protected void afterAddDetailFinish(long detailId, MoveDetailEntity sourceDetail) {
+        sourceDetail = detailService.get(detailId);
         if (sourceDetail.getInventory().getQuantity() < sourceDetail.getQuantity()) {
             // 判断来源库存
             Result.FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
@@ -83,7 +82,6 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
                     .setType(InventoryType.STORAGE.getKey());
             inventoryService.add(to);
         }
-        return sourceDetail;
     }
 
     @Override

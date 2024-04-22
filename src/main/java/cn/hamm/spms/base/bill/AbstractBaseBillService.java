@@ -1,6 +1,7 @@
 package cn.hamm.spms.base.bill;
 
 import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.spms.base.BaseRepository;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
@@ -35,11 +36,17 @@ public abstract class AbstractBaseBillService<
      * @param sourceDetail 提交明细
      */
     public final void addFinish(D sourceDetail) {
-        sourceDetail = beforeAddFinish(sourceDetail);
+        // 查保存的明细
         D savedDetail = detailService.get(sourceDetail.getId());
-        sourceDetail.setFinishQuantity(savedDetail.getFinishQuantity() + sourceDetail.getQuantity());
-        detailService.update(sourceDetail);
-        List<D> details = detailService.getAllByBillId(sourceDetail.getBillId());
+        // 更新保存明细的完成数量 = 保存明细的完成数量 + 提交的完成数量
+        savedDetail.setFinishQuantity(savedDetail.getFinishQuantity() + sourceDetail.getQuantity());
+        detailService.update(savedDetail);
+
+        // 操作完成的后置方法
+        afterAddDetailFinish(savedDetail.getId(), sourceDetail);
+
+        // 开始判断是否整个单据数量已超标
+        List<D> details = detailService.getAllByBillId(savedDetail.getBillId());
         boolean isAllFinished = true;
         for (D d : details) {
             if (d.getFinishQuantity() < d.getQuantity()) {
@@ -48,6 +55,7 @@ public abstract class AbstractBaseBillService<
             }
         }
         if (isAllFinished) {
+            // 触发单据完成的后置方法
             afterAllDetailsFinished(savedDetail.getBillId());
         }
     }
@@ -56,10 +64,8 @@ public abstract class AbstractBaseBillService<
      * <h2>添加完成数量前置方法</h2>
      *
      * @param sourceDetail 提交明细
-     * @return 提交明细
      */
-    protected D beforeAddFinish(D sourceDetail) {
-        return sourceDetail;
+    protected void afterAddDetailFinish(long detailId, D sourceDetail) {
     }
 
     /**
@@ -97,6 +103,12 @@ public abstract class AbstractBaseBillService<
 
     /**
      * <h2>保存单据明细</h2>
+     * <li>
+     * 请不要再重写后直接调用 #{@link #update(RootEntity)} #{@link #updateWithNull(RootEntity)}，避免出现调用循环。
+     * </li>
+     * <li>
+     * 如需再次保存，请调用 #{@link #updateToDatabase(RootEntity)} }
+     * </li>
      *
      * @param billId  单据ID
      * @param details 明细列表

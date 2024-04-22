@@ -53,14 +53,13 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
     }
 
     @Override
-    protected OutputDetailEntity beforeAddFinish(OutputDetailEntity sourceDetail) {
+    protected void afterAddDetailFinish(long detailId, OutputDetailEntity sourceDetail) {
         InventoryEntity inventory = sourceDetail.getInventory();
         if (Objects.isNull(inventory)) {
             Result.FORBIDDEN.show("请传入库存信息");
-            return null;
+            return;
         }
         inventory = inventoryService.get(inventory.getId());
-        sourceDetail = detailService.get(sourceDetail.getId());
         Result.FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), sourceDetail.getMaterial().getId(), "物料信息不匹配");
         if (inventory.getQuantity() < sourceDetail.getQuantity()) {
             // 判断库存
@@ -68,6 +67,5 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
         }
         inventory.setQuantity(inventory.getQuantity() - sourceDetail.getQuantity());
         inventoryService.update(inventory);
-        return sourceDetail;
     }
 }
