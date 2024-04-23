@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * <h1>Service</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @Service
 public class SaleService extends AbstractBaseBillService<SaleEntity, SaleRepository, SaleDetailEntity, SaleDetailService, SaleDetailRepository> {

@@ -7,7 +7,7 @@ import lombok.Getter;
 /**
  * <h1>库存类型</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @AllArgsConstructor
 @Getter

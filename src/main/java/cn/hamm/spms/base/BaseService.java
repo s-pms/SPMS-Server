@@ -16,7 +16,7 @@ import java.util.Objects;
  *
  * @param <E> 实体
  * @param <R> 数据源
- * @author Hamm
+ * @author Hamm.cn
  */
 public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> extends RootService<E, R> {
     /**

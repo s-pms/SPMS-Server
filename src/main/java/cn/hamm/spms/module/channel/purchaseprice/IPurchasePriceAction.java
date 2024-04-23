@@ -3,7 +3,7 @@ package cn.hamm.spms.module.channel.purchaseprice;
 /**
  * <h1>采购价动作</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 public interface IPurchasePriceAction {
     /**

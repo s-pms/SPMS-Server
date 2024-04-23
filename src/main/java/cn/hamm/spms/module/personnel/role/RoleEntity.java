@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * <h1>角色实体</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)

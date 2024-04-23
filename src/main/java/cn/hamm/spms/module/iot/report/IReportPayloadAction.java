@@ -3,7 +3,7 @@ package cn.hamm.spms.module.iot.report;
 /**
  * <h1>数据采集报告动作</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 public interface IReportPayloadAction {
     /**

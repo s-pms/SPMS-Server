@@ -23,7 +23,7 @@ import org.hibernate.validator.constraints.Length;
 /**
  * <h1>采购单实体</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)

@@ -3,7 +3,7 @@ package cn.hamm.spms.module.personnel.user;
 /**
  * <h1>动作</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 public interface IUserAction {
     /**

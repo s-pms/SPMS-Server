@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * <h1>实体树基类</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @MappedSuperclass
 @Getter

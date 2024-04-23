@@ -7,7 +7,7 @@ import lombok.Getter;
 /**
  * <h1>报告颗粒度</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @AllArgsConstructor
 @Getter

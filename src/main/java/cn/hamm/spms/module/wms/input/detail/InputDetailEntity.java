@@ -16,7 +16,7 @@ import org.hibernate.annotations.DynamicUpdate;
 /**
  * <h1>入库明细实体</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)

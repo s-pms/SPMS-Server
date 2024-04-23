@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * <h1>Service</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @Service
 public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleRepository> {

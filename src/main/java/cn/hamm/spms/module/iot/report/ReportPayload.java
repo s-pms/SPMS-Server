@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 /**
  * <h1>数据采集报告</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

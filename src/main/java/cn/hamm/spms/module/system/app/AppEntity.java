@@ -20,7 +20,7 @@ import org.hibernate.annotations.DynamicUpdate;
 /**
  * <h1>系统应用实体</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)

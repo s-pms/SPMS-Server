@@ -3,7 +3,7 @@ package cn.hamm.spms.module.system.app;
 /**
  * <h1>应用动作</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 public interface IAppAction {
     /**

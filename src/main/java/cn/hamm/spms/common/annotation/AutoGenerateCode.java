@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 /**
  * <h1>自动生成编码</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

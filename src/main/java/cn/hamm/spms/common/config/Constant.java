@@ -3,7 +3,7 @@ package cn.hamm.spms.common.config;
 /**
  * <h1>系统常量</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 public class Constant {
     /**

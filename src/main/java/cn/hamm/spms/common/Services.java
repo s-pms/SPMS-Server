@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 /**
  * <h1>服务整合助手类</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @Component
 @SuppressWarnings("UnusedReturnValue")

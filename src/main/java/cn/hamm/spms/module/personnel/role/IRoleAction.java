@@ -3,7 +3,7 @@ package cn.hamm.spms.module.personnel.role;
 /**
  * <h1>角色动静做</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 public interface IRoleAction {
     /**

@@ -19,7 +19,7 @@ import java.util.List;
  * @param <D>   明细实体
  * @param <DS>  明细Service
  * @param <DR>> 明细数据源
- * @author Hamm
+ * @author Hamm.cn
  */
 public abstract class AbstractBaseBillService<
         E extends AbstractBaseBillEntity<E, D>, R extends BaseRepository<E>,

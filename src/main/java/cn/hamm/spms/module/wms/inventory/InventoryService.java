@@ -16,7 +16,7 @@ import java.util.Objects;
 /**
  * <h1>Service</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @Service
 public class InventoryService extends BaseService<InventoryEntity, InventoryRepository> {

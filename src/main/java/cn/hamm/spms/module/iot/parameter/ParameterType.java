@@ -7,7 +7,7 @@ import lombok.Getter;
 /**
  * <h1>数据类型</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @Getter
 @AllArgsConstructor

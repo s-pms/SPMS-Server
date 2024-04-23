@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * <h1>Wechat</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @Permission(login = false)
 @Controller

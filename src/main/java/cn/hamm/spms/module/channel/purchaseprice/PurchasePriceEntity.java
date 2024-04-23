@@ -18,7 +18,7 @@ import org.hibernate.annotations.DynamicUpdate;
 /**
  * <h1>采购价格实体</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)

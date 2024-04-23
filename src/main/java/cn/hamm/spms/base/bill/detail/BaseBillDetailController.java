@@ -9,7 +9,7 @@ import cn.hamm.spms.base.BaseController;
  * @param <E> 明细实体
  * @param <S> 明细Service
  * @param <R> 明细数据源
- * @author Hamm
+ * @author Hamm.cn
  */
 @Permission
 public class BaseBillDetailController<

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * <h1>数据采集报告</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @Data
 @Accessors(chain = true)

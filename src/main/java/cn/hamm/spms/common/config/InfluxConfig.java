@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 /**
  * <h1>InfluxDB配置</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @Component
 @Data

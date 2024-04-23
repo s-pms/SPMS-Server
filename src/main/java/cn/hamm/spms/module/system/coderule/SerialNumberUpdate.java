@@ -7,7 +7,7 @@ import lombok.Getter;
 /**
  * <h1>序列号更新方式</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @AllArgsConstructor
 @Getter

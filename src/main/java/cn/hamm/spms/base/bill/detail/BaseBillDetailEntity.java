@@ -10,7 +10,7 @@ import lombok.Getter;
  * <h1>单据明细基类</h1>
  *
  * @param <E> 明细实体
- * @author Hamm
+ * @author Hamm.cn
  */
 @SuppressWarnings({"unchecked", "UnusedReturnValue"})
 @MappedSuperclass

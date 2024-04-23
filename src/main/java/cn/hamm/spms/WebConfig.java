@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * <h1>全局配置</h1h1>>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @Configuration
 public class WebConfig extends AbstractWebConfig {

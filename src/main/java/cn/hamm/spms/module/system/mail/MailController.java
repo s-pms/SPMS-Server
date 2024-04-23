@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * <h1>Controller</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @RestController
 @RequestMapping("mail")

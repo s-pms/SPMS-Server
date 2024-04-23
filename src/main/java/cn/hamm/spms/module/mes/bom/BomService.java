@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 /**
  * <h1>Service</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @Service
 public class BomService extends AbstractBaseBillService<BomEntity, BomRepository, BomDetailEntity, BomDetailService, BomDetailRepository> {

@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @param <E> 单据实体
  * @param <D> 明细实体
- * @author Hamm
+ * @author Hamm.cn
  */
 @MappedSuperclass
 @Getter

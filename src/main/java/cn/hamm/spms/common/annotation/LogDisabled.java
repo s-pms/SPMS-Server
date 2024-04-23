@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * <h1>禁止记录日志</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

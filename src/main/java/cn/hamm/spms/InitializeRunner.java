@@ -26,7 +26,7 @@ import java.util.Objects;
 /**
  * <h1>初始化</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @Component
 public class InitializeRunner implements CommandLineRunner {

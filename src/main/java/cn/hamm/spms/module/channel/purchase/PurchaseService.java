@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * <h1>Service</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @Service
 public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, PurchaseRepository, PurchaseDetailEntity, PurchaseDetailService, PurchaseDetailRepository> {

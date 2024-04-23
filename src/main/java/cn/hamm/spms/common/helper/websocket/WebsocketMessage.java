@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 /**
  * <h1>Websocket消息体</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @SuppressWarnings("unused")
 @Data

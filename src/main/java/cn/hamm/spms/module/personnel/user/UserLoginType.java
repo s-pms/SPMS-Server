@@ -3,7 +3,7 @@ package cn.hamm.spms.module.personnel.user;
 /**
  * <h1>用户登录方式</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 public enum UserLoginType {
     /**

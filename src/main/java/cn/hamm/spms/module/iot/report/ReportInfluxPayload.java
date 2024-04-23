@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 /**
  * <h1>数据采集时序存储报告</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @Data
 @Accessors(chain = true)

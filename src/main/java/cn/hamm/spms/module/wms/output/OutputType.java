@@ -7,7 +7,7 @@ import lombok.Getter;
 /**
  * <h1>出库类型</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @AllArgsConstructor
 @Getter

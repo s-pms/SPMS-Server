@@ -3,7 +3,7 @@ package cn.hamm.spms.module.channel.saleprice;
 /**
  * <h1>销售价格动作</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 public interface ISalePriceAction {
     /**

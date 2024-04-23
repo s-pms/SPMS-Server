@@ -11,7 +11,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 /**
  * <h1>入口类</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @SpringBootApplication
 @EnableWebSocket

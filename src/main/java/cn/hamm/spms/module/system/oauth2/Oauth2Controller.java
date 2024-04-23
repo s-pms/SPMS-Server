@@ -35,7 +35,7 @@ import java.util.Objects;
 /**
  * <h1>Controller</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @RestController
 @RequestMapping("oauth2")

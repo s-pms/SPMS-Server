@@ -21,7 +21,7 @@ import java.util.Objects;
 /**
  * <h1>Influx助手类</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @Configuration
 public class InfluxHelper {

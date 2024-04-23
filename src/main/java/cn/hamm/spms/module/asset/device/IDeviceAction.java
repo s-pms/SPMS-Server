@@ -3,7 +3,7 @@ package cn.hamm.spms.module.asset.device;
 /**
  * <h1>设备动作</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 public interface IDeviceAction {
     /**

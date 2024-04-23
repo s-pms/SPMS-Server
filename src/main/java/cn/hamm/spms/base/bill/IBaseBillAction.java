@@ -3,7 +3,7 @@ package cn.hamm.spms.base.bill;
 /**
  * <h1>单据基础动作</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 public interface IBaseBillAction {
     /**

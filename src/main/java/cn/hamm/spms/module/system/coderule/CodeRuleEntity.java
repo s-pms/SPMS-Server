@@ -20,7 +20,7 @@ import org.hibernate.validator.constraints.Range;
 /**
  * <h1>编码规则实体</h1>
  *
- * @author Hamm
+ * @author Hamm.cn
  */
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
