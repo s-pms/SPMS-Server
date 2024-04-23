@@ -76,7 +76,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
             Class<?> clazz,
             Method method
     ) {
-        LogDisabled logDisabled = method.getAnnotation(LogDisabled.class);
+        LogDisabled logDisabled = ReflectUtil.getAnnotation(LogDisabled.class, method);
         if (Objects.nonNull(logDisabled)) {
             return;
         }

@@ -6,6 +6,7 @@ import cn.hamm.airpower.result.json.JsonData;
 import cn.hamm.airpower.root.RootEntityController;
 import cn.hamm.airpower.security.Permission;
 import cn.hamm.spms.common.annotation.LogDisabled;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -33,7 +34,7 @@ public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>
 
     @LogDisabled
     @Override
-    public JsonData getDetail(@RequestBody @Validated(WhenIdRequired.class) E entity) {
+    public JsonData getDetail(@RequestBody @Validated(WhenIdRequired.class) @NotNull E entity) {
         return super.getDetail(entity);
     }
 }
