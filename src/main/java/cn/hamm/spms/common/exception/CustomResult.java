@@ -2,6 +2,7 @@ package cn.hamm.spms.common.exception;
 
 import cn.hamm.airpower.result.IResult;
 import lombok.Getter;
+import org.jetbrains.annotations.Contract;
 
 /**
  * <h1>应用自定义异常代码</h1>
@@ -20,6 +21,7 @@ public enum CustomResult implements IResult {
     private final int code;
     private final String message;
 
+    @Contract(pure = true)
     CustomResult(int code, String message) {
         this.code = code + 10000000;
         this.message = message;

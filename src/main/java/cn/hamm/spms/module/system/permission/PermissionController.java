@@ -3,6 +3,7 @@ package cn.hamm.spms.module.system.permission;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.util.TreeUtil;
 import cn.hamm.spms.base.BaseController;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,12 +23,12 @@ public class PermissionController extends BaseController<PermissionEntity, Permi
     private TreeUtil treeUtil;
 
     @Override
-    protected PermissionEntity beforeAdd(PermissionEntity entity) {
+    protected PermissionEntity beforeAdd(@NotNull PermissionEntity entity) {
         return entity.setIsSystem(null);
     }
 
     @Override
-    protected PermissionEntity beforeUpdate(PermissionEntity entity) {
+    protected PermissionEntity beforeUpdate(@NotNull PermissionEntity entity) {
         return entity.setIsSystem(null);
     }
 

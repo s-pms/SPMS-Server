@@ -9,6 +9,7 @@ import cn.hamm.spms.module.channel.sale.detail.SaleDetailService;
 import cn.hamm.spms.module.wms.output.OutputEntity;
 import cn.hamm.spms.module.wms.output.OutputStatus;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +30,7 @@ public class SaleController extends BaseBillController<SaleEntity, SaleService, 
     private SaleDetailService saleDetailService;
 
     @Override
-    public void afterAudit(SaleEntity bill) {
+    public void afterAudit(@NotNull SaleEntity bill) {
         OutputEntity outputBill = new OutputEntity()
                 .setStatus(OutputStatus.AUDITING.getKey())
                 .setSale(bill);

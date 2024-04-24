@@ -4,6 +4,7 @@ import cn.hamm.airpower.result.Result;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.channel.supplier.SupplierEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -16,7 +17,7 @@ import java.util.Objects;
 @Service
 public class PurchasePriceService extends BaseService<PurchasePriceEntity, PurchasePriceRepository> {
     @Override
-    protected PurchasePriceEntity beforeAdd(PurchasePriceEntity source) {
+    protected @NotNull PurchasePriceEntity beforeAdd(@NotNull PurchasePriceEntity source) {
         PurchasePriceEntity exist = repository.getBySupplierAndMaterial(source.getSupplier(), source.getMaterial());
         if (Objects.nonNull(exist)) {
             Result.FORBIDDEN_EXIST.show(exist.getSupplier().getName() + "-" + exist.getMaterial().getName() + " 采购价已存在!");

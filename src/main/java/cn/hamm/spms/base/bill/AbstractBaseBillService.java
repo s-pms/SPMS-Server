@@ -7,6 +7,7 @@ import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public abstract class AbstractBaseBillService<
      *
      * @param sourceDetail 提交明细
      */
-    public final void addFinish(D sourceDetail) {
+    public final void addFinish(@NotNull D sourceDetail) {
         // 查保存的明细
         D savedDetail = detailService.get(sourceDetail.getId());
         // 更新保存明细的完成数量 = 保存明细的完成数量 + 提交的完成数量
@@ -85,19 +86,19 @@ public abstract class AbstractBaseBillService<
     }
 
     @Override
-    protected E afterGet(E bill) {
+    protected E afterGet(@NotNull E bill) {
         List<D> details = detailService.getAllByBillId(bill.getId());
         bill.setDetails(details);
         return bill;
     }
 
     @Override
-    protected void afterAdd(long id, E source) {
+    protected void afterAdd(long id, @NotNull E source) {
         saveDetails(id, source.getDetails());
     }
 
     @Override
-    protected void afterUpdate(long id, E source) {
+    protected void afterUpdate(long id, @NotNull E source) {
         saveDetails(id, source.getDetails());
     }
 
@@ -125,7 +126,7 @@ public abstract class AbstractBaseBillService<
      *
      * @param bill 单据
      */
-    public final void setAudited(E bill) {
+    public final void setAudited(@NotNull E bill) {
         bill.setStatus(getAuditedStatus().getKey());
     }
 
@@ -134,7 +135,7 @@ public abstract class AbstractBaseBillService<
      *
      * @param bill 单据
      */
-    public final void setAuditing(E bill) {
+    public final void setAuditing(@NotNull E bill) {
         bill.setStatus(getAuditingStatus().getKey());
     }
 
@@ -144,7 +145,7 @@ public abstract class AbstractBaseBillService<
      * @param bill 单据
      * @return 是否审核
      */
-    public final boolean canAudit(E bill) {
+    public final boolean canAudit(@NotNull E bill) {
         return bill.getStatus() == getAuditingStatus().getKey();
     }
 
@@ -154,7 +155,7 @@ public abstract class AbstractBaseBillService<
      * @param bill 单据
      * @return 是否可驳回
      */
-    public final boolean canReject(E bill) {
+    public final boolean canReject(@NotNull E bill) {
         return bill.getStatus() == getAuditingStatus().getKey();
     }
 
@@ -163,7 +164,7 @@ public abstract class AbstractBaseBillService<
      *
      * @param bill 单据
      */
-    public final void setReject(E bill) {
+    public final void setReject(@NotNull E bill) {
         bill.setStatus(getRejectedStatus().getKey());
     }
 
@@ -173,7 +174,7 @@ public abstract class AbstractBaseBillService<
      * @param bill 单据
      * @return 是否可编辑
      */
-    public final boolean canEdit(E bill) {
+    public final boolean canEdit(@NotNull E bill) {
         return bill.getStatus() == getRejectedStatus().getKey();
     }
 

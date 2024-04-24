@@ -7,6 +7,7 @@ import cn.hamm.airpower.query.QueryRequest;
 import cn.hamm.airpower.result.json.JsonData;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.common.annotation.LogDisabled;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +27,7 @@ import java.util.Objects;
 public class InventoryController extends BaseController<InventoryEntity, InventoryService, InventoryRepository> {
     @LogDisabled
     @Override
-    public JsonData getList(@RequestBody QueryRequest<InventoryEntity> queryRequest) {
+    public JsonData getList(@RequestBody @NotNull QueryRequest<InventoryEntity> queryRequest) {
         List<InventoryEntity> list;
         InventoryEntity filter = queryRequest.getFilter();
         if (Objects.nonNull(filter)) {

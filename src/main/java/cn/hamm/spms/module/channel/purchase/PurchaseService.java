@@ -9,6 +9,7 @@ import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailService;
 import cn.hamm.spms.module.wms.input.InputEntity;
 import cn.hamm.spms.module.wms.input.InputStatus;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
     }
 
     @Override
-    protected void afterDetailSaved(PurchaseEntity purchase) {
+    protected void afterDetailSaved(@NotNull PurchaseEntity purchase) {
         List<PurchaseDetailEntity> details = detailService.getAllByBillId(purchase.getId());
         double totalPrice = 0D;
         for (PurchaseDetailEntity detail : details) {

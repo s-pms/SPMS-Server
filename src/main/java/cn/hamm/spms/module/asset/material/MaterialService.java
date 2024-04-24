@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.asset.material;
 
 import cn.hamm.spms.base.BaseService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -13,7 +14,7 @@ import java.util.Objects;
 @Service
 public class MaterialService extends BaseService<MaterialEntity, MaterialRepository> {
     @Override
-    protected MaterialEntity beforeAppSaveToDatabase(MaterialEntity material) {
+    protected MaterialEntity beforeAppSaveToDatabase(@NotNull MaterialEntity material) {
         if (Objects.isNull(material.getPurchasePrice())) {
             material.setPurchasePrice(0D);
         }

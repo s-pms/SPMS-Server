@@ -12,6 +12,7 @@ import cn.hamm.spms.module.wms.input.detail.InputDetailService;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryService;
 import cn.hamm.spms.module.wms.inventory.InventoryType;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +55,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
     }
 
     @Override
-    protected void afterAddDetailFinish(long detailId, InputDetailEntity sourceDetail) {
+    protected void afterAddDetailFinish(long detailId, @NotNull InputDetailEntity sourceDetail) {
         if (Objects.isNull(sourceDetail.getStorage()) || Objects.isNull(sourceDetail.getStorage().getId())) {
             Result.FORBIDDEN.show("请传入入库存储资源");
             return;

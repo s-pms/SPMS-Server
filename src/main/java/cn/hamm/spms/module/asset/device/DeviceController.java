@@ -10,6 +10,7 @@ import cn.hamm.spms.module.iot.report.IReportPayloadAction;
 import cn.hamm.spms.module.iot.report.ReportEvent;
 import cn.hamm.spms.module.iot.report.ReportPayload;
 import jakarta.annotation.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -71,7 +72,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
     }
 
     @Override
-    protected DeviceEntity beforeUpdate(DeviceEntity device) {
+    protected DeviceEntity beforeUpdate(@NotNull DeviceEntity device) {
         redisTemplate.delete(ReportEvent.CACHE_PREFIX + device.getUuid());
         return service.getDeviceParameters(device);
     }

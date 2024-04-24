@@ -5,6 +5,7 @@ import cn.hamm.airpower.root.RootService;
 import cn.hamm.airpower.util.ReflectUtil;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -30,7 +31,7 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
     }
 
     @Override
-    protected final E beforeSaveToDatabase(E entity) {
+    protected final @NotNull E beforeSaveToDatabase(@NotNull E entity) {
         List<Field> fields = ReflectUtil.getFieldList(entity.getClass());
         for (Field field : fields) {
             AutoGenerateCode autoGenerateCode = field.getAnnotation(AutoGenerateCode.class);

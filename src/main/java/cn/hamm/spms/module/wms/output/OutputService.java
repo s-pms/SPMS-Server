@@ -11,6 +11,7 @@ import cn.hamm.spms.module.wms.inventory.InventoryService;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailRepository;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +54,7 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
     }
 
     @Override
-    protected void afterAddDetailFinish(long detailId, OutputDetailEntity sourceDetail) {
+    protected void afterAddDetailFinish(long detailId, @NotNull OutputDetailEntity sourceDetail) {
         InventoryEntity inventory = sourceDetail.getInventory();
         if (Objects.isNull(inventory)) {
             Result.FORBIDDEN.show("请传入库存信息");

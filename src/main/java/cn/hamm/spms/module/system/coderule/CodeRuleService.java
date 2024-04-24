@@ -3,6 +3,7 @@ package cn.hamm.spms.module.system.coderule;
 import cn.hamm.airpower.result.Result;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -22,7 +23,7 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
      * @param codeRuleField 为哪个字段创建
      * @return 一个自定义编码
      */
-    public final String createCode(CodeRuleField codeRuleField) {
+    public final @NotNull String createCode(@NotNull CodeRuleField codeRuleField) {
         CodeRuleEntity codeRule = repository.getByRuleField(codeRuleField.getKey());
         Result.ERROR.whenNull(codeRule, "保存失败,请先配置自定义编码规则!");
         String template = codeRule.getTemplate();

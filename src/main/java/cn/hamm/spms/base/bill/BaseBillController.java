@@ -10,6 +10,7 @@ import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailService;
 import cn.hamm.spms.base.bill.detail.IBaseBillDetailAction;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,7 +65,7 @@ public class BaseBillController<
     }
 
     @Override
-    protected final E beforeUpdate(E bill) {
+    protected final @NotNull E beforeUpdate(@NotNull E bill) {
         E savedBill = service.get(bill.getId());
         Result.FORBIDDEN.when(!service.canEdit(savedBill), "该单据状态下无法编辑");
         service.setAuditing(savedBill.setStatus(null));
@@ -73,7 +74,7 @@ public class BaseBillController<
 
 
     @Override
-    protected final E beforeAdd(E bill) {
+    protected final E beforeAdd(@NotNull E bill) {
         return super.beforeAdd(bill.setStatus(null));
     }
 
@@ -82,6 +83,6 @@ public class BaseBillController<
      *
      * @param bill 单据
      */
-    protected void afterAudit(E bill) {
+    protected void afterAudit(@NotNull E bill) {
     }
 }

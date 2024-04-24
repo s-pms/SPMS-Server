@@ -9,6 +9,7 @@ import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
 import cn.hamm.spms.module.iot.report.*;
 import jakarta.annotation.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -63,7 +64,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
      * @param reportPayload 传入参数
      * @return 查询历史
      */
-    public List<ReportInfluxPayload> getDevicePayloadHistory(ReportPayload reportPayload) {
+    public List<ReportInfluxPayload> getDevicePayloadHistory(@NotNull ReportPayload reportPayload) {
         ParameterEntity parameter = parameterService.getByCode(reportPayload.getCode());
         Result.PARAM_INVALID.whenNull(parameter, "不支持的参数");
         ReportGranularity reportGranularity = DictionaryUtil.getDictionaryByKey(ReportGranularity.class, reportPayload.getReportGranularity());
@@ -88,7 +89,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
      * @param device 设备
      * @return 设备
      */
-    public DeviceEntity getDeviceParameters(DeviceEntity device) {
+    public DeviceEntity getDeviceParameters(@NotNull DeviceEntity device) {
         Set<ParameterEntity> parameters = new HashSet<>();
         if (Objects.nonNull(device.getParameters())) {
             for (ParameterEntity parameter : device.getParameters()) {
@@ -106,7 +107,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     }
 
     @Override
-    protected DeviceEntity beforeAppSaveToDatabase(DeviceEntity device) {
+    protected DeviceEntity beforeAppSaveToDatabase(@NotNull DeviceEntity device) {
         if (!StringUtils.hasText(device.getUuid())) {
             device.setUuid(device.getCode());
         }

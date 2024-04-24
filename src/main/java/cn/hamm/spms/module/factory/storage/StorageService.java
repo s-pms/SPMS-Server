@@ -2,6 +2,7 @@ package cn.hamm.spms.module.factory.storage;
 
 import cn.hamm.airpower.query.QueryRequest;
 import cn.hamm.spms.base.BaseService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Objects;
 @Service
 public class StorageService extends BaseService<StorageEntity, StorageRepository> {
     @Override
-    protected List<StorageEntity> afterGetList(List<StorageEntity> list) {
+    protected @NotNull List<StorageEntity> afterGetList(@NotNull List<StorageEntity> list) {
         for (StorageEntity item : list) {
             QueryRequest<StorageEntity> queryRequest = new QueryRequest<>();
             queryRequest.setFilter(new StorageEntity().setParentId(item.getId()));
@@ -25,7 +26,7 @@ public class StorageService extends BaseService<StorageEntity, StorageRepository
     }
 
     @Override
-    protected <T extends QueryRequest<StorageEntity>> T beforeGetList(T sourceRequestData) {
+    protected <T extends QueryRequest<StorageEntity>> @NotNull T beforeGetList(@NotNull T sourceRequestData) {
         StorageEntity filter = sourceRequestData.getFilter();
         if (Objects.isNull(filter.getParentId())) {
             filter.setParentId(0L);

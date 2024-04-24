@@ -18,6 +18,7 @@ import cn.hamm.spms.module.system.permission.PermissionEntity;
 import cn.hamm.spms.module.system.permission.PermissionService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -74,7 +75,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
             HttpServletRequest request,
             HttpServletResponse response,
             Class<?> clazz,
-            Method method
+            @NotNull Method method
     ) {
         LogDisabled logDisabled = method.getAnnotation(LogDisabled.class);
         if (Objects.nonNull(logDisabled)) {

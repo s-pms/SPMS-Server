@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.iot.parameter;
 
 import cn.hamm.spms.base.BaseService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -43,7 +44,7 @@ public class ParameterService extends BaseService<ParameterEntity, ParameterRepo
     }
 
     @Override
-    protected ParameterEntity beforeAppSaveToDatabase(ParameterEntity parameter) {
+    protected ParameterEntity beforeAppSaveToDatabase(@NotNull ParameterEntity parameter) {
         redisUtil.del(PARAM_CODE_CACHE_PREFIX + parameter.getCode());
         return parameter;
     }

@@ -18,6 +18,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -125,7 +127,7 @@ public class Oauth2Controller extends RootController implements IAppAction {
         return new JsonData(accessToken);
     }
 
-    private ModelAndView redirectLogin(HttpServletResponse response, String appKey, String redirectUri) {
+    private @Nullable ModelAndView redirectLogin(HttpServletResponse response, String appKey, String redirectUri) {
         String url = appConfig.getLoginUrl() +
                 "?appKey=" +
                 appKey +
@@ -141,7 +143,7 @@ public class Oauth2Controller extends RootController implements IAppAction {
      * @param error 错误信息
      * @return 错误页面
      */
-    private ModelAndView showError(String error) {
+    private @NotNull ModelAndView showError(String error) {
         ModelAndView view = new ModelAndView("error");
         view.getModel().put("error", error);
         return view;
@@ -153,7 +155,7 @@ public class Oauth2Controller extends RootController implements IAppAction {
      * @param response 响应体
      * @param url      目标URL
      */
-    private void redirect(HttpServletResponse response, String url) {
+    private void redirect(@NotNull HttpServletResponse response, String url) {
         try {
             response.sendRedirect(url);
         } catch (IOException e) {

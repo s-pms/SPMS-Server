@@ -4,6 +4,7 @@ import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.query.QueryRequest;
 import cn.hamm.airpower.result.Result;
 import cn.hamm.spms.base.BaseService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     }
 
     @Override
-    protected <T extends QueryRequest<MenuEntity>> T beforeGetList(T sourceRequestData) {
+    protected <T extends QueryRequest<MenuEntity>> @NotNull T beforeGetList(@NotNull T sourceRequestData) {
         MenuEntity filter = sourceRequestData.getFilter();
         if (Objects.isNull(sourceRequestData.getSort())) {
             sourceRequestData.setSort(new Sort().setField("orderNo"));
@@ -35,7 +36,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     }
 
     @Override
-    protected List<MenuEntity> afterGetList(List<MenuEntity> list) {
+    protected @NotNull List<MenuEntity> afterGetList(@NotNull List<MenuEntity> list) {
         for (MenuEntity item : list) {
             item.excludeBaseData();
         }

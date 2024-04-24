@@ -3,6 +3,7 @@ package cn.hamm.spms.module.system.app;
 import cn.hamm.airpower.result.Result;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -41,7 +42,7 @@ public class AppService extends BaseService<AppEntity, AppRepository> {
     }
 
     @Override
-    protected AppEntity beforeAppSaveToDatabase(AppEntity app) {
+    protected AppEntity beforeAppSaveToDatabase(@NotNull AppEntity app) {
         if (Objects.isNull(app.getAppSecret())) {
             app.setAppSecret(RandomUtil.randomString().toUpperCase());
         }

@@ -1,6 +1,7 @@
 package cn.hamm.spms.base.bill.detail;
 
 import cn.hamm.spms.base.BaseService;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
      * @param details 明细
      * @return 存储后的明细
      */
-    public final List<E> saveDetails(Long billId, List<E> details) {
+    public final @NotNull List<E> saveDetails(Long billId, @NotNull List<E> details) {
         deleteAllByBillId(billId);
         List<E> savedDetails = new ArrayList<>(details.size());
         for (E detail : details) {

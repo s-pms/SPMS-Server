@@ -4,6 +4,7 @@ import cn.hamm.airpower.result.Result;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.channel.customer.CustomerEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -16,7 +17,7 @@ import java.util.Objects;
 @Service
 public class SalePriceService extends BaseService<SalePriceEntity, SalePriceRepository> {
     @Override
-    protected SalePriceEntity beforeAdd(SalePriceEntity source) {
+    protected @NotNull SalePriceEntity beforeAdd(@NotNull SalePriceEntity source) {
         SalePriceEntity exist = repository.getByCustomerAndMaterial(source.getCustomer(), source.getMaterial());
         if (Objects.nonNull(exist)) {
             Result.FORBIDDEN_EXIST.show(exist.getCustomer().getName() + "-" + exist.getMaterial().getName() + " 销售价已存在!");
@@ -25,7 +26,7 @@ public class SalePriceService extends BaseService<SalePriceEntity, SalePriceRepo
     }
 
     @Override
-    protected SalePriceEntity beforeUpdate(SalePriceEntity source) {
+    protected @NotNull SalePriceEntity beforeUpdate(@NotNull SalePriceEntity source) {
         return source.setMaterial(null).setCustomer(null);
     }
 

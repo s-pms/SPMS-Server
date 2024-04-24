@@ -11,6 +11,7 @@ import com.influxdb.client.write.Point;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
@@ -82,14 +83,13 @@ public class InfluxHelper {
         }
     }
 
-    private WriteApiBlocking getWriteApi() {
-        if (Objects.isNull(influxDbClient)) {
-            influxDbClient = InfluxDBClientFactory.create(influxConfig.getUrl(), influxConfig.getToken().toCharArray(), influxConfig.getOrg(), influxConfig.getBucket());
-            influxDbClient.setLogLevel(LogLevel.NONE);
-        }
-        WriteApiBlocking writeApi = influxDbClient.getWriteApiBlocking();
+    private @Nullable WriteApiBlocking getWriteApi() {
         try {
-            return writeApi;
+            if (Objects.isNull(influxDbClient)) {
+                influxDbClient = InfluxDBClientFactory.create(influxConfig.getUrl(), influxConfig.getToken().toCharArray(), influxConfig.getOrg(), influxConfig.getBucket());
+                influxDbClient.setLogLevel(LogLevel.NONE);
+            }
+            return influxDbClient.getWriteApiBlocking();
         } catch (Exception ignored) {
             influxDbClient.close();
             influxDbClient = null;
@@ -150,7 +150,7 @@ public class InfluxHelper {
      * @param reportGranularity 报告颗粒度
      * @return 数据
      */
-    private List<ReportInfluxPayload> query(ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
+    private @NotNull List<ReportInfluxPayload> query(ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
         if (Objects.isNull(influxDbClient)) {
             influxDbClient = InfluxDBClientFactory.create(influxConfig.getUrl(), influxConfig.getToken().toCharArray(), influxConfig.getUrl(), influxConfig.getBucket());
             influxDbClient.setLogLevel(LogLevel.BASIC);
@@ -187,8 +187,7 @@ public class InfluxHelper {
         return result;
     }
 
-    @NotNull
-    private List<String> getFluxQuery(ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
+    private  @NotNull List<String> getFluxQuery(@NotNull ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
         List<String> queryParams = new ArrayList<>();
         queryParams.add(String.format("from(bucket:\"%s\")", influxConfig.getBucket()));
         queryParams.add(String.format("range(start: %s, stop: %s)", Integer.parseInt(String.valueOf(reportPayload.getStartTime() / 1000)), Integer.parseInt(String.valueOf(reportPayload.getEndTime() / 1000))));

@@ -10,6 +10,7 @@ import cn.hamm.airpower.security.AccessUtil;
 import cn.hamm.airpower.util.ReflectUtil;
 import cn.hamm.spms.base.BaseService;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -56,7 +57,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     }
 
     @Override
-    protected List<PermissionEntity> afterGetList(List<PermissionEntity> list) {
+    protected @NotNull List<PermissionEntity> afterGetList(@NotNull List<PermissionEntity> list) {
         for (PermissionEntity item : list) {
             item.excludeBaseData();
         }
@@ -173,7 +174,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                     }
 
                     AccessConfig accessConfig = AccessUtil.getWhatNeedAccess(clazz, method);
-                    if (!accessConfig.login || !accessConfig.authorize) {
+                    if (!accessConfig.isLogin() || !accessConfig.isAuthorize()) {
                         // 这里可以选择是否不读取这些接口的权限，但前端可能需要
                         continue;
                     }
@@ -199,7 +200,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
         }
     }
 
-    private boolean checkApiBand(Api api, Extends extend) {
+    private boolean checkApiBand(Api api, @NotNull Extends extend) {
         List<Api> excludeList = Arrays.asList(extend.exclude());
         List<Api> includeList = Arrays.asList(extend.value());
         if (excludeList.contains(api)) {
