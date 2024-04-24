@@ -34,7 +34,7 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
     protected final @NotNull E beforeSaveToDatabase(@NotNull E entity) {
         List<Field> fields = ReflectUtil.getFieldList(entity.getClass());
         for (Field field : fields) {
-            AutoGenerateCode autoGenerateCode = field.getAnnotation(AutoGenerateCode.class);
+            AutoGenerateCode autoGenerateCode = ReflectUtil.getAnnotation(AutoGenerateCode.class, field);
             if (Objects.isNull(autoGenerateCode)) {
                 continue;
             }
