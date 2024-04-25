@@ -3,7 +3,7 @@ package cn.hamm.spms.module.personnel.user;
 import cn.hamm.airpower.enums.Result;
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.model.query.QueryRequest;
-import cn.hamm.airpower.util.*;
+import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.exception.CustomResult;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
