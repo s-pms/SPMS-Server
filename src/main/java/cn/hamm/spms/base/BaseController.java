@@ -1,10 +1,10 @@
 package cn.hamm.spms.base;
 
-import cn.hamm.airpower.query.QueryPageRequest;
-import cn.hamm.airpower.query.QueryRequest;
-import cn.hamm.airpower.result.json.JsonData;
+import cn.hamm.airpower.model.query.QueryPageRequest;
+import cn.hamm.airpower.model.query.QueryRequest;
+import cn.hamm.airpower.model.json.JsonData;
 import cn.hamm.airpower.root.RootEntityController;
-import cn.hamm.airpower.security.Permission;
+import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.spms.common.annotation.LogDisabled;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;

@@ -1,6 +1,6 @@
 package cn.hamm.spms.common.exception;
 
-import cn.hamm.airpower.result.IResult;
+import cn.hamm.airpower.interfaces.IResult;
 import lombok.Getter;
 import org.jetbrains.annotations.Contract;
 

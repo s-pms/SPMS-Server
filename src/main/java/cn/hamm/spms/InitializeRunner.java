@@ -1,7 +1,6 @@
 package cn.hamm.spms;
 
-import cn.hamm.airpower.security.PasswordUtil;
-import cn.hamm.airpower.util.RandomUtil;
+import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
@@ -78,13 +77,13 @@ public class InitializeRunner implements CommandLineRunner {
         if (Objects.nonNull(userEntity)) {
             return;
         }
-        String salt = RandomUtil.randomString();
+        String salt = AirUtil.getRandomUtil().randomString();
         Services.getUserService().add(new UserEntity()
                 .setNickname("Hamm")
                 .setAccount("hamm")
                 .setPhone("17623205062")
                 .setEmail("admin@hamm.cn")
-                .setPassword(PasswordUtil.encode("Aa123456", salt))
+                .setPassword(AirUtil.getPasswordUtil().encode("Aa123456", salt))
                 .setSalt(salt)
                 .setRemark("超级管理员,请勿数据库暴力直接删除"));
     }

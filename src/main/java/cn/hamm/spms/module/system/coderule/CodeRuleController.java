@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.system.coderule;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.result.json.JsonData;
-import cn.hamm.airpower.security.Permission;
-import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.annotation.Permission;
+import cn.hamm.airpower.model.json.JsonData;
+import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.base.BaseController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,20 +21,20 @@ public class CodeRuleController extends BaseController<CodeRuleEntity, CodeRuleS
     @Permission(login = false)
     @RequestMapping("getFieldList")
     public JsonData getFieldList() {
-        return jsonData(DictionaryUtil.getDictionaryList(CodeRuleField.class, "key", "label", "defaultPrefix"));
+        return jsonData(AirUtil.getDictionaryUtil().getDictionaryList(CodeRuleField.class, "key", "label", "defaultPrefix"));
     }
 
     @Description("获取支持的参数")
     @Permission(login = false)
     @RequestMapping("getParamList")
     public JsonData getParamList() {
-        return jsonData(DictionaryUtil.getDictionaryList(CodeRuleParam.class, "key", "label", "desc", "demo"));
+        return jsonData(AirUtil.getDictionaryUtil().getDictionaryList(CodeRuleParam.class, "key", "label", "desc", "demo"));
     }
 
     @Description("获取流水号更新方式")
     @Permission(login = false)
     @RequestMapping("getSerialNumberUpdate")
     public JsonData getSerialNumberUpdate() {
-        return jsonData(DictionaryUtil.getDictionaryList(SerialNumberUpdate.class));
+        return jsonData(AirUtil.getDictionaryUtil().getDictionaryList(SerialNumberUpdate.class));
     }
 }

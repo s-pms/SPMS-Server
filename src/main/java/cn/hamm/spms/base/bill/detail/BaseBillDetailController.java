@@ -1,6 +1,6 @@
 package cn.hamm.spms.base.bill.detail;
 
-import cn.hamm.airpower.security.Permission;
+import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.spms.base.BaseController;
 
 /**

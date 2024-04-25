@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.asset.device;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.result.Result;
-import cn.hamm.airpower.result.json.Json;
-import cn.hamm.airpower.security.Permission;
+import cn.hamm.airpower.enums.Result;
+import cn.hamm.airpower.model.json.Json;
+import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.report.IReportPayloadAction;

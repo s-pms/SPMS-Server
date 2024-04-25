@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.iot.parameter;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.result.Result;
+import cn.hamm.airpower.enums.Result;
 import cn.hamm.spms.base.BaseController;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.RequestMapping;

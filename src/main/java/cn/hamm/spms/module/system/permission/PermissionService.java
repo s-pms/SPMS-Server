@@ -1,13 +1,12 @@
 package cn.hamm.spms.module.system.permission;
 
-import cn.hamm.airpower.api.Api;
-import cn.hamm.airpower.api.Extends;
-import cn.hamm.airpower.query.QueryRequest;
-import cn.hamm.airpower.result.Result;
+import cn.hamm.airpower.annotation.Extends;
+import cn.hamm.airpower.enums.Api;
+import cn.hamm.airpower.enums.Result;
+import cn.hamm.airpower.model.Access;
+import cn.hamm.airpower.model.query.QueryRequest;
 import cn.hamm.airpower.root.RootEntityController;
-import cn.hamm.airpower.security.AccessConfig;
-import cn.hamm.airpower.security.AccessUtil;
-import cn.hamm.airpower.util.ReflectUtil;
+import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.base.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -86,7 +85,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                     continue;
                 }
 
-                String customClassName = ReflectUtil.getDescription(clazz);
+                String customClassName = AirUtil.getReflectUtil().getDescription(clazz);
                 String identity = clazz.getSimpleName().replaceAll("Controller", "");
                 PermissionEntity permissionEntity = getPermissionByIdentity(identity);
                 if (Objects.isNull(permissionEntity)) {
@@ -159,21 +158,21 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                             default:
                         }
                     }
-                    String customMethodName = ReflectUtil.getDescription(method);
+                    String customMethodName = AirUtil.getReflectUtil().getDescription(method);
 
                     String subIdentity = (!"".equalsIgnoreCase(pathClass) ? (pathClass + "_") : "");
 
-                    RequestMapping requestMapping = ReflectUtil.getAnnotation(RequestMapping.class, method);
+                    RequestMapping requestMapping = AirUtil.getReflectUtil().getAnnotation(RequestMapping.class, method);
                     if (Objects.nonNull(requestMapping) && requestMapping.value().length > 0) {
                         subIdentity += requestMapping.value()[0];
                     }
 
-                    PostMapping postMapping = ReflectUtil.getAnnotation(PostMapping.class, method);
+                    PostMapping postMapping = AirUtil.getReflectUtil().getAnnotation(PostMapping.class, method);
                     if (Objects.nonNull(postMapping) && postMapping.value().length > 0) {
                         subIdentity += postMapping.value()[0];
                     }
 
-                    AccessConfig accessConfig = AccessUtil.getWhatNeedAccess(clazz, method);
+                    Access accessConfig = AirUtil.getAccessUtil().getWhatNeedAccess(clazz, method);
                     if (!accessConfig.isLogin() || !accessConfig.isAuthorize()) {
                         // 这里可以选择是否不读取这些接口的权限，但前端可能需要
                         continue;

@@ -1,11 +1,11 @@
 package cn.hamm.spms.module.system.status;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.result.Result;
-import cn.hamm.airpower.result.json.JsonData;
+import cn.hamm.airpower.annotation.Permission;
+import cn.hamm.airpower.enums.Result;
+import cn.hamm.airpower.model.json.JsonData;
 import cn.hamm.airpower.root.RootController;
-import cn.hamm.airpower.security.Permission;
-import cn.hamm.airpower.util.ReflectUtil;
+import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.common.exception.CustomResult;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -97,7 +97,7 @@ public class StatusController extends RootController {
                     }
                     resultList.add(new HashMap<>(3) {
                         {
-                            put("name", ReflectUtil.getDescription(clazz));
+                            put("name", AirUtil.getReflectUtil().getDescription(clazz));
                             put("class", clazz.getSimpleName());
                             put("enums", enumTypeList);
                         }

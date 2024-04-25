@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.personnel.role;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.result.json.Json;
+import cn.hamm.airpower.model.json.Json;
 import cn.hamm.spms.base.BaseController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;

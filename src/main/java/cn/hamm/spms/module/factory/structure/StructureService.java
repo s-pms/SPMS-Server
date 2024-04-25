@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.factory.structure;
 
-import cn.hamm.airpower.query.QueryRequest;
+import cn.hamm.airpower.model.query.QueryRequest;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;

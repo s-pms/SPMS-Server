@@ -1,10 +1,10 @@
 package cn.hamm.spms.base.bill;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.response.Filter;
-import cn.hamm.airpower.result.Result;
-import cn.hamm.airpower.result.json.Json;
-import cn.hamm.airpower.security.Permission;
+import cn.hamm.airpower.annotation.Filter;
+import cn.hamm.airpower.enums.Result;
+import cn.hamm.airpower.model.json.Json;
+import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;

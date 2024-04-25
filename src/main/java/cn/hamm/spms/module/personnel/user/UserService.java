@@ -1,13 +1,9 @@
 package cn.hamm.spms.module.personnel.user;
 
+import cn.hamm.airpower.enums.Result;
 import cn.hamm.airpower.model.Sort;
-import cn.hamm.airpower.query.QueryRequest;
-import cn.hamm.airpower.result.Result;
-import cn.hamm.airpower.security.PasswordUtil;
-import cn.hamm.airpower.security.SecurityUtil;
-import cn.hamm.airpower.util.EmailUtil;
-import cn.hamm.airpower.util.RandomUtil;
-import cn.hamm.airpower.util.TreeUtil;
+import cn.hamm.airpower.model.query.QueryRequest;
+import cn.hamm.airpower.util.*;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.exception.CustomResult;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
@@ -147,13 +143,13 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         Result.PARAM_INVALID.whenNotEquals(code, user.getCode(), "验证码输入错误");
         String oldPassword = user.getOldPassword();
         Result.PARAM_INVALID.whenNotEqualsIgnoreCase(
-                PasswordUtil.encode(oldPassword, existUser.getSalt()),
+                AirUtil.getPasswordUtil().encode(oldPassword, existUser.getSalt()),
                 existUser.getPassword(),
                 "原密码输入错误，修改密码失败"
         );
-        String salt = RandomUtil.randomString(4);
+        String salt = AirUtil.getRandomUtil().randomString(4);
         user.setSalt(salt);
-        user.setPassword(PasswordUtil.encode(user.getPassword(), salt));
+        user.setPassword(AirUtil.getPasswordUtil().encode(user.getPassword(), salt));
         removeEmailCodeCache(existUser.getEmail());
         update(user);
     }
@@ -174,7 +170,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public void sendMail(String email) throws MessagingException {
         CustomResult.EMAIL_SEND_BUSY.when(hasEmailCodeInRedis(email));
-        String code = RandomUtil.randomNumbers(6);
+        String code = AirUtil.getRandomUtil().randomNumbers(6);
         setCodeToRedis(email, code);
         emailUtil.sendCode(email, "你收到一个邮箱验证码", code, "SPMS");
     }
@@ -266,9 +262,9 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         }
         CustomResult.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNull(existUser);
         // 将用户传入的密码加密与数据库存储匹配
-        String encodePassword = PasswordUtil.encode(userEntity.getPassword(), existUser.getSalt());
+        String encodePassword = AirUtil.getPasswordUtil().encode(userEntity.getPassword(), existUser.getSalt());
         CustomResult.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNotEqualsIgnoreCase(encodePassword, existUser.getPassword());
-        return securityUtil.createAccessToken(existUser.getId());
+        return AirUtil.getSecurityUtil().createAccessToken(existUser.getId());
     }
 
     /**
@@ -354,8 +350,8 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         Result.FORBIDDEN_EXIST.whenNotNull(existUser, "邮箱已经存在，请勿重复添加用户");
         if (!StringUtils.hasLength(source.getPassword())) {
             // 创建时没有设置密码的话 随机一个密码
-            String salt = RandomUtil.randomString(4);
-            source.setPassword(PasswordUtil.encode("123123", salt));
+            String salt = AirUtil.getRandomUtil().randomString(4);
+            source.setPassword(AirUtil.getPasswordUtil().encode("123123", salt));
             source.setSalt(salt);
         }
         return source;

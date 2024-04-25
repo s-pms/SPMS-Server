@@ -1,10 +1,10 @@
 package cn.hamm.spms.module.wms.inventory;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.api.Api;
-import cn.hamm.airpower.api.Extends;
-import cn.hamm.airpower.query.QueryRequest;
-import cn.hamm.airpower.result.json.JsonData;
+import cn.hamm.airpower.enums.Api;
+import cn.hamm.airpower.annotation.Extends;
+import cn.hamm.airpower.model.query.QueryRequest;
+import cn.hamm.airpower.model.json.JsonData;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.common.annotation.LogDisabled;
 import org.jetbrains.annotations.NotNull;

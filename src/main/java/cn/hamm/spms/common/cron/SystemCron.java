@@ -1,7 +1,7 @@
 package cn.hamm.spms.common.cron;
 
 import cn.hamm.airpower.config.GlobalConfig;
-import cn.hamm.airpower.query.QueryRequest;
+import cn.hamm.airpower.model.query.QueryRequest;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import cn.hamm.spms.module.system.coderule.SerialNumberUpdate;

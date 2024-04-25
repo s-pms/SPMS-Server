@@ -1,14 +1,12 @@
 package cn.hamm.spms.module.personnel.user;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.response.Filter;
-import cn.hamm.airpower.result.Result;
-import cn.hamm.airpower.result.json.Json;
-import cn.hamm.airpower.result.json.JsonData;
-import cn.hamm.airpower.security.CookieUtil;
-import cn.hamm.airpower.security.Permission;
-import cn.hamm.airpower.security.SecurityUtil;
-import cn.hamm.airpower.util.RandomUtil;
+import cn.hamm.airpower.annotation.Filter;
+import cn.hamm.airpower.annotation.Permission;
+import cn.hamm.airpower.enums.Result;
+import cn.hamm.airpower.model.json.Json;
+import cn.hamm.airpower.model.json.JsonData;
+import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.system.app.AppEntity;
 import cn.hamm.spms.module.system.app.AppService;
@@ -37,12 +35,6 @@ import java.util.List;
 public class UserController extends BaseController<UserEntity, UserService, UserRepository> implements IUserAction {
     @Autowired
     private AppService appService;
-
-    @Autowired
-    private SecurityUtil securityUtil;
-
-    @Autowired
-    private CookieUtil cookieUtil;
 
     @Description("获取我的信息")
     @Permission(authorize = false)
@@ -134,12 +126,12 @@ public class UserController extends BaseController<UserEntity, UserService, User
         }
 
         // 开始处理Oauth2登录逻辑
-        Long userId = securityUtil.getUserIdFromAccessToken(accessToken);
+        Long userId = AirUtil.getSecurityUtil().getUserIdFromAccessToken(accessToken);
 
         // 存储Cookies
-        String cookieString = RandomUtil.randomString();
+        String cookieString = AirUtil.getRandomUtil().randomString();
         service.saveCookie(userId, cookieString);
-        response.addCookie(cookieUtil.getAuthorizeCookie(cookieString));
+        response.addCookie(AirUtil.getCookieUtil().getAuthorizeCookie(cookieString));
 
         String appKey = userEntity.getAppKey();
         if (!StringUtils.hasText(appKey)) {
@@ -151,7 +143,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
         Result.PARAM_INVALID.whenNull(appEntity, "登录失败,错误的应用ID");
 
         // 生成临时身份令牌code
-        String code = RandomUtil.randomString(32);
+        String code = AirUtil.getRandomUtil().randomString(32);
         appEntity.setCode(code);
 
         // 缓存临时身份令牌code

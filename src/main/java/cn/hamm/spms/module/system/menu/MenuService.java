@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.system.menu;
 
 import cn.hamm.airpower.model.Sort;
-import cn.hamm.airpower.query.QueryRequest;
-import cn.hamm.airpower.result.Result;
+import cn.hamm.airpower.model.query.QueryRequest;
+import cn.hamm.airpower.enums.Result;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,9 @@
 package cn.hamm.spms.base;
 
-import cn.hamm.airpower.result.Result;
+
+import cn.hamm.airpower.enums.Result;
 import cn.hamm.airpower.root.RootService;
-import cn.hamm.airpower.util.ReflectUtil;
+import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import org.jetbrains.annotations.NotNull;
@@ -32,9 +33,9 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
 
     @Override
     protected final @NotNull E beforeSaveToDatabase(@NotNull E entity) {
-        List<Field> fields = ReflectUtil.getFieldList(entity.getClass());
+        List<Field> fields = AirUtil.getReflectUtil().getFieldList(entity.getClass());
         for (Field field : fields) {
-            AutoGenerateCode autoGenerateCode = ReflectUtil.getAnnotation(AutoGenerateCode.class, field);
+            AutoGenerateCode autoGenerateCode = AirUtil.getReflectUtil().getAnnotation(AutoGenerateCode.class, field);
             if (Objects.isNull(autoGenerateCode)) {
                 continue;
             }

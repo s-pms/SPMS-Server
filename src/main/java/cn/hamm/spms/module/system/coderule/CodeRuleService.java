@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.system.coderule;
 
-import cn.hamm.airpower.result.Result;
-import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.enums.Result;
+import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
         CodeRuleEntity codeRule = repository.getByRuleField(codeRuleField.getKey());
         Result.ERROR.whenNull(codeRule, "保存失败,请先配置自定义编码规则!");
         String template = codeRule.getTemplate();
-        List<Map<String, String>> mapList = DictionaryUtil.getDictionaryList(CodeRuleParam.class);
+        List<Map<String, String>> mapList = AirUtil.getDictionaryUtil().getDictionaryList(CodeRuleParam.class);
         Calendar calendar = Calendar.getInstance();
         for (Map<String, String> map : mapList) {
             String param = map.get("label");

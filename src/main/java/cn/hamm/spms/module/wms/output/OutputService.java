@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.wms.output;
 
 import cn.hamm.airpower.interfaces.IDictionary;
-import cn.hamm.airpower.result.Result;
+import cn.hamm.airpower.enums.Result;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.sale.SaleEntity;

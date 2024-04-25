@@ -1,8 +1,9 @@
 package cn.hamm.spms.module.asset.device;
 
-import cn.hamm.airpower.result.Result;
-import cn.hamm.airpower.result.json.Json;
-import cn.hamm.airpower.util.DictionaryUtil;
+
+import cn.hamm.airpower.enums.Result;
+import cn.hamm.airpower.model.json.Json;
+import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.helper.influxdb.InfluxHelper;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
@@ -67,8 +68,8 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     public List<ReportInfluxPayload> getDevicePayloadHistory(@NotNull ReportPayload reportPayload) {
         ParameterEntity parameter = parameterService.getByCode(reportPayload.getCode());
         Result.PARAM_INVALID.whenNull(parameter, "不支持的参数");
-        ReportGranularity reportGranularity = DictionaryUtil.getDictionaryByKey(ReportGranularity.class, reportPayload.getReportGranularity());
-        ReportDataType reportDataType = DictionaryUtil.getDictionaryByKey(ReportDataType.class, parameter.getDataType());
+        ReportGranularity reportGranularity = AirUtil.getDictionaryUtil().getDictionaryByKey(ReportGranularity.class, reportPayload.getReportGranularity());
+        ReportDataType reportDataType = AirUtil.getDictionaryUtil().getDictionaryByKey(ReportDataType.class, parameter.getDataType());
         if (reportDataType != null) {
             switch (reportDataType) {
                 case QUANTITY:

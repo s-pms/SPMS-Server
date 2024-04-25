@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.iot.report;
 
-import cn.hamm.airpower.mqtt.MqttHelper;
-import cn.hamm.airpower.result.json.Json;
+import cn.hamm.airpower.model.json.Json;
+import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.common.helper.influxdb.InfluxHelper;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.asset.device.DeviceService;
@@ -64,9 +64,6 @@ public class ReportEvent {
     public final static String CACHE_UNDERLINE = "_";
 
     @Autowired
-    private MqttHelper mqttHelper;
-
-    @Autowired
     private DeviceService deviceService;
 
     @Autowired
@@ -86,8 +83,8 @@ public class ReportEvent {
      * @noinspection AlibabaMethodTooLong
      */
     public void listen() throws MqttException {
-        MqttClient mqttClient = mqttHelper.createClient();
-        mqttClient.connect(mqttHelper.createOption());
+        MqttClient mqttClient = AirUtil.getMqttUtil().createClient();
+        mqttClient.connect(AirUtil.getMqttUtil().createOption());
         mqttClient.subscribe(ReportEvent.IOT_REPORT_TOPIC_V1);
         mqttClient.setCallback(new MqttCallback() {
             @Override

@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.wechat;
 
 import cn.hamm.airpower.root.RootController;
-import cn.hamm.airpower.security.Permission;
+import cn.hamm.airpower.annotation.Permission;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

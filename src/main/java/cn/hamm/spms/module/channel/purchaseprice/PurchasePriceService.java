@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.channel.purchaseprice;
 
-import cn.hamm.airpower.result.Result;
+import cn.hamm.airpower.enums.Result;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.channel.supplier.SupplierEntity;

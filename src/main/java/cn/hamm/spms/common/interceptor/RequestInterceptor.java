@@ -1,12 +1,9 @@
 package cn.hamm.spms.common.interceptor;
 
 import cn.hamm.airpower.config.GlobalConfig;
+import cn.hamm.airpower.enums.Result;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
-import cn.hamm.airpower.request.RequestUtil;
-import cn.hamm.airpower.result.Result;
-import cn.hamm.airpower.security.AccessUtil;
-import cn.hamm.airpower.security.SecurityUtil;
-import cn.hamm.airpower.util.ReflectUtil;
+import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.common.annotation.LogDisabled;
 import cn.hamm.spms.common.config.Constant;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
@@ -47,9 +44,6 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     private LogService logService;
 
     @Autowired
-    private SecurityUtil securityUtil;
-
-    @Autowired
     private GlobalConfig globalConfig;
 
     @Override
@@ -77,7 +71,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
             Class<?> clazz,
             @NotNull Method method
     ) {
-        LogDisabled logDisabled = ReflectUtil.getAnnotation(LogDisabled.class, method);
+        LogDisabled logDisabled = AirUtil.getReflectUtil().getAnnotation(LogDisabled.class, method);
         if (Objects.nonNull(logDisabled)) {
             return;
         }
@@ -87,21 +81,21 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         String platform = "";
         String action = request.getRequestURI();
         try {
-            userId = securityUtil.getUserIdFromAccessToken(accessToken);
+            userId = AirUtil.getSecurityUtil().getUserIdFromAccessToken(accessToken);
             platform = request.getHeader(Constant.APP_PLATFORM_HEADER);
-            String description = ReflectUtil.getDescription(method);
+            String description = AirUtil.getReflectUtil().getDescription(method);
             if (!description.equals(method.getName())) {
                 action = description;
             }
         } catch (Exception ignored) {
         }
-        String identity = AccessUtil.getPermissionIdentity(clazz, method);
+        String identity = AirUtil.getAccessUtil().getPermissionIdentity(clazz, method);
         PermissionEntity permissionEntity = permissionService.getPermissionByIdentity(identity);
         if (Objects.nonNull(permissionEntity)) {
             action = permissionEntity.getName();
         }
         long logId = logService.add(new LogEntity()
-                .setIp(RequestUtil.getIpAddress(request))
+                .setIp(AirUtil.getRequestUtil().getIpAddress(request))
                 .setAction(action)
                 .setPlatform(platform)
                 .setRequest(getRequestBody(request))
