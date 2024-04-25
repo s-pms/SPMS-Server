@@ -97,9 +97,8 @@ public class InitializeRunner implements CommandLineRunner {
         Services.getPermissionService().initPermission("cn.hamm.spms");
         Services.getMenuService().initMenu();
         System.out.println("---------------------------------");
-        String activeProfile = Services.getEnvironment().getActiveProfiles()[0];
         String[] localEnvList = {"hamm"};
-        if (Arrays.stream(localEnvList).toList().contains(activeProfile)) {
+        if (Arrays.stream(localEnvList).toList().contains(AirUtil.getCurrentEnvironment())) {
             initDevData();
         }
     }

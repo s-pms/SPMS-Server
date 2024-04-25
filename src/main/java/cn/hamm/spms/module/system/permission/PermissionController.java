@@ -1,10 +1,9 @@
 package cn.hamm.spms.module.system.permission;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.util.TreeUtil;
+import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.base.BaseController;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,8 +18,6 @@ import java.util.List;
 @RequestMapping("permission")
 @Description("权限")
 public class PermissionController extends BaseController<PermissionEntity, PermissionService, PermissionRepository> {
-    @Autowired
-    private TreeUtil treeUtil;
 
     @Override
     protected PermissionEntity beforeAdd(@NotNull PermissionEntity entity) {
@@ -34,6 +31,6 @@ public class PermissionController extends BaseController<PermissionEntity, Permi
 
     @Override
     protected List<PermissionEntity> afterGetList(List<PermissionEntity> list) {
-        return treeUtil.buildTreeList(list);
+        return AirUtil.getTreeUtil().buildTreeList(list);
     }
 }

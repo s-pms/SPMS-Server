@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.iot.report;
 
+
 import cn.hamm.airpower.model.json.Json;
 import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.common.helper.influxdb.InfluxHelper;

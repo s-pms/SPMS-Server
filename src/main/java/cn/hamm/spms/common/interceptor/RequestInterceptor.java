@@ -1,6 +1,6 @@
 package cn.hamm.spms.common.interceptor;
 
-import cn.hamm.airpower.config.GlobalConfig;
+import cn.hamm.airpower.config.AirConfig;
 import cn.hamm.airpower.enums.Result;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
 import cn.hamm.airpower.util.AirUtil;
@@ -43,9 +43,6 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     @Autowired
     private LogService logService;
 
-    @Autowired
-    private GlobalConfig globalConfig;
-
     @Override
     public boolean checkPermissionAccess(Long userId, String permissionIdentity, HttpServletRequest request) {
         UserEntity existUser = userService.get(userId);
@@ -75,7 +72,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         if (Objects.nonNull(logDisabled)) {
             return;
         }
-        String accessToken = request.getHeader(globalConfig.getAuthorizeHeader());
+        String accessToken = request.getHeader(AirConfig.getGlobalConfig().getAuthorizeHeader());
         Long userId = null;
         int appVersion = request.getIntHeader(Constant.APP_VERSION_HEADER);
         String platform = "";

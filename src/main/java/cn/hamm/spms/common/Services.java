@@ -12,7 +12,6 @@ import cn.hamm.spms.module.wms.input.InputService;
 import cn.hamm.spms.module.wms.output.OutputService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,9 +22,6 @@ import org.springframework.stereotype.Component;
 @Component
 @SuppressWarnings("UnusedReturnValue")
 public class Services {
-    @Getter
-    private static Environment environment;
-
     @Getter
     private static PurchaseService purchaseService;
 
@@ -58,7 +54,6 @@ public class Services {
 
     @Autowired
     private void initService(
-            Environment environment,
             CodeRuleService codeRuleService,
             PurchaseService purchaseService,
             SaleService saleService,
@@ -70,7 +65,6 @@ public class Services {
             DeviceService deviceService,
             UserService userService
     ) {
-        Services.environment = environment;
         Services.codeRuleService = codeRuleService;
         Services.purchaseService = purchaseService;
         Services.saleService = saleService;
