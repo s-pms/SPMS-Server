@@ -68,7 +68,6 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
      * @param quantity 数量
      * @return 明细实体
      */
-    @SuppressWarnings("unused")
     public E addFinishQuantity(Double quantity) {
         this.setFinishQuantity(this.getFinishQuantity() + quantity);
         return (E) this;
