@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.system.coderule;
 
+import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +16,7 @@ public enum CodeRuleField implements IDictionary {
     /**
      * <h2>角色</h2>
      */
-    RoleCode(1, "角色编码", "RO", SerialNumberUpdate.NEVER, ""),
+    RoleCode(1, "角色编码", "RO", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
 
     /**
      * <h2>供应商编码</h2>
@@ -25,12 +26,12 @@ public enum CodeRuleField implements IDictionary {
     /**
      * <h2>存储资源编码</h2>
      */
-    StorageCode(3, "存储资源编码", "SRG", SerialNumberUpdate.NEVER, ""),
+    StorageCode(3, "存储资源编码", "SRG", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
 
     /**
      * <h2>工厂结构编码</h2>
      */
-    StructureCode(4, "工厂结构编码", "ST", SerialNumberUpdate.NEVER, ""),
+    StructureCode(4, "工厂结构编码", "ST", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
 
     /**
      * <h2>客户编码</h2>
@@ -45,7 +46,7 @@ public enum CodeRuleField implements IDictionary {
     /**
      * <h2>单位编码</h2>
      */
-    UnitCode(7, "单位编码", "UT", SerialNumberUpdate.NEVER, ""),
+    UnitCode(7, "单位编码", "UT", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
 
     /**
      * <h2>采购单号</h2>

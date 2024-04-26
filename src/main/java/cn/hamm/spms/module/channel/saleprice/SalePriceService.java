@@ -20,7 +20,11 @@ public class SalePriceService extends BaseService<SalePriceEntity, SalePriceRepo
     protected @NotNull SalePriceEntity beforeAdd(@NotNull SalePriceEntity source) {
         SalePriceEntity exist = repository.getByCustomerAndMaterial(source.getCustomer(), source.getMaterial());
         if (Objects.nonNull(exist)) {
-            Result.FORBIDDEN_EXIST.show(exist.getCustomer().getName() + "-" + exist.getMaterial().getName() + " 销售价已存在!");
+            Result.FORBIDDEN_EXIST.show(String.format(
+                    "%s 在客户 %s 的销售价已经存在!",
+                    exist.getMaterial().getName(),
+                    exist.getCustomer().getName()
+            ));
         }
         return source;
     }

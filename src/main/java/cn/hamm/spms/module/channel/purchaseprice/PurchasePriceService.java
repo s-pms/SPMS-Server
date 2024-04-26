@@ -20,7 +20,11 @@ public class PurchasePriceService extends BaseService<PurchasePriceEntity, Purch
     protected @NotNull PurchasePriceEntity beforeAdd(@NotNull PurchasePriceEntity source) {
         PurchasePriceEntity exist = repository.getBySupplierAndMaterial(source.getSupplier(), source.getMaterial());
         if (Objects.nonNull(exist)) {
-            Result.FORBIDDEN_EXIST.show(exist.getSupplier().getName() + "-" + exist.getMaterial().getName() + " 采购价已存在!");
+            Result.FORBIDDEN_EXIST.show(String.format(
+                    "物料 %s 在供应商 %s 下的采购价已存在!",
+                    exist.getMaterial().getName(),
+                    exist.getSupplier().getName()
+            ));
         }
         return source;
     }

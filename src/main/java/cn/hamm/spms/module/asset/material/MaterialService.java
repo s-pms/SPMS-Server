@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.asset.material;
 
+import cn.hamm.airpower.config.Constant;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,8 @@ import java.util.Objects;
 public class MaterialService extends BaseService<MaterialEntity, MaterialRepository> {
     @Override
     protected MaterialEntity beforeAppSaveToDatabase(@NotNull MaterialEntity material) {
-        if (Objects.isNull(material.getPurchasePrice())) {
-            material.setPurchasePrice(0D);
-        }
-        if (Objects.isNull(material.getSalePrice())) {
-            material.setSalePrice(0D);
-        }
+        material.setPurchasePrice(Objects.requireNonNullElse(material.getPurchasePrice(), Constant.ZERO_DOUBLE));
+        material.setSalePrice(Objects.requireNonNullElse(material.getSalePrice(), Constant.ZERO_DOUBLE));
         return material;
     }
 }

@@ -1,7 +1,6 @@
 package cn.hamm.spms.base;
 
 
-import cn.hamm.airpower.enums.Result;
 import cn.hamm.airpower.root.RootService;
 import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.common.Services;
@@ -39,16 +38,11 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
             if (Objects.isNull(autoGenerateCode)) {
                 continue;
             }
-            field.setAccessible(true);
-            try {
-                Object value = field.get(entity);
-                if (Objects.isNull(field.get(entity)) || !StringUtils.hasText(value.toString())) {
-                    String code = Services.getCodeRuleService().createCode(autoGenerateCode.value());
-                    field.set(entity, code);
-                    break;
-                }
-            } catch (IllegalAccessException e) {
-                Result.ERROR.show("生成编码规则失败，反射字段出现异常");
+            Object value = AirUtil.getReflectUtil().getFieldValue(entity, field);
+            if (Objects.isNull(value) || !StringUtils.hasText(value.toString())) {
+                String code = Services.getCodeRuleService().createCode(autoGenerateCode.value());
+                AirUtil.getReflectUtil().setFieldValue(entity, field, code);
+                break;
             }
         }
         entity = beforeAppSaveToDatabase(entity);

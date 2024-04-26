@@ -94,7 +94,7 @@ public class InitializeRunner implements CommandLineRunner {
         initRootUser();
         initCodeRules();
         initParameters();
-        Services.getPermissionService().initPermission("cn.hamm.spms");
+        Services.getPermissionService().initPermission();
         Services.getMenuService().initMenu();
         System.out.println("---------------------------------");
         String[] localEnvList = {"hamm"};

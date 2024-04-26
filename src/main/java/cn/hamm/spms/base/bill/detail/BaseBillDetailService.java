@@ -22,9 +22,7 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
      */
     public final void deleteAllByBillId(Long billId) {
         List<E> details = getAllByBillId(billId);
-        for (E detail : details) {
-            repository.deleteById(detail.getId());
-        }
+        details.forEach(detail -> repository.deleteById(detail.getId()));
     }
 
     /**
@@ -47,11 +45,11 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
     public final @NotNull List<E> saveDetails(Long billId, @NotNull List<E> details) {
         deleteAllByBillId(billId);
         List<E> savedDetails = new ArrayList<>(details.size());
-        for (E detail : details) {
+        details.forEach(detail -> {
             detail.setBillId(billId);
             long detailId = add(detail);
             savedDetails.add(get(detailId));
-        }
+        });
         return savedDetails;
     }
 }

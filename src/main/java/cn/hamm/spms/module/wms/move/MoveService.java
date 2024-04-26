@@ -90,7 +90,6 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
         moveBill.setStatus(MoveStatus.DONE.getKey());
         update(moveBill);
 
-
         InputEntity inputBill = new InputEntity()
                 .setType(InputType.MOVE.getKey())
                 .setMove(moveBill)

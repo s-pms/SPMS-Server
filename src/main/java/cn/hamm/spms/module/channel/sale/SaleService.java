@@ -35,10 +35,7 @@ public class SaleService extends AbstractBaseBillService<SaleEntity, SaleReposit
     @Override
     protected void afterDetailSaved(@NotNull SaleEntity sale) {
         List<SaleDetailEntity> details = sale.getDetails();
-        double totalPrice = 0D;
-        for (SaleDetailEntity detail : details) {
-            totalPrice += detail.getQuantity() * detail.getPrice();
-        }
+        double totalPrice = details.stream().mapToDouble(detail -> detail.getQuantity() * detail.getPrice()).sum();
         sale.setTotalPrice(totalPrice);
         updateToDatabase(sale);
     }

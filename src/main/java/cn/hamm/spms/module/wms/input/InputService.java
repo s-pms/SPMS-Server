@@ -48,7 +48,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
         InputEntity bill = get(id);
         bill.setStatus(InputStatus.DONE.getKey());
         update(bill);
-        if (bill.getType() == InputType.PURCHASE.getKey()) {
+        if (InputType.PURCHASE.equalsKey(bill.getType())) {
             PurchaseEntity purchaseEntity = bill.getPurchase();
             Services.getPurchaseService().update(purchaseEntity.setStatus(PurchaseStatus.FINISHED.getKey()));
         }

@@ -1,11 +1,12 @@
 package cn.hamm.spms.common.interceptor;
 
 import cn.hamm.airpower.config.AirConfig;
+import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.enums.Result;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
 import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.common.annotation.LogDisabled;
-import cn.hamm.spms.common.config.Constant;
+import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
@@ -57,7 +58,9 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
                 }
             }
         }
-        Result.FORBIDDEN.show("你无权访问 " + needPermission.getName() + "(" + needPermission.getIdentity() + ")");
+        Result.FORBIDDEN.show(String.format(
+                "你无权访问 %s (%s)", needPermission.getName(), needPermission.getIdentity()
+        ));
         return false;
     }
 
@@ -74,12 +77,12 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         }
         String accessToken = request.getHeader(AirConfig.getGlobalConfig().getAuthorizeHeader());
         Long userId = null;
-        int appVersion = request.getIntHeader(Constant.APP_VERSION_HEADER);
-        String platform = "";
+        int appVersion = request.getIntHeader(AppConstant.APP_VERSION_HEADER);
+        String platform = Constant.EMPTY_STRING;
         String action = request.getRequestURI();
         try {
             userId = AirUtil.getSecurityUtil().getUserIdFromAccessToken(accessToken);
-            platform = request.getHeader(Constant.APP_PLATFORM_HEADER);
+            platform = request.getHeader(AppConstant.APP_PLATFORM_HEADER);
             String description = AirUtil.getReflectUtil().getDescription(method);
             if (!description.equals(method.getName())) {
                 action = description;

@@ -47,7 +47,7 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
         OutputEntity bill = get(id);
         bill.setStatus(OutputStatus.DONE.getKey());
         update(bill);
-        if (bill.getType() == OutputType.SALE.getKey()) {
+        if (OutputType.SALE.equalsKey(bill.getType())) {
             SaleEntity saleEntity = bill.getSale();
             Services.getSaleService().update(saleEntity.setStatus(SaleStatus.DONE.getKey()));
         }

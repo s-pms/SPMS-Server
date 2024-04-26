@@ -1,5 +1,7 @@
 package cn.hamm.spms.common.helper.influxdb;
 
+import cn.hamm.airpower.config.Constant;
+import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.common.config.InfluxConfig;
 import cn.hamm.spms.module.iot.report.*;
 import com.influxdb.LogLevel;
@@ -26,6 +28,10 @@ import java.util.Objects;
  */
 @Configuration
 public class InfluxHelper {
+    public static final String INFLUX_FIELD_VALUE = "value";
+    public static final String INFLUX_TAG_UUID = "uuid";
+    public static final String INFLUX_SQL_SPLIT = " |> ";
+    public static final String INFLUX_RECORD_VALUE_KEY = "_value";
     private InfluxDBClient influxDbClient;
 
     @Autowired
@@ -42,8 +48,8 @@ public class InfluxHelper {
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
             writeApi.writePoint(influxConfig.getBucket(), influxConfig.getOrg(), new Point(ReportEvent.CACHE_PREFIX + code)
-                    .addField("value", value)
-                    .addTag("uuid", uuid)
+                    .addField(INFLUX_FIELD_VALUE, value)
+                    .addTag(INFLUX_TAG_UUID, uuid)
             );
         }
     }
@@ -59,8 +65,8 @@ public class InfluxHelper {
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
             writeApi.writePoint(influxConfig.getBucket(), influxConfig.getOrg(), new Point(ReportEvent.CACHE_PREFIX + code)
-                    .addField("value", value)
-                    .addTag("uuid", uuid)
+                    .addField(INFLUX_FIELD_VALUE, value)
+                    .addTag(INFLUX_TAG_UUID, uuid)
             );
         }
     }
@@ -77,8 +83,8 @@ public class InfluxHelper {
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
             writeApi.writePoint(influxConfig.getBucket(), influxConfig.getOrg(), new Point(ReportEvent.CACHE_PREFIX + code)
-                    .addField("value", value)
-                    .addTag("uuid", uuid)
+                    .addField(INFLUX_FIELD_VALUE, value)
+                    .addTag(INFLUX_TAG_UUID, uuid)
             );
         }
     }
@@ -158,11 +164,11 @@ public class InfluxHelper {
         List<ReportInfluxPayload> result = new ArrayList<>();
         QueryApi queryApi = influxDbClient.getQueryApi();
         List<String> queryParams = getFluxQuery(reportPayload, reportDataType, reportGranularity);
-        System.out.println(String.join(" |> ", queryParams));
-        List<FluxTable> tables = queryApi.query(String.join(" |> ", queryParams));
+        System.out.println(String.join(INFLUX_SQL_SPLIT, queryParams));
+        List<FluxTable> tables = queryApi.query(String.join(INFLUX_SQL_SPLIT, queryParams));
         for (FluxTable table : tables) {
             for (FluxRecord record : table.getRecords()) {
-                Object value = record.getValueByKey("_value");
+                Object value = record.getValueByKey(INFLUX_RECORD_VALUE_KEY);
                 ReportInfluxPayload payload = new ReportInfluxPayload()
                         .setTimestamp(Objects.requireNonNull(record.getTime()).toEpochMilli());
                 switch (reportDataType) {
@@ -170,10 +176,10 @@ public class InfluxHelper {
                         payload.setValue(Objects.isNull(value) ? 0 : Double.parseDouble(value.toString()));
                         break;
                     case INFORMATION:
-                        payload.setStrValue(Objects.isNull(value) ? "" : value.toString());
+                        payload.setStrValue(Objects.isNull(value) ? Constant.EMPTY_STRING : value.toString());
                         break;
                     case SWITCH:
-                        payload.setBoolValue(!Objects.isNull(value) && "1".equals(value.toString()));
+                        payload.setBoolValue(!Objects.isNull(value) && AppConstant.BOOLEAN_STRING_1.equals(value.toString()));
                         break;
                     case STATUS:
                         payload.setIntValue(Objects.isNull(value) ? 0 : Integer.parseInt(value.toString()));
@@ -187,7 +193,7 @@ public class InfluxHelper {
         return result;
     }
 
-    private  @NotNull List<String> getFluxQuery(@NotNull ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
+    private @NotNull List<String> getFluxQuery(@NotNull ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
         List<String> queryParams = new ArrayList<>();
         queryParams.add(String.format("from(bucket:\"%s\")", influxConfig.getBucket()));
         queryParams.add(String.format("range(start: %s, stop: %s)", Integer.parseInt(String.valueOf(reportPayload.getStartTime() / 1000)), Integer.parseInt(String.valueOf(reportPayload.getEndTime() / 1000))));

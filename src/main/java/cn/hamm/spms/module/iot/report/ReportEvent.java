@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.iot.report;
 
 
+import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.model.json.Json;
 import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.common.helper.influxdb.InfluxHelper;
@@ -58,11 +59,6 @@ public class ReportEvent {
      * <h2>Redis存IOT采集数据的前缀</h2>
      */
     public final static String CACHE_PREFIX = "iot_report_";
-
-    /**
-     * <h2>下划线</h2>
-     */
-    public final static String CACHE_UNDERLINE = "_";
 
     @Autowired
     private DeviceService deviceService;
@@ -123,13 +119,13 @@ public class ReportEvent {
                             payload.setUuid(reportData.getDeviceId());
                             switch (payload.getCode()) {
                                 case REPORT_KEY_OF_STATUS:
-                                    lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_STATUS + CACHE_UNDERLINE + reportData.getDeviceId());
+                                    lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_STATUS + Constant.UNDERLINE + reportData.getDeviceId());
                                     if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
                                         // 查到了数据 没过期 跳过
                                         continue;
                                     }
                                     influxHelper.save(payload.getCode(), Integer.parseInt(payload.getValue()), reportData.getDeviceId());
-                                    redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_STATUS + CACHE_UNDERLINE + reportData.getDeviceId(), payload
+                                    redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_STATUS + Constant.UNDERLINE + reportData.getDeviceId(), payload
                                             .getValue());
                                     if (Objects.isNull(device)) {
                                         device = deviceService.getByUuid(reportData.getDeviceId());
@@ -140,13 +136,13 @@ public class ReportEvent {
                                     }
                                     break;
                                 case REPORT_KEY_OF_ALARM:
-                                    lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_ALARM + CACHE_UNDERLINE + reportData.getDeviceId());
+                                    lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_ALARM + Constant.UNDERLINE + reportData.getDeviceId());
                                     if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
                                         // 查到了数据 没过期 跳过
                                         continue;
                                     }
                                     influxHelper.save(payload.getCode(), Integer.parseInt(payload.getValue()), reportData.getDeviceId());
-                                    redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_ALARM + CACHE_UNDERLINE + reportData.getDeviceId(), payload
+                                    redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_ALARM + Constant.UNDERLINE + reportData.getDeviceId(), payload
                                             .getValue());
                                     if (Objects.isNull(device)) {
                                         device = deviceService.getByUuid(reportData.getDeviceId());
@@ -157,13 +153,13 @@ public class ReportEvent {
                                     }
                                     break;
                                 case REPORT_KEY_OF_PART_COUNT:
-                                    lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_PART_COUNT + CACHE_UNDERLINE + reportData.getDeviceId());
+                                    lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_PART_COUNT + Constant.UNDERLINE + reportData.getDeviceId());
                                     if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
                                         // 查到了数据 没过期 跳过
                                         continue;
                                     }
                                     influxHelper.save(payload.getCode(), Double.parseDouble(payload.getValue()), reportData.getDeviceId());
-                                    redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_PART_COUNT + CACHE_UNDERLINE + reportData.getDeviceId(), payload
+                                    redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_PART_COUNT + Constant.UNDERLINE + reportData.getDeviceId(), payload
                                             .getValue());
                                     if (Objects.isNull(device)) {
                                         device = deviceService.getByUuid(reportData.getDeviceId());
@@ -175,12 +171,12 @@ public class ReportEvent {
                                     break;
                                 default:
                                     influxHelper.save(payload.getCode(), payload.getValue(), reportData.getDeviceId());
-                                    lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + payload.getCode() + CACHE_UNDERLINE + reportData.getDeviceId());
+                                    lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + payload.getCode() + Constant.UNDERLINE + reportData.getDeviceId());
                                     if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
                                         // 查到了数据 没过期 跳过
                                         continue;
                                     }
-                                    redisTemplate.opsForValue().set(CACHE_PREFIX + payload.getCode() + CACHE_UNDERLINE + reportData.getDeviceId(), payload
+                                    redisTemplate.opsForValue().set(CACHE_PREFIX + payload.getCode() + Constant.UNDERLINE + reportData.getDeviceId(), payload
                                             .getValue());
                             }
                         }

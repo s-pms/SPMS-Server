@@ -5,7 +5,7 @@ package cn.hamm.spms.common.config;
  *
  * @author Hamm.cn
  */
-public class Constant {
+public class AppConstant {
     /**
      * <h2>客户端版本头</h2>
      */
@@ -15,4 +15,8 @@ public class Constant {
      * <h2>客户端平台头</h2>
      */
     public static final String APP_PLATFORM_HEADER = "app-platform";
+
+    public static final String CONTROLLER_CLASS_PATH = "/**/*Controller.class";
+
+    public static final String BOOLEAN_STRING_1 = "1";
 }

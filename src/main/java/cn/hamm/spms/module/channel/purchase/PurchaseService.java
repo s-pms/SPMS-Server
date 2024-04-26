@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.channel.purchase;
 
+import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
@@ -22,6 +23,7 @@ import java.util.List;
  */
 @Service
 public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, PurchaseRepository, PurchaseDetailEntity, PurchaseDetailService, PurchaseDetailRepository> {
+
     @Override
     public IDictionary getAuditingStatus() {
         return PurchaseStatus.AUDITING;
@@ -43,7 +45,7 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
         bill.setStatus(PurchaseStatus.DONE.getKey());
         List<PurchaseDetailEntity> details = detailService.getAllByBillId(bill.getId());
         List<InputDetailEntity> inputDetails = new ArrayList<>();
-        double totalRealPrice = 0D;
+        double totalRealPrice = Constant.ZERO_DOUBLE;
         for (PurchaseDetailEntity detail : details) {
             totalRealPrice += detail.getPrice() * detail.getFinishQuantity();
             inputDetails.add(new InputDetailEntity()
@@ -65,10 +67,7 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
     @Override
     protected void afterDetailSaved(@NotNull PurchaseEntity purchase) {
         List<PurchaseDetailEntity> details = detailService.getAllByBillId(purchase.getId());
-        double totalPrice = 0D;
-        for (PurchaseDetailEntity detail : details) {
-            totalPrice += detail.getPrice() * detail.getQuantity();
-        }
+        double totalPrice = details.stream().mapToDouble(detail -> detail.getPrice() * detail.getQuantity()).sum();
         purchase.setTotalPrice(totalPrice);
         updateToDatabase(purchase);
     }

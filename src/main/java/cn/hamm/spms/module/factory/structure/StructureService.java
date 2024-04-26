@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.factory.structure;
 
+import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.model.query.QueryRequest;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +30,7 @@ public class StructureService extends BaseService<StructureEntity, StructureRepo
     protected <T extends QueryRequest<StructureEntity>> @NotNull T beforeGetList(@NotNull T sourceRequestData) {
         StructureEntity filter = sourceRequestData.getFilter();
         if (Objects.isNull(filter.getParentId())) {
-            filter.setParentId(0L);
+            filter.setParentId(Constant.ZERO_LONG);
         }
         sourceRequestData.setFilter(filter);
         return sourceRequestData;

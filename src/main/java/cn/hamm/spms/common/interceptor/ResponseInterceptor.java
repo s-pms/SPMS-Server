@@ -25,7 +25,9 @@ public class ResponseInterceptor extends ResponseBodyInterceptor {
     protected Object beforeResponseFinished(Object body, ServerHttpRequest request, ServerHttpResponse response) {
         try {
             Object shareData = getShareData(RequestInterceptor.LOG_REQUEST_KEY);
-            assert shareData != null;
+            if (Objects.isNull(shareData)) {
+                return body;
+            }
             long logId = Long.parseLong(shareData.toString());
             LogEntity log = logService.getMaybeNull(logId);
             if (Objects.nonNull(log)) {

@@ -42,6 +42,7 @@ import java.util.Objects;
 @RequestMapping("oauth2")
 @Slf4j
 public class Oauth2Controller extends RootController implements IAppAction {
+    public static final String ERROR = "error";
     @Autowired
     private UserService userService;
 
@@ -137,8 +138,8 @@ public class Oauth2Controller extends RootController implements IAppAction {
      * @return 错误页面
      */
     private @NotNull ModelAndView showError(String error) {
-        ModelAndView view = new ModelAndView("error");
-        view.getModel().put("error", error);
+        ModelAndView view = new ModelAndView(ERROR);
+        view.getModel().put(ERROR, error);
         return view;
     }
 
