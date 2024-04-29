@@ -97,7 +97,7 @@ public class InitializeRunner implements CommandLineRunner {
         Services.getPermissionService().initPermission();
         Services.getMenuService().initMenu();
         System.out.println("---------------------------------");
-        String[] localEnvList = {"hamm"};
+        String[] localEnvList = {"local-hamm"};
         if (Arrays.stream(localEnvList).toList().contains(AirUtil.getCurrentEnvironment())) {
             initDevData();
         }
