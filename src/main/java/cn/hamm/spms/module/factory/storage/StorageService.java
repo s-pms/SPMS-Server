@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.factory.storage;
 
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.model.query.QueryRequest;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +29,7 @@ public class StorageService extends BaseService<StorageEntity, StorageRepository
     protected <T extends QueryRequest<StorageEntity>> @NotNull T beforeGetList(@NotNull T sourceRequestData) {
         StorageEntity filter = sourceRequestData.getFilter();
         if (Objects.isNull(filter.getParentId())) {
-            filter.setParentId(Constant.ZERO_LONG);
+            filter.setRootTree();
         }
         sourceRequestData.setFilter(filter);
         return sourceRequestData;

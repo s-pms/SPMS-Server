@@ -5,7 +5,7 @@ import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.enums.Result;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
 import cn.hamm.airpower.util.AirUtil;
-import cn.hamm.spms.common.annotation.LogDisabled;
+import cn.hamm.spms.common.annotation.DisableLog;
 import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
@@ -33,7 +33,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     /**
      * <h2>日志前缀</h2>
      */
-    public final static String LOG_REQUEST_KEY = "logId";
+    final static String LOG_REQUEST_KEY = "logId";
 
     @Autowired
     private UserService userService;
@@ -71,8 +71,8 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
             Class<?> clazz,
             @NotNull Method method
     ) {
-        LogDisabled logDisabled = AirUtil.getReflectUtil().getAnnotation(LogDisabled.class, method);
-        if (Objects.nonNull(logDisabled)) {
+        DisableLog disableLog = AirUtil.getReflectUtil().getAnnotation(DisableLog.class, method);
+        if (Objects.nonNull(disableLog)) {
             return;
         }
         String accessToken = request.getHeader(AirConfig.getGlobalConfig().getAuthorizeHeader());

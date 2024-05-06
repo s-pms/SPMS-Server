@@ -2,6 +2,7 @@ package cn.hamm.spms;
 
 import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.common.Services;
+import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.report.ReportDataType;
@@ -77,7 +78,7 @@ public class InitializeRunner implements CommandLineRunner {
         if (Objects.nonNull(userEntity)) {
             return;
         }
-        String salt = AirUtil.getRandomUtil().randomString();
+        String salt = AirUtil.getRandomUtil().randomString(AppConstant.PASSWORD_SALT_LENGTH);
         Services.getUserService().add(new UserEntity()
                 .setNickname("Hamm")
                 .setAccount("hamm")

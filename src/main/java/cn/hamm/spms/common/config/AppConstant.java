@@ -18,5 +18,9 @@ public class AppConstant {
 
     public static final String CONTROLLER_CLASS_PATH = "/**/*Controller.class";
 
-    public static final String BOOLEAN_STRING_1 = "1";
+    public static final String ORDER_NO = "orderNo";
+    /**
+     * <h2>密码盐长度</h2>
+     */
+    public static final int PASSWORD_SALT_LENGTH = 4;
 }

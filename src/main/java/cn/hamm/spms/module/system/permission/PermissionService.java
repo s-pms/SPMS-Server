@@ -89,7 +89,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                 }
 
                 String customClassName = AirUtil.getReflectUtil().getDescription(clazz);
-                String identity = clazz.getSimpleName().replaceAll("Controller", Constant.EMPTY_STRING);
+                String identity = clazz.getSimpleName().replaceAll(Constant.CONTROLLER_SUFFIX, Constant.EMPTY_STRING);
                 PermissionEntity permissionEntity = getPermissionByIdentity(identity);
                 if (Objects.isNull(permissionEntity)) {
                     permissionEntity = new PermissionEntity()

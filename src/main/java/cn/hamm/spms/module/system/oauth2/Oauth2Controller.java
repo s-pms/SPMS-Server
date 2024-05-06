@@ -3,6 +3,7 @@ package cn.hamm.spms.module.system.oauth2;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.airpower.config.AirConfig;
+import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.enums.Result;
 import cn.hamm.airpower.model.json.JsonData;
 import cn.hamm.airpower.root.RootController;
@@ -42,7 +43,12 @@ import java.util.Objects;
 @RequestMapping("oauth2")
 @Slf4j
 public class Oauth2Controller extends RootController implements IAppAction {
-    public static final String ERROR = "error";
+    private static final String APP_KEY = "appKey";
+    private static final String INVALID_APP_KEY = "Invalid appKey!";
+    private static final String APP_NOT_FOUND = "App(%s) not found!";
+    private static final String REDIRECT_URI = "redirectUri";
+    private static final String REDIRECT_URI_MISSING = "RedirectUri missing!";
+
     @Autowired
     private UserService userService;
 
@@ -57,19 +63,19 @@ public class Oauth2Controller extends RootController implements IAppAction {
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-        String appKey = request.getParameter("appKey");
+        String appKey = request.getParameter(APP_KEY);
         if (!StringUtils.hasText(appKey)) {
-            return showError("Invalid appKey!");
+            return showError(INVALID_APP_KEY);
         }
         AppEntity appEntity;
         try {
             appEntity = appService.getByAppKey(appKey);
         } catch (Exception exception) {
-            return showError("App(" + appKey + ") not found!");
+            return showError(String.format(APP_NOT_FOUND, appKey));
         }
-        String redirectUri = request.getParameter("redirectUri");
+        String redirectUri = request.getParameter(REDIRECT_URI);
         if (!StringUtils.hasText(redirectUri)) {
-            return showError("RedirectUri missing!");
+            return showError(REDIRECT_URI_MISSING);
         }
         Cookie[] cookies = request.getCookies();
         if (Objects.isNull(cookies)) {
@@ -138,8 +144,8 @@ public class Oauth2Controller extends RootController implements IAppAction {
      * @return 错误页面
      */
     private @NotNull ModelAndView showError(String error) {
-        ModelAndView view = new ModelAndView(ERROR);
-        view.getModel().put(ERROR, error);
+        ModelAndView view = new ModelAndView(Constant.ERROR);
+        view.getModel().put(Constant.ERROR, error);
         return view;
     }
 

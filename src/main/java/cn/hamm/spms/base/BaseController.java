@@ -1,11 +1,11 @@
 package cn.hamm.spms.base;
 
+import cn.hamm.airpower.annotation.Permission;
+import cn.hamm.airpower.model.json.JsonData;
 import cn.hamm.airpower.model.query.QueryPageRequest;
 import cn.hamm.airpower.model.query.QueryRequest;
-import cn.hamm.airpower.model.json.JsonData;
 import cn.hamm.airpower.root.RootEntityController;
-import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.spms.common.annotation.LogDisabled;
+import cn.hamm.spms.common.annotation.DisableLog;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,19 +20,19 @@ import org.springframework.web.bind.annotation.RequestBody;
  */
 @Permission
 public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>, R extends BaseRepository<E>> extends RootEntityController<E, S, R> {
-    @LogDisabled
+    @DisableLog
     @Override
     public JsonData getList(@RequestBody QueryRequest<E> queryRequest) {
         return super.getList(queryRequest);
     }
 
-    @LogDisabled
+    @DisableLog
     @Override
     public JsonData getPage(@RequestBody QueryPageRequest<E> queryPageRequest) {
         return super.getPage(queryPageRequest);
     }
 
-    @LogDisabled
+    @DisableLog
     @Override
     public JsonData getDetail(@RequestBody @Validated(WhenIdRequired.class) @NotNull E entity) {
         return super.getDetail(entity);

@@ -1,11 +1,11 @@
 package cn.hamm.spms.module.system.menu;
 
-import cn.hamm.airpower.config.Constant;
+import cn.hamm.airpower.enums.Result;
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.model.query.QueryRequest;
-import cn.hamm.airpower.enums.Result;
 import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.spms.base.BaseService;
+import cn.hamm.spms.common.config.AppConstant;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     protected <T extends QueryRequest<MenuEntity>> @NotNull T beforeGetList(@NotNull T sourceRequestData) {
         MenuEntity filter = sourceRequestData.getFilter();
         if (Objects.isNull(sourceRequestData.getSort())) {
-            sourceRequestData.setSort(new Sort().setField("orderNo"));
+            sourceRequestData.setSort(new Sort().setField(AppConstant.ORDER_NO));
         }
         sourceRequestData.setFilter(filter);
         return sourceRequestData;
@@ -49,11 +49,11 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         MenuEntity secondMenu;
         MenuEntity thirdMenu;
 
-        firstMenu = new MenuEntity().setName("首页").setOrderNo(99).setPath("/console").setComponent("/console/index/index").setParentId(Constant.ZERO_LONG);
+        firstMenu = new MenuEntity().setName("首页").setOrderNo(99).setPath("/console").setComponent("/console/index/index").setRootTree();
         add(firstMenu);
 
         // 基础数据
-        firstMenu = new MenuEntity().setName("基础数据").setOrderNo(88).setParentId(Constant.ZERO_LONG);
+        firstMenu = new MenuEntity().setName("基础数据").setOrderNo(88).setRootTree();
         firstMenu = get(add(firstMenu));
 
         secondMenu = new MenuEntity().setName("人事管理").setParentId(firstMenu.getId());
@@ -82,7 +82,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
 
 
         // 渠道管理
-        firstMenu = new MenuEntity().setName("渠道管理").setOrderNo(77).setParentId(Constant.ZERO_LONG);
+        firstMenu = new MenuEntity().setName("渠道管理").setOrderNo(77).setRootTree();
         firstMenu = get(add(firstMenu));
 
         secondMenu = new MenuEntity().setName("采购管理").setPath("/console/channel/purchase/list").setParentId(firstMenu.getId());
@@ -100,7 +100,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
 
 
         // 仓储管理 - WMS
-        firstMenu = new MenuEntity().setName("仓储管理").setOrderNo(66).setParentId(Constant.ZERO_LONG);
+        firstMenu = new MenuEntity().setName("仓储管理").setOrderNo(66).setRootTree();
         firstMenu = get(add(firstMenu));
 
         secondMenu = new MenuEntity().setName("库存概览").setPath("/console/wms/inventory/list").setParentId(firstMenu.getId());
@@ -114,7 +114,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
 
 
         // 生产管理 - MES
-        firstMenu = new MenuEntity().setName("生产管理").setOrderNo(55).setParentId(Constant.ZERO_LONG);
+        firstMenu = new MenuEntity().setName("生产管理").setOrderNo(55).setRootTree();
         firstMenu = get(add(firstMenu));
 
         secondMenu = new MenuEntity().setName("生产资源").setParentId(firstMenu.getId());
@@ -145,7 +145,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
 
 
         // 物联网
-        firstMenu = new MenuEntity().setName("设备物联").setOrderNo(44).setParentId(Constant.ZERO_LONG);
+        firstMenu = new MenuEntity().setName("设备物联").setOrderNo(44).setRootTree();
         firstMenu = get(add(firstMenu));
 
         MenuEntity iotSubMenu;
@@ -155,7 +155,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         add(iotSubMenu);
 
         // 系统设置
-        firstMenu = new MenuEntity().setName("系统设置").setOrderNo(2).setParentId(Constant.ZERO_LONG);
+        firstMenu = new MenuEntity().setName("系统设置").setOrderNo(2).setRootTree();
         firstMenu = get(add(firstMenu));
 
         secondMenu = new MenuEntity().setName("计量单位").setPath("/console/system/unit/list").setParentId(firstMenu.getId());
