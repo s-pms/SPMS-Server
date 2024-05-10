@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.personnel.role;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.model.json.Json;
+import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.base.BaseController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,13 +21,13 @@ public class RoleController extends BaseController<RoleEntity, RoleService, Role
     @RequestMapping("authorizeMenu")
     public Json authorizeMenu(@RequestBody @Validated({WhenAuthorizePermission.class, WhenIdRequired.class}) RoleEntity entity) {
         service.update(entity);
-        return json("授权菜单成功");
+        return Json.success("授权菜单成功");
     }
 
     @Description("授权权限")
     @RequestMapping("authorizePermission")
     public Json authorizePermission(@RequestBody @Validated({WhenAuthorizePermission.class, WhenIdRequired.class}) RoleEntity entity) {
         service.update(entity);
-        return json("授权菜单成功");
+        return Json.success("授权菜单成功");
     }
 }

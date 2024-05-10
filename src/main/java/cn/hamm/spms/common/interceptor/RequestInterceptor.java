@@ -2,7 +2,8 @@ package cn.hamm.spms.common.interceptor;
 
 import cn.hamm.airpower.config.AirConfig;
 import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.enums.Result;
+import cn.hamm.airpower.config.MessageConstant;
+import cn.hamm.airpower.enums.SystemError;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
 import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.common.annotation.DisableLog;
@@ -34,7 +35,6 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
      * <h2>日志前缀</h2>
      */
     final static String LOG_REQUEST_KEY = "logId";
-
     @Autowired
     private UserService userService;
 
@@ -58,8 +58,8 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
                 }
             }
         }
-        Result.FORBIDDEN.show(String.format(
-                "你无权访问 %s (%s)", needPermission.getName(), needPermission.getIdentity()
+        SystemError.FORBIDDEN.show(String.format(
+                MessageConstant.ACCESS_DENIED, needPermission.getName(), needPermission.getIdentity()
         ));
         return false;
     }

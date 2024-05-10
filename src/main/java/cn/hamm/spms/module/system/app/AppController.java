@@ -2,8 +2,8 @@ package cn.hamm.spms.module.system.app;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Filter;
-import cn.hamm.airpower.model.json.JsonData;
 import cn.hamm.airpower.annotation.Permission;
+import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.base.BaseController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,13 +23,13 @@ public class AppController extends BaseController<AppEntity, AppService, AppRepo
     @RequestMapping("getByAppKey")
     @Permission(login = false)
     @Filter(WhenGetDetail.class)
-    public JsonData getByAppKey(@RequestBody @Validated(WhenGetByAppKey.class) AppEntity entity) {
-        return jsonData(service.getByAppKey(entity.getAppKey()));
+    public Json getByAppKey(@RequestBody @Validated(WhenGetByAppKey.class) AppEntity entity) {
+        return Json.data(service.getByAppKey(entity.getAppKey()));
     }
 
     @Description("重置指定应用的秘钥")
     @RequestMapping("resetSecret")
-    public JsonData resetSecret(@RequestBody @Validated(WhenResetSecret.class) AppEntity entity) {
-        return jsonData(service.resetSecretById(entity.getId()), "重置应用秘钥成功");
+    public Json resetSecret(@RequestBody @Validated(WhenResetSecret.class) AppEntity entity) {
+        return Json.data(service.resetSecretById(entity.getId()), "重置应用秘钥成功");
     }
 }

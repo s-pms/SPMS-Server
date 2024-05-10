@@ -2,7 +2,7 @@ package cn.hamm.spms.module.iot.report;
 
 
 import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.model.json.Json;
+import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.common.helper.influxdb.InfluxHelper;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
@@ -182,7 +182,7 @@ public class ReportEvent {
                         }
                         reportData.setPayloads(payloadList);
                         redisTemplate.opsForValue().set(CACHE_PREFIX + reportData.getDeviceId(), Json.toString(reportData));
-                    } catch (Exception e) {
+                    } catch (java.lang.Exception e) {
                         log.error(e.getMessage());
                     }
                 }

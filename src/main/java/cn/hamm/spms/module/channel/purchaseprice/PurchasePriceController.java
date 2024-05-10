@@ -2,7 +2,7 @@ package cn.hamm.spms.module.channel.purchaseprice;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Filter;
-import cn.hamm.airpower.model.json.JsonData;
+import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.base.BaseController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +21,7 @@ public class PurchasePriceController extends BaseController<PurchasePriceEntity,
     @Description("查询物料和供应商的价格")
     @RequestMapping("getByMaterialAndSupplier")
     @Filter(WhenGetDetail.class)
-    public JsonData getByMaterialAndSupplier(@RequestBody @Validated(WhenGetByMaterialAndSupplier.class) PurchasePriceEntity entity) {
-        return jsonData(service.getByMaterialAndSupplier(entity.getMaterial(), entity.getSupplier()));
+    public Json getByMaterialAndSupplier(@RequestBody @Validated(WhenGetByMaterialAndSupplier.class) PurchasePriceEntity entity) {
+        return Json.data(service.getByMaterialAndSupplier(entity.getMaterial(), entity.getSupplier()));
     }
 }

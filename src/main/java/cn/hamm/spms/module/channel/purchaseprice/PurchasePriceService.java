@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.channel.purchaseprice;
 
-import cn.hamm.airpower.enums.Result;
+import cn.hamm.airpower.enums.SystemError;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.channel.supplier.SupplierEntity;
@@ -20,7 +20,7 @@ public class PurchasePriceService extends BaseService<PurchasePriceEntity, Purch
     protected @NotNull PurchasePriceEntity beforeAdd(@NotNull PurchasePriceEntity source) {
         PurchasePriceEntity exist = repository.getBySupplierAndMaterial(source.getSupplier(), source.getMaterial());
         if (Objects.nonNull(exist)) {
-            Result.FORBIDDEN_EXIST.show(String.format(
+            SystemError.FORBIDDEN_EXIST.show(String.format(
                     "物料 %s 在供应商 %s 下的采购价已存在!",
                     exist.getMaterial().getName(),
                     exist.getSupplier().getName()
@@ -31,7 +31,7 @@ public class PurchasePriceService extends BaseService<PurchasePriceEntity, Purch
 
     protected PurchasePriceEntity getByMaterialAndSupplier(MaterialEntity materialEntity, SupplierEntity supplierEntity) {
         PurchasePriceEntity exist = repository.getBySupplierAndMaterial(supplierEntity, materialEntity);
-        Result.DATA_NOT_FOUND.whenNull(exist, "没有查询到该物料在此供应商下提供的采购价格，请参考物料标准采购价填写。");
+        SystemError.DATA_NOT_FOUND.whenNull(exist, "没有查询到该物料在此供应商下提供的采购价格，请参考物料标准采购价填写。");
         return exist;
     }
 }

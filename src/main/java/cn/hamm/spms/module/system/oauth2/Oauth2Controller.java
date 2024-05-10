@@ -4,8 +4,8 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.airpower.config.AirConfig;
 import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.enums.Result;
-import cn.hamm.airpower.model.json.JsonData;
+import cn.hamm.airpower.enums.SystemError;
+import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.root.RootController;
 import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.common.config.AppConfig;
@@ -70,7 +70,7 @@ public class Oauth2Controller extends RootController implements IAppAction {
         AppEntity appEntity;
         try {
             appEntity = appService.getByAppKey(appKey);
-        } catch (Exception exception) {
+        } catch (java.lang.Exception exception) {
             return showError(String.format(APP_NOT_FOUND, appKey));
         }
         String redirectUri = request.getParameter(REDIRECT_URI);
@@ -117,14 +117,14 @@ public class Oauth2Controller extends RootController implements IAppAction {
     @Description("Code换取AccessToken")
     @Permission(login = false)
     @RequestMapping("accessToken")
-    public JsonData accessToken(@RequestBody @Validated(WhenCode2AccessToken.class) AppEntity appEntity) {
+    public Json accessToken(@RequestBody @Validated(WhenCode2AccessToken.class) AppEntity appEntity) {
         String code = appEntity.getCode();
         Long userId = userService.getUserIdByOauthAppKeyAndCode(appEntity.getAppKey(), code);
         AppEntity existApp = appService.getByAppKey(appEntity.getAppKey());
-        Result.FORBIDDEN.whenNotEquals(existApp.getAppSecret(), appEntity.getAppSecret(), "应用秘钥错误");
+        SystemError.FORBIDDEN.whenNotEquals(existApp.getAppSecret(), appEntity.getAppSecret(), "应用秘钥错误");
         userService.removeOauthCode(existApp.getAppKey(), code);
         String accessToken = AirUtil.getSecurityUtil().createAccessToken(userId);
-        return new JsonData(accessToken);
+        return Json.data(accessToken);
     }
 
     private @Nullable ModelAndView redirectLogin(HttpServletResponse response, String appKey, String redirectUri) {

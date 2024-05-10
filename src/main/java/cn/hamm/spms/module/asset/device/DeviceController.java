@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.asset.device;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.enums.Result;
-import cn.hamm.airpower.model.json.Json;
 import cn.hamm.airpower.annotation.Permission;
+import cn.hamm.airpower.enums.SystemError;
+import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.report.IReportPayloadAction;
@@ -41,7 +41,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
     @RequestMapping("getCurrentReport")
     @Permission(login = false)
     public Json getCurrentReport(@RequestBody @Validated(WhenIdRequired.class) DeviceEntity device) {
-        return jsonData(service.getCurrentReport(device.getId()));
+        return Json.data(service.getCurrentReport(device.getId()));
     }
 
     @Description("获取采集配置")
@@ -49,7 +49,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
     @Permission(login = false)
     public Json getDeviceConfig(@RequestBody @Validated(WhenGetDeviceConfig.class) DeviceEntity device) {
         device = service.getByUuid(device.getUuid());
-        Result.DATA_NOT_FOUND.whenNull(device);
+        SystemError.DATA_NOT_FOUND.whenNull(device);
         device.setPartCount(null)
                 .setAlarm(null)
                 .setStatus(null)
@@ -61,14 +61,14 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
             parameters.add(p);
         }
         device.setParameters(parameters);
-        return jsonData(device);
+        return Json.data(device);
     }
 
     @Description("获取指定设备某个参数的历史")
     @RequestMapping("getDevicePayloadHistory")
     @Permission(login = false)
     public Json getDevicePayloadHistory(@RequestBody @Validated(WhenGetDevicePayloadHistory.class) ReportPayload payload) {
-        return jsonData(service.getDevicePayloadHistory(payload));
+        return Json.data(service.getDevicePayloadHistory(payload));
     }
 
     @Override

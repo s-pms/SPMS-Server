@@ -2,7 +2,7 @@ package cn.hamm.spms.module.system.menu;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.model.json.JsonData;
+import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.model.query.QueryRequest;
 import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.base.BaseController;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MenuController extends BaseController<MenuEntity, MenuService, MenuRepository> {
     @Permission(authorize = false)
     @Override
-    public JsonData getList(@RequestBody QueryRequest<MenuEntity> queryRequest) {
-        return jsonData(AirUtil.getTreeUtil().buildTreeList(service.getList(queryRequest)));
+    public Json getList(@RequestBody QueryRequest<MenuEntity> queryRequest) {
+        return Json.data(AirUtil.getTreeUtil().buildTreeList(service.getList(queryRequest)));
     }
 }

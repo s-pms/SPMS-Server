@@ -1,7 +1,7 @@
 package cn.hamm.spms.common.interceptor;
 
 import cn.hamm.airpower.interceptor.ResponseBodyInterceptor;
-import cn.hamm.airpower.model.json.Json;
+import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.module.system.log.LogEntity;
 import cn.hamm.spms.module.system.log.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +34,13 @@ public class ResponseInterceptor extends ResponseBodyInterceptor {
                 String bodyString = body.toString();
                 try {
                     bodyString = Json.toString(body);
-                } catch (Exception ignored) {
+                } catch (java.lang.Exception ignored) {
 
                 }
                 log.setResponse(bodyString);
                 logService.update(log);
             }
-        } catch (Exception ignored) {
+        } catch (java.lang.Exception ignored) {
 
         }
         return body;

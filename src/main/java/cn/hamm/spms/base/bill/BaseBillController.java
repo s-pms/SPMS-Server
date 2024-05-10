@@ -2,9 +2,9 @@ package cn.hamm.spms.base.bill;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Filter;
-import cn.hamm.airpower.enums.Result;
-import cn.hamm.airpower.model.json.Json;
 import cn.hamm.airpower.annotation.Permission;
+import cn.hamm.airpower.enums.SystemError;
+import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
@@ -37,11 +37,11 @@ public class BaseBillController<
     @Filter(WhenGetDetail.class)
     public Json audit(@RequestBody @Validated(WhenIdRequired.class) E bill) {
         E savedBill = service.get(bill.getId());
-        Result.FORBIDDEN.when(!service.canAudit(savedBill), "该单据状态无法审核");
+        SystemError.FORBIDDEN.when(!service.canAudit(savedBill), "该单据状态无法审核");
         service.setAudited(savedBill);
         service.update(savedBill);
         afterAudit(savedBill);
-        return json("审核成功");
+        return Json.success("审核成功");
     }
 
     @Description("驳回")
@@ -49,11 +49,11 @@ public class BaseBillController<
     @Filter(WhenGetDetail.class)
     public Json reject(@RequestBody @Validated(WhenReject.class) E bill) {
         E savedBill = service.get(bill.getId());
-        Result.FORBIDDEN.when(!service.canReject(savedBill), "该单据状态无法驳回");
+        SystemError.FORBIDDEN.when(!service.canReject(savedBill), "该单据状态无法驳回");
         savedBill.setRejectReason(bill.getRejectReason());
         service.setReject(savedBill);
         service.update(savedBill);
-        return json("驳回成功");
+        return Json.success("驳回成功");
     }
 
     @Description("添加完成数量")
@@ -61,13 +61,13 @@ public class BaseBillController<
     @Filter(WhenGetDetail.class)
     public Json finish(@RequestBody @Validated(WhenAddFinish.class) D detail) {
         service.addFinish(detail);
-        return json("添加完成数量成功");
+        return Json.success("添加完成数量成功");
     }
 
     @Override
     protected final @NotNull E beforeUpdate(@NotNull E bill) {
         E savedBill = service.get(bill.getId());
-        Result.FORBIDDEN.when(!service.canEdit(savedBill), "该单据状态下无法编辑");
+        SystemError.FORBIDDEN.when(!service.canEdit(savedBill), "该单据状态下无法编辑");
         service.setAuditing(savedBill.setStatus(null));
         return savedBill;
     }

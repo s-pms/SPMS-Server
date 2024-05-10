@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.system.mail;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.model.json.Json;
-import cn.hamm.airpower.root.RootController;
 import cn.hamm.airpower.annotation.Permission;
+import cn.hamm.airpower.model.Json;
+import cn.hamm.airpower.root.RootController;
 import cn.hamm.spms.module.personnel.user.IUserAction;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
@@ -31,6 +31,6 @@ public class MailController extends RootController implements IUserAction {
     @RequestMapping("send")
     public Json send(@RequestBody @Validated(WhenSendEmail.class) UserEntity userEntity) throws MessagingException {
         userService.sendMail(userEntity.getEmail());
-        return json("发送成功");
+        return Json.success("发送成功");
     }
 }

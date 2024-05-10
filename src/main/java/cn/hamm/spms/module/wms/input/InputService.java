@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.wms.input;
 
+import cn.hamm.airpower.enums.SystemError;
 import cn.hamm.airpower.interfaces.IDictionary;
-import cn.hamm.airpower.enums.Result;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.purchase.PurchaseEntity;
@@ -57,7 +57,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
     @Override
     protected void afterAddDetailFinish(long detailId, @NotNull InputDetailEntity sourceDetail) {
         if (Objects.isNull(sourceDetail.getStorage()) || Objects.isNull(sourceDetail.getStorage().getId())) {
-            Result.FORBIDDEN.show("请传入入库存储资源");
+            SystemError.FORBIDDEN.show("请传入入库存储资源");
             return;
         }
         InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(sourceDetail.getMaterial().getId(), sourceDetail.getStorage().getId());

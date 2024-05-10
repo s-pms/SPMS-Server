@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.system.app;
 
-import cn.hamm.airpower.enums.Result;
+import cn.hamm.airpower.enums.SystemError;
 import cn.hamm.airpower.util.AirUtil;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ public class AppService extends BaseService<AppEntity, AppRepository> {
      */
     public AppEntity getByAppKey(String appKey) {
         AppEntity appEntity = repository.getByAppKey(appKey);
-        Result.DATA_NOT_FOUND.whenNull(appEntity, "没有查到指定AppKey的应用");
+        SystemError.DATA_NOT_FOUND.whenNull(appEntity, "没有查到指定AppKey的应用");
         return appEntity;
     }
 
