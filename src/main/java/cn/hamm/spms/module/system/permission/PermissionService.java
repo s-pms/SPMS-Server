@@ -68,7 +68,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     }
 
     @SuppressWarnings("AlibabaMethodTooLong")
-    public void initPermission() {
+    public void loadPermission() {
         try {
             ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
             String pattern = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
