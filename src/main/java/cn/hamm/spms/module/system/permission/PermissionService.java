@@ -22,6 +22,7 @@ import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -82,7 +83,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                 String className = metadataReader.getClassMetadata().getClassName();
                 Class<?> clazz = Class.forName(className);
 
-                RestController restController = clazz.getAnnotation(RestController.class);
+                RestController restController = AirUtil.getReflectUtil().getAnnotation(RestController.class, clazz);
                 if (Objects.isNull(restController) || RootEntityController.class.getSimpleName().equals(clazz.getSimpleName())) {
                     // 不是rest控制器或者是指定的几个白名单控制器
                     continue;
@@ -106,7 +107,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                 permissionEntity = get(permissionEntity.getId());
 
                 // 读取类的RequestMapping
-                RequestMapping requestMappingClass = clazz.getAnnotation(RequestMapping.class);
+                RequestMapping requestMappingClass = AirUtil.getReflectUtil().getAnnotation(RequestMapping.class, clazz);
                 String pathClass = Constant.EMPTY_STRING;
                 if (Objects.nonNull(requestMappingClass) && requestMappingClass.value().length > 0) {
                     // 标了RequestMapping
@@ -114,19 +115,17 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                 }
                 // 取出所有控制器方法
                 Method[] methods = clazz.getMethods();
+
+                // 取出控制器类上的Extends注解 如自己没标 则使用父类的
+                Extends extendsApi = AirUtil.getReflectUtil().getAnnotation(Extends.class, clazz);
                 for (Method method : methods) {
-                    Extends extendsApi = clazz.getAnnotation(Extends.class);
                     if (Objects.nonNull(extendsApi)) {
-                        Api current = null;
                         try {
-                            current = Api.valueOf(method.getName());
+                            Api current = Api.valueOf(method.getName());
+                            if (checkApiExcluded(current, extendsApi)) {
+                                continue;
+                            }
                         } catch (Exception ignored) {
-                        }
-                        if (Objects.isNull(current)) {
-                            continue;
-                        }
-                        if (checkApiBand(current, extendsApi)) {
-                            continue;
                         }
                     }
                     String customMethodName = AirUtil.getReflectUtil().getDescription(method);
@@ -141,6 +140,10 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                     PostMapping postMapping = AirUtil.getReflectUtil().getAnnotation(PostMapping.class, method);
                     if (Objects.nonNull(postMapping) && postMapping.value().length > 0) {
                         subIdentity += postMapping.value()[0];
+                    }
+
+                    if (!StringUtils.hasText(subIdentity) || (pathClass + Constant.UNDERLINE).equals(subIdentity)) {
+                        continue;
                     }
 
                     Access accessConfig = AirUtil.getAccessUtil().getWhatNeedAccess(clazz, method);
@@ -170,7 +173,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
         }
     }
 
-    private boolean checkApiBand(Api api, @NotNull Extends extend) {
+    private boolean checkApiExcluded(Api api, @NotNull Extends extend) {
         List<Api> excludeList = Arrays.asList(extend.exclude());
         List<Api> includeList = Arrays.asList(extend.value());
         if (excludeList.contains(api)) {
