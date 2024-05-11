@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.system.menu;
 
-import cn.hamm.airpower.enums.SystemError;
+import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.model.query.QueryRequest;
 import cn.hamm.airpower.root.RootEntity;
@@ -24,7 +24,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         QueryRequest<MenuEntity> queryRequest = new QueryRequest<>();
         queryRequest.setFilter(new MenuEntity().setParentId(id));
         List<MenuEntity> children = getList(queryRequest);
-        SystemError.FORBIDDEN_DELETE.when(!children.isEmpty(), "含有子菜单,无法删除!");
+        ServiceError.FORBIDDEN_DELETE.when(!children.isEmpty(), "含有子菜单,无法删除!");
     }
 
     @Override

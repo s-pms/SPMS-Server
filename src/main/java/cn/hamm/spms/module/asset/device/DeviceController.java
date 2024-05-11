@@ -2,7 +2,7 @@ package cn.hamm.spms.module.asset.device;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.enums.SystemError;
+import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
@@ -49,7 +49,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
     @Permission(login = false)
     public Json getDeviceConfig(@RequestBody @Validated(WhenGetDeviceConfig.class) DeviceEntity device) {
         device = service.getByUuid(device.getUuid());
-        SystemError.DATA_NOT_FOUND.whenNull(device);
+        ServiceError.DATA_NOT_FOUND.whenNull(device);
         device.setPartCount(null)
                 .setAlarm(null)
                 .setStatus(null)

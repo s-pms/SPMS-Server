@@ -1,6 +1,6 @@
 package cn.hamm.spms.common.cron;
 
-import cn.hamm.airpower.config.AirConfig;
+import cn.hamm.airpower.config.Configs;
 import cn.hamm.airpower.model.query.QueryRequest;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
@@ -25,7 +25,7 @@ public class SystemCron {
 
     @Scheduled(cron = "59 59 23 * * *")
     void softShutdownService() {
-        AirConfig.getGlobalConfig().setServiceRunning(false);
+        Configs.getServiceConfig().setServiceRunning(false);
     }
 
     @Scheduled(cron = "0 0 0 * * *")
@@ -34,7 +34,7 @@ public class SystemCron {
         for (CodeRuleEntity codeRule : codeRules) {
             resetSn(codeRule);
         }
-        AirConfig.getGlobalConfig().setServiceRunning(true);
+        Configs.getServiceConfig().setServiceRunning(true);
     }
 
     /**

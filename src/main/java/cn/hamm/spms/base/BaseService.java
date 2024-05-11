@@ -2,7 +2,7 @@ package cn.hamm.spms.base;
 
 
 import cn.hamm.airpower.root.RootService;
-import cn.hamm.airpower.util.AirUtil;
+import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import org.jetbrains.annotations.NotNull;
@@ -32,16 +32,16 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
 
     @Override
     protected final @NotNull E beforeSaveToDatabase(@NotNull E entity) {
-        List<Field> fields = AirUtil.getReflectUtil().getFieldList(entity.getClass());
+        List<Field> fields = Utils.getReflectUtil().getFieldList(entity.getClass());
         for (Field field : fields) {
-            AutoGenerateCode autoGenerateCode = AirUtil.getReflectUtil().getAnnotation(AutoGenerateCode.class, field);
+            AutoGenerateCode autoGenerateCode = Utils.getReflectUtil().getAnnotation(AutoGenerateCode.class, field);
             if (Objects.isNull(autoGenerateCode)) {
                 continue;
             }
-            Object value = AirUtil.getReflectUtil().getFieldValue(entity, field);
+            Object value = Utils.getReflectUtil().getFieldValue(entity, field);
             if (Objects.isNull(value) || !StringUtils.hasText(value.toString())) {
                 String code = Services.getCodeRuleService().createCode(autoGenerateCode.value());
-                AirUtil.getReflectUtil().setFieldValue(entity, field, code);
+                Utils.getReflectUtil().setFieldValue(entity, field, code);
                 break;
             }
         }

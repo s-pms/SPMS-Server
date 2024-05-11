@@ -2,12 +2,12 @@ package cn.hamm.spms.module.system.oauth2;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.config.AirConfig;
+import cn.hamm.airpower.config.Configs;
 import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.enums.SystemError;
+import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.root.RootController;
-import cn.hamm.airpower.util.AirUtil;
+import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
@@ -84,7 +84,7 @@ public class Oauth2Controller extends RootController implements IAppAction {
         }
         String cookieString = null;
         for (Cookie c : cookies) {
-            if (AirConfig.getCookieConfig().getAuthCookieName().equals(c.getName())) {
+            if (Configs.getCookieConfig().getAuthCookieName().equals(c.getName())) {
                 cookieString = c.getValue();
                 break;
             }
@@ -99,7 +99,7 @@ public class Oauth2Controller extends RootController implements IAppAction {
             return redirectLogin(response, appKey, redirectUri);
         }
         UserEntity userEntity = userService.get(userId);
-        String code = AirUtil.getRandomUtil().randomString();
+        String code = Utils.getRandomUtil().randomString();
         appEntity.setCode(code).setAppKey(appKey);
         userService.saveOauthCode(userEntity.getId(), appEntity);
         String redirectTarget;
@@ -121,9 +121,9 @@ public class Oauth2Controller extends RootController implements IAppAction {
         String code = appEntity.getCode();
         Long userId = userService.getUserIdByOauthAppKeyAndCode(appEntity.getAppKey(), code);
         AppEntity existApp = appService.getByAppKey(appEntity.getAppKey());
-        SystemError.FORBIDDEN.whenNotEquals(existApp.getAppSecret(), appEntity.getAppSecret(), "应用秘钥错误");
+        ServiceError.FORBIDDEN.whenNotEquals(existApp.getAppSecret(), appEntity.getAppSecret(), "应用秘钥错误");
         userService.removeOauthCode(existApp.getAppKey(), code);
-        String accessToken = AirUtil.getSecurityUtil().createAccessToken(userId);
+        String accessToken = Utils.getSecurityUtil().createAccessToken(userId);
         return Json.data(accessToken);
     }
 

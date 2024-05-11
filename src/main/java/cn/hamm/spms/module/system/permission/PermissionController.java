@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.system.permission;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.util.AirUtil;
+import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseController;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +31,6 @@ public class PermissionController extends BaseController<PermissionEntity, Permi
 
     @Override
     protected List<PermissionEntity> afterGetList(List<PermissionEntity> list) {
-        return AirUtil.getTreeUtil().buildTreeList(list);
+        return Utils.getTreeUtil().buildTreeList(list);
     }
 }

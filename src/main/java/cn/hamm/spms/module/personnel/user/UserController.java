@@ -3,9 +3,9 @@ package cn.hamm.spms.module.personnel.user;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Filter;
 import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.enums.SystemError;
+import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.util.AirUtil;
+import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.system.app.AppEntity;
 import cn.hamm.spms.module.system.app.AppService;
@@ -121,16 +121,16 @@ public class UserController extends BaseController<UserEntity, UserService, User
                 accessToken = service.loginViaPhone(userEntity);
                 break;
             default:
-                SystemError.SERVICE_ERROR.show("暂不支持的登录方式");
+                ServiceError.SERVICE_ERROR.show("暂不支持的登录方式");
         }
 
         // 开始处理Oauth2登录逻辑
-        Long userId = AirUtil.getSecurityUtil().getUserIdFromAccessToken(accessToken);
+        Long userId = Utils.getSecurityUtil().getUserIdFromAccessToken(accessToken);
 
         // 存储Cookies
-        String cookieString = AirUtil.getRandomUtil().randomString();
+        String cookieString = Utils.getRandomUtil().randomString();
         service.saveCookie(userId, cookieString);
-        response.addCookie(AirUtil.getCookieUtil().getAuthorizeCookie(cookieString));
+        response.addCookie(Utils.getCookieUtil().getAuthorizeCookie(cookieString));
 
         String appKey = userEntity.getAppKey();
         if (!StringUtils.hasText(appKey)) {
@@ -139,10 +139,10 @@ public class UserController extends BaseController<UserEntity, UserService, User
 
         // 验证应用信息
         AppEntity appEntity = appService.getByAppKey(appKey);
-        SystemError.PARAM_INVALID.whenNull(appEntity, "登录失败,错误的应用ID");
+        ServiceError.PARAM_INVALID.whenNull(appEntity, "登录失败,错误的应用ID");
 
         // 生成临时身份令牌code
-        String code = AirUtil.getRandomUtil().randomString(32);
+        String code = Utils.getRandomUtil().randomString(32);
         appEntity.setCode(code);
 
         // 缓存临时身份令牌code

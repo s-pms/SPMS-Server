@@ -1,6 +1,6 @@
 package cn.hamm.spms;
 
-import cn.hamm.airpower.util.AirUtil;
+import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
@@ -78,13 +78,13 @@ public class InitializeRunner implements CommandLineRunner {
         if (Objects.nonNull(userEntity)) {
             return;
         }
-        String salt = AirUtil.getRandomUtil().randomString(AppConstant.PASSWORD_SALT_LENGTH);
+        String salt = Utils.getRandomUtil().randomString(AppConstant.PASSWORD_SALT_LENGTH);
         Services.getUserService().add(new UserEntity()
                 .setNickname("Hamm")
                 .setAccount("hamm")
                 .setPhone("17623205062")
                 .setEmail("admin@hamm.cn")
-                .setPassword(AirUtil.getPasswordUtil().encode("Aa123456", salt))
+                .setPassword(Utils.getPasswordUtil().encode("Aa123456", salt))
                 .setSalt(salt)
                 .setRemark("超级管理员,请勿数据库暴力直接删除"));
     }
@@ -99,7 +99,7 @@ public class InitializeRunner implements CommandLineRunner {
         Services.getMenuService().initMenu();
         System.out.println("---------------------------------");
         String[] localEnvList = {"local-hamm"};
-        if (Arrays.stream(localEnvList).toList().contains(AirUtil.getCurrentEnvironment())) {
+        if (Arrays.stream(localEnvList).toList().contains(Utils.getCurrentEnvironment())) {
             initDevData();
         }
     }

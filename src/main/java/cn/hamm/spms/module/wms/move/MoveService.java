@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.wms.move;
 
-import cn.hamm.airpower.enums.SystemError;
+import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
@@ -58,7 +58,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
         sourceDetail = detailService.get(detailId);
         if (sourceDetail.getInventory().getQuantity() < sourceDetail.getQuantity()) {
             // 判断来源库存
-            SystemError.FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
+            ServiceError.FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
         }
 
         // 扣除来源库存

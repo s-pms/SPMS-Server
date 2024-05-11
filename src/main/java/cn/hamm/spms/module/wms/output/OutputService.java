@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.wms.output;
 
-import cn.hamm.airpower.enums.SystemError;
+import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
@@ -57,14 +57,14 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
     protected void afterAddDetailFinish(long detailId, @NotNull OutputDetailEntity sourceDetail) {
         InventoryEntity inventory = sourceDetail.getInventory();
         if (Objects.isNull(inventory)) {
-            SystemError.FORBIDDEN.show("请传入库存信息");
+            ServiceError.FORBIDDEN.show("请传入库存信息");
             return;
         }
         inventory = inventoryService.get(inventory.getId());
-        SystemError.FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), sourceDetail.getMaterial().getId(), "物料信息不匹配");
+        ServiceError.FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), sourceDetail.getMaterial().getId(), "物料信息不匹配");
         if (inventory.getQuantity() < sourceDetail.getQuantity()) {
             // 判断库存
-            SystemError.FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
+            ServiceError.FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
         }
         inventory.setQuantity(inventory.getQuantity() - sourceDetail.getQuantity());
         inventoryService.update(inventory);

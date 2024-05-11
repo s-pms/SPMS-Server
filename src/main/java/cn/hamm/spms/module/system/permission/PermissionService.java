@@ -3,12 +3,12 @@ package cn.hamm.spms.module.system.permission;
 import cn.hamm.airpower.annotation.Extends;
 import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.enums.Api;
-import cn.hamm.airpower.enums.SystemError;
+import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.model.Access;
 import cn.hamm.airpower.model.query.QueryRequest;
 import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.root.RootEntityController;
-import cn.hamm.airpower.util.AirUtil;
+import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.Application;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.config.AppConstant;
@@ -54,11 +54,11 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     @Override
     protected void beforeDelete(long id) {
         PermissionEntity permission = get(id);
-        SystemError.FORBIDDEN_DELETE.when(permission.getIsSystem(), "系统内置权限无法被删除!");
+        ServiceError.FORBIDDEN_DELETE.when(permission.getIsSystem(), "系统内置权限无法被删除!");
         QueryRequest<PermissionEntity> queryRequest = new QueryRequest<>();
         queryRequest.setFilter(new PermissionEntity().setParentId(id));
         List<PermissionEntity> children = getList(queryRequest);
-        SystemError.FORBIDDEN_DELETE.when(!children.isEmpty(), "含有子权限,无法删除!");
+        ServiceError.FORBIDDEN_DELETE.when(!children.isEmpty(), "含有子权限,无法删除!");
     }
 
     @Override
@@ -83,13 +83,13 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                 String className = metadataReader.getClassMetadata().getClassName();
                 Class<?> clazz = Class.forName(className);
 
-                RestController restController = AirUtil.getReflectUtil().getAnnotation(RestController.class, clazz);
+                RestController restController = Utils.getReflectUtil().getAnnotation(RestController.class, clazz);
                 if (Objects.isNull(restController) || RootEntityController.class.getSimpleName().equals(clazz.getSimpleName())) {
                     // 不是rest控制器或者是指定的几个白名单控制器
                     continue;
                 }
 
-                String customClassName = AirUtil.getReflectUtil().getDescription(clazz);
+                String customClassName = Utils.getReflectUtil().getDescription(clazz);
                 String identity = clazz.getSimpleName().replaceAll(Constant.CONTROLLER_SUFFIX, Constant.EMPTY_STRING);
                 PermissionEntity permissionEntity = getPermissionByIdentity(identity);
                 if (Objects.isNull(permissionEntity)) {
@@ -107,7 +107,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                 permissionEntity = get(permissionEntity.getId());
 
                 // 读取类的RequestMapping
-                RequestMapping requestMappingClass = AirUtil.getReflectUtil().getAnnotation(RequestMapping.class, clazz);
+                RequestMapping requestMappingClass = Utils.getReflectUtil().getAnnotation(RequestMapping.class, clazz);
                 String pathClass = Constant.EMPTY_STRING;
                 if (Objects.nonNull(requestMappingClass) && requestMappingClass.value().length > 0) {
                     // 标了RequestMapping
@@ -117,7 +117,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                 Method[] methods = clazz.getMethods();
 
                 // 取出控制器类上的Extends注解 如自己没标 则使用父类的
-                Extends extendsApi = AirUtil.getReflectUtil().getAnnotation(Extends.class, clazz);
+                Extends extendsApi = Utils.getReflectUtil().getAnnotation(Extends.class, clazz);
                 for (Method method : methods) {
                     if (Objects.nonNull(extendsApi)) {
                         try {
@@ -128,16 +128,16 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                         } catch (Exception ignored) {
                         }
                     }
-                    String customMethodName = AirUtil.getReflectUtil().getDescription(method);
+                    String customMethodName = Utils.getReflectUtil().getDescription(method);
 
                     String subIdentity = (!Constant.EMPTY_STRING.equalsIgnoreCase(pathClass) ? (pathClass + Constant.UNDERLINE) : Constant.EMPTY_STRING);
 
-                    RequestMapping requestMapping = AirUtil.getReflectUtil().getAnnotation(RequestMapping.class, method);
+                    RequestMapping requestMapping = Utils.getReflectUtil().getAnnotation(RequestMapping.class, method);
                     if (Objects.nonNull(requestMapping) && requestMapping.value().length > 0) {
                         subIdentity += requestMapping.value()[0];
                     }
 
-                    PostMapping postMapping = AirUtil.getReflectUtil().getAnnotation(PostMapping.class, method);
+                    PostMapping postMapping = Utils.getReflectUtil().getAnnotation(PostMapping.class, method);
                     if (Objects.nonNull(postMapping) && postMapping.value().length > 0) {
                         subIdentity += postMapping.value()[0];
                     }
@@ -146,7 +146,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                         continue;
                     }
 
-                    Access accessConfig = AirUtil.getAccessUtil().getWhatNeedAccess(clazz, method);
+                    Access accessConfig = Utils.getAccessUtil().getWhatNeedAccess(clazz, method);
                     if (!accessConfig.isLogin() || !accessConfig.isAuthorize()) {
                         // 这里可以选择是否不读取这些接口的权限，但前端可能需要
                         continue;

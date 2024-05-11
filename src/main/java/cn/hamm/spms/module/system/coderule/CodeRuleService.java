@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.system.coderule;
 
 import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.enums.SystemError;
-import cn.hamm.airpower.util.AirUtil;
+import cn.hamm.airpower.enums.ServiceError;
+import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -29,9 +29,9 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
      */
     public final @NotNull String createCode(@NotNull CodeRuleField codeRuleField) {
         CodeRuleEntity codeRule = repository.getByRuleField(codeRuleField.getKey());
-        SystemError.SERVICE_ERROR.whenNull(codeRule, "保存失败,请先配置自定义编码规则!");
+        ServiceError.SERVICE_ERROR.whenNull(codeRule, "保存失败,请先配置自定义编码规则!");
         String template = codeRule.getTemplate();
-        List<Map<String, String>> mapList = AirUtil.getDictionaryUtil().getDictionaryList(CodeRuleParam.class);
+        List<Map<String, String>> mapList = Utils.getDictionaryUtil().getDictionaryList(CodeRuleParam.class);
         Calendar calendar = Calendar.getInstance();
         for (Map<String, String> map : mapList) {
             String param = map.get(Constant.LABEL);
@@ -76,6 +76,6 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
     @Override
     protected void beforeDelete(long id) {
         CodeRuleEntity codeRule = get(id);
-        SystemError.FORBIDDEN_DELETE.when(codeRule.getIsSystem(), "内置编码规则不能删除!");
+        ServiceError.FORBIDDEN_DELETE.when(codeRule.getIsSystem(), "内置编码规则不能删除!");
     }
 }

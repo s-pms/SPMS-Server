@@ -1,11 +1,11 @@
 package cn.hamm.spms.common.interceptor;
 
-import cn.hamm.airpower.config.AirConfig;
+import cn.hamm.airpower.config.Configs;
 import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.config.MessageConstant;
-import cn.hamm.airpower.enums.SystemError;
+import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
-import cn.hamm.airpower.util.AirUtil;
+import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.common.annotation.DisableLog;
 import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
@@ -58,7 +58,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
                 }
             }
         }
-        SystemError.FORBIDDEN.show(String.format(
+        ServiceError.FORBIDDEN.show(String.format(
                 MessageConstant.ACCESS_DENIED, needPermission.getName(), needPermission.getIdentity()
         ));
         return false;
@@ -71,31 +71,31 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
             Class<?> clazz,
             @NotNull Method method
     ) {
-        DisableLog disableLog = AirUtil.getReflectUtil().getAnnotation(DisableLog.class, method);
+        DisableLog disableLog = Utils.getReflectUtil().getAnnotation(DisableLog.class, method);
         if (Objects.nonNull(disableLog)) {
             return;
         }
-        String accessToken = request.getHeader(AirConfig.getGlobalConfig().getAuthorizeHeader());
+        String accessToken = request.getHeader(Configs.getServiceConfig().getAuthorizeHeader());
         Long userId = null;
         int appVersion = request.getIntHeader(AppConstant.APP_VERSION_HEADER);
         String platform = Constant.EMPTY_STRING;
         String action = request.getRequestURI();
         try {
-            userId = AirUtil.getSecurityUtil().getUserIdFromAccessToken(accessToken);
+            userId = Utils.getSecurityUtil().getUserIdFromAccessToken(accessToken);
             platform = request.getHeader(AppConstant.APP_PLATFORM_HEADER);
-            String description = AirUtil.getReflectUtil().getDescription(method);
+            String description = Utils.getReflectUtil().getDescription(method);
             if (!description.equals(method.getName())) {
                 action = description;
             }
         } catch (Exception ignored) {
         }
-        String identity = AirUtil.getAccessUtil().getPermissionIdentity(clazz, method);
+        String identity = Utils.getAccessUtil().getPermissionIdentity(clazz, method);
         PermissionEntity permissionEntity = permissionService.getPermissionByIdentity(identity);
         if (Objects.nonNull(permissionEntity)) {
             action = permissionEntity.getName();
         }
         long logId = logService.add(new LogEntity()
-                .setIp(AirUtil.getRequestUtil().getIpAddress(request))
+                .setIp(Utils.getRequestUtil().getIpAddress(request))
                 .setAction(action)
                 .setPlatform(platform)
                 .setRequest(getRequestBody(request))

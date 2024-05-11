@@ -1,10 +1,10 @@
 package cn.hamm.spms.module.personnel.user;
 
 import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.enums.SystemError;
+import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.model.query.QueryRequest;
-import cn.hamm.airpower.util.AirUtil;
+import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.common.exception.CustomException;
@@ -72,7 +72,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     public List<MenuEntity> getMenuListByUserId(long userId) {
         UserEntity userEntity = get(userId);
         if (userEntity.isRootUser()) {
-            return AirUtil.getTreeUtil().buildTreeList(menuService.getList(new QueryRequest<MenuEntity>().setSort(new Sort().setField(AppConstant.ORDER_NO))));
+            return Utils.getTreeUtil().buildTreeList(menuService.getList(new QueryRequest<MenuEntity>().setSort(new Sort().setField(AppConstant.ORDER_NO))));
         }
         List<MenuEntity> menuList = new ArrayList<>();
         for (RoleEntity roleEntity : userEntity.getRoleList()) {
@@ -89,7 +89,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
                 }
             });
         }
-        return AirUtil.getTreeUtil().buildTreeList(menuList);
+        return Utils.getTreeUtil().buildTreeList(menuList);
     }
 
     /**
@@ -129,16 +129,16 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     public void modifyUserPassword(@NotNull UserEntity user) {
         UserEntity existUser = get(user.getId());
         String code = getEmailCode(existUser.getEmail());
-        SystemError.PARAM_INVALID.whenNotEquals(code, user.getCode(), "验证码输入错误");
+        ServiceError.PARAM_INVALID.whenNotEquals(code, user.getCode(), "验证码输入错误");
         String oldPassword = user.getOldPassword();
-        SystemError.PARAM_INVALID.whenNotEqualsIgnoreCase(
-                AirUtil.getPasswordUtil().encode(oldPassword, existUser.getSalt()),
+        ServiceError.PARAM_INVALID.whenNotEqualsIgnoreCase(
+                Utils.getPasswordUtil().encode(oldPassword, existUser.getSalt()),
                 existUser.getPassword(),
                 "原密码输入错误，修改密码失败"
         );
-        String salt = AirUtil.getRandomUtil().randomString(AppConstant.PASSWORD_SALT_LENGTH);
+        String salt = Utils.getRandomUtil().randomString(AppConstant.PASSWORD_SALT_LENGTH);
         user.setSalt(salt);
-        user.setPassword(AirUtil.getPasswordUtil().encode(user.getPassword(), salt));
+        user.setPassword(Utils.getPasswordUtil().encode(user.getPassword(), salt));
         removeEmailCodeCache(existUser.getEmail());
         update(user);
     }
@@ -149,7 +149,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param email 邮箱
      */
     public void removeEmailCodeCache(String email) {
-        AirUtil.getRedisUtil().del(REDIS_EMAIL_CODE_KEY + email);
+        Utils.getRedisUtil().del(REDIS_EMAIL_CODE_KEY + email);
     }
 
     /**
@@ -159,9 +159,9 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public void sendMail(String email) throws MessagingException {
         CustomException.EMAIL_SEND_BUSY.when(hasEmailCodeInRedis(email));
-        String code = AirUtil.getRandomUtil().randomNumbers(6);
+        String code = Utils.getRandomUtil().randomNumbers(6);
         setCodeToRedis(email, code);
-        AirUtil.getEmailUtil().sendCode(email, "你收到一个邮箱验证码", code, "SPMS");
+        Utils.getEmailUtil().sendCode(email, "你收到一个邮箱验证码", code, "SPMS");
     }
 
     /**
@@ -171,7 +171,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param appEntity 保存的应用信息
      */
     public void saveOauthCode(Long userId, @NotNull AppEntity appEntity) {
-        AirUtil.getRedisUtil().set(getAppCodeKey(appEntity.getAppKey(), appEntity.getCode()), userId, CACHE_CODE_EXPIRE_SECOND);
+        Utils.getRedisUtil().set(getAppCodeKey(appEntity.getAppKey(), appEntity.getCode()), userId, CACHE_CODE_EXPIRE_SECOND);
     }
 
     /**
@@ -193,8 +193,8 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return UserId
      */
     public Long getUserIdByOauthAppKeyAndCode(String appKey, String code) {
-        Object userId = AirUtil.getRedisUtil().get(getAppCodeKey(appKey, code));
-        SystemError.FORBIDDEN.whenNull(userId, "你的AppKey或Code错误，请重新获取");
+        Object userId = Utils.getRedisUtil().get(getAppCodeKey(appKey, code));
+        ServiceError.FORBIDDEN.whenNull(userId, "你的AppKey或Code错误，请重新获取");
         return Long.valueOf(userId.toString());
     }
 
@@ -205,7 +205,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param code   Code
      */
     public void removeOauthCode(String appKey, String code) {
-        AirUtil.getRedisUtil().del(getAppCodeKey(appKey, code));
+        Utils.getRedisUtil().del(getAppCodeKey(appKey, code));
     }
 
     /**
@@ -215,7 +215,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param cookie Cookie
      */
     public void saveCookie(Long userId, String cookie) {
-        AirUtil.getRedisUtil().set(COOKIE_CODE_KEY + cookie, userId, CACHE_COOKIE_EXPIRE_SECOND);
+        Utils.getRedisUtil().set(COOKIE_CODE_KEY + cookie, userId, CACHE_COOKIE_EXPIRE_SECOND);
     }
 
     /**
@@ -225,7 +225,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return UserId
      */
     public Long getUserIdByCookie(String cookie) {
-        Object userId = AirUtil.getRedisUtil().get(COOKIE_CODE_KEY + cookie);
+        Object userId = Utils.getRedisUtil().get(COOKIE_CODE_KEY + cookie);
         if (Objects.isNull(userId)) {
             return null;
         }
@@ -247,13 +247,13 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             // 账号登录
             existUser = repository.getByAccount(userEntity.getAccount());
         } else {
-            SystemError.PARAM_INVALID.show("ID或账号不能为空，请确认是否传入");
+            ServiceError.PARAM_INVALID.show("ID或账号不能为空，请确认是否传入");
         }
         CustomException.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNull(existUser);
         // 将用户传入的密码加密与数据库存储匹配
-        String encodePassword = AirUtil.getPasswordUtil().encode(userEntity.getPassword(), existUser.getSalt());
+        String encodePassword = Utils.getPasswordUtil().encode(userEntity.getPassword(), existUser.getSalt());
         CustomException.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNotEqualsIgnoreCase(encodePassword, existUser.getPassword());
-        return AirUtil.getSecurityUtil().createAccessToken(existUser.getId());
+        return Utils.getSecurityUtil().createAccessToken(existUser.getId());
     }
 
     /**
@@ -264,10 +264,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public String loginViaEmail(@NotNull UserEntity userEntity) {
         String code = getEmailCode(userEntity.getEmail());
-        SystemError.PARAM_INVALID.whenNotEquals(code, userEntity.getCode(), "邮箱验证码不正确");
+        ServiceError.PARAM_INVALID.whenNotEquals(code, userEntity.getCode(), "邮箱验证码不正确");
         UserEntity existUser = repository.getByEmail(userEntity.getEmail());
-        SystemError.PARAM_INVALID.whenNull("邮箱或验证码不正确");
-        return AirUtil.getSecurityUtil().createAccessToken(existUser.getId());
+        ServiceError.PARAM_INVALID.whenNull("邮箱或验证码不正确");
+        return Utils.getSecurityUtil().createAccessToken(existUser.getId());
     }
 
     /**
@@ -278,10 +278,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public String loginViaPhone(@NotNull UserEntity userEntity) {
         String code = getPhoneCode(userEntity.getEmail());
-        SystemError.PARAM_INVALID.whenNotEquals(code, userEntity.getCode(), "短信验证码不正确");
+        ServiceError.PARAM_INVALID.whenNotEquals(code, userEntity.getCode(), "短信验证码不正确");
         UserEntity existUser = repository.getByPhone(userEntity.getEmail());
-        SystemError.PARAM_INVALID.whenNull("手机或验证码不正确");
-        return AirUtil.getSecurityUtil().createAccessToken(existUser.getId());
+        ServiceError.PARAM_INVALID.whenNull("手机或验证码不正确");
+        return Utils.getSecurityUtil().createAccessToken(existUser.getId());
     }
 
     /**
@@ -291,7 +291,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param code  验证码
      */
     private void setCodeToRedis(String email, String code) {
-        AirUtil.getRedisUtil().set(REDIS_EMAIL_CODE_KEY + email, code, CACHE_CODE_EXPIRE_SECOND);
+        Utils.getRedisUtil().set(REDIS_EMAIL_CODE_KEY + email, code, CACHE_CODE_EXPIRE_SECOND);
     }
 
     /**
@@ -301,7 +301,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return 验证码
      */
     private String getEmailCode(String email) {
-        Object code = AirUtil.getRedisUtil().get(REDIS_EMAIL_CODE_KEY + email);
+        Object code = Utils.getRedisUtil().get(REDIS_EMAIL_CODE_KEY + email);
         return Objects.isNull(code) ? Constant.EMPTY_STRING : code.toString();
     }
 
@@ -312,7 +312,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return 验证码
      */
     private String getPhoneCode(String email) {
-        Object code = AirUtil.getRedisUtil().get(REDIS_PHONE_CODE_KEY + email);
+        Object code = Utils.getRedisUtil().get(REDIS_PHONE_CODE_KEY + email);
         return Objects.isNull(code) ? Constant.EMPTY_STRING : code.toString();
     }
 
@@ -324,23 +324,23 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return 是否在缓存内
      */
     private boolean hasEmailCodeInRedis(String email) {
-        return AirUtil.getRedisUtil().hasKey(REDIS_EMAIL_CODE_KEY + email);
+        return Utils.getRedisUtil().hasKey(REDIS_EMAIL_CODE_KEY + email);
     }
 
     @Override
     protected void beforeDelete(long id) {
         UserEntity entity = get(id);
-        SystemError.FORBIDDEN_DELETE.when(entity.isRootUser(), "该超级管理员用户无法被删除!");
+        ServiceError.FORBIDDEN_DELETE.when(entity.isRootUser(), "该超级管理员用户无法被删除!");
     }
 
     @Override
     protected @NotNull UserEntity beforeAdd(@NotNull UserEntity source) {
         UserEntity existUser = repository.getByEmail(source.getEmail());
-        SystemError.FORBIDDEN_EXIST.whenNotNull(existUser, "邮箱已经存在，请勿重复添加用户");
+        ServiceError.FORBIDDEN_EXIST.whenNotNull(existUser, "邮箱已经存在，请勿重复添加用户");
         if (!StringUtils.hasLength(source.getPassword())) {
             // 创建时没有设置密码的话 随机一个密码
-            String salt = AirUtil.getRandomUtil().randomString(AppConstant.PASSWORD_SALT_LENGTH);
-            source.setPassword(AirUtil.getPasswordUtil().encode("123123", salt));
+            String salt = Utils.getRandomUtil().randomString(AppConstant.PASSWORD_SALT_LENGTH);
+            source.setPassword(Utils.getPasswordUtil().encode("123123", salt));
             source.setSalt(salt);
         }
         return source;

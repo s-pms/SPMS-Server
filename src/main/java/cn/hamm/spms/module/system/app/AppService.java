@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.system.app;
 
-import cn.hamm.airpower.enums.SystemError;
-import cn.hamm.airpower.util.AirUtil;
+import cn.hamm.airpower.enums.ServiceError;
+import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class AppService extends BaseService<AppEntity, AppRepository> {
      */
     public AppEntity getByAppKey(String appKey) {
         AppEntity appEntity = repository.getByAppKey(appKey);
-        SystemError.DATA_NOT_FOUND.whenNull(appEntity, "没有查到指定AppKey的应用");
+        ServiceError.DATA_NOT_FOUND.whenNull(appEntity, "没有查到指定AppKey的应用");
         return appEntity;
     }
 
@@ -34,7 +34,7 @@ public class AppService extends BaseService<AppEntity, AppRepository> {
      * @return 应用新秘钥
      */
     public String resetSecretById(Long id) {
-        String newSecret = AirUtil.getRandomUtil().randomString().toUpperCase();
+        String newSecret = Utils.getRandomUtil().randomString().toUpperCase();
         AppEntity entity = get(id);
         entity.setAppSecret(newSecret);
         update(entity);
@@ -45,7 +45,7 @@ public class AppService extends BaseService<AppEntity, AppRepository> {
     protected AppEntity beforeAppSaveToDatabase(@NotNull AppEntity app) {
         return app.setAppKey(Objects.requireNonNullElse(
                 app.getAppSecret(),
-                AirUtil.getRandomUtil().randomString().toUpperCase()
+                Utils.getRandomUtil().randomString().toUpperCase()
         ));
     }
 }
