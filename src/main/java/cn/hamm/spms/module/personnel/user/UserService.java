@@ -7,7 +7,7 @@ import cn.hamm.airpower.model.query.QueryRequest;
 import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.config.AppConstant;
-import cn.hamm.spms.common.exception.CustomException;
+import cn.hamm.spms.common.exception.CustomError;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.system.app.AppEntity;
 import cn.hamm.spms.module.system.menu.MenuEntity;
@@ -158,7 +158,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param email 邮箱
      */
     public void sendMail(String email) throws MessagingException {
-        CustomException.EMAIL_SEND_BUSY.when(hasEmailCodeInRedis(email));
+        CustomError.EMAIL_SEND_BUSY.when(hasEmailCodeInRedis(email));
         String code = Utils.getRandomUtil().randomNumbers(6);
         setCodeToRedis(email, code);
         Utils.getEmailUtil().sendCode(email, "你收到一个邮箱验证码", code, "SPMS");
@@ -249,10 +249,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         } else {
             ServiceError.PARAM_INVALID.show("ID或账号不能为空，请确认是否传入");
         }
-        CustomException.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNull(existUser);
+        CustomError.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNull(existUser);
         // 将用户传入的密码加密与数据库存储匹配
         String encodePassword = Utils.getPasswordUtil().encode(userEntity.getPassword(), existUser.getSalt());
-        CustomException.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNotEqualsIgnoreCase(encodePassword, existUser.getPassword());
+        CustomError.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNotEqualsIgnoreCase(encodePassword, existUser.getPassword());
         return Utils.getSecurityUtil().createAccessToken(existUser.getId());
     }
 

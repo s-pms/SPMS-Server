@@ -19,7 +19,7 @@ import java.util.List;
  * @author Hamm.cn
  */
 @Component
-public class SystemCron {
+public class ServiceCron {
     @Autowired
     private CodeRuleService codeRuleService;
 
