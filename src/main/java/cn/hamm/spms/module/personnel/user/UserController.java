@@ -125,7 +125,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
         }
 
         // 开始处理Oauth2登录逻辑
-        Long userId = Utils.getSecurityUtil().getUserIdFromAccessToken(accessToken);
+        Long userId = Utils.getSecurityUtil().getIdFromAccessToken(accessToken);
 
         // 存储Cookies
         String cookieString = Utils.getRandomUtil().randomString();
