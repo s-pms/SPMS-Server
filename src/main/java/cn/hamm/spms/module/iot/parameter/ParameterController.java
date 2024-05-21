@@ -1,19 +1,17 @@
 package cn.hamm.spms.module.iot.parameter;
 
+import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.spms.base.BaseController;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <h1>Controller</h1>
  *
  * @author Hamm.cn
  */
-@RestController
-@RequestMapping("parameter")
+@ApiController("parameter")
 @Description("采集参数")
 public class ParameterController extends BaseController<ParameterEntity, ParameterService, ParameterRepository> {
     @Override

@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.personnel.user;
 
+import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Filter;
 import cn.hamm.airpower.annotation.Permission;
@@ -17,7 +18,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +28,7 @@ import java.util.List;
  *
  * @author Hamm.cn
  */
-@RestController
-@RequestMapping("user")
+@ApiController("user")
 @Description("用户")
 public class UserController extends BaseController<UserEntity, UserService, UserRepository> implements IUserAction {
     @Autowired
@@ -125,7 +124,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
         }
 
         // 开始处理Oauth2登录逻辑
-        Long userId = Utils.getSecurityUtil().getUserIdFromAccessToken(accessToken);
+        Long userId = Utils.getSecurityUtil().getIdFromAccessToken(accessToken);
 
         // 存储Cookies
         String cookieString = Utils.getRandomUtil().randomString();

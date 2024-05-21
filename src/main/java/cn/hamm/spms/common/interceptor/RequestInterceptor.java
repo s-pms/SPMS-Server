@@ -81,7 +81,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         String platform = Constant.EMPTY_STRING;
         String action = request.getRequestURI();
         try {
-            userId = Utils.getSecurityUtil().getUserIdFromAccessToken(accessToken);
+            userId = Utils.getSecurityUtil().getIdFromAccessToken(accessToken);
             platform = request.getHeader(AppConstant.APP_PLATFORM_HEADER);
             String description = Utils.getReflectUtil().getDescription(method);
             if (!description.equals(method.getName())) {

@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.wms.inventory;
 
+import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Extends;
 import cn.hamm.airpower.enums.Api;
@@ -9,8 +10,6 @@ import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.common.annotation.DisableLog;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,8 +19,7 @@ import java.util.Objects;
  *
  * @author Hamm.cn
  */
-@RestController
-@RequestMapping("inventory")
+@ApiController("inventory")
 @Description("入库")
 @Extends({Api.GetDetail, Api.GetList})
 public class InventoryController extends BaseController<InventoryEntity, InventoryService, InventoryRepository> {

@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.system.oauth2;
 
+import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.airpower.config.Configs;
@@ -26,7 +27,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
@@ -39,8 +39,7 @@ import java.util.Objects;
  *
  * @author Hamm.cn
  */
-@RestController
-@RequestMapping("oauth2")
+@ApiController("oauth2")
 @Slf4j
 public class Oauth2Controller extends RootController implements IAppAction {
     private static final String APP_KEY = "appKey";

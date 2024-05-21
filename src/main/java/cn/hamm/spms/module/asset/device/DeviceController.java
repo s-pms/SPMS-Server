@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.asset.device;
 
+import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.airpower.enums.ServiceError;
@@ -15,7 +16,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,8 +25,7 @@ import java.util.Set;
  *
  * @author zfy
  */
-@RestController
-@RequestMapping("device")
+@ApiController("device")
 @Description("设备")
 public class DeviceController extends BaseController<DeviceEntity, DeviceService, DeviceRepository> implements IDeviceAction, IReportPayloadAction {
     @Resource
