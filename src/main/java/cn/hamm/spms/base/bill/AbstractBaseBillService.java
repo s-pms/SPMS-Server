@@ -145,8 +145,8 @@ public abstract class AbstractBaseBillService<
      * @param bill 单据
      * @return 是否审核
      */
-    public final boolean canAudit(@NotNull E bill) {
-        return bill.getStatus() == getAuditingStatus().getKey();
+    public boolean canAudit(@NotNull E bill) {
+        return getAuditedStatus().equalsKey(bill.getStatus());
     }
 
     /**
@@ -155,8 +155,8 @@ public abstract class AbstractBaseBillService<
      * @param bill 单据
      * @return 是否可驳回
      */
-    public final boolean canReject(@NotNull E bill) {
-        return bill.getStatus() == getAuditingStatus().getKey();
+    public boolean canReject(@NotNull E bill) {
+        return getAuditedStatus().equalsKey(bill.getStatus());
     }
 
     /**
@@ -174,8 +174,8 @@ public abstract class AbstractBaseBillService<
      * @param bill 单据
      * @return 是否可编辑
      */
-    public final boolean canEdit(@NotNull E bill) {
-        return bill.getStatus() == getRejectedStatus().getKey();
+    public boolean canEdit(@NotNull E bill) {
+        return getRejectedStatus().equalsKey(bill.getStatus());
     }
 
     /**
