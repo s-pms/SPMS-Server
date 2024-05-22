@@ -68,8 +68,8 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     public List<ReportInfluxPayload> getDevicePayloadHistory(@NotNull ReportPayload reportPayload) {
         ParameterEntity parameter = parameterService.getByCode(reportPayload.getCode());
         ServiceError.PARAM_INVALID.whenNull(parameter, "不支持的参数");
-        ReportGranularity reportGranularity = Utils.getDictionaryUtil().getDictionaryByKey(ReportGranularity.class, reportPayload.getReportGranularity());
-        ReportDataType reportDataType = Utils.getDictionaryUtil().getDictionaryByKey(ReportDataType.class, parameter.getDataType());
+        ReportGranularity reportGranularity = Utils.getDictionaryUtil().getDictionary(ReportGranularity.class, reportPayload.getReportGranularity());
+        ReportDataType reportDataType = Utils.getDictionaryUtil().getDictionary(ReportDataType.class, parameter.getDataType());
         if (reportDataType != null) {
             switch (reportDataType) {
                 case QUANTITY:

@@ -31,10 +31,10 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
         CodeRuleEntity codeRule = repository.getByRuleField(codeRuleField.getKey());
         ServiceError.SERVICE_ERROR.whenNull(codeRule, "保存失败,请先配置自定义编码规则!");
         String template = codeRule.getTemplate();
-        List<Map<String, String>> mapList = Utils.getDictionaryUtil().getDictionaryList(CodeRuleParam.class);
+        List<Map<String, Object>> mapList = Utils.getDictionaryUtil().getDictionaryList(CodeRuleParam.class);
         Calendar calendar = Calendar.getInstance();
-        for (Map<String, String> map : mapList) {
-            String param = map.get(Constant.LABEL);
+        for (Map<String, Object> map : mapList) {
+            String param = map.get(Constant.LABEL).toString();
             if (CodeRuleParam.FULL_YEAR.getLabel().equals(param)) {
                 template = template.replaceAll(param, String.valueOf(calendar.get(Calendar.YEAR)));
                 continue;
