@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.channel.sale;
 
+import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.spms.base.bill.BaseBillController;
 import cn.hamm.spms.common.Services;
@@ -11,8 +12,6 @@ import cn.hamm.spms.module.wms.output.OutputStatus;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +21,7 @@ import java.util.List;
  *
  * @author Hamm.cn
  */
-@RestController
-@RequestMapping("sale")
+@ApiController("sale")
 @Description("销售单")
 public class SaleController extends BaseBillController<SaleEntity, SaleService, SaleRepository, SaleDetailEntity, SaleDetailService, SaleDetailRepository> {
     @Autowired

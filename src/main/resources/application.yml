@@ -35,3 +35,6 @@ spring:
     view:
       suffix: .html
       prefix: /
+
+airpower:
+  access-token-secret: 1234567890
