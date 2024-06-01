@@ -146,7 +146,7 @@ public abstract class AbstractBaseBillService<
      * @return 是否审核
      */
     public boolean canAudit(@NotNull E bill) {
-        return getAuditedStatus().equalsKey(bill.getStatus());
+        return getAuditingStatus().equalsKey(bill.getStatus());
     }
 
     /**
@@ -156,7 +156,7 @@ public abstract class AbstractBaseBillService<
      * @return 是否可驳回
      */
     public boolean canReject(@NotNull E bill) {
-        return getAuditedStatus().equalsKey(bill.getStatus());
+        return getAuditingStatus().equalsKey(bill.getStatus());
     }
 
     /**
