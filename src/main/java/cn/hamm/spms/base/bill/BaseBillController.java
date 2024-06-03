@@ -11,6 +11,7 @@ import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailService;
 import cn.hamm.spms.base.bill.detail.IBaseBillDetailAction;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,9 @@ public class BaseBillController<
         E extends AbstractBaseBillEntity<E, D>, S extends AbstractBaseBillService<E, R, D, DS, DR>, R extends BaseBillRepository<E, D>,
         D extends BaseBillDetailEntity<D>, DS extends BaseBillDetailService<D, DR>, DR extends BaseBillDetailRepository<D>
         > extends BaseController<E, S, R> implements IBaseBillAction, IBaseBillDetailAction {
+
+    @Autowired(required = false)
+    protected DS detailService;
 
     @Description("审核")
     @RequestMapping("audit")

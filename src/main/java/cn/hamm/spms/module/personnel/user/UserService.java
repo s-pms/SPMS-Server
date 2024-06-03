@@ -6,17 +6,15 @@ import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.model.query.QueryRequest;
 import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseService;
+import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.common.exception.CustomError;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.system.app.AppEntity;
 import cn.hamm.spms.module.system.menu.MenuEntity;
-import cn.hamm.spms.module.system.menu.MenuService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
-import cn.hamm.spms.module.system.permission.PermissionService;
 import jakarta.mail.MessagingException;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -57,12 +55,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     private static final int CACHE_COOKIE_EXPIRE_SECOND = Constant.SECOND_PER_DAY;
 
-    @Autowired
-    private MenuService menuService;
-
-    @Autowired
-    private PermissionService permissionService;
-
     /**
      * <h2>获取登录用户的菜单列表</h2>
      *
@@ -72,7 +64,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     public List<MenuEntity> getMenuListByUserId(long userId) {
         UserEntity userEntity = get(userId);
         if (userEntity.isRootUser()) {
-            return Utils.getTreeUtil().buildTreeList(menuService.getList(new QueryRequest<MenuEntity>().setSort(new Sort().setField(AppConstant.ORDER_NO))));
+            return Utils.getTreeUtil().buildTreeList(Services.getMenuService().getList(new QueryRequest<MenuEntity>().setSort(new Sort().setField(AppConstant.ORDER_NO))));
         }
         List<MenuEntity> menuList = new ArrayList<>();
         for (RoleEntity roleEntity : userEntity.getRoleList()) {
@@ -101,7 +93,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     public List<PermissionEntity> getPermissionListByUserId(long userId) {
         UserEntity userEntity = get(userId);
         if (userEntity.isRootUser()) {
-            return permissionService.getList(null);
+            return Services.getPermissionService().getList(null);
         }
         List<PermissionEntity> permissionList = new ArrayList<>();
         for (RoleEntity roleEntity : userEntity.getRoleList()) {

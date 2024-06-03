@@ -2,11 +2,10 @@ package cn.hamm.spms.common.cron;
 
 import cn.hamm.airpower.config.Configs;
 import cn.hamm.airpower.model.query.QueryRequest;
+import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
-import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import cn.hamm.spms.module.system.coderule.SerialNumberUpdate;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +19,6 @@ import java.util.List;
  */
 @Component
 public class ServiceCron {
-    @Autowired
-    private CodeRuleService codeRuleService;
 
     @Scheduled(cron = "59 59 23 * * *")
     void softShutdownService() {
@@ -30,7 +27,7 @@ public class ServiceCron {
 
     @Scheduled(cron = "0 0 0 * * *")
     void resetCodeRuleBaseNumber() {
-        List<CodeRuleEntity> codeRules = codeRuleService.getList(new QueryRequest<>());
+        List<CodeRuleEntity> codeRules = Services.getCodeRuleService().getList(new QueryRequest<>());
         for (CodeRuleEntity codeRule : codeRules) {
             resetSn(codeRule);
         }
@@ -49,19 +46,19 @@ public class ServiceCron {
         if (codeRule.getSnType().equals(SerialNumberUpdate.YEAR.getKey()) && month == 1 && day == 1) {
             // 按年更新 且是1月1号
             codeRule.setCurrentSn(0);
-            codeRuleService.update(codeRule);
+            Services.getCodeRuleService().update(codeRule);
             return;
         }
         if (codeRule.getSnType().equals(SerialNumberUpdate.MONTH.getKey()) && day == 1) {
             // 按月更新 且是1号
             codeRule.setCurrentSn(0);
-            codeRuleService.update(codeRule);
+            Services.getCodeRuleService().update(codeRule);
             return;
         }
         if (codeRule.getSnType().equals(SerialNumberUpdate.DAY.getKey())) {
             // 按日更新 直接更新
             codeRule.setCurrentSn(0);
-            codeRuleService.update(codeRule);
+            Services.getCodeRuleService().update(codeRule);
         }
     }
 }

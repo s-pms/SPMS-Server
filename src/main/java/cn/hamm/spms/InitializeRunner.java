@@ -4,12 +4,20 @@ import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
+import cn.hamm.spms.module.asset.material.MaterialEntity;
+import cn.hamm.spms.module.asset.material.MaterialType;
+import cn.hamm.spms.module.channel.customer.CustomerEntity;
+import cn.hamm.spms.module.channel.purchaseprice.PurchasePriceEntity;
+import cn.hamm.spms.module.channel.saleprice.SalePriceEntity;
+import cn.hamm.spms.module.channel.supplier.SupplierEntity;
+import cn.hamm.spms.module.factory.storage.StorageEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.report.ReportDataType;
 import cn.hamm.spms.module.iot.report.ReportEvent;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
+import cn.hamm.spms.module.system.unit.UnitEntity;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -108,6 +116,55 @@ public class InitializeRunner implements CommandLineRunner {
         int deviceCount = 10;
         for (int i = 0; i < deviceCount; i++) {
             Services.getDeviceService().add(new DeviceEntity().setCode("Simulator00" + (i + 1)).setName("设备" + (i + 1)));
+        }
+
+        UnitEntity unit = new UnitEntity();
+        unit.setName("台");
+        unit = Services.getUnitService().get(Services.getUnitService().add(unit));
+
+        MaterialEntity material = new MaterialEntity()
+                .setMaterialType(MaterialType.PURCHASE.getKey())
+                .setName("MacBook Pro M3 Max")
+                .setSpc("32G-1TB")
+                .setUnitInfo(unit)
+                .setPurchasePrice(28000D)
+                .setSalePrice(29999D);
+        material = Services.getMaterialService().get(Services.getMaterialService().add(material));
+
+        CustomerEntity customer = new CustomerEntity();
+        customer.setName("腾讯科技").setPhone("17666666666");
+        customer = Services.getCustomerService().get(Services.getCustomerService().add(customer));
+
+        SupplierEntity supplier = new SupplierEntity();
+        supplier.setName("Apple中国").setPhone("17666666666");
+        supplier = Services.getSupplierService().get(Services.getSupplierService().add(supplier));
+
+        SalePriceEntity salePrice = new SalePriceEntity();
+        salePrice.setCustomer(customer).setPrice(29999D).setMaterial(material);
+        Services.getSalePriceService().get(Services.getSalePriceService().add(salePrice));
+
+        PurchasePriceEntity purchasePrice = new PurchasePriceEntity();
+        purchasePrice.setSupplier(supplier).setPrice(28000D).setMaterial(material);
+        Services.getPurchasePriceService().get(Services.getPurchasePriceService().add(purchasePrice));
+
+        StorageEntity storage = new StorageEntity().setName("东部大仓");
+        storage = Services.getStorageService().get(Services.getStorageService().add(storage));
+
+        for (int i = 0; i < 4; i++) {
+            Services.getStorageService().add(new StorageEntity()
+                    .setParentId(storage.getId())
+                    .setName(String.format("东部%s仓", (i + 1)))
+            );
+        }
+
+        storage = new StorageEntity().setName("西部大仓");
+        storage = Services.getStorageService().get(Services.getStorageService().add(storage));
+
+        for (int i = 0; i < 4; i++) {
+            Services.getStorageService().add(new StorageEntity()
+                    .setParentId(storage.getId())
+                    .setName(String.format("西部%s仓", (i + 1)))
+            );
         }
     }
 }

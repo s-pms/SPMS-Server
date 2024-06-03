@@ -1,14 +1,25 @@
 package cn.hamm.spms.common;
 
 import cn.hamm.spms.module.asset.device.DeviceService;
+import cn.hamm.spms.module.asset.material.MaterialService;
+import cn.hamm.spms.module.channel.customer.CustomerService;
 import cn.hamm.spms.module.channel.purchase.PurchaseService;
+import cn.hamm.spms.module.channel.purchaseprice.PurchasePriceService;
 import cn.hamm.spms.module.channel.sale.SaleService;
+import cn.hamm.spms.module.channel.saleprice.SalePriceService;
+import cn.hamm.spms.module.channel.supplier.SupplierService;
+import cn.hamm.spms.module.factory.storage.StorageService;
+import cn.hamm.spms.module.factory.structure.StructureService;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
 import cn.hamm.spms.module.personnel.user.UserService;
+import cn.hamm.spms.module.system.app.AppService;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
+import cn.hamm.spms.module.system.log.LogService;
 import cn.hamm.spms.module.system.menu.MenuService;
 import cn.hamm.spms.module.system.permission.PermissionService;
+import cn.hamm.spms.module.system.unit.UnitService;
 import cn.hamm.spms.module.wms.input.InputService;
+import cn.hamm.spms.module.wms.inventory.InventoryService;
 import cn.hamm.spms.module.wms.output.OutputService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +63,39 @@ public class Services {
     @Getter
     private static UserService userService;
 
+    @Getter
+    private static MaterialService materialService;
+
+    @Getter
+    private static UnitService unitService;
+
+    @Getter
+    private static CustomerService customerService;
+
+    @Getter
+    private static SupplierService supplierService;
+
+    @Getter
+    private static SalePriceService salePriceService;
+
+    @Getter
+    private static PurchasePriceService purchasePriceService;
+
+    @Getter
+    private static StorageService storageService;
+
+    @Getter
+    private static StructureService structureService;
+
+    @Getter
+    private static InventoryService inventoryService;
+
+    @Getter
+    private static AppService appService;
+
+    @Getter
+    private static LogService logService;
+
     @Autowired
     private void initService(
             CodeRuleService codeRuleService,
@@ -63,7 +107,18 @@ public class Services {
             PermissionService permissionService,
             ParameterService parameterService,
             DeviceService deviceService,
-            UserService userService
+            UserService userService,
+            MaterialService materialService,
+            UnitService unitService,
+            SupplierService supplierService,
+            CustomerService customerService,
+            SalePriceService salePriceService,
+            PurchasePriceService purchasePriceService,
+            StorageService storageService,
+            StructureService structureService,
+            InventoryService inventoryService,
+            AppService appService,
+            LogService logService
     ) {
         Services.codeRuleService = codeRuleService;
         Services.purchaseService = purchaseService;
@@ -75,5 +130,16 @@ public class Services {
         Services.parameterService = parameterService;
         Services.deviceService = deviceService;
         Services.userService = userService;
+        Services.materialService = materialService;
+        Services.unitService = unitService;
+        Services.supplierService = supplierService;
+        Services.customerService = customerService;
+        Services.salePriceService = salePriceService;
+        Services.purchasePriceService = purchasePriceService;
+        Services.storageService = storageService;
+        Services.structureService = structureService;
+        Services.inventoryService = inventoryService;
+        Services.appService = appService;
+        Services.logService = logService;
     }
 }

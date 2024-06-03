@@ -7,12 +7,10 @@ import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.sale.SaleEntity;
 import cn.hamm.spms.module.channel.sale.SaleStatus;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
-import cn.hamm.spms.module.wms.inventory.InventoryService;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailRepository;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailService;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -24,9 +22,6 @@ import java.util.Objects;
  */
 @Service
 public class OutputService extends AbstractBaseBillService<OutputEntity, OutputRepository, OutputDetailEntity, OutputDetailService, OutputDetailRepository> {
-    @Autowired
-    private InventoryService inventoryService;
-
     @Override
     public IDictionary getAuditedStatus() {
         return OutputStatus.OUTPUTTING;
@@ -60,13 +55,14 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
             ServiceError.FORBIDDEN.show("请传入库存信息");
             return;
         }
-        inventory = inventoryService.get(inventory.getId());
-        ServiceError.FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), sourceDetail.getMaterial().getId(), "物料信息不匹配");
+        OutputDetailEntity existDetail = detailService.get(sourceDetail.getId());
+        inventory = Services.getInventoryService().get(inventory.getId());
+        ServiceError.FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), existDetail.getMaterial().getId(), "物料信息不匹配");
         if (inventory.getQuantity() < sourceDetail.getQuantity()) {
             // 判断库存
             ServiceError.FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
         }
         inventory.setQuantity(inventory.getQuantity() - sourceDetail.getQuantity());
-        inventoryService.update(inventory);
+        Services.getInventoryService().update(inventory);
     }
 }

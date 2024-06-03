@@ -2,12 +2,10 @@ package cn.hamm.spms.module.wms.inventory;
 
 import cn.hamm.airpower.model.query.QueryRequest;
 import cn.hamm.spms.base.BaseService;
+import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
-import cn.hamm.spms.module.factory.storage.StorageService;
 import cn.hamm.spms.module.factory.structure.StructureEntity;
-import cn.hamm.spms.module.factory.structure.StructureService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,12 +18,6 @@ import java.util.Objects;
  */
 @Service
 public class InventoryService extends BaseService<InventoryEntity, InventoryRepository> {
-    @Autowired
-    private StorageService storageService;
-
-    @Autowired
-    private StructureService structureService;
-
     /**
      * <h2>查询指定物料ID和存储资源ID下的库存</h2>
      *
@@ -65,7 +57,7 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
         list = getList(new QueryRequest<InventoryEntity>().setFilter(
                 new InventoryEntity().setStorage(storageEntity).setType(InventoryType.STORAGE.getKey())
         ));
-        List<StorageEntity> storageList = storageService.getByPid(storageEntity.getId());
+        List<StorageEntity> storageList = Services.getStorageService().getByPid(storageEntity.getId());
         for (StorageEntity storage : storageList) {
             List<InventoryEntity> children = getListByStorage(storage);
             list.addAll(children);
@@ -89,7 +81,7 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
         list = getList(new QueryRequest<InventoryEntity>().setFilter(
                 new InventoryEntity().setStructure(structureEntity).setType(InventoryType.STRUCTURE.getKey())
         ));
-        List<StructureEntity> structureList = structureService.getByPid(structureEntity.getId());
+        List<StructureEntity> structureList = Services.getStructureService().getByPid(structureEntity.getId());
         for (StructureEntity structure : structureList) {
             List<InventoryEntity> children = getListByStructure(structure);
             list.addAll(children);

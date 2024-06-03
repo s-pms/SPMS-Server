@@ -10,10 +10,8 @@ import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.input.detail.InputDetailRepository;
 import cn.hamm.spms.module.wms.input.detail.InputDetailService;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
-import cn.hamm.spms.module.wms.inventory.InventoryService;
 import cn.hamm.spms.module.wms.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -25,9 +23,6 @@ import java.util.Objects;
  */
 @Service
 public class InputService extends AbstractBaseBillService<InputEntity, InputRepository, InputDetailEntity, InputDetailService, InputDetailRepository> {
-    @Autowired
-    private InventoryService inventoryService;
-
     @Override
     public IDictionary getAuditingStatus() {
         return InputStatus.AUDITING;
@@ -60,17 +55,19 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
             ServiceError.FORBIDDEN.show("请传入入库存储资源");
             return;
         }
-        InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(sourceDetail.getMaterial().getId(), sourceDetail.getStorage().getId());
+        InputDetailEntity existDetail = detailService.get(sourceDetail.getId());
+        InventoryEntity inventory = Services.getInventoryService().getByMaterialIdAndStorageId(existDetail.getMaterial().getId(), sourceDetail.getStorage().getId());
         if (Objects.nonNull(inventory)) {
             inventory.setQuantity(inventory.getQuantity() + sourceDetail.getQuantity());
-            inventoryService.update(inventory);
+            Services.getInventoryService().update(inventory);
         } else {
             inventory = new InventoryEntity()
                     .setQuantity(sourceDetail.getQuantity())
-                    .setMaterial(sourceDetail.getMaterial())
+                    .setMaterial(existDetail.getMaterial())
                     .setStorage(sourceDetail.getStorage())
                     .setType(InventoryType.STORAGE.getKey());
-            inventoryService.add(inventory);
+            Services.getInventoryService().add(inventory);
         }
+
     }
 }

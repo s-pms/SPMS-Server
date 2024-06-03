@@ -68,7 +68,7 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '采购标准价'")
     private Double purchasePrice;
 
-    @Description("采购标准价")
-    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '采购标准价'")
+    @Description("销售标准价")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '销售标准价'")
     private Double salePrice;
 }

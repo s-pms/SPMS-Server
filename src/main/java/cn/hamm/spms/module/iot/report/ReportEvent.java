@@ -4,11 +4,10 @@ package cn.hamm.spms.module.iot.report;
 import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.util.Utils;
+import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.helper.influxdb.InfluxHelper;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
-import cn.hamm.spms.module.asset.device.DeviceService;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
-import cn.hamm.spms.module.iot.parameter.ParameterService;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
@@ -60,12 +59,6 @@ public class ReportEvent {
      */
     public final static String CACHE_PREFIX = "iot_report_";
 
-    @Autowired
-    private DeviceService deviceService;
-
-    @Autowired
-    private ParameterService parameterService;
-
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -105,7 +98,7 @@ public class ReportEvent {
                             if (Objects.isNull(payload.getValue())) {
                                 continue;
                             }
-                            ParameterEntity parameterEntity = parameterService.getByCode(payload.getCode());
+                            ParameterEntity parameterEntity = Services.getParameterService().getByCode(payload.getCode());
                             if (Objects.isNull(parameterEntity)) {
                                 continue;
                             }
@@ -128,10 +121,10 @@ public class ReportEvent {
                                     redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_STATUS + Constant.UNDERLINE + reportData.getDeviceId(), payload
                                             .getValue());
                                     if (Objects.isNull(device)) {
-                                        device = deviceService.getByUuid(reportData.getDeviceId());
+                                        device = Services.getDeviceService().getByUuid(reportData.getDeviceId());
                                         if (Objects.nonNull(device) && device.getIsReporting()) {
                                             device.setStatus(Integer.parseInt(payload.getValue()));
-                                            deviceService.update(device);
+                                            Services.getDeviceService().update(device);
                                         }
                                     }
                                     break;
@@ -145,10 +138,10 @@ public class ReportEvent {
                                     redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_ALARM + Constant.UNDERLINE + reportData.getDeviceId(), payload
                                             .getValue());
                                     if (Objects.isNull(device)) {
-                                        device = deviceService.getByUuid(reportData.getDeviceId());
+                                        device = Services.getDeviceService().getByUuid(reportData.getDeviceId());
                                         if (Objects.nonNull(device) && device.getIsReporting()) {
                                             device.setAlarm(Integer.parseInt(payload.getValue()));
-                                            deviceService.update(device);
+                                            Services.getDeviceService().update(device);
                                         }
                                     }
                                     break;
@@ -162,10 +155,10 @@ public class ReportEvent {
                                     redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_PART_COUNT + Constant.UNDERLINE + reportData.getDeviceId(), payload
                                             .getValue());
                                     if (Objects.isNull(device)) {
-                                        device = deviceService.getByUuid(reportData.getDeviceId());
+                                        device = Services.getDeviceService().getByUuid(reportData.getDeviceId());
                                         if (Objects.nonNull(device) && device.getIsReporting()) {
                                             device.setPartCount(Long.parseLong(payload.getValue()));
-                                            deviceService.update(device);
+                                            Services.getDeviceService().update(device);
                                         }
                                     }
                                     break;

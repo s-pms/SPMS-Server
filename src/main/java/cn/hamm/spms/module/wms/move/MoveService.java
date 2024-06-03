@@ -9,7 +9,6 @@ import cn.hamm.spms.module.wms.input.InputStatus;
 import cn.hamm.spms.module.wms.input.InputType;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
-import cn.hamm.spms.module.wms.inventory.InventoryService;
 import cn.hamm.spms.module.wms.inventory.InventoryType;
 import cn.hamm.spms.module.wms.move.detail.MoveDetailEntity;
 import cn.hamm.spms.module.wms.move.detail.MoveDetailRepository;
@@ -18,7 +17,6 @@ import cn.hamm.spms.module.wms.output.OutputEntity;
 import cn.hamm.spms.module.wms.output.OutputStatus;
 import cn.hamm.spms.module.wms.output.OutputType;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,12 +30,6 @@ import java.util.Objects;
  */
 @Service
 public class MoveService extends AbstractBaseBillService<MoveEntity, MoveRepository, MoveDetailEntity, MoveDetailService, MoveDetailRepository> {
-    @Autowired
-    private InventoryService inventoryService;
-
-    @Autowired
-    private MoveDetailService moveDetailService;
-
     @Override
     public IDictionary getAuditedStatus() {
         return MoveStatus.MOVING;
@@ -64,15 +56,15 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
         // 扣除来源库存
         InventoryEntity from = sourceDetail.getInventory();
         from.setQuantity(from.getQuantity() - sourceDetail.getQuantity());
-        inventoryService.update(from);
+        Services.getInventoryService().update(from);
 
         // 查询移库单
         MoveEntity bill = get(sourceDetail.getBillId());
-        InventoryEntity to = inventoryService.getByMaterialIdAndStorageId(sourceDetail.getInventory().getMaterial().getId(), bill.getStorage().getId());
+        InventoryEntity to = Services.getInventoryService().getByMaterialIdAndStorageId(sourceDetail.getInventory().getMaterial().getId(), bill.getStorage().getId());
         if (Objects.nonNull(to)) {
             // 更新目标库存
             to.setQuantity(to.getQuantity() + sourceDetail.getQuantity());
-            inventoryService.update(to);
+            Services.getInventoryService().update(to);
         } else {
             // 创建目标库存
             to = new InventoryEntity()
@@ -80,7 +72,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
                     .setMaterial(sourceDetail.getInventory().getMaterial())
                     .setStorage(bill.getStorage())
                     .setType(InventoryType.STORAGE.getKey());
-            inventoryService.add(to);
+            Services.getInventoryService().add(to);
         }
     }
 
@@ -98,7 +90,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
                 .setType(OutputType.MOVE.getKey())
                 .setMove(moveBill)
                 .setStatus(OutputStatus.DONE.getKey());
-        List<MoveDetailEntity> details = moveDetailService.getAllByBillId(moveBill.getId());
+        List<MoveDetailEntity> details = detailService.getAllByBillId(moveBill.getId());
         List<OutputDetailEntity> outputDetails = new ArrayList<>();
         List<InputDetailEntity> inputDetails = new ArrayList<>();
         for (MoveDetailEntity detail : details) {
