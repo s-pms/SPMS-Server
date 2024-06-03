@@ -1,5 +1,6 @@
 package cn.hamm.spms.common;
 
+import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.asset.device.DeviceService;
 import cn.hamm.spms.module.asset.material.MaterialService;
 import cn.hamm.spms.module.channel.customer.CustomerService;
@@ -96,6 +97,9 @@ public class Services {
     @Getter
     private static LogService logService;
 
+    @Getter
+    private static AppConfig appConfig;
+
     @Autowired
     private void initService(
             CodeRuleService codeRuleService,
@@ -118,7 +122,8 @@ public class Services {
             StructureService structureService,
             InventoryService inventoryService,
             AppService appService,
-            LogService logService
+            LogService logService,
+            AppConfig appConfig
     ) {
         Services.codeRuleService = codeRuleService;
         Services.purchaseService = purchaseService;
@@ -141,5 +146,6 @@ public class Services {
         Services.inventoryService = inventoryService;
         Services.appService = appService;
         Services.logService = logService;
+        Services.appConfig = appConfig;
     }
 }
