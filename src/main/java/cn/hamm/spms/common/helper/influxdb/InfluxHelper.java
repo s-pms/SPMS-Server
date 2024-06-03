@@ -1,7 +1,7 @@
 package cn.hamm.spms.common.helper.influxdb;
 
 import cn.hamm.airpower.config.Constant;
-import cn.hamm.spms.common.config.AppConfig;
+import cn.hamm.spms.Application;
 import cn.hamm.spms.module.iot.report.*;
 import com.influxdb.LogLevel;
 import com.influxdb.client.InfluxDBClient;
@@ -44,8 +44,8 @@ public class InfluxHelper {
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
             writeApi.writePoint(
-                    AppConfig.get().getInfluxdb().getBucket(),
-                    AppConfig.get().getInfluxdb().getOrg(),
+                    Application.getAppConfig().getInfluxdb().getBucket(),
+                    Application.getAppConfig().getInfluxdb().getOrg(),
                     new Point(ReportEvent.CACHE_PREFIX + code)
                             .addField(INFLUX_FIELD_VALUE, value)
                             .addTag(INFLUX_TAG_UUID, uuid)
@@ -63,8 +63,8 @@ public class InfluxHelper {
     public void save(String code, String value, String uuid) {
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
-            writeApi.writePoint(AppConfig.get().getInfluxdb().getBucket(),
-                    AppConfig.get().getInfluxdb().getOrg(),
+            writeApi.writePoint(Application.getAppConfig().getInfluxdb().getBucket(),
+                    Application.getAppConfig().getInfluxdb().getOrg(),
                     new Point(ReportEvent.CACHE_PREFIX + code)
                             .addField(INFLUX_FIELD_VALUE, value)
                             .addTag(INFLUX_TAG_UUID, uuid)
@@ -83,8 +83,8 @@ public class InfluxHelper {
     public void save(String code, int value, String uuid) {
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
-            writeApi.writePoint(AppConfig.get().getInfluxdb().getBucket(),
-                    AppConfig.get().getInfluxdb().getOrg(),
+            writeApi.writePoint(Application.getAppConfig().getInfluxdb().getBucket(),
+                    Application.getAppConfig().getInfluxdb().getOrg(),
                     new Point(ReportEvent.CACHE_PREFIX + code)
                             .addField(INFLUX_FIELD_VALUE, value)
                             .addTag(INFLUX_TAG_UUID, uuid)
@@ -96,10 +96,10 @@ public class InfluxHelper {
         try {
             if (Objects.isNull(influxDbClient)) {
                 influxDbClient = InfluxDBClientFactory.create(
-                        AppConfig.get().getInfluxdb().getUrl(),
-                        AppConfig.get().getInfluxdb().getToken().toCharArray(),
-                        AppConfig.get().getInfluxdb().getOrg(),
-                        AppConfig.get().getInfluxdb().getBucket()
+                        Application.getAppConfig().getInfluxdb().getUrl(),
+                        Application.getAppConfig().getInfluxdb().getToken().toCharArray(),
+                        Application.getAppConfig().getInfluxdb().getOrg(),
+                        Application.getAppConfig().getInfluxdb().getBucket()
                 );
                 influxDbClient.setLogLevel(LogLevel.NONE);
             }
@@ -167,10 +167,10 @@ public class InfluxHelper {
     private @NotNull List<ReportInfluxPayload> query(ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
         if (Objects.isNull(influxDbClient)) {
             influxDbClient = InfluxDBClientFactory.create(
-                    AppConfig.get().getInfluxdb().getUrl(),
-                    AppConfig.get().getInfluxdb().getToken().toCharArray(),
-                    AppConfig.get().getInfluxdb().getUrl(),
-                    AppConfig.get().getInfluxdb().getBucket()
+                    Application.getAppConfig().getInfluxdb().getUrl(),
+                    Application.getAppConfig().getInfluxdb().getToken().toCharArray(),
+                    Application.getAppConfig().getInfluxdb().getUrl(),
+                    Application.getAppConfig().getInfluxdb().getBucket()
             );
             influxDbClient.setLogLevel(LogLevel.BASIC);
         }
@@ -208,7 +208,7 @@ public class InfluxHelper {
 
     private @NotNull List<String> getFluxQuery(@NotNull ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
         List<String> queryParams = new ArrayList<>();
-        queryParams.add(String.format("from(bucket:\"%s\")", AppConfig.get().getInfluxdb().getBucket()));
+        queryParams.add(String.format("from(bucket:\"%s\")", Application.getAppConfig().getInfluxdb().getBucket()));
         queryParams.add(String.format("range(start: %s, stop: %s)", Integer.parseInt(String.valueOf(reportPayload.getStartTime() / 1000)), Integer.parseInt(String.valueOf(reportPayload.getEndTime() / 1000))));
         queryParams.add(String.format("filter(fn: (r) => r._measurement == \"%s\" and r.uuid == \"%s\")", ReportEvent.CACHE_PREFIX + reportPayload.getCode(), reportPayload.getUuid()));
         queryParams.add("filter(fn: (r) => r._field == \"value\")");

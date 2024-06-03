@@ -9,8 +9,8 @@ import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.root.RootController;
 import cn.hamm.airpower.util.Utils;
+import cn.hamm.spms.Application;
 import cn.hamm.spms.common.Services;
-import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.system.app.AppEntity;
 import cn.hamm.spms.module.system.app.IAppAction;
@@ -116,7 +116,7 @@ public class Oauth2Controller extends RootController implements IAppAction {
     }
 
     private @Nullable ModelAndView redirectLogin(HttpServletResponse response, String appKey, String redirectUri) {
-        String url = AppConfig.get().getLoginUrl() +
+        String url = Application.getAppConfig().getLoginUrl() +
                 "?appKey=" +
                 appKey +
                 "&redirectUri=" +

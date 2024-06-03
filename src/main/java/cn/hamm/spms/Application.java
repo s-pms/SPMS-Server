@@ -1,6 +1,8 @@
 package cn.hamm.spms;
 
+import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.iot.report.ReportEvent;
+import lombok.Getter;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -19,6 +21,9 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 public class Application {
     private static ReportEvent reportEvent;
 
+    @Getter
+    private static AppConfig appConfig;
+
     public static void main(String[] args) throws MqttException {
         SpringApplication.run(Application.class, args);
         reportEvent.listen();
@@ -29,8 +34,9 @@ public class Application {
     }
 
     @Autowired
-    public void autorun(ReportEvent reportEvent) {
+    public void autorun(AppConfig appConfig, ReportEvent reportEvent) {
         Application.reportEvent = reportEvent;
+        Application.appConfig = appConfig;
     }
 
 }
