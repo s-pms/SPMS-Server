@@ -76,7 +76,6 @@ public class BaseBillController<
         return savedBill;
     }
 
-
     @Override
     protected final E beforeAdd(@NotNull E bill) {
         return super.beforeAdd(bill.setStatus(null));

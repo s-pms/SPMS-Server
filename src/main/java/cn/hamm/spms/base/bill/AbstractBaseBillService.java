@@ -30,7 +30,6 @@ public abstract class AbstractBaseBillService<
     @Autowired(required = false)
     protected DS detailService;
 
-
     /**
      * <h2>添加完成数量</h2>
      *
@@ -83,23 +82,6 @@ public abstract class AbstractBaseBillService<
      * @param bill 单据
      */
     protected void afterDetailSaved(E bill) {
-    }
-
-    @Override
-    protected E afterGet(@NotNull E bill) {
-        List<D> details = detailService.getAllByBillId(bill.getId());
-        bill.setDetails(details);
-        return bill;
-    }
-
-    @Override
-    protected void afterAdd(long id, @NotNull E source) {
-        saveDetails(id, source.getDetails());
-    }
-
-    @Override
-    protected void afterUpdate(long id, @NotNull E source) {
-        saveDetails(id, source.getDetails());
     }
 
     /**
@@ -198,4 +180,21 @@ public abstract class AbstractBaseBillService<
      * @return 驳回状态
      */
     public abstract IDictionary getRejectedStatus();
+
+    @Override
+    protected E afterGet(@NotNull E bill) {
+        List<D> details = detailService.getAllByBillId(bill.getId());
+        bill.setDetails(details);
+        return bill;
+    }
+
+    @Override
+    protected void afterAdd(long id, @NotNull E source) {
+        saveDetails(id, source.getDetails());
+    }
+
+    @Override
+    protected void afterUpdate(long id, @NotNull E source) {
+        saveDetails(id, source.getDetails());
+    }
 }
