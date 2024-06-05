@@ -54,7 +54,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     }
 
     @Override
-    protected void beforeHandleRequest(
+    protected boolean beforeHandleRequest(
             HttpServletRequest request,
             HttpServletResponse response,
             Class<?> clazz,
@@ -62,7 +62,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     ) {
         DisableLog disableLog = Utils.getReflectUtil().getAnnotation(DisableLog.class, method);
         if (Objects.nonNull(disableLog)) {
-            return;
+            return true;
         }
         String accessToken = request.getHeader(Configs.getServiceConfig().getAuthorizeHeader());
         Long userId = null;
@@ -92,5 +92,6 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
                 .setUserId(userId)
         );
         setShareData(RequestInterceptor.LOG_REQUEST_KEY, logId);
+        return true;
     }
 }
