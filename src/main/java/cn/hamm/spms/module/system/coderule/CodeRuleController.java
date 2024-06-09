@@ -7,7 +7,6 @@ import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseController;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <h1>Controller</h1>
