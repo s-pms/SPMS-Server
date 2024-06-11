@@ -66,18 +66,12 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
         ServiceError.PARAM_INVALID.whenNull(parameter, "不支持的参数");
         ReportGranularity reportGranularity = Utils.getDictionaryUtil().getDictionary(ReportGranularity.class, reportPayload.getReportGranularity());
         ReportDataType reportDataType = Utils.getDictionaryUtil().getDictionary(ReportDataType.class, parameter.getDataType());
-        if (reportDataType != null) {
-            switch (reportDataType) {
-                case QUANTITY:
-                    return influxHelper.queryQuantity(reportPayload, reportGranularity);
-                case STATUS:
-                    return influxHelper.queryStatus(reportPayload, reportGranularity);
-                case SWITCH:
-                    return influxHelper.querySwitch(reportPayload, reportGranularity);
-                default:
-            }
-        }
-        return influxHelper.queryInformation(reportPayload, reportGranularity);
+        return switch (reportDataType) {
+            case QUANTITY -> influxHelper.queryQuantity(reportPayload, reportGranularity);
+            case STATUS -> influxHelper.queryStatus(reportPayload, reportGranularity);
+            case SWITCH -> influxHelper.querySwitch(reportPayload, reportGranularity);
+            default -> influxHelper.queryInformation(reportPayload, reportGranularity);
+        };
     }
 
     /**

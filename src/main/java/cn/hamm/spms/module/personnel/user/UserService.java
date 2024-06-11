@@ -9,8 +9,8 @@ import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.common.exception.CustomError;
+import cn.hamm.spms.module.open.app.OpenAppEntity;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
-import cn.hamm.spms.module.system.app.AppEntity;
 import cn.hamm.spms.module.system.menu.MenuEntity;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import jakarta.mail.MessagingException;
@@ -159,11 +159,11 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * <h2>存储Oauth的一次性Code</h2>
      *
-     * @param userId    用户ID
-     * @param appEntity 保存的应用信息
+     * @param userId  用户ID
+     * @param openApp 保存的应用信息
      */
-    public void saveOauthCode(Long userId, @NotNull AppEntity appEntity) {
-        Utils.getRedisUtil().set(getAppCodeKey(appEntity.getAppKey(), appEntity.getCode()), userId, CACHE_CODE_EXPIRE_SECOND);
+    public void saveOauthCode(Long userId, @NotNull OpenAppEntity openApp) {
+        Utils.getRedisUtil().set(getAppCodeKey(openApp.getAppKey(), openApp.getCode()), userId, CACHE_CODE_EXPIRE_SECOND);
     }
 
     /**

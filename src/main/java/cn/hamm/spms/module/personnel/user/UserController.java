@@ -9,7 +9,7 @@ import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.common.Services;
-import cn.hamm.spms.module.system.app.AppEntity;
+import cn.hamm.spms.module.open.app.OpenAppEntity;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
@@ -133,15 +133,15 @@ public class UserController extends BaseController<UserEntity, UserService, User
         }
 
         // 验证应用信息
-        AppEntity appEntity = Services.getAppService().getByAppKey(appKey);
-        ServiceError.PARAM_INVALID.whenNull(appEntity, "登录失败,错误的应用ID");
+        OpenAppEntity openApp = Services.getOpenAppService().getByAppKey(appKey);
+        ServiceError.PARAM_INVALID.whenNull(openApp, "登录失败,错误的应用ID");
 
         // 生成临时身份令牌code
         String code = Utils.getRandomUtil().randomString(32);
-        appEntity.setCode(code);
+        openApp.setCode(code);
 
         // 缓存临时身份令牌code
-        service.saveOauthCode(userId, appEntity);
+        service.saveOauthCode(userId, openApp);
         return Json.data(code, "登录成功,请重定向此Code");
     }
 }
