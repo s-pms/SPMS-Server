@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.system.app;
+package cn.hamm.spms.module.open.app;
 
 import cn.hamm.spms.base.BaseRepository;
 import org.springframework.stereotype.Repository;
@@ -9,12 +9,12 @@ import org.springframework.stereotype.Repository;
  * @author Hamm.cn
  */
 @Repository
-public interface AppRepository extends BaseRepository<AppEntity> {
+public interface OpenAppRepository extends BaseRepository<OpenAppEntity> {
     /**
-     * <h2>通过AppKey获取一个应用</h2>
+     * <h2>通过AppKey查询应用</h2>
      *
      * @param appKey AppKey
-     * @return AppEntity
+     * @return 应用
      */
-    AppEntity getByAppKey(String appKey);
+    OpenAppEntity getByAppKey(String appKey);
 }

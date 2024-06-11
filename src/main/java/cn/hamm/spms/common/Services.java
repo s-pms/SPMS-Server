@@ -12,8 +12,9 @@ import cn.hamm.spms.module.channel.supplier.SupplierService;
 import cn.hamm.spms.module.factory.storage.StorageService;
 import cn.hamm.spms.module.factory.structure.StructureService;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
+import cn.hamm.spms.module.open.app.OpenAppService;
+import cn.hamm.spms.module.open.log.OpenLogService;
 import cn.hamm.spms.module.personnel.user.UserService;
-import cn.hamm.spms.module.system.app.AppService;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import cn.hamm.spms.module.system.log.LogService;
 import cn.hamm.spms.module.system.menu.MenuService;
@@ -92,13 +93,16 @@ public class Services {
     private static InventoryService inventoryService;
 
     @Getter
-    private static AppService appService;
-
-    @Getter
     private static LogService logService;
 
     @Getter
     private static AppConfig appConfig;
+
+    @Getter
+    private static OpenAppService openAppService;
+
+    @Getter
+    private static OpenLogService openLogService;
 
     @Autowired
     private void initService(
@@ -121,9 +125,10 @@ public class Services {
             StorageService storageService,
             StructureService structureService,
             InventoryService inventoryService,
-            AppService appService,
             LogService logService,
-            AppConfig appConfig
+            AppConfig appConfig,
+            OpenAppService openAppService,
+            OpenLogService openLogService
     ) {
         Services.codeRuleService = codeRuleService;
         Services.purchaseService = purchaseService;
@@ -144,8 +149,9 @@ public class Services {
         Services.storageService = storageService;
         Services.structureService = structureService;
         Services.inventoryService = inventoryService;
-        Services.appService = appService;
         Services.logService = logService;
         Services.appConfig = appConfig;
+        Services.openAppService = openAppService;
+        Services.openLogService = openLogService;
     }
 }

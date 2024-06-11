@@ -148,11 +148,17 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         firstMenu = new MenuEntity().setName("设备物联").setOrderNo(44).setRootTree();
         firstMenu = get(add(firstMenu));
 
-        MenuEntity iotSubMenu;
-        iotSubMenu = new MenuEntity().setName("设备概览").setPath("/console/iot/monitor/preview").setParentId(firstMenu.getId());
-        add(iotSubMenu);
-        iotSubMenu = new MenuEntity().setName("参数管理").setPath("/console/iot/parameter/list").setParentId(firstMenu.getId());
-        add(iotSubMenu);
+        secondMenu = new MenuEntity().setName("设备概览").setPath("/console/iot/monitor/preview").setParentId(firstMenu.getId());
+        add(secondMenu);
+        secondMenu = new MenuEntity().setName("参数管理").setPath("/console/iot/parameter/list").setParentId(firstMenu.getId());
+        add(secondMenu);
+
+        // 开放能力
+        firstMenu = new MenuEntity().setName("开放能力").setOrderNo(20).setRootTree();
+        firstMenu = get(add(firstMenu));
+
+        secondMenu = new MenuEntity().setName("开放应用").setPath("/console/open/app/list").setParentId(firstMenu.getId());
+        add(secondMenu);
 
         // 系统设置
         firstMenu = new MenuEntity().setName("系统设置").setOrderNo(2).setRootTree();
@@ -165,8 +171,6 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         secondMenu = new MenuEntity().setName("权限管理").setPath("/console/system/permission/list").setParentId(firstMenu.getId());
         add(secondMenu);
         secondMenu = new MenuEntity().setName("菜单管理").setPath("/console/system/menu/list").setParentId(firstMenu.getId());
-        add(secondMenu);
-        secondMenu = new MenuEntity().setName("第三方应用").setPath("/console/system/app/list").setParentId(firstMenu.getId());
         add(secondMenu);
         secondMenu = new MenuEntity().setName("请求日志").setPath("/console/system/log/list").setParentId(firstMenu.getId());
         add(secondMenu);

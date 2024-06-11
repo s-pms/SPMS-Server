@@ -9,13 +9,11 @@ import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.annotation.DisableLog;
 import cn.hamm.spms.common.config.AppConstant;
-import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.system.log.LogEntity;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -33,36 +31,43 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
      */
     final static String LOG_REQUEST_KEY = "logId";
 
+    /**
+     * <h2>验证指定的用户是否有指定权限标识的权限</h2>
+     *
+     * @param userId             用户ID
+     * @param permissionIdentity 权限标识
+     * @param request            请求对象
+     * @apiNote 抛出异常则为拦截
+     */
     @Override
-    public boolean checkPermissionAccess(Long userId, String permissionIdentity, HttpServletRequest request) {
+    protected void checkUserPermission(Long userId, String permissionIdentity, HttpServletRequest request) {
         UserEntity existUser = Services.getUserService().get(userId);
         if (existUser.isRootUser()) {
-            return true;
+            return;
         }
         PermissionEntity needPermission = Services.getPermissionService().getPermissionByIdentity(permissionIdentity);
-        for (RoleEntity role : existUser.getRoleList()) {
-            for (PermissionEntity permission : role.getPermissionList()) {
-                if (needPermission.getId().equals(permission.getId())) {
-                    return true;
-                }
-            }
+        if (existUser.getRoleList().stream().flatMap(role -> role.getPermissionList().stream()).anyMatch(permission -> needPermission.getId().equals(permission.getId()))) {
+            return;
         }
         ServiceError.FORBIDDEN.show(String.format(
                 MessageConstant.ACCESS_DENIED, needPermission.getName(), needPermission.getIdentity()
         ));
-        return false;
     }
 
+    /**
+     * <h2>拦截请求</h2>
+     *
+     * @param request  请求对象
+     * @param response 响应对象
+     * @param clazz    控制器类
+     * @param method   执行方法
+     * @apiNote 抛出异常则为拦截
+     */
     @Override
-    protected boolean beforeHandleRequest(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Class<?> clazz,
-            @NotNull Method method
-    ) {
+    protected void interceptRequest(HttpServletRequest request, HttpServletResponse response, Class<?> clazz, Method method) {
         DisableLog disableLog = Utils.getReflectUtil().getAnnotation(DisableLog.class, method);
         if (Objects.nonNull(disableLog)) {
-            return true;
+            return;
         }
         String accessToken = request.getHeader(Configs.getServiceConfig().getAuthorizeHeader());
         Long userId = null;
@@ -92,6 +97,5 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
                 .setUserId(userId)
         );
         setShareData(RequestInterceptor.LOG_REQUEST_KEY, logId);
-        return true;
     }
 }
