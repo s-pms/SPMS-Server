@@ -51,7 +51,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     @SuppressWarnings("AlibabaMethodTooLong")
     public void loadPermission() {
         List<PermissionEntity> permissions = Utils.getAccessUtil().scanPermission(Application.class.getPackageName(), PermissionEntity.class);
-        for (PermissionEntity permission : permissions) {
+        for (var permission : permissions) {
             PermissionEntity exist = getPermissionByIdentity(permission.getIdentity());
             if (Objects.isNull(exist)) {
                 exist = new PermissionEntity()

@@ -4,6 +4,7 @@ import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseService;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
         String template = codeRule.getTemplate();
         List<Map<String, Object>> mapList = Utils.getDictionaryUtil().getDictionaryList(CodeRuleParam.class);
         Calendar calendar = Calendar.getInstance();
-        for (Map<String, Object> map : mapList) {
+        for (val map : mapList) {
             String param = map.get(Constant.LABEL).toString();
             if (CodeRuleParam.FULL_YEAR.getLabel().equals(param)) {
                 template = template.replaceAll(param, String.valueOf(calendar.get(Calendar.YEAR)));

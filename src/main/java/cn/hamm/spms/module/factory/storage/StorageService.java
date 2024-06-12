@@ -17,11 +17,11 @@ import java.util.Objects;
 public class StorageService extends BaseService<StorageEntity, StorageRepository> {
     @Override
     protected @NotNull List<StorageEntity> afterGetList(@NotNull List<StorageEntity> list) {
-        for (StorageEntity item : list) {
+        list.forEach(item -> {
             QueryRequest<StorageEntity> queryRequest = new QueryRequest<>();
             queryRequest.setFilter(new StorageEntity().setParentId(item.getId()));
             item.setChildren(this.getList(queryRequest));
-        }
+        });
         return list;
     }
 
