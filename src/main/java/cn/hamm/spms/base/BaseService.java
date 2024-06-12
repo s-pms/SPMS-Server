@@ -39,11 +39,12 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
                 continue;
             }
             Object value = Utils.getReflectUtil().getFieldValue(entity, field);
-            if (Objects.isNull(value) || !StringUtils.hasText(value.toString())) {
-                String code = Services.getCodeRuleService().createCode(autoGenerateCode.value());
-                Utils.getReflectUtil().setFieldValue(entity, field, code);
-                break;
+            if (!Objects.isNull(value) && StringUtils.hasText(value.toString())) {
+                continue;
             }
+            String code = Services.getCodeRuleService().createCode(autoGenerateCode.value());
+            Utils.getReflectUtil().setFieldValue(entity, field, code);
+            break;
         }
         entity = beforeAppSaveToDatabase(entity);
         return entity;
