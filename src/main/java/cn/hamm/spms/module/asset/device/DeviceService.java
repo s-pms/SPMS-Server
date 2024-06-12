@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <h1>Service</h1>
@@ -83,12 +84,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     public DeviceEntity getDeviceParameters(@NotNull DeviceEntity device) {
         Set<ParameterEntity> parameters = new HashSet<>();
         if (Objects.nonNull(device.getParameters())) {
-            for (ParameterEntity parameter : device.getParameters()) {
-                parameter = Services.getParameterService().get(parameter.getId());
-                if (!parameter.getIsSystem()) {
-                    parameters.add(parameter);
-                }
-            }
+            parameters = device.getParameters().stream().map(parameter -> Services.getParameterService().get(parameter.getId())).filter(parameter -> !parameter.getIsSystem()).collect(Collectors.toSet());
         }
         parameters.add(Services.getParameterService().getByCode(ReportEvent.REPORT_KEY_OF_STATUS));
         parameters.add(Services.getParameterService().getByCode(ReportEvent.REPORT_KEY_OF_ALARM));
