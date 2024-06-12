@@ -1,6 +1,7 @@
 package cn.hamm.spms.common.exception;
 
 import cn.hamm.airpower.interfaces.IException;
+import cn.hamm.spms.common.config.AppConstant;
 import lombok.Getter;
 import org.jetbrains.annotations.Contract;
 
@@ -18,13 +19,12 @@ public enum CustomError implements IException {
 
     ;
 
-    private static final int BASE_CODE = 10000000;
     private final int code;
     private final String message;
 
     @Contract(pure = true)
     CustomError(int code, String message) {
-        this.code = code + BASE_CODE;
+        this.code = code + AppConstant.BASE_CUSTOM_ERROR_CODE;
         this.message = message;
     }
 }
