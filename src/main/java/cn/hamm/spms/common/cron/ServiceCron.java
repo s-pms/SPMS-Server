@@ -28,9 +28,7 @@ public class ServiceCron {
     @Scheduled(cron = "0 0 0 * * *")
     void resetCodeRuleBaseNumber() {
         List<CodeRuleEntity> codeRules = Services.getCodeRuleService().getList(new QueryRequest<>());
-        for (CodeRuleEntity codeRule : codeRules) {
-            resetSn(codeRule);
-        }
+        codeRules.forEach(this::resetSn);
         Configs.getServiceConfig().setServiceRunning(true);
     }
 

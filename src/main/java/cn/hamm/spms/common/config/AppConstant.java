@@ -16,9 +16,11 @@ public class AppConstant {
      */
     public static final String APP_PLATFORM_HEADER = "app-platform";
 
-    public static final String CONTROLLER_CLASS_PATH = "/**/*Controller.class";
-
+    /**
+     * <h2>orderNo</h2>
+     */
     public static final String ORDER_NO = "orderNo";
+
     /**
      * <h2>密码盐长度</h2>
      */
