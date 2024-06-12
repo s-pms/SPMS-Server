@@ -2,6 +2,7 @@ package cn.hamm.spms.common.helper.influxdb;
 
 import cn.hamm.airpower.config.Constant;
 import cn.hamm.spms.common.Services;
+import cn.hamm.spms.common.config.InfluxConfig;
 import cn.hamm.spms.module.iot.report.*;
 import com.influxdb.LogLevel;
 import com.influxdb.client.InfluxDBClient;
@@ -26,11 +27,14 @@ import java.util.Objects;
  */
 @Configuration
 public class InfluxHelper {
+    /**
+     * <h2>InfluxDB配置</h2>
+     */
+    public static final InfluxConfig INFLUX_CONFIG = Services.getAppConfig().getInfluxdb();
     private static final String INFLUX_TAG_UUID = "uuid";
     private static final String INFLUX_SQL_SPLIT = " |> ";
     private static final String INFLUX_RECORD_VALUE_KEY = "_value";
     private static final String INFLUX_FIELD_VALUE = Constant.VALUE;
-
     private InfluxDBClient influxDbClient;
 
     /**
@@ -43,9 +47,7 @@ public class InfluxHelper {
     public void save(String code, double value, String uuid) {
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
-            writeApi.writePoint(
-                    Services.getAppConfig().getInfluxdb().getBucket(),
-                    Services.getAppConfig().getInfluxdb().getOrg(),
+            writeApi.writePoint(INFLUX_CONFIG.getBucket(), INFLUX_CONFIG.getOrg(),
                     new Point(ReportEvent.CACHE_PREFIX + code)
                             .addField(INFLUX_FIELD_VALUE, value)
                             .addTag(INFLUX_TAG_UUID, uuid)
@@ -63,8 +65,7 @@ public class InfluxHelper {
     public void save(String code, String value, String uuid) {
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
-            writeApi.writePoint(Services.getAppConfig().getInfluxdb().getBucket(),
-                    Services.getAppConfig().getInfluxdb().getOrg(),
+            writeApi.writePoint(INFLUX_CONFIG.getBucket(), INFLUX_CONFIG.getOrg(),
                     new Point(ReportEvent.CACHE_PREFIX + code)
                             .addField(INFLUX_FIELD_VALUE, value)
                             .addTag(INFLUX_TAG_UUID, uuid)
@@ -83,8 +84,7 @@ public class InfluxHelper {
     public void save(String code, int value, String uuid) {
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
-            writeApi.writePoint(Services.getAppConfig().getInfluxdb().getBucket(),
-                    Services.getAppConfig().getInfluxdb().getOrg(),
+            writeApi.writePoint(INFLUX_CONFIG.getBucket(), INFLUX_CONFIG.getOrg(),
                     new Point(ReportEvent.CACHE_PREFIX + code)
                             .addField(INFLUX_FIELD_VALUE, value)
                             .addTag(INFLUX_TAG_UUID, uuid)
@@ -92,17 +92,15 @@ public class InfluxHelper {
         }
     }
 
+    /**
+     * <h2>获取写入API</h2>
+     *
+     * @return 写入API
+     */
     private @Nullable WriteApiBlocking getWriteApi() {
         try {
-            if (Objects.isNull(influxDbClient)) {
-                influxDbClient = InfluxDBClientFactory.create(
-                        Services.getAppConfig().getInfluxdb().getUrl(),
-                        Services.getAppConfig().getInfluxdb().getToken().toCharArray(),
-                        Services.getAppConfig().getInfluxdb().getOrg(),
-                        Services.getAppConfig().getInfluxdb().getBucket()
-                );
-                influxDbClient.setLogLevel(LogLevel.NONE);
-            }
+            initInfluxDbClient();
+            influxDbClient.setLogLevel(LogLevel.NONE);
             return influxDbClient.getWriteApiBlocking();
         } catch (Exception ignored) {
             influxDbClient.close();
@@ -165,15 +163,8 @@ public class InfluxHelper {
      * @return 数据
      */
     private @NotNull List<ReportInfluxPayload> query(ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
-        if (Objects.isNull(influxDbClient)) {
-            influxDbClient = InfluxDBClientFactory.create(
-                    Services.getAppConfig().getInfluxdb().getUrl(),
-                    Services.getAppConfig().getInfluxdb().getToken().toCharArray(),
-                    Services.getAppConfig().getInfluxdb().getUrl(),
-                    Services.getAppConfig().getInfluxdb().getBucket()
-            );
-            influxDbClient.setLogLevel(LogLevel.BASIC);
-        }
+        initInfluxDbClient();
+        influxDbClient.setLogLevel(LogLevel.BASIC);
         List<ReportInfluxPayload> result = new ArrayList<>();
         QueryApi queryApi = influxDbClient.getQueryApi();
         List<String> queryParams = getFluxQuery(reportPayload, reportDataType, reportGranularity);
@@ -206,6 +197,28 @@ public class InfluxHelper {
         return result;
     }
 
+    /**
+     * <h2>初始化InfluxDB</h2>
+     */
+    private void initInfluxDbClient() {
+        if (Objects.isNull(influxDbClient)) {
+            influxDbClient = InfluxDBClientFactory.create(
+                    INFLUX_CONFIG.getUrl(),
+                    INFLUX_CONFIG.getToken().toCharArray(),
+                    INFLUX_CONFIG.getOrg(),
+                    INFLUX_CONFIG.getBucket()
+            );
+        }
+    }
+
+    /**
+     * <h2>获取查询参数</h2>
+     *
+     * @param reportPayload     数采报告
+     * @param reportDataType    数据类型
+     * @param reportGranularity 报告颗粒度
+     * @return 参数列表
+     */
     private @NotNull List<String> getFluxQuery(@NotNull ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
         List<String> queryParams = new ArrayList<>();
         queryParams.add(String.format("from(bucket:\"%s\")", Services.getAppConfig().getInfluxdb().getBucket()));
