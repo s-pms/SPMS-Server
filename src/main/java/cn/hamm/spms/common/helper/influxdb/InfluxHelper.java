@@ -27,10 +27,6 @@ import java.util.Objects;
  */
 @Configuration
 public class InfluxHelper {
-    /**
-     * <h2>InfluxDB配置</h2>
-     */
-    public static final InfluxConfig INFLUX_CONFIG = Services.getAppConfig().getInfluxdb();
     private static final String INFLUX_TAG_UUID = "uuid";
     private static final String INFLUX_SQL_SPLIT = " |> ";
     private static final String INFLUX_RECORD_VALUE_KEY = "_value";
@@ -45,9 +41,10 @@ public class InfluxHelper {
      * @param uuid  设备ID
      */
     public void save(String code, double value, String uuid) {
+        InfluxConfig influxdbConfig = Services.getAppConfig().getInfluxdb();
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
-            writeApi.writePoint(INFLUX_CONFIG.getBucket(), INFLUX_CONFIG.getOrg(),
+            writeApi.writePoint(influxdbConfig.getBucket(), influxdbConfig.getOrg(),
                     new Point(ReportEvent.CACHE_PREFIX + code)
                             .addField(INFLUX_FIELD_VALUE, value)
                             .addTag(INFLUX_TAG_UUID, uuid)
@@ -63,16 +60,16 @@ public class InfluxHelper {
      * @param uuid  设备ID
      */
     public void save(String code, String value, String uuid) {
+        InfluxConfig influxdbConfig = Services.getAppConfig().getInfluxdb();
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
-            writeApi.writePoint(INFLUX_CONFIG.getBucket(), INFLUX_CONFIG.getOrg(),
+            writeApi.writePoint(influxdbConfig.getBucket(), influxdbConfig.getOrg(),
                     new Point(ReportEvent.CACHE_PREFIX + code)
                             .addField(INFLUX_FIELD_VALUE, value)
                             .addTag(INFLUX_TAG_UUID, uuid)
             );
         }
     }
-
 
     /**
      * <h2>保存数据</h2>
@@ -82,9 +79,10 @@ public class InfluxHelper {
      * @param uuid  设备ID
      */
     public void save(String code, int value, String uuid) {
+        InfluxConfig influxdbConfig = Services.getAppConfig().getInfluxdb();
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
-            writeApi.writePoint(INFLUX_CONFIG.getBucket(), INFLUX_CONFIG.getOrg(),
+            writeApi.writePoint(influxdbConfig.getBucket(), influxdbConfig.getOrg(),
                     new Point(ReportEvent.CACHE_PREFIX + code)
                             .addField(INFLUX_FIELD_VALUE, value)
                             .addTag(INFLUX_TAG_UUID, uuid)
@@ -153,7 +151,6 @@ public class InfluxHelper {
         return query(payload, ReportDataType.STATUS, reportGranularity);
     }
 
-
     /**
      * <h2>查询报告</h2>
      *
@@ -201,12 +198,13 @@ public class InfluxHelper {
      * <h2>初始化InfluxDB</h2>
      */
     private void initInfluxDbClient() {
+        InfluxConfig influxdbConfig = Services.getAppConfig().getInfluxdb();
         if (Objects.isNull(influxDbClient)) {
             influxDbClient = InfluxDBClientFactory.create(
-                    INFLUX_CONFIG.getUrl(),
-                    INFLUX_CONFIG.getToken().toCharArray(),
-                    INFLUX_CONFIG.getOrg(),
-                    INFLUX_CONFIG.getBucket()
+                    influxdbConfig.getUrl(),
+                    influxdbConfig.getToken().toCharArray(),
+                    influxdbConfig.getOrg(),
+                    influxdbConfig.getBucket()
             );
         }
     }
