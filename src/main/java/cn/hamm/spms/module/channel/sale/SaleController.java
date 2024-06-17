@@ -12,8 +12,8 @@ import cn.hamm.spms.module.wms.output.OutputStatus;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <h1>Controller</h1>
@@ -30,13 +30,11 @@ public class SaleController extends BaseBillController<SaleEntity, SaleService, 
                 .setStatus(OutputStatus.AUDITING.getKey())
                 .setSale(bill);
         List<SaleDetailEntity> details = detailService.getAllByBillId(bill.getId());
-        List<OutputDetailEntity> outputDetails = new ArrayList<>();
-        for (SaleDetailEntity detail : details) {
-            outputDetails.add(new OutputDetailEntity()
-                    .setMaterial(detail.getMaterial())
-                    .setQuantity(detail.getQuantity())
-            );
-        }
+        List<OutputDetailEntity> outputDetails = details.stream()
+                .map(detail -> new OutputDetailEntity()
+                        .setMaterial(detail.getMaterial())
+                        .setQuantity(detail.getQuantity()))
+                .collect(Collectors.toList());
         outputBill.setDetails(outputDetails);
         Services.getOutputService().add(outputBill);
     }

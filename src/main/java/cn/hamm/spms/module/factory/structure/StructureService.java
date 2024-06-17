@@ -17,11 +17,11 @@ import java.util.Objects;
 public class StructureService extends BaseService<StructureEntity, StructureRepository> {
     @Override
     protected @NotNull List<StructureEntity> afterGetList(@NotNull List<StructureEntity> list) {
-        for (StructureEntity item : list) {
+        list.forEach(item -> {
             QueryRequest<StructureEntity> queryRequest = new QueryRequest<>();
             queryRequest.setFilter(new StructureEntity().setParentId(item.getId()));
             item.setChildren(this.getList(queryRequest));
-        }
+        });
         return list;
     }
 

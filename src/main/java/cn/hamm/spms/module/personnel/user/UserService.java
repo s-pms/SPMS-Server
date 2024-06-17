@@ -10,7 +10,6 @@ import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.common.exception.CustomError;
 import cn.hamm.spms.module.open.app.OpenAppEntity;
-import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.system.menu.MenuEntity;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import jakarta.mail.MessagingException;
@@ -64,23 +63,22 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     public List<MenuEntity> getMenuListByUserId(long userId) {
         UserEntity userEntity = get(userId);
         if (userEntity.isRootUser()) {
-            return Utils.getTreeUtil().buildTreeList(Services.getMenuService().getList(new QueryRequest<MenuEntity>().setSort(new Sort().setField(AppConstant.ORDER_NO))));
+            return Utils.getTreeUtil().buildTreeList(
+                    Services.getMenuService().getList(
+                            new QueryRequest<MenuEntity>().setSort(
+                                    new Sort().setField(AppConstant.ORDER_NO)
+                            )
+                    )
+            );
         }
         List<MenuEntity> menuList = new ArrayList<>();
-        for (RoleEntity roleEntity : userEntity.getRoleList()) {
-            roleEntity.getMenuList().forEach(menuItem -> {
-                boolean isExist = false;
-                for (MenuEntity existItem : menuList) {
-                    if (menuItem.getId().equals(existItem.getId())) {
-                        isExist = true;
-                        break;
-                    }
-                }
-                if (!isExist) {
-                    menuList.add(menuItem);
-                }
-            });
-        }
+        userEntity.getRoleList().forEach(role -> role.getMenuList().forEach(menu -> {
+            boolean isExist = menuList.stream()
+                    .anyMatch(existMenu -> menu.getId().equals(existMenu.getId()));
+            if (!isExist) {
+                menuList.add(menu);
+            }
+        }));
         return Utils.getTreeUtil().buildTreeList(menuList);
     }
 
@@ -96,20 +94,13 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             return Services.getPermissionService().getList(null);
         }
         List<PermissionEntity> permissionList = new ArrayList<>();
-        for (RoleEntity roleEntity : userEntity.getRoleList()) {
-            roleEntity.getPermissionList().forEach(permissionItem -> {
-                boolean isExist = false;
-                for (PermissionEntity existItem : permissionList) {
-                    if (permissionItem.getId().equals(existItem.getId())) {
-                        isExist = true;
-                        break;
-                    }
-                }
-                if (!isExist) {
-                    permissionList.add(permissionItem);
-                }
-            });
-        }
+        userEntity.getRoleList().forEach(roleEntity -> roleEntity.getPermissionList().forEach(permission -> {
+            boolean isExist = permissionList.stream()
+                    .anyMatch(existPermission -> permission.getId().equals(existPermission.getId()));
+            if (!isExist) {
+                permissionList.add(permission);
+            }
+        }));
         return permissionList;
     }
 

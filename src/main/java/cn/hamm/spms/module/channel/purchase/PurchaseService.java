@@ -67,7 +67,9 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
     @Override
     protected void afterDetailSaved(@NotNull PurchaseEntity purchase) {
         List<PurchaseDetailEntity> details = detailService.getAllByBillId(purchase.getId());
-        double totalPrice = details.stream().mapToDouble(detail -> detail.getPrice() * detail.getQuantity()).sum();
+        double totalPrice = details.stream()
+                .mapToDouble(detail -> detail.getPrice() * detail.getQuantity())
+                .sum();
         purchase.setTotalPrice(totalPrice);
         updateToDatabase(purchase);
     }

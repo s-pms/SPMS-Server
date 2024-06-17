@@ -47,13 +47,9 @@ public abstract class AbstractBaseBillService<
 
         // 开始判断是否整个单据数量已超标
         List<D> details = detailService.getAllByBillId(savedDetail.getBillId());
-        boolean isAllFinished = true;
-        for (D d : details) {
-            if (d.getFinishQuantity() < d.getQuantity()) {
-                isAllFinished = false;
-                break;
-            }
-        }
+        // 所有的完成数量都不小于计划数量 标识全部完成
+        boolean isAllFinished = details.stream()
+                .noneMatch(d -> d.getFinishQuantity() < d.getQuantity());
         if (isAllFinished) {
             // 触发单据完成的后置方法
             afterAllDetailsFinished(savedDetail.getBillId());

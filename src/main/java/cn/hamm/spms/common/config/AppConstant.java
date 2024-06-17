@@ -16,11 +16,18 @@ public class AppConstant {
      */
     public static final String APP_PLATFORM_HEADER = "app-platform";
 
-    public static final String CONTROLLER_CLASS_PATH = "/**/*Controller.class";
-
+    /**
+     * <h2>orderNo</h2>
+     */
     public static final String ORDER_NO = "orderNo";
+
     /**
      * <h2>密码盐长度</h2>
      */
     public static final int PASSWORD_SALT_LENGTH = 4;
+    
+    /**
+     * <h2>自定义异常代码基数</h2>
+     */
+    public static final int BASE_CUSTOM_ERROR_CODE = 500000;
 }

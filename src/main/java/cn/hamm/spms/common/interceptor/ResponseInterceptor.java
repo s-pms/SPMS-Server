@@ -30,13 +30,13 @@ public class ResponseInterceptor extends ResponseBodyInterceptor {
                 String bodyString = body.toString();
                 try {
                     bodyString = Json.toString(body);
-                } catch (java.lang.Exception ignored) {
+                } catch (Exception ignored) {
 
                 }
                 log.setResponse(bodyString);
                 Services.getLogService().update(log);
             }
-        } catch (java.lang.Exception ignored) {
+        } catch (Exception ignored) {
 
         }
         return body;

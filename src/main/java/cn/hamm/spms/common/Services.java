@@ -33,7 +33,6 @@ import org.springframework.stereotype.Component;
  * @author Hamm.cn
  */
 @Component
-@SuppressWarnings("UnusedReturnValue")
 public class Services {
     @Getter
     private static PurchaseService purchaseService;

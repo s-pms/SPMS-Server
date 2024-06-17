@@ -93,7 +93,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
         List<MoveDetailEntity> details = detailService.getAllByBillId(moveBill.getId());
         List<OutputDetailEntity> outputDetails = new ArrayList<>();
         List<InputDetailEntity> inputDetails = new ArrayList<>();
-        for (MoveDetailEntity detail : details) {
+        details.forEach(detail -> {
             inputDetails.add(new InputDetailEntity()
                     .setStorage(moveBill.getStorage())
                     .setMaterial(detail.getInventory().getMaterial())
@@ -106,7 +106,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
                     .setQuantity(detail.getQuantity())
                     .setFinishQuantity(detail.getFinishQuantity())
             );
-        }
+        });
         inputBill.setDetails(inputDetails);
         Services.getInputService().add(inputBill);
         outputBill.setDetails(outputDetails);
