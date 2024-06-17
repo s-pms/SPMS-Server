@@ -30,9 +30,11 @@ public class SaleController extends BaseBillController<SaleEntity, SaleService, 
                 .setStatus(OutputStatus.AUDITING.getKey())
                 .setSale(bill);
         List<SaleDetailEntity> details = detailService.getAllByBillId(bill.getId());
-        List<OutputDetailEntity> outputDetails = details.stream().map(detail -> new OutputDetailEntity()
-                .setMaterial(detail.getMaterial())
-                .setQuantity(detail.getQuantity())).collect(Collectors.toList());
+        List<OutputDetailEntity> outputDetails = details.stream()
+                .map(detail -> new OutputDetailEntity()
+                        .setMaterial(detail.getMaterial())
+                        .setQuantity(detail.getQuantity()))
+                .collect(Collectors.toList());
         outputBill.setDetails(outputDetails);
         Services.getOutputService().add(outputBill);
     }

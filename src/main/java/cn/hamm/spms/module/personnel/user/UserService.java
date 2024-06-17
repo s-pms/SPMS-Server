@@ -67,7 +67,8 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         }
         List<MenuEntity> menuList = new ArrayList<>();
         userEntity.getRoleList().forEach(role -> role.getMenuList().forEach(menuItem -> {
-            boolean isExist = menuList.stream().anyMatch(existItem -> menuItem.getId().equals(existItem.getId()));
+            boolean isExist = menuList.stream()
+                    .anyMatch(existItem -> menuItem.getId().equals(existItem.getId()));
             if (!isExist) {
                 menuList.add(menuItem);
             }
@@ -88,7 +89,8 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         }
         List<PermissionEntity> permissionList = new ArrayList<>();
         userEntity.getRoleList().forEach(roleEntity -> roleEntity.getPermissionList().forEach(permissionItem -> {
-            boolean isExist = permissionList.stream().anyMatch(existItem -> permissionItem.getId().equals(existItem.getId()));
+            boolean isExist = permissionList.stream()
+                    .anyMatch(existItem -> permissionItem.getId().equals(existItem.getId()));
             if (!isExist) {
                 permissionList.add(permissionItem);
             }

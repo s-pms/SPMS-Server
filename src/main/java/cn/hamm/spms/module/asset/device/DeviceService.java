@@ -84,7 +84,10 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     public DeviceEntity getDeviceParameters(@NotNull DeviceEntity device) {
         Set<ParameterEntity> parameters = new HashSet<>();
         if (Objects.nonNull(device.getParameters())) {
-            parameters = device.getParameters().stream().map(parameter -> Services.getParameterService().get(parameter.getId())).filter(parameter -> !parameter.getIsSystem()).collect(Collectors.toSet());
+            parameters = device.getParameters().stream()
+                    .map(parameter -> Services.getParameterService().get(parameter.getId()))
+                    .filter(parameter -> !parameter.getIsSystem())
+                    .collect(Collectors.toSet());
         }
         parameters.add(Services.getParameterService().getByCode(ReportEvent.REPORT_KEY_OF_STATUS));
         parameters.add(Services.getParameterService().getByCode(ReportEvent.REPORT_KEY_OF_ALARM));

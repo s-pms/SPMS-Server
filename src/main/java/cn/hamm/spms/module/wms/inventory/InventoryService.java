@@ -58,7 +58,9 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
                 new InventoryEntity().setStorage(storageEntity).setType(InventoryType.STORAGE.getKey())
         ));
         List<StorageEntity> storageList = Services.getStorageService().getByPid(storageEntity.getId());
-        storageList.stream().map(this::getListByStorage).forEach(list::addAll);
+        storageList.stream()
+                .map(this::getListByStorage)
+                .forEach(list::addAll);
         return list;
     }
 
@@ -79,7 +81,9 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
                 new InventoryEntity().setStructure(structureEntity).setType(InventoryType.STRUCTURE.getKey())
         ));
         List<StructureEntity> structureList = Services.getStructureService().getByPid(structureEntity.getId());
-        structureList.stream().map(this::getListByStructure).forEach(list::addAll);
+        structureList.stream()
+                .map(this::getListByStructure)
+                .forEach(list::addAll);
         return list;
     }
 }
