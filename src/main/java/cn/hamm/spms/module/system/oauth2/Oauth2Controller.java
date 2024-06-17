@@ -29,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -54,10 +55,8 @@ public class Oauth2Controller extends RootController implements IOpenAppAction {
         if (!StringUtils.hasText(appKey)) {
             return showError(INVALID_APP_KEY);
         }
-        OpenAppEntity openApp;
-        try {
-            openApp = Services.getOpenAppService().getByAppKey(appKey);
-        } catch (java.lang.Exception exception) {
+        OpenAppEntity openApp = Services.getOpenAppService().getByAppKey(appKey);
+        if (Objects.isNull(openApp)) {
             return showError(String.format(APP_NOT_FOUND, appKey));
         }
         String redirectUri = request.getParameter(REDIRECT_URI);
@@ -69,13 +68,11 @@ public class Oauth2Controller extends RootController implements IOpenAppAction {
             // 没有cookie
             return redirectLogin(response, appKey, redirectUri);
         }
-        String cookieString = null;
-        for (Cookie c : cookies) {
-            if (Configs.getCookieConfig().getAuthCookieName().equals(c.getName())) {
-                cookieString = c.getValue();
-                break;
-            }
-        }
+        String cookieString = Arrays.stream(cookies)
+                .filter(c -> Configs.getCookieConfig().getAuthCookieName().equals(c.getName()))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElse(null);
         if (!StringUtils.hasText(cookieString)) {
             // 没有cookie
             return redirectLogin(response, appKey, redirectUri);
@@ -114,6 +111,14 @@ public class Oauth2Controller extends RootController implements IOpenAppAction {
         return Json.data(accessToken);
     }
 
+    /**
+     * <h2>重定向到登录页面</h2>
+     *
+     * @param response    响应体
+     * @param appKey      AppKey
+     * @param redirectUri 重定向地址
+     * @return 重定向页面
+     */
     private @Nullable ModelAndView redirectLogin(HttpServletResponse response, String appKey, String redirectUri) {
         String url = Services.getAppConfig().getLoginUrl() +
                 "?appKey=" +
