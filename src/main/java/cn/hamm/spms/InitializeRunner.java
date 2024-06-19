@@ -90,7 +90,7 @@ public class InitializeRunner implements CommandLineRunner {
         Services.getUserService().add(new UserEntity()
                 .setNickname("Hamm")
                 .setAccount("hamm")
-                .setPhone("17623205062")
+                .setPhone("17666666666")
                 .setEmail("admin@hamm.cn")
                 .setPassword(Utils.getPasswordUtil().encode("Aa123456", salt))
                 .setSalt(salt)
