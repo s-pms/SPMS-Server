@@ -61,8 +61,8 @@ public class OpenAppController extends BaseController<OpenAppEntity, OpenAppServ
         OpenAppEntity exist = service.get(openApp.getId());
         try {
             KeyPair keyPair = Utils.getRsaUtil().generateKeyPair();
-            exist.setPrivateKey(Utils.getRsaUtil().convertPrivateKeyToPEM(keyPair.getPrivate()));
-            exist.setPublicKey(Utils.getRsaUtil().convertPublicKeyToPEM(keyPair.getPublic()));
+            exist.setPrivateKey(Utils.getRsaUtil().convertPrivateKeyToPem(keyPair.getPrivate()));
+            exist.setPublicKey(Utils.getRsaUtil().convertPublicKeyToPem(keyPair.getPublic()));
         } catch (NoSuchAlgorithmException e) {
             throw new ServiceException(e);
         }
