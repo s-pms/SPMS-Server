@@ -35,6 +35,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class Services {
     @Getter
+    private static AppConfig appConfig;
+
+    @Getter
     private static PurchaseService purchaseService;
 
     @Getter
@@ -93,9 +96,6 @@ public class Services {
 
     @Getter
     private static LogService logService;
-
-    @Getter
-    private static AppConfig appConfig;
 
     @Getter
     private static OpenAppService openAppService;
