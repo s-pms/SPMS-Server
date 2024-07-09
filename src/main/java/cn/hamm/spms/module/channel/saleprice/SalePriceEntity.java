@@ -1,8 +1,6 @@
 package cn.hamm.spms.module.channel.saleprice;
 
-
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.channel.customer.CustomerEntity;
@@ -30,13 +28,11 @@ import org.hibernate.annotations.DynamicUpdate;
 public class SalePriceEntity extends BaseEntity<SalePriceEntity> implements ISalePriceAction {
     @Description("物料信息")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料不能为空")
     private MaterialEntity material;
 
     @Description("客户信息")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "客户不能为空")
     private CustomerEntity customer;
 

@@ -1,8 +1,6 @@
 package cn.hamm.spms.module.mes.craft;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Exclude;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
@@ -31,7 +29,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @Description("工艺路线")
 public class CraftRouterEntity extends BaseEntity<CraftRouterEntity> {
     @Description("物料")
-    @Payload
     @ManyToOne(fetch = FetchType.EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料不能为空")
     private MaterialEntity material;
@@ -51,7 +48,6 @@ public class CraftRouterEntity extends BaseEntity<CraftRouterEntity> {
     @Description("是否默认版本")
     @Search(Search.Mode.EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否默认版本'")
-    @Exclude(filters = {WhenPayLoad.class})
     private Boolean defaultVersion;
 
 

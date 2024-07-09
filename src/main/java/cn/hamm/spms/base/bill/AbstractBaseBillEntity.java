@@ -1,8 +1,6 @@
 package cn.hamm.spms.base.bill;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Exclude;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import jakarta.persistence.Column;
@@ -34,9 +32,7 @@ public abstract class AbstractBaseBillEntity<
         D extends BaseBillDetailEntity<D>
         > extends BaseEntity<E> implements IBaseBillAction {
     @Description("单据明细")
-    @Payload
     @Transient
-    @Exclude(filters = {WhenPayLoad.class})
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "单据明细不能为空")
     private List<D> details = new ArrayList<>();
 

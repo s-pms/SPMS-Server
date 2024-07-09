@@ -1,8 +1,6 @@
 package cn.hamm.spms.module.mes.order;
 
-
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
@@ -64,7 +62,6 @@ public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetail
 
     @Description("物料信息")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料不能为空")
     private MaterialEntity material;
 
@@ -79,11 +76,9 @@ public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetail
 
     @Description("计划信息")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     private PlanEntity plan;
 
     @Description("客户信息")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     private CustomerEntity customer;
 }

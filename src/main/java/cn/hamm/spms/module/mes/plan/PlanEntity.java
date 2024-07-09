@@ -1,8 +1,6 @@
 package cn.hamm.spms.module.mes.plan;
 
-
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
@@ -61,6 +59,5 @@ public class PlanEntity extends AbstractBaseBillEntity<PlanEntity, PlanDetailEnt
 
     @Description("客户信息")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     private CustomerEntity customer;
 }

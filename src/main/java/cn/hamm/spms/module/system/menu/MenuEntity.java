@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.system.menu;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Exclude;
 import cn.hamm.spms.base.BaseTreeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,6 +41,5 @@ public class MenuEntity extends BaseTreeEntity<MenuEntity> {
 
     @Description("排序号")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '排序号'")
-    @Exclude(filters = {WhenPayLoad.class})
     private Integer orderNo;
 }

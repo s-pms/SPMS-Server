@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.mes.craft.relation;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import jakarta.persistence.*;
@@ -32,7 +31,6 @@ public class CraftRouterOperationMaterialEntity extends BaseEntity<CraftRouterOp
     private Long routerOperationId;
 
     @Description("物料")
-    @Payload
     @ManyToOne(fetch = FetchType.EAGER)
     private MaterialEntity material;
 

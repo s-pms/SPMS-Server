@@ -2,8 +2,6 @@ package cn.hamm.spms.module.mes.bom;
 
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Exclude;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
@@ -35,7 +33,6 @@ import org.hibernate.annotations.DynamicUpdate;
 public class BomEntity extends AbstractBaseBillEntity<BomEntity, BomDetailEntity> {
     @Description("物料信息")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料信息不能为空")
     private MaterialEntity material;
 
@@ -48,7 +45,6 @@ public class BomEntity extends AbstractBaseBillEntity<BomEntity, BomDetailEntity
     @Description("是否默认版本")
     @Search(Search.Mode.EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否默认版本'")
-    @Exclude(filters = {WhenPayLoad.class})
     private Boolean defaultVersion;
 
     @Description("BOM状态")
