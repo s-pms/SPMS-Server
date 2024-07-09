@@ -82,7 +82,5 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAct
 
     @Description("参数列表")
     @ManyToMany(fetch = FetchType.EAGER)
-    @Payload
-    @Exclude(filters = {WhenPayLoad.class})
     private Set<ParameterEntity> parameters;
 }

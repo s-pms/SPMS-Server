@@ -17,6 +17,7 @@ import java.util.Objects;
  *
  * @author Hamm.cn
  */
+@SuppressWarnings("AlibabaServiceOrDaoClassShouldEndWithImpl")
 @Service
 public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository> implements IOpenAppService {
     /**
@@ -25,6 +26,7 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
      * @param appKey AppKey
      * @return 应用
      */
+    @Override
     public OpenAppEntity getByAppKey(String appKey) {
         return repository.getByAppKey(appKey);
     }

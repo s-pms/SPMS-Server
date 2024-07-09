@@ -1,8 +1,6 @@
 package cn.hamm.spms.module.wms.input;
 
-
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
@@ -54,21 +52,17 @@ public class InputEntity extends AbstractBaseBillEntity<InputEntity, InputDetail
 
     @Description("采购信息")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     private PurchaseEntity purchase;
 
     @Description("退料位置")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     private StructureEntity structure;
 
     @Description("生产订单")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     private OrderEntity order;
 
     @Description("移库单")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     private MoveEntity move;
 }

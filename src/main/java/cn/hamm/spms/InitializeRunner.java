@@ -31,6 +31,9 @@ import java.util.Objects;
  */
 @Component
 public class InitializeRunner implements CommandLineRunner {
+
+    public static final int FOUR = 4;
+
     private void initParameters() {
         ParameterEntity parameter;
 
@@ -150,7 +153,7 @@ public class InitializeRunner implements CommandLineRunner {
         StorageEntity storage = new StorageEntity().setName("东部大仓");
         storage = Services.getStorageService().get(Services.getStorageService().add(storage));
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < FOUR; i++) {
             Services.getStorageService().add(new StorageEntity()
                     .setParentId(storage.getId())
                     .setName(String.format("东部%s仓", (i + 1)))
@@ -160,7 +163,7 @@ public class InitializeRunner implements CommandLineRunner {
         storage = new StorageEntity().setName("西部大仓");
         storage = Services.getStorageService().get(Services.getStorageService().add(storage));
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < FOUR; i++) {
             Services.getStorageService().add(new StorageEntity()
                     .setParentId(storage.getId())
                     .setName(String.format("西部%s仓", (i + 1)))

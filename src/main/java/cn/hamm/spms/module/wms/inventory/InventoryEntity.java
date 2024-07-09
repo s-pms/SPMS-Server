@@ -1,8 +1,6 @@
 package cn.hamm.spms.module.wms.inventory;
 
-
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
@@ -32,7 +30,6 @@ import org.hibernate.annotations.DynamicUpdate;
 public class InventoryEntity extends BaseEntity<InventoryEntity> {
     @Description("物料信息")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     @Search(Search.Mode.JOIN)
     private MaterialEntity material;
 
@@ -48,13 +45,11 @@ public class InventoryEntity extends BaseEntity<InventoryEntity> {
 
     @Description("存储资源")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     @Search(Search.Mode.JOIN)
     private StorageEntity storage;
 
     @Description("工厂结构")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     @Search(Search.Mode.JOIN)
     private StructureEntity structure;
 }

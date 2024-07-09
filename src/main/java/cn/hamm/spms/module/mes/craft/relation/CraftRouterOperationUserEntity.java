@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.mes.craft.relation;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import jakarta.persistence.*;
@@ -32,7 +31,6 @@ public class CraftRouterOperationUserEntity extends BaseEntity<CraftRouterOperat
     private Long routerOperationId;
 
     @Description("人员")
-    @Payload
     @ManyToOne(fetch = FetchType.EAGER)
     private UserEntity user;
 

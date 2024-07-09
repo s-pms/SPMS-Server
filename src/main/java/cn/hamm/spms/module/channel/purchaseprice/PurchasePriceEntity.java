@@ -1,8 +1,6 @@
 package cn.hamm.spms.module.channel.purchaseprice;
 
-
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.channel.supplier.SupplierEntity;
@@ -31,13 +29,11 @@ import org.hibernate.annotations.DynamicUpdate;
 public class PurchasePriceEntity extends BaseEntity<PurchasePriceEntity> implements IPurchasePriceAction {
     @Description("物料信息")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class, WhenGetByMaterialAndSupplier.class}, message = "物料不能为空")
     private MaterialEntity material;
 
     @Description("供应商信息")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class, WhenGetByMaterialAndSupplier.class}, message = "供应商不能为空")
     private SupplierEntity supplier;
 
