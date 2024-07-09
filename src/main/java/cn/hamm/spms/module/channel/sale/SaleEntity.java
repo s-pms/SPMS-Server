@@ -1,8 +1,6 @@
 package cn.hamm.spms.module.channel.sale;
 
-
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
@@ -59,7 +57,6 @@ public class SaleEntity extends AbstractBaseBillEntity<SaleEntity, SaleDetailEnt
 
     @Description("客户信息")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "客户不能为空")
     private CustomerEntity customer;
 }

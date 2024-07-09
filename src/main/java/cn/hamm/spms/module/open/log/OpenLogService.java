@@ -15,6 +15,7 @@ import java.util.Objects;
  *
  * @author Hamm.cn
  */
+@SuppressWarnings("AlibabaServiceOrDaoClassShouldEndWithImpl")
 @Service
 public class OpenLogService extends BaseService<OpenLogEntity, OpenLogRepository> implements IOpenLogService {
     /**

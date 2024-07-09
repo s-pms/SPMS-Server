@@ -1,8 +1,6 @@
 package cn.hamm.spms.module.wms.move;
 
-
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
@@ -43,7 +41,6 @@ public class MoveEntity extends AbstractBaseBillEntity<MoveEntity, MoveDetailEnt
 
     @Description("入库存储资源")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "入库存储资源")
     private StorageEntity storage;
 }

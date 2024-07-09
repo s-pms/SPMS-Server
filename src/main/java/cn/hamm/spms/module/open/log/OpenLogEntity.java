@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.open.log;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
@@ -52,7 +51,6 @@ public class OpenLogEntity extends BaseEntity<OpenLogEntity> implements IOpenLog
 
     @Description("应用")
     @ManyToOne
-    @Payload
     @Search(Search.Mode.JOIN)
     @ReadOnly
     private OpenAppEntity openApp;

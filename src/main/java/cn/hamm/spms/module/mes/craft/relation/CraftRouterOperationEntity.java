@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.mes.craft.relation;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.mes.operation.OperationEntity;
 import jakarta.persistence.*;
@@ -26,7 +25,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "craft_router_operation")
 @Description("工艺路线工序")
 public class CraftRouterOperationEntity extends BaseEntity<CraftRouterOperationEntity> {
-    @Payload
     @Description("工序")
     @ManyToOne(fetch = FetchType.EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "工序不能为空")

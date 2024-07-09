@@ -1,8 +1,6 @@
 package cn.hamm.spms.module.mes.pickout.detail;
 
-
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import jakarta.persistence.*;
@@ -29,7 +27,6 @@ import org.hibernate.annotations.DynamicUpdate;
 public class PickoutDetailEntity extends BaseBillDetailEntity<PickoutDetailEntity> {
     @Description("物料信息")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Payload
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料不能为空")
     private MaterialEntity material;
 

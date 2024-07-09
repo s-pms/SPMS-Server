@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.asset.material;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Payload;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
@@ -61,7 +60,6 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
     @ManyToOne
     @Search(Search.Mode.JOIN)
     @NotNull(groups = {WhenAdd.class, WhenUpdate.class}, message = "物料类型不能为空")
-    @Payload
     private UnitEntity unitInfo;
 
     @Description("采购标准价")
