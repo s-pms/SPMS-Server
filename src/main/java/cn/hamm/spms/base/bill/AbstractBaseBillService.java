@@ -80,13 +80,29 @@ public abstract class AbstractBaseBillService<
     protected void afterDetailSaved(E bill) {
     }
 
+    @Override
+    protected E afterGet(@NotNull E bill) {
+        List<D> details = detailService.getAllByBillId(bill.getId());
+        return bill.setDetails(details);
+    }
+
+    @Override
+    protected void afterAdd(long id, @NotNull E source) {
+        saveDetails(id, source.getDetails());
+    }
+
+    @Override
+    protected void afterUpdate(long id, @NotNull E source) {
+        saveDetails(id, source.getDetails());
+    }
+
     /**
      * <h2>保存单据明细</h2>
      * <li>
-     * 请不要再重写后直接调用 #{@link #update(RootEntity)} #{@link #updateWithNull(RootEntity)}，避免出现调用循环。
+     * 请不要再重写后直接调用 {@link #update(RootEntity)} #{@link #updateWithNull(RootEntity)}，避免出现调用循环。
      * </li>
      * <li>
-     * 如需再次保存，请调用 #{@link #updateToDatabase(RootEntity)} }
+     * 如需再次保存，请调用 {@link #updateToDatabase(RootEntity)} }
      * </li>
      *
      * @param billId  单据ID
@@ -176,21 +192,4 @@ public abstract class AbstractBaseBillService<
      * @return 驳回状态
      */
     public abstract IDictionary getRejectedStatus();
-
-    @Override
-    protected E afterGet(@NotNull E bill) {
-        List<D> details = detailService.getAllByBillId(bill.getId());
-        bill.setDetails(details);
-        return bill;
-    }
-
-    @Override
-    protected void afterAdd(long id, @NotNull E source) {
-        saveDetails(id, source.getDetails());
-    }
-
-    @Override
-    protected void afterUpdate(long id, @NotNull E source) {
-        saveDetails(id, source.getDetails());
-    }
 }

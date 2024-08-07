@@ -4,6 +4,7 @@ import cn.hamm.airpower.config.Configs;
 import cn.hamm.airpower.model.query.QueryRequest;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
+import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import cn.hamm.spms.module.system.coderule.SerialNumberUpdate;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -41,22 +42,23 @@ public class ServiceCron {
         Calendar calendar = Calendar.getInstance();
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
+        CodeRuleService codeRuleService = Services.getCodeRuleService();
         if (codeRule.getSnType().equals(SerialNumberUpdate.YEAR.getKey()) && month == 1 && day == 1) {
             // 按年更新 且是1月1号
             codeRule.setCurrentSn(0);
-            Services.getCodeRuleService().update(codeRule);
+            codeRuleService.update(codeRule);
             return;
         }
         if (codeRule.getSnType().equals(SerialNumberUpdate.MONTH.getKey()) && day == 1) {
             // 按月更新 且是1号
             codeRule.setCurrentSn(0);
-            Services.getCodeRuleService().update(codeRule);
+            codeRuleService.update(codeRule);
             return;
         }
         if (codeRule.getSnType().equals(SerialNumberUpdate.DAY.getKey())) {
             // 按日更新 直接更新
             codeRule.setCurrentSn(0);
-            Services.getCodeRuleService().update(codeRule);
+            codeRuleService.update(codeRule);
         }
     }
 }

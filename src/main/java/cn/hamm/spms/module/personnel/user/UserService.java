@@ -4,6 +4,8 @@ import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.model.query.QueryRequest;
+import cn.hamm.airpower.util.PasswordUtil;
+import cn.hamm.airpower.util.TreeUtil;
 import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
@@ -11,6 +13,7 @@ import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.common.exception.CustomError;
 import cn.hamm.spms.module.open.app.OpenAppEntity;
 import cn.hamm.spms.module.system.menu.MenuEntity;
+import cn.hamm.spms.module.system.menu.MenuService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import jakarta.mail.MessagingException;
 import org.jetbrains.annotations.NotNull;
@@ -61,10 +64,12 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return 菜单树列表
      */
     public List<MenuEntity> getMenuListByUserId(long userId) {
-        UserEntity userEntity = get(userId);
-        if (userEntity.isRootUser()) {
-            return Utils.getTreeUtil().buildTreeList(
-                    Services.getMenuService().getList(
+        UserEntity user = get(userId);
+        TreeUtil treeUtil = Utils.getTreeUtil();
+        if (user.isRootUser()) {
+            MenuService menuService = Services.getMenuService();
+            return treeUtil.buildTreeList(
+                    menuService.getList(
                             new QueryRequest<MenuEntity>().setSort(
                                     new Sort().setField(AppConstant.ORDER_NO)
                             )
@@ -72,14 +77,14 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             );
         }
         List<MenuEntity> menuList = new ArrayList<>();
-        userEntity.getRoleList().forEach(role -> role.getMenuList().forEach(menu -> {
+        user.getRoleList().forEach(role -> role.getMenuList().forEach(menu -> {
             boolean isExist = menuList.stream()
                     .anyMatch(existMenu -> menu.getId().equals(existMenu.getId()));
             if (!isExist) {
                 menuList.add(menu);
             }
         }));
-        return Utils.getTreeUtil().buildTreeList(menuList);
+        return treeUtil.buildTreeList(menuList);
     }
 
     /**
@@ -89,12 +94,12 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return 权限列表
      */
     public List<PermissionEntity> getPermissionListByUserId(long userId) {
-        UserEntity userEntity = get(userId);
-        if (userEntity.isRootUser()) {
+        UserEntity user = get(userId);
+        if (user.isRootUser()) {
             return Services.getPermissionService().getList(null);
         }
         List<PermissionEntity> permissionList = new ArrayList<>();
-        userEntity.getRoleList().forEach(roleEntity -> roleEntity.getPermissionList().forEach(permission -> {
+        user.getRoleList().forEach(role -> role.getPermissionList().forEach(permission -> {
             boolean isExist = permissionList.stream()
                     .anyMatch(existPermission -> permission.getId().equals(existPermission.getId()));
             if (!isExist) {
@@ -114,14 +119,15 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         String code = getEmailCode(existUser.getEmail());
         ServiceError.PARAM_INVALID.whenNotEquals(code, user.getCode(), "验证码输入错误");
         String oldPassword = user.getOldPassword();
+        PasswordUtil passwordUtil = Utils.getPasswordUtil();
         ServiceError.PARAM_INVALID.whenNotEqualsIgnoreCase(
-                Utils.getPasswordUtil().encode(oldPassword, existUser.getSalt()),
+                passwordUtil.encode(oldPassword, existUser.getSalt()),
                 existUser.getPassword(),
                 "原密码输入错误，修改密码失败"
         );
         String salt = Utils.getRandomUtil().randomString(AppConstant.PASSWORD_SALT_LENGTH);
         user.setSalt(salt);
-        user.setPassword(Utils.getPasswordUtil().encode(user.getPassword(), salt));
+        user.setPassword(passwordUtil.encode(user.getPassword(), salt));
         removeEmailCodeCache(existUser.getEmail());
         update(user);
     }

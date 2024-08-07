@@ -10,6 +10,7 @@ import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.input.detail.InputDetailRepository;
 import cn.hamm.spms.module.wms.input.detail.InputDetailService;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
+import cn.hamm.spms.module.wms.inventory.InventoryService;
 import cn.hamm.spms.module.wms.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -56,17 +57,18 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
             return;
         }
         InputDetailEntity existDetail = detailService.get(sourceDetail.getId());
-        InventoryEntity inventory = Services.getInventoryService().getByMaterialIdAndStorageId(existDetail.getMaterial().getId(), sourceDetail.getStorage().getId());
+        InventoryService inventoryService = Services.getInventoryService();
+        InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(existDetail.getMaterial().getId(), sourceDetail.getStorage().getId());
         if (Objects.nonNull(inventory)) {
             inventory.setQuantity(inventory.getQuantity() + sourceDetail.getQuantity());
-            Services.getInventoryService().update(inventory);
+            inventoryService.update(inventory);
         } else {
             inventory = new InventoryEntity()
                     .setQuantity(sourceDetail.getQuantity())
                     .setMaterial(existDetail.getMaterial())
                     .setStorage(sourceDetail.getStorage())
                     .setType(InventoryType.STORAGE.getKey());
-            Services.getInventoryService().add(inventory);
+            inventoryService.add(inventory);
         }
 
     }

@@ -2,11 +2,13 @@ package cn.hamm.spms.module.asset.device;
 
 import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.model.Json;
+import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.helper.influxdb.InfluxHelper;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
+import cn.hamm.spms.module.iot.parameter.ParameterService;
 import cn.hamm.spms.module.iot.report.*;
 import jakarta.annotation.Resource;
 import org.jetbrains.annotations.NotNull;
@@ -65,8 +67,9 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     public List<ReportInfluxPayload> getDevicePayloadHistory(@NotNull ReportPayload reportPayload) {
         ParameterEntity parameter = Services.getParameterService().getByCode(reportPayload.getCode());
         ServiceError.PARAM_INVALID.whenNull(parameter, "不支持的参数");
-        ReportGranularity reportGranularity = Utils.getDictionaryUtil().getDictionary(ReportGranularity.class, reportPayload.getReportGranularity());
-        ReportDataType reportDataType = Utils.getDictionaryUtil().getDictionary(ReportDataType.class, parameter.getDataType());
+        DictionaryUtil dictionaryUtil = Utils.getDictionaryUtil();
+        ReportGranularity reportGranularity = dictionaryUtil.getDictionary(ReportGranularity.class, reportPayload.getReportGranularity());
+        ReportDataType reportDataType = dictionaryUtil.getDictionary(ReportDataType.class, parameter.getDataType());
         return switch (reportDataType) {
             case QUANTITY -> influxHelper.queryQuantity(reportPayload, reportGranularity);
             case STATUS -> influxHelper.queryStatus(reportPayload, reportGranularity);
@@ -83,15 +86,16 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
      */
     public DeviceEntity getDeviceParameters(@NotNull DeviceEntity device) {
         Set<ParameterEntity> parameters = new HashSet<>();
+        ParameterService parameterService = Services.getParameterService();
         if (Objects.nonNull(device.getParameters())) {
             parameters = device.getParameters().stream()
-                    .map(parameter -> Services.getParameterService().get(parameter.getId()))
+                    .map(parameter -> parameterService.get(parameter.getId()))
                     .filter(parameter -> !parameter.getIsSystem())
                     .collect(Collectors.toSet());
         }
-        parameters.add(Services.getParameterService().getByCode(ReportEvent.REPORT_KEY_OF_STATUS));
-        parameters.add(Services.getParameterService().getByCode(ReportEvent.REPORT_KEY_OF_ALARM));
-        parameters.add(Services.getParameterService().getByCode(ReportEvent.REPORT_KEY_OF_PART_COUNT));
+        parameters.add(parameterService.getByCode(ReportEvent.REPORT_KEY_OF_STATUS));
+        parameters.add(parameterService.getByCode(ReportEvent.REPORT_KEY_OF_ALARM));
+        parameters.add(parameterService.getByCode(ReportEvent.REPORT_KEY_OF_PART_COUNT));
         device.setParameters(parameters);
         return device;
     }

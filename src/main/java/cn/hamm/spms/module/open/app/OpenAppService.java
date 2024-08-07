@@ -2,6 +2,7 @@ package cn.hamm.spms.module.open.app;
 
 import cn.hamm.airpower.exception.ServiceException;
 import cn.hamm.airpower.open.IOpenAppService;
+import cn.hamm.airpower.util.RsaUtil;
 import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
@@ -35,14 +36,24 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
     protected @NotNull OpenAppEntity beforeAdd(@NotNull OpenAppEntity openApp) {
         openApp.setAppKey(createAppKey());
         openApp.setAppSecret(Base64.getEncoder().encodeToString(Utils.getRandomUtil().randomBytes()));
+        resetKeyPare(openApp);
+        return openApp;
+    }
+
+    /**
+     * <h2>重置密钥对</h2>
+     *
+     * @param openApp 待重置的应用
+     */
+    public final void resetKeyPare(@NotNull OpenAppEntity openApp) {
         try {
-            KeyPair keyPair = Utils.getRsaUtil().generateKeyPair();
-            openApp.setPrivateKey(Utils.getRsaUtil().convertPrivateKeyToPem(keyPair.getPrivate()));
-            openApp.setPublicKey(Utils.getRsaUtil().convertPublicKeyToPem(keyPair.getPublic()));
+            RsaUtil rsaUtil = Utils.getRsaUtil();
+            KeyPair keyPair = rsaUtil.generateKeyPair();
+            openApp.setPrivateKey(rsaUtil.convertPrivateKeyToPem(keyPair.getPrivate()));
+            openApp.setPublicKey(rsaUtil.convertPublicKeyToPem(keyPair.getPublic()));
         } catch (NoSuchAlgorithmException e) {
             throw new ServiceException(e);
         }
-        return openApp;
     }
 
     /**
