@@ -7,6 +7,7 @@ import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.sale.SaleEntity;
 import cn.hamm.spms.module.channel.sale.SaleStatus;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
+import cn.hamm.spms.module.wms.inventory.InventoryService;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailRepository;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailService;
@@ -56,13 +57,14 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
             return;
         }
         OutputDetailEntity existDetail = detailService.get(sourceDetail.getId());
-        inventory = Services.getInventoryService().get(inventory.getId());
+        InventoryService inventoryService = Services.getInventoryService();
+        inventory = inventoryService.get(inventory.getId());
         ServiceError.FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), existDetail.getMaterial().getId(), "物料信息不匹配");
         if (inventory.getQuantity() < sourceDetail.getQuantity()) {
             // 判断库存
             ServiceError.FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
         }
         inventory.setQuantity(inventory.getQuantity() - sourceDetail.getQuantity());
-        Services.getInventoryService().update(inventory);
+        inventoryService.update(inventory);
     }
 }

@@ -55,10 +55,10 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
                 .excludeBaseData();
         Set<ParameterEntity> parameters = new HashSet<>();
         device = service.getDeviceParameters(device);
-        for (ParameterEntity p : device.getParameters()) {
+        device.getParameters().forEach(p -> {
             p.setId(null).excludeBaseData();
             parameters.add(p);
-        }
+        });
         device.setParameters(parameters);
         return Json.data(device);
     }

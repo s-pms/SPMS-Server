@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * <h1>全局配置</h1h1>>
+ * <h1>全局配置</h1>
  *
  * @author Hamm.cn
  */

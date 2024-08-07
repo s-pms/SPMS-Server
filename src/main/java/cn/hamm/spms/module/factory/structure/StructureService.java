@@ -20,7 +20,7 @@ public class StructureService extends BaseService<StructureEntity, StructureRepo
         list.forEach(item -> {
             QueryRequest<StructureEntity> queryRequest = new QueryRequest<>();
             queryRequest.setFilter(new StructureEntity().setParentId(item.getId()));
-            item.setChildren(this.getList(queryRequest));
+            item.setChildren(getList(queryRequest));
         });
         return list;
     }
@@ -44,6 +44,6 @@ public class StructureService extends BaseService<StructureEntity, StructureRepo
     public List<StructureEntity> getByPid(Long pid) {
         QueryRequest<StructureEntity> queryRequest = new QueryRequest<>();
         queryRequest.setFilter(new StructureEntity().setParentId(pid));
-        return this.getList(queryRequest);
+        return getList(queryRequest);
     }
 }

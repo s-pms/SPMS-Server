@@ -20,7 +20,7 @@ public class StorageService extends BaseService<StorageEntity, StorageRepository
         list.forEach(item -> {
             QueryRequest<StorageEntity> queryRequest = new QueryRequest<>();
             queryRequest.setFilter(new StorageEntity().setParentId(item.getId()));
-            item.setChildren(this.getList(queryRequest));
+            item.setChildren(getList(queryRequest));
         });
         return list;
     }
@@ -44,6 +44,6 @@ public class StorageService extends BaseService<StorageEntity, StorageRepository
     public List<StorageEntity> getByPid(Long pid) {
         QueryRequest<StorageEntity> queryRequest = new QueryRequest<>();
         queryRequest.setFilter(new StorageEntity().setParentId(pid));
-        return this.getList(queryRequest);
+        return getList(queryRequest);
     }
 }

@@ -5,6 +5,7 @@ import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.config.MessageConstant;
 import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
+import cn.hamm.airpower.util.ReflectUtil;
 import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.annotation.DisableLog;
@@ -68,7 +69,8 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
      */
     @Override
     protected void interceptRequest(HttpServletRequest request, HttpServletResponse response, Class<?> clazz, Method method) {
-        DisableLog disableLog = Utils.getReflectUtil().getAnnotation(DisableLog.class, method);
+        ReflectUtil reflectUtil = Utils.getReflectUtil();
+        DisableLog disableLog = reflectUtil.getAnnotation(DisableLog.class, method);
         if (Objects.nonNull(disableLog)) {
             return;
         }
@@ -80,7 +82,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         try {
             userId = Utils.getSecurityUtil().getIdFromAccessToken(accessToken);
             platform = request.getHeader(AppConstant.APP_PLATFORM_HEADER);
-            String description = Utils.getReflectUtil().getDescription(method);
+            String description = reflectUtil.getDescription(method);
             if (!description.equals(method.getName())) {
                 action = description;
             }

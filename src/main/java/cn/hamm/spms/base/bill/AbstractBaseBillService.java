@@ -84,8 +84,7 @@ public abstract class AbstractBaseBillService<
     @Override
     protected E afterGet(@NotNull E bill) {
         List<D> details = detailService.getAllByBillId(bill.getId());
-        bill.setDetails(details);
-        return bill;
+        return bill.setDetails(details);
     }
 
     @Override
@@ -101,10 +100,10 @@ public abstract class AbstractBaseBillService<
     /**
      * <h2>保存单据明细</h2>
      * <li>
-     * 请不要再重写后直接调用 #{@link #update(RootEntity)} #{@link #updateWithNull(RootEntity)}，避免出现调用循环。
+     * 请不要再重写后直接调用 {@link #update(RootEntity)} #{@link #updateWithNull(RootEntity)}，避免出现调用循环。
      * </li>
      * <li>
-     * 如需再次保存，请调用 #{@link #updateToDatabase(RootEntity)} }
+     * 如需再次保存，请调用 {@link #updateToDatabase(RootEntity)} }
      * </li>
      *
      * @param billId  单据ID

@@ -9,6 +9,7 @@ import cn.hamm.spms.module.wms.input.InputStatus;
 import cn.hamm.spms.module.wms.input.InputType;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
+import cn.hamm.spms.module.wms.inventory.InventoryService;
 import cn.hamm.spms.module.wms.inventory.InventoryType;
 import cn.hamm.spms.module.wms.move.detail.MoveDetailEntity;
 import cn.hamm.spms.module.wms.move.detail.MoveDetailRepository;
@@ -56,15 +57,16 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
         // 扣除来源库存
         InventoryEntity from = sourceDetail.getInventory();
         from.setQuantity(from.getQuantity() - sourceDetail.getQuantity());
-        Services.getInventoryService().update(from);
+        InventoryService inventoryService = Services.getInventoryService();
+        inventoryService.update(from);
 
         // 查询移库单
         MoveEntity bill = get(sourceDetail.getBillId());
-        InventoryEntity to = Services.getInventoryService().getByMaterialIdAndStorageId(sourceDetail.getInventory().getMaterial().getId(), bill.getStorage().getId());
+        InventoryEntity to = inventoryService.getByMaterialIdAndStorageId(sourceDetail.getInventory().getMaterial().getId(), bill.getStorage().getId());
         if (Objects.nonNull(to)) {
             // 更新目标库存
             to.setQuantity(to.getQuantity() + sourceDetail.getQuantity());
-            Services.getInventoryService().update(to);
+            inventoryService.update(to);
         } else {
             // 创建目标库存
             to = new InventoryEntity()
@@ -72,7 +74,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
                     .setMaterial(sourceDetail.getInventory().getMaterial())
                     .setStorage(bill.getStorage())
                     .setType(InventoryType.STORAGE.getKey());
-            Services.getInventoryService().add(to);
+            inventoryService.add(to);
         }
     }
 
