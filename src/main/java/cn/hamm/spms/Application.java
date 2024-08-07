@@ -32,5 +32,4 @@ public class Application {
     public void autorun(ReportEvent reportEvent) {
         Application.reportEvent = reportEvent;
     }
-
 }
