@@ -2,7 +2,6 @@ package cn.hamm.spms.common.interceptor;
 
 import cn.hamm.airpower.config.Configs;
 import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.config.MessageConstant;
 import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
 import cn.hamm.airpower.util.ReflectUtil;
@@ -54,7 +53,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
             return;
         }
         ServiceError.FORBIDDEN.show(String.format(
-                MessageConstant.ACCESS_DENIED, needPermission.getName(), needPermission.getIdentity()
+                "你无权访问 %s (%s)", needPermission.getName(), needPermission.getIdentity()
         ));
     }
 
