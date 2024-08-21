@@ -160,6 +160,9 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         secondMenu = new MenuEntity().setName("开放应用").setPath("/console/open/app/list").setParentId(firstMenu.getId());
         add(secondMenu);
 
+        secondMenu = new MenuEntity().setName("WebHooks").setPath("/console/open/webhook/list").setParentId(firstMenu.getId());
+        add(secondMenu);
+
         // 系统设置
         firstMenu = new MenuEntity().setName("系统设置").setOrderNo(2).setRootTree();
         firstMenu = get(add(firstMenu));
