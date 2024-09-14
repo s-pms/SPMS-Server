@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.factory.storage;
 
-import cn.hamm.airpower.model.query.QueryRequest;
+import cn.hamm.airpower.model.query.QueryListRequest;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -18,15 +18,15 @@ public class StorageService extends BaseService<StorageEntity, StorageRepository
     @Override
     protected @NotNull List<StorageEntity> afterGetList(@NotNull List<StorageEntity> list) {
         list.forEach(item -> {
-            QueryRequest<StorageEntity> queryRequest = new QueryRequest<>();
-            queryRequest.setFilter(new StorageEntity().setParentId(item.getId()));
-            item.setChildren(getList(queryRequest));
+            QueryListRequest<StorageEntity> queryListRequest = new QueryListRequest<>();
+            queryListRequest.setFilter(new StorageEntity().setParentId(item.getId()));
+            item.setChildren(getList(queryListRequest));
         });
         return list;
     }
 
     @Override
-    protected <T extends QueryRequest<StorageEntity>> @NotNull T beforeGetList(@NotNull T sourceRequestData) {
+    protected <T extends QueryListRequest<StorageEntity>> @NotNull T beforeGetList(@NotNull T sourceRequestData) {
         StorageEntity filter = sourceRequestData.getFilter();
         if (Objects.isNull(filter.getParentId())) {
             filter.setRootTree();
@@ -42,8 +42,8 @@ public class StorageService extends BaseService<StorageEntity, StorageRepository
      * @return 列表
      */
     public List<StorageEntity> getByPid(Long pid) {
-        QueryRequest<StorageEntity> queryRequest = new QueryRequest<>();
-        queryRequest.setFilter(new StorageEntity().setParentId(pid));
-        return getList(queryRequest);
+        QueryListRequest<StorageEntity> queryListRequest = new QueryListRequest<>();
+        queryListRequest.setFilter(new StorageEntity().setParentId(pid));
+        return getList(queryListRequest);
     }
 }

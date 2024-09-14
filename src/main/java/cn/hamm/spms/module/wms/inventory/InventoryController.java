@@ -5,7 +5,7 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Extends;
 import cn.hamm.airpower.enums.Api;
 import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.model.query.QueryRequest;
+import cn.hamm.airpower.model.query.QueryListRequest;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.common.annotation.DisableLog;
 import org.jetbrains.annotations.NotNull;
@@ -25,9 +25,9 @@ import java.util.Objects;
 public class InventoryController extends BaseController<InventoryEntity, InventoryService, InventoryRepository> {
     @DisableLog
     @Override
-    public Json getList(@RequestBody @NotNull QueryRequest<InventoryEntity> queryRequest) {
+    public Json getList(@RequestBody @NotNull QueryListRequest<InventoryEntity> queryListRequest) {
         List<InventoryEntity> list;
-        InventoryEntity filter = queryRequest.getFilter();
+        InventoryEntity filter = queryListRequest.getFilter();
         if (Objects.nonNull(filter)) {
             if (filter.getType() == InventoryType.STORAGE.getKey()) {
                 list = service.getListByStorage(filter.getStorage());
@@ -38,7 +38,7 @@ public class InventoryController extends BaseController<InventoryEntity, Invento
                 return Json.data(list);
             }
         }
-        list = service.getList(queryRequest);
+        list = service.getList(queryListRequest);
         return Json.data(list);
     }
 }

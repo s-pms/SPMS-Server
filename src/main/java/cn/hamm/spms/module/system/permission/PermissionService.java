@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.system.permission;
 
 import cn.hamm.airpower.enums.ServiceError;
-import cn.hamm.airpower.model.query.QueryRequest;
+import cn.hamm.airpower.model.query.QueryListRequest;
 import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.Application;
@@ -36,9 +36,9 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     protected void beforeDelete(long id) {
         PermissionEntity permission = get(id);
         ServiceError.FORBIDDEN_DELETE.when(permission.getIsSystem(), "系统内置权限无法被删除!");
-        QueryRequest<PermissionEntity> queryRequest = new QueryRequest<>();
-        queryRequest.setFilter(new PermissionEntity().setParentId(id));
-        List<PermissionEntity> children = getList(queryRequest);
+        QueryListRequest<PermissionEntity> queryListRequest = new QueryListRequest<>();
+        queryListRequest.setFilter(new PermissionEntity().setParentId(id));
+        List<PermissionEntity> children = getList(queryListRequest);
         ServiceError.FORBIDDEN_DELETE.when(!children.isEmpty(), "含有子权限,无法删除!");
     }
 

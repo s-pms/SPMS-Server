@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.wms.inventory;
 
-import cn.hamm.airpower.model.query.QueryRequest;
+import cn.hamm.airpower.model.query.QueryListRequest;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
@@ -50,11 +50,11 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
     public List<InventoryEntity> getListByStorage(StorageEntity storageEntity) {
         List<InventoryEntity> list;
         if (Objects.isNull(storageEntity)) {
-            return getList(new QueryRequest<InventoryEntity>().setFilter(
+            return getList(new QueryListRequest<InventoryEntity>().setFilter(
                     new InventoryEntity().setType(InventoryType.STORAGE.getKey())
             ));
         }
-        list = getList(new QueryRequest<InventoryEntity>().setFilter(
+        list = getList(new QueryListRequest<InventoryEntity>().setFilter(
                 new InventoryEntity().setStorage(storageEntity).setType(InventoryType.STORAGE.getKey())
         ));
         List<StorageEntity> storageList = Services.getStorageService().getByPid(storageEntity.getId());
@@ -73,11 +73,11 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
     public List<InventoryEntity> getListByStructure(StructureEntity structureEntity) {
         List<InventoryEntity> list;
         if (Objects.isNull(structureEntity)) {
-            return getList(new QueryRequest<InventoryEntity>().setFilter(
+            return getList(new QueryListRequest<InventoryEntity>().setFilter(
                     new InventoryEntity().setType(InventoryType.STRUCTURE.getKey())
             ));
         }
-        list = getList(new QueryRequest<InventoryEntity>().setFilter(
+        list = getList(new QueryListRequest<InventoryEntity>().setFilter(
                 new InventoryEntity().setStructure(structureEntity).setType(InventoryType.STRUCTURE.getKey())
         ));
         List<StructureEntity> structureList = Services.getStructureService().getByPid(structureEntity.getId());
