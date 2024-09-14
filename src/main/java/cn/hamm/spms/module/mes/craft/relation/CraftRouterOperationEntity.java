@@ -24,7 +24,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "craft_router_operation")
 @Description("工艺路线工序")
-public class CraftRouterOperationEntity extends BaseEntity<CraftRouterOperationEntity> {
+public class CraftRouterOperationEntity extends BaseEntity {
     @Description("工序")
     @ManyToOne(fetch = FetchType.EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "工序不能为空")

@@ -28,7 +28,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "webhook")
 @Description("通知钩子")
-public class WebHookEntity extends BaseEntity<WebHookEntity> {
+public class WebHookEntity extends BaseEntity {
     @Description("类型")
     @Dictionary(value = WebHookType.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '类型'")

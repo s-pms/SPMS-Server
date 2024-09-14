@@ -30,7 +30,7 @@ import org.hibernate.validator.constraints.Range;
 @DynamicUpdate
 @Table(name = "coderule")
 @Description("编码规则")
-public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
+public class CodeRuleEntity extends BaseEntity {
     @Description("规则字段")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '规则字段'", unique = true)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "规则字段不能为空")

@@ -21,7 +21,7 @@ import java.util.List;
 @MappedSuperclass
 @Getter
 @Description("")
-public class BaseTreeEntity<E extends BaseTreeEntity<E>> extends BaseEntity<E> implements ITree<E> {
+public class BaseTreeEntity<E extends BaseTreeEntity<E>> extends BaseEntity implements ITree<E> {
     @Description("名称")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '名称'")

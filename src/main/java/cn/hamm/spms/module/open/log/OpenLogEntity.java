@@ -28,7 +28,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "open_log")
 @Description("调用日志")
-public class OpenLogEntity extends BaseEntity<OpenLogEntity> implements IOpenLogAction {
+public class OpenLogEntity extends BaseEntity implements IOpenLogAction {
     @Description("URL")
     @Column(columnDefinition = "varchar(255) default '' comment 'URL'")
     @ReadOnly

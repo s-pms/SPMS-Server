@@ -30,7 +30,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "parameter")
 @Description("采集参数")
-public class ParameterEntity extends BaseEntity<ParameterEntity> {
+public class ParameterEntity extends BaseEntity {
     @Description("参数编码")
     @Column(columnDefinition = "varchar(255) default '' comment '参数编码'", unique = true)
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class})

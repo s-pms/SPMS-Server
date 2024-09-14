@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author Hamm.cn
  */
 @Permission
-public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>, R extends BaseRepository<E>> extends RootEntityController<E, S, R> {
+public class BaseController<E extends BaseEntity, S extends BaseService<E, R>, R extends BaseRepository<E>> extends RootEntityController<E, S, R> {
     @DisableLog
     @Override
     public Json getList(@RequestBody QueryListRequest<E> queryListRequest) {

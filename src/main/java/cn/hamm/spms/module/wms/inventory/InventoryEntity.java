@@ -27,7 +27,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "inventory")
 @Description("库存")
-public class InventoryEntity extends BaseEntity<InventoryEntity> {
+public class InventoryEntity extends BaseEntity {
     @Description("物料信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @Search(Search.Mode.JOIN)

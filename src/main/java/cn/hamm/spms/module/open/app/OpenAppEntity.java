@@ -33,7 +33,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "open_app")
 @Description("开放应用")
-public class OpenAppEntity extends BaseEntity<OpenAppEntity> implements IOpenAppAction, IOpenApp {
+public class OpenAppEntity extends BaseEntity implements IOpenAppAction, IOpenApp {
     @Description("应用Key")
     @Column(columnDefinition = "varchar(255) default '' comment 'AppKey'", unique = true)
     private String appKey;

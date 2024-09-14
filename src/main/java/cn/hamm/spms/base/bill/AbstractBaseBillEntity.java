@@ -30,7 +30,7 @@ import java.util.List;
 public abstract class AbstractBaseBillEntity<
         E extends AbstractBaseBillEntity<E, D>,
         D extends BaseBillDetailEntity<D>
-        > extends BaseEntity<E> implements IBaseBillAction {
+        > extends BaseEntity implements IBaseBillAction {
     @Description("单据明细")
     @Transient
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "单据明细不能为空")

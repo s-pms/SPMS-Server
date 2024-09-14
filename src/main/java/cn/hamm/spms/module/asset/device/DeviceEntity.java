@@ -34,7 +34,7 @@ import java.util.Set;
 @DynamicUpdate
 @Table(name = "device")
 @Description("设备")
-public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAction {
+public class DeviceEntity extends BaseEntity implements IDeviceAction {
     @Description("设备名称")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '设备名称'", unique = true)

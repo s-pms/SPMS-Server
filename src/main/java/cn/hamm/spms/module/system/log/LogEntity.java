@@ -24,7 +24,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "log")
 @Description("日志")
-public class LogEntity extends BaseEntity<LogEntity> {
+public class LogEntity extends BaseEntity {
     @Description("访问动作")
     @Column(columnDefinition = "varchar(255) default '' comment '访问动作'")
     private String action;

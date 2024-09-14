@@ -32,7 +32,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "material")
 @Description("物料")
-public class MaterialEntity extends BaseEntity<MaterialEntity> {
+public class MaterialEntity extends BaseEntity {
     @Description("物料名称")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '物料名称'", unique = true)

@@ -30,7 +30,7 @@ import java.util.Set;
 @DynamicUpdate
 @Table(name = "role")
 @Description("角色")
-public class RoleEntity extends BaseEntity<RoleEntity> implements IRoleAction {
+public class RoleEntity extends BaseEntity implements IRoleAction {
     @Description("角色名称")
     @Column(columnDefinition = "varchar(255) default '' comment '角色名称'", unique = true)
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "角色名称不能为空")
