@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Permission
 public class BaseBillController<
-        E extends AbstractBaseBillEntity<E, D>, S extends AbstractBaseBillService<E, R, D, DS, DR>, R extends BaseBillRepository<E, D>,
-        D extends BaseBillDetailEntity<D>, DS extends BaseBillDetailService<D, DR>, DR extends BaseBillDetailRepository<D>
+        E extends AbstractBaseBillEntity<D>, S extends AbstractBaseBillService<E, R, D, DS, DR>, R extends BaseBillRepository<E, D>,
+        D extends BaseBillDetailEntity, DS extends BaseBillDetailService<D, DR>, DR extends BaseBillDetailRepository<D>
         > extends BaseController<E, S, R> implements IBaseBillAction, IBaseBillDetailAction {
 
     @Autowired(required = false)

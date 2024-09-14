@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * <h1>单据实体基类</h1>
  *
- * @param <E> 单据实体
  * @param <D> 明细实体
  * @author Hamm.cn
  */
@@ -27,10 +26,8 @@ import java.util.List;
 @DynamicInsert
 @DynamicUpdate
 @Description("")
-public abstract class AbstractBaseBillEntity<
-        E extends AbstractBaseBillEntity<E, D>,
-        D extends BaseBillDetailEntity<D>
-        > extends BaseEntity implements IBaseBillAction {
+public abstract class AbstractBaseBillEntity<D extends BaseBillDetailEntity>
+        extends BaseEntity implements IBaseBillAction {
     @Description("单据明细")
     @Transient
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "单据明细不能为空")
@@ -49,7 +46,7 @@ public abstract class AbstractBaseBillEntity<
      * @return 单据实体
      */
     @SuppressWarnings("UnusedReturnValue")
-    public E setRejectReason(String rejectReason) {
+    public <E extends AbstractBaseBillEntity<D>> E setRejectReason(String rejectReason) {
         this.rejectReason = rejectReason;
         //noinspection unchecked
         return (E) this;
@@ -62,7 +59,7 @@ public abstract class AbstractBaseBillEntity<
      * @param details 明细
      * @return 单据实体
      */
-    public E setDetails(List<D> details) {
+    public <E extends AbstractBaseBillEntity<D>> E setDetails(List<D> details) {
         this.details = details;
         //noinspection unchecked
         return (E) this;
@@ -81,6 +78,6 @@ public abstract class AbstractBaseBillEntity<
      * @param status 状态值
      * @return 单据实体
      */
-    public abstract E setStatus(Integer status);
+    public abstract <E extends AbstractBaseBillEntity<D>> E setStatus(Integer status);
 
 }

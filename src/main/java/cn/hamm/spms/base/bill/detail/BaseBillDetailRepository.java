@@ -12,7 +12,7 @@ import java.util.List;
  * @author Hamm.cn
  */
 @NoRepositoryBean
-public interface BaseBillDetailRepository<E extends BaseBillDetailEntity<E>> extends BaseRepository<E> {
+public interface BaseBillDetailRepository<E extends BaseBillDetailEntity> extends BaseRepository<E> {
     /**
      * <h2>根据单据ID查询所有明细</h2>
      *

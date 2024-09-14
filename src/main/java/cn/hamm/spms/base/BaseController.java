@@ -2,8 +2,8 @@ package cn.hamm.spms.base;
 
 import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.model.query.QueryPageRequest;
 import cn.hamm.airpower.model.query.QueryListRequest;
+import cn.hamm.airpower.model.query.QueryPageRequest;
 import cn.hamm.airpower.root.RootEntityController;
 import cn.hamm.spms.common.annotation.DisableLog;
 import org.jetbrains.annotations.NotNull;

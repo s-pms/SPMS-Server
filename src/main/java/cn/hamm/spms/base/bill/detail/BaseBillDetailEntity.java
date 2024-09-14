@@ -9,14 +9,12 @@ import lombok.Getter;
 /**
  * <h1>单据明细基类</h1>
  *
- * @param <E> 明细实体
  * @author Hamm.cn
  */
-@SuppressWarnings({"unchecked", "UnusedReturnValue"})
 @MappedSuperclass
 @Getter
 @Description("")
-public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> extends BaseEntity {
+public abstract class BaseBillDetailEntity extends BaseEntity {
     @Description("单据ID")
     @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '单据ID'")
     private Long billId;
@@ -27,8 +25,10 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
      * @param billId 单据ID
      * @return 明细实体
      */
-    public E setBillId(Long billId) {
+    @SuppressWarnings("UnusedReturnValue")
+    public <E extends BaseBillDetailEntity> E setBillId(Long billId) {
         this.billId = billId;
+        //noinspection unchecked
         return (E) this;
     }
 
@@ -45,7 +45,7 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
      * @param quantity 数量
      * @return 明细实体
      */
-    public abstract E setQuantity(Double quantity);
+    public abstract <E extends BaseBillDetailEntity> E setQuantity(Double quantity);
 
     /**
      * <h2>获取已完成数量</h2>
@@ -60,7 +60,7 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
      * @param finishQuantity 已完成数量
      * @return 明细实体
      */
-    public abstract E setFinishQuantity(Double finishQuantity);
+    public abstract <E extends BaseBillDetailEntity> E setFinishQuantity(Double finishQuantity);
 
     /**
      * <h2>添加完成数量</h2>
@@ -68,8 +68,9 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
      * @param quantity 数量
      * @return 明细实体
      */
-    public E addFinishQuantity(Double quantity) {
+    public final <E extends BaseBillDetailEntity> E addFinishQuantity(Double quantity) {
         this.setFinishQuantity(this.getFinishQuantity() + quantity);
+        //noinspection unchecked
         return (E) this;
     }
 }

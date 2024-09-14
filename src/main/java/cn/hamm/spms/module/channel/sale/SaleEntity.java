@@ -31,7 +31,7 @@ import org.hibernate.validator.constraints.Length;
 @DynamicUpdate
 @Table(name = "sale")
 @Description("销售单")
-public class SaleEntity extends AbstractBaseBillEntity<SaleEntity, SaleDetailEntity> {
+public class SaleEntity extends AbstractBaseBillEntity<SaleDetailEntity> {
     @Description("销售单号")
     @Column(columnDefinition = "varchar(255) default '' comment '销售单号'", unique = true)
     @AutoGenerateCode(CodeRuleField.SaleBillCode)

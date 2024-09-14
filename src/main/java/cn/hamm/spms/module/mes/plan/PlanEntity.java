@@ -28,7 +28,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "plan")
 @Description("生产计划")
-public class PlanEntity extends AbstractBaseBillEntity<PlanEntity, PlanDetailEntity> {
+public class PlanEntity extends AbstractBaseBillEntity<PlanDetailEntity> {
     @Description("生产计划号")
     @Column(columnDefinition = "varchar(255) default '' comment '生产计划号'", unique = true)
     @AutoGenerateCode(CodeRuleField.PlanBillCode)

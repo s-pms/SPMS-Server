@@ -13,7 +13,7 @@ import java.util.List;
  * @param <R> 明细数据源
  * @author Hamm.cn
  */
-public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends BaseBillDetailRepository<E>> extends BaseService<E, R> {
+public class BaseBillDetailService<E extends BaseBillDetailEntity, R extends BaseBillDetailRepository<E>> extends BaseService<E, R> {
 
     /**
      * <h2>根据单据ID删除所有明细</h2>

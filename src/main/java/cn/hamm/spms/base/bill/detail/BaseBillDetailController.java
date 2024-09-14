@@ -13,6 +13,6 @@ import cn.hamm.spms.base.BaseController;
  */
 @Permission
 public class BaseBillDetailController<
-        E extends BaseBillDetailEntity<E>, S extends BaseBillDetailService<E, R>, R extends BaseBillDetailRepository<E>
+        E extends BaseBillDetailEntity, S extends BaseBillDetailService<E, R>, R extends BaseBillDetailRepository<E>
         > extends BaseController<E, S, R> {
 }

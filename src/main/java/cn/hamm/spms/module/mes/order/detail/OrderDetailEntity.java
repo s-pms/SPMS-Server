@@ -25,7 +25,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "order_detail")
 @Description("订单明细")
-public class OrderDetailEntity extends BaseBillDetailEntity<OrderDetailEntity> {
+public class OrderDetailEntity extends BaseBillDetailEntity {
     @Description("数量")
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '数量'")
     private Double quantity;

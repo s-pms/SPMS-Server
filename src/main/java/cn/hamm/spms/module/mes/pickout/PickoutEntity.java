@@ -28,7 +28,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "pickout")
 @Description("领料单")
-public class PickoutEntity extends AbstractBaseBillEntity<PickoutEntity, PickoutDetailEntity> {
+public class PickoutEntity extends AbstractBaseBillEntity<PickoutDetailEntity> {
     @Description("领料单号")
     @Column(columnDefinition = "varchar(255) default '' comment '领料单号'", unique = true)
     @AutoGenerateCode(CodeRuleField.PickoutBillCode)

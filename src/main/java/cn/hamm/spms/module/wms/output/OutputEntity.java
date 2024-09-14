@@ -29,7 +29,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "output")
 @Description("出库单")
-public class OutputEntity extends AbstractBaseBillEntity<OutputEntity, OutputDetailEntity> {
+public class OutputEntity extends AbstractBaseBillEntity<OutputDetailEntity> {
     @Description("出库单号")
     @Column(columnDefinition = "varchar(255) default '' comment '出库单号'", unique = true)
     @AutoGenerateCode(CodeRuleField.OutputBillCode)

@@ -28,7 +28,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "move")
 @Description("移库单")
-public class MoveEntity extends AbstractBaseBillEntity<MoveEntity, MoveDetailEntity> {
+public class MoveEntity extends AbstractBaseBillEntity<MoveDetailEntity> {
     @Description("移库单号")
     @Column(columnDefinition = "varchar(255) default '' comment '移库单号'", unique = true)
     @AutoGenerateCode(CodeRuleField.MoveBillCode)

@@ -30,7 +30,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "bom")
 @Description("BOM")
-public class BomEntity extends AbstractBaseBillEntity<BomEntity, BomDetailEntity> {
+public class BomEntity extends AbstractBaseBillEntity<BomDetailEntity> {
     @Description("物料信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料信息不能为空")

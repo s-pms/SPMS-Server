@@ -31,7 +31,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "orders")
 @Description("生产订单")
-public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetailEntity> {
+public class OrderEntity extends AbstractBaseBillEntity<OrderDetailEntity> {
     @Description("订单号")
     @Column(columnDefinition = "varchar(255) default '' comment '订单号'", unique = true)
     @AutoGenerateCode(CodeRuleField.OrderBillCode)

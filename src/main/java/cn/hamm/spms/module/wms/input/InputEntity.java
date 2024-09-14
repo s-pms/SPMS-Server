@@ -31,7 +31,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "input")
 @Description("入库单")
-public class InputEntity extends AbstractBaseBillEntity<InputEntity, InputDetailEntity> {
+public class InputEntity extends AbstractBaseBillEntity<InputDetailEntity> {
     @Description("入库单号")
     @Column(columnDefinition = "varchar(255) default '' comment '入库单号'", unique = true)
     @AutoGenerateCode(CodeRuleField.InputBillCode)

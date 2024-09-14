@@ -23,8 +23,8 @@ import java.util.List;
  * @author Hamm.cn
  */
 public abstract class AbstractBaseBillService<
-        E extends AbstractBaseBillEntity<E, D>, R extends BaseRepository<E>,
-        D extends BaseBillDetailEntity<D>, DS extends BaseBillDetailService<D, DR>, DR extends BaseBillDetailRepository<D>
+        E extends AbstractBaseBillEntity<D>, R extends BaseRepository<E>,
+        D extends BaseBillDetailEntity, DS extends BaseBillDetailService<D, DR>, DR extends BaseBillDetailRepository<D>
         > extends BaseService<E, R> {
 
     @Autowired(required = false)
@@ -81,7 +81,7 @@ public abstract class AbstractBaseBillService<
     }
 
     @Override
-    protected E afterGet(@NotNull E bill) {
+    protected E afterGet(E bill) {
         List<D> details = detailService.getAllByBillId(bill.getId());
         return bill.setDetails(details);
     }
