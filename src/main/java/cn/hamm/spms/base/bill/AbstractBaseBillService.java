@@ -81,7 +81,7 @@ public abstract class AbstractBaseBillService<
     }
 
     @Override
-    protected E afterGet(E bill) {
+    protected E afterGet(@NotNull E bill) {
         List<D> details = detailService.getAllByBillId(bill.getId());
         return bill.setDetails(details);
     }

@@ -62,13 +62,8 @@ public class ReportEvent {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
-    private final InfluxHelper influxHelper;
-
     @Autowired
-    ReportEvent(InfluxHelper influxHelper) {
-        this.influxHelper = influxHelper;
-    }
-
+    private InfluxHelper influxHelper;
 
     /**
      * <h2>开始监听MQTT</h2>
