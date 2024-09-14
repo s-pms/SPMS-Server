@@ -26,7 +26,7 @@ public class StructureService extends BaseService<StructureEntity, StructureRepo
     }
 
     @Override
-    protected <T extends QueryListRequest<StructureEntity>> @NotNull T beforeGetList(@NotNull T sourceRequestData) {
+    protected @NotNull QueryListRequest<StructureEntity> beforeGetList(@NotNull QueryListRequest<StructureEntity> sourceRequestData) {
         StructureEntity filter = sourceRequestData.getFilter();
         if (Objects.isNull(filter.getParentId())) {
             filter.setRootTree();

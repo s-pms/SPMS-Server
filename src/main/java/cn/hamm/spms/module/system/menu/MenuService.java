@@ -28,7 +28,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     }
 
     @Override
-    protected <T extends QueryListRequest<MenuEntity>> @NotNull T beforeGetList(@NotNull T sourceRequestData) {
+    protected @NotNull QueryListRequest<MenuEntity> beforeGetList(@NotNull QueryListRequest<MenuEntity> sourceRequestData) {
         MenuEntity filter = sourceRequestData.getFilter();
         if (Objects.isNull(sourceRequestData.getSort())) {
             sourceRequestData.setSort(new Sort().setField(AppConstant.ORDER_NO));

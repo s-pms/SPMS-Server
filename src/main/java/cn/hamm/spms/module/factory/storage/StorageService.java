@@ -26,7 +26,7 @@ public class StorageService extends BaseService<StorageEntity, StorageRepository
     }
 
     @Override
-    protected <T extends QueryListRequest<StorageEntity>> @NotNull T beforeGetList(@NotNull T sourceRequestData) {
+    protected @NotNull QueryListRequest<StorageEntity> beforeGetList(@NotNull QueryListRequest<StorageEntity> sourceRequestData) {
         StorageEntity filter = sourceRequestData.getFilter();
         if (Objects.isNull(filter.getParentId())) {
             filter.setRootTree();
