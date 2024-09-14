@@ -49,25 +49,26 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         MenuEntity secondMenu;
         MenuEntity thirdMenu;
 
-        firstMenu = new MenuEntity().setName("首页").setOrderNo(99).setPath("/console").setComponent("/console/index/index").setRootTree();
+        firstMenu = new MenuEntity().setOrderNo(99).setPath("/console").setComponent("/console/index/index").setName("首页").setRootTree();
         add(firstMenu);
 
         // 基础数据
-        firstMenu = new MenuEntity().setName("基础数据").setOrderNo(88).setRootTree();
+        firstMenu = new MenuEntity().setOrderNo(88).setRootTree().setName("基础数据");
         firstMenu = get(add(firstMenu));
 
         secondMenu = new MenuEntity().setName("人事管理").setParentId(firstMenu.getId());
         secondMenu = get(add(secondMenu));
 
-        thirdMenu = new MenuEntity().setName("员工管理").setPath("/console/personnel/user/list").setParentId(secondMenu.getId());
+        thirdMenu = new MenuEntity().setPath("/console/personnel/user/list").setName("员工管理").setParentId(secondMenu.getId());
         add(thirdMenu);
-        thirdMenu = new MenuEntity().setName("角色管理").setPath("/console/personnel/role/list").setParentId(secondMenu.getId());
+        thirdMenu = new MenuEntity().setPath("/console/personnel/role/list").setName("角色管理").setParentId(secondMenu.getId());
         add(thirdMenu);
 
         secondMenu = new MenuEntity().setName("资产管理").setParentId(firstMenu.getId());
         secondMenu = get(add(secondMenu));
 
-        thirdMenu = new MenuEntity().setName("物料管理").setPath("/console/asset/material/list").setParentId(secondMenu.getId());
+        thirdMenu = new MenuEntity().setPath("/console/asset/material/list");
+        thirdMenu.setName("物料管理").setParentId(secondMenu.getId());
         add(thirdMenu);
         thirdMenu = new MenuEntity().setName("设备管理").setPath("/console/asset/device/list").setParentId(secondMenu.getId());
         add(thirdMenu);

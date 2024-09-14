@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
-public class ReportPayload extends RootModel<ReportPayload> implements IReportPayloadAction, IEntityAction, IAction {
+public class ReportPayload extends RootModel implements IReportPayloadAction, IEntityAction, IAction {
     /**
      * <h2>属性名</h2>
      */

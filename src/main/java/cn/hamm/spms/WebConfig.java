@@ -13,8 +13,13 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class WebConfig extends AbstractWebConfig {
+
+    private final RequestInterceptor requestInterceptor;
+
     @Autowired
-    private RequestInterceptor requestInterceptor;
+    WebConfig(RequestInterceptor requestInterceptor) {
+        this.requestInterceptor = requestInterceptor;
+    }
 
     @Override
     public AbstractRequestInterceptor getAccessInterceptor() {

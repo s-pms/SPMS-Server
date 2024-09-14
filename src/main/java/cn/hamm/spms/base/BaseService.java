@@ -21,7 +21,7 @@ import java.util.Objects;
  * @param <R> 数据源
  * @author Hamm.cn
  */
-public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> extends RootService<E, R> {
+public class BaseService<E extends BaseEntity, R extends BaseRepository<E>> extends RootService<E, R> {
     /**
      * <h2>当前服务的数据库最后一次确认</h2>
      *

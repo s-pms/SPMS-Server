@@ -62,8 +62,12 @@ public class ReportEvent {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
+    private final InfluxHelper influxHelper;
+
     @Autowired
-    private InfluxHelper influxHelper;
+    ReportEvent(InfluxHelper influxHelper) {
+        this.influxHelper = influxHelper;
+    }
 
 
     /**

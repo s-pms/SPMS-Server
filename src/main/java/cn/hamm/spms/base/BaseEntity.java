@@ -17,5 +17,5 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicInsert
 @DynamicUpdate
 @Description("")
-public class BaseEntity<E extends BaseEntity<E>> extends RootEntity<E> {
+public class BaseEntity<E extends BaseEntity<E>> extends RootEntity {
 }

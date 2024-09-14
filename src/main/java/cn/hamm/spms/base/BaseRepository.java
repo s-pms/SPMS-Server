@@ -10,5 +10,5 @@ import org.springframework.data.repository.NoRepositoryBean;
  * @author Hamm.cn
  */
 @NoRepositoryBean
-public interface BaseRepository<E extends BaseEntity<E>> extends RootRepository<E> {
+public interface BaseRepository<E extends BaseEntity> extends RootRepository<E> {
 }
