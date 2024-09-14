@@ -16,9 +16,11 @@
 ## S-PMS介绍（后端项目）
 
 **S-PMS** `(Smart Production Management System)` **智能生产管理系统** ，是一个集成化、智能化的企业级应用软件，它集成了多个核心的生产管理模块，包括
-**制造执行系统** `(MES, Manufacturing Execution System)`、**仓库管理系统** `(WMS, Warehouse Management System)`、*
-*企业资源计划系统** `(ERP, Enterprise Resource Planning)`、**质量管理系统** `(QMS, Quality Management System)` 以及 *
-*物联网管理系统** `(IoTS,Internet of Things System)` 等。
+**制造执行系统** `(MES, Manufacturing Execution System)`、
+**仓库管理系统** `(WMS, Warehouse Management System)`、
+**企业资源计划系统** `(ERP, Enterprise Resource Planning)`、
+**质量管理系统** `(QMS, Quality Management System)` 以及
+**物联网管理系统** `(IoTS,Internet of Things System)` 等。
 
 - **MES (Manufacturing Execution System) 制造执行系统**
   ，主要用于车间层的生产活动优化管理，实时监控从订单下达到产品完成的整个生产过程，实现对生产数据的实时采集和分析，以提高生产效率、产品质量和资源利用率。
