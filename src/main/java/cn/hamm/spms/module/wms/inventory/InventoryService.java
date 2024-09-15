@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.wms.inventory;
 
-import cn.hamm.airpower.model.query.QueryRequest;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
@@ -50,13 +49,9 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
     public List<InventoryEntity> getListByStorage(StorageEntity storageEntity) {
         List<InventoryEntity> list;
         if (Objects.isNull(storageEntity)) {
-            return getList(new QueryRequest<InventoryEntity>().setFilter(
-                    new InventoryEntity().setType(InventoryType.STORAGE.getKey())
-            ));
+            return filter(new InventoryEntity().setType(InventoryType.STORAGE.getKey()));
         }
-        list = getList(new QueryRequest<InventoryEntity>().setFilter(
-                new InventoryEntity().setStorage(storageEntity).setType(InventoryType.STORAGE.getKey())
-        ));
+        list = filter(new InventoryEntity().setStorage(storageEntity).setType(InventoryType.STORAGE.getKey()));
         List<StorageEntity> storageList = Services.getStorageService().getByPid(storageEntity.getId());
         storageList.stream()
                 .map(this::getListByStorage)
@@ -73,13 +68,9 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
     public List<InventoryEntity> getListByStructure(StructureEntity structureEntity) {
         List<InventoryEntity> list;
         if (Objects.isNull(structureEntity)) {
-            return getList(new QueryRequest<InventoryEntity>().setFilter(
-                    new InventoryEntity().setType(InventoryType.STRUCTURE.getKey())
-            ));
+            return filter(new InventoryEntity().setType(InventoryType.STRUCTURE.getKey()));
         }
-        list = getList(new QueryRequest<InventoryEntity>().setFilter(
-                new InventoryEntity().setStructure(structureEntity).setType(InventoryType.STRUCTURE.getKey())
-        ));
+        list = filter(new InventoryEntity().setStructure(structureEntity).setType(InventoryType.STRUCTURE.getKey()));
         List<StructureEntity> structureList = Services.getStructureService().getByPid(structureEntity.getId());
         structureList.stream()
                 .map(this::getListByStructure)

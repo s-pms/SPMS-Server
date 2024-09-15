@@ -3,7 +3,6 @@ package cn.hamm.spms.module.personnel.user;
 import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.model.Sort;
-import cn.hamm.airpower.model.query.QueryRequest;
 import cn.hamm.airpower.util.PasswordUtil;
 import cn.hamm.airpower.util.TreeUtil;
 import cn.hamm.airpower.util.Utils;
@@ -69,11 +68,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         if (user.isRootUser()) {
             MenuService menuService = Services.getMenuService();
             return treeUtil.buildTreeList(
-                    menuService.getList(
-                            new QueryRequest<MenuEntity>().setSort(
-                                    new Sort().setField(AppConstant.ORDER_NO)
-                            )
-                    )
+                    menuService.filter(null, new Sort().setField(AppConstant.ORDER_NO))
             );
         }
         List<MenuEntity> menuList = new ArrayList<>();

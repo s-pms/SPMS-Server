@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.factory.structure;
 
-import cn.hamm.airpower.model.query.QueryRequest;
+import cn.hamm.airpower.model.query.QueryListRequest;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -17,16 +17,12 @@ import java.util.Objects;
 public class StructureService extends BaseService<StructureEntity, StructureRepository> {
     @Override
     protected @NotNull List<StructureEntity> afterGetList(@NotNull List<StructureEntity> list) {
-        list.forEach(item -> {
-            QueryRequest<StructureEntity> queryRequest = new QueryRequest<>();
-            queryRequest.setFilter(new StructureEntity().setParentId(item.getId()));
-            item.setChildren(getList(queryRequest));
-        });
+        list.forEach(item -> item.setChildren(filter(new StructureEntity().setParentId(item.getId()))));
         return list;
     }
 
     @Override
-    protected <T extends QueryRequest<StructureEntity>> @NotNull T beforeGetList(@NotNull T sourceRequestData) {
+    protected @NotNull QueryListRequest<StructureEntity> beforeGetList(@NotNull QueryListRequest<StructureEntity> sourceRequestData) {
         StructureEntity filter = sourceRequestData.getFilter();
         if (Objects.isNull(filter.getParentId())) {
             filter.setRootTree();
@@ -42,8 +38,6 @@ public class StructureService extends BaseService<StructureEntity, StructureRepo
      * @return 列表
      */
     public List<StructureEntity> getByPid(Long pid) {
-        QueryRequest<StructureEntity> queryRequest = new QueryRequest<>();
-        queryRequest.setFilter(new StructureEntity().setParentId(pid));
-        return getList(queryRequest);
+        return filter(new StructureEntity().setParentId(pid));
     }
 }

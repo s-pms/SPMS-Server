@@ -1,7 +1,6 @@
 package cn.hamm.spms.common.cron;
 
 import cn.hamm.airpower.config.Configs;
-import cn.hamm.airpower.model.query.QueryRequest;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
@@ -28,7 +27,7 @@ public class ServiceCron {
 
     @Scheduled(cron = "0 0 0 * * *")
     void resetCodeRuleBaseNumber() {
-        List<CodeRuleEntity> codeRules = Services.getCodeRuleService().getList(new QueryRequest<>());
+        List<CodeRuleEntity> codeRules = Services.getCodeRuleService().filter(null);
         codeRules.forEach(this::resetSn);
         Configs.getServiceConfig().setServiceRunning(true);
     }
