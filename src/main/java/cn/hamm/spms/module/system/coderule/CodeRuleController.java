@@ -6,7 +6,7 @@ import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  * <h1>Controller</h1>
@@ -19,7 +19,7 @@ public class CodeRuleController extends BaseController<CodeRuleEntity, CodeRuleS
 
     @Description("获取支持的表")
     @Permission(login = false)
-    @RequestMapping("getFieldList")
+    @PostMapping("getFieldList")
     public Json getFieldList() {
         return Json.data(Utils.getDictionaryUtil().getDictionaryList(CodeRuleField.class,
                 CodeRuleField::getKey,
@@ -30,7 +30,7 @@ public class CodeRuleController extends BaseController<CodeRuleEntity, CodeRuleS
 
     @Description("获取支持的参数")
     @Permission(login = false)
-    @RequestMapping("getParamList")
+    @PostMapping("getParamList")
     public Json getParamList() {
         return Json.data(Utils.getDictionaryUtil().getDictionaryList(CodeRuleParam.class,
                 CodeRuleParam::getKey,
@@ -42,7 +42,7 @@ public class CodeRuleController extends BaseController<CodeRuleEntity, CodeRuleS
 
     @Description("获取流水号更新方式")
     @Permission(login = false)
-    @RequestMapping("getSerialNumberUpdate")
+    @PostMapping("getSerialNumberUpdate")
     public Json getSerialNumberUpdate() {
         return Json.data(Utils.getDictionaryUtil().getDictionaryList(SerialNumberUpdate.class));
     }

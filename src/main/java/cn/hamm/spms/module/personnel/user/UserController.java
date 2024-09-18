@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.List;
 public class UserController extends BaseController<UserEntity, UserService, UserRepository> implements IUserAction {
     @Description("获取我的信息")
     @Permission(authorize = false)
-    @RequestMapping("getMyInfo")
+    @PostMapping("getMyInfo")
     @Filter(WhenGetMyInfo.class)
     public Json getMyInfo(Long userId) {
         return Json.data(service.get(userId));
@@ -41,7 +41,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
 
     @Description("修改我的信息")
     @Permission(authorize = false)
-    @RequestMapping("updateMyInfo")
+    @PostMapping("updateMyInfo")
     public Json updateMyInfo(@RequestBody @Validated(WhenUpdateMyInfo.class) UserEntity userEntity, Long userId) {
         userEntity.setId(userId);
         userEntity.setRoleList(null);
@@ -51,14 +51,14 @@ public class UserController extends BaseController<UserEntity, UserService, User
 
     @Description("获取我的菜单")
     @Permission(authorize = false)
-    @RequestMapping("getMyMenuList")
+    @PostMapping("getMyMenuList")
     public Json getMyMenuList() {
         return Json.data(service.getMenuListByUserId(getCurrentUserId()));
     }
 
     @Description("获取我的权限")
     @Permission(authorize = false)
-    @RequestMapping("getMyPermissionList")
+    @PostMapping("getMyPermissionList")
     public Json getMyPermissionList() {
         List<PermissionEntity> permissionList = service.getPermissionListByUserId(getCurrentUserId());
         List<String> permissions = new ArrayList<>();
@@ -68,7 +68,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
 
     @Description("修改我的密码")
     @Permission(authorize = false)
-    @RequestMapping("updateMyPassword")
+    @PostMapping("updateMyPassword")
     public Json updateMyPassword(@RequestBody @Validated(WhenUpdateMyPassword.class) UserEntity userEntity, Long userId) {
         userEntity.setId(userId);
         service.modifyUserPassword(userEntity);
@@ -77,21 +77,21 @@ public class UserController extends BaseController<UserEntity, UserService, User
 
     @Description("账号密码登录")
     @Permission(login = false)
-    @RequestMapping("login")
+    @PostMapping("login")
     public Json login(@RequestBody @Validated(WhenLogin.class) UserEntity userEntity, HttpServletResponse httpServletResponse) {
         return doLogin(UserLoginType.VIA_ACCOUNT_PASSWORD, userEntity, httpServletResponse);
     }
 
     @Description("邮箱验证码登录")
     @Permission(login = false)
-    @RequestMapping("loginViaEmail")
+    @PostMapping("loginViaEmail")
     public Json loginViaEmail(@RequestBody @Validated(WhenLoginViaEmail.class) UserEntity userEntity, HttpServletResponse httpServletResponse) {
         return doLogin(UserLoginType.VIA_EMAIL_CODE, userEntity, httpServletResponse);
     }
 
     @Description("手机验证码登录")
     @Permission(login = false)
-    @RequestMapping("loginViaPhone")
+    @PostMapping("loginViaPhone")
     public Json loginViaPhone(@RequestBody @Validated(WhenLoginViaPhone.class) UserEntity userEntity, HttpServletResponse httpServletResponse) {
         return doLogin(UserLoginType.VIA_PHONE_CODE, userEntity, httpServletResponse);
     }

@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  * <h1>单据控制器基类</h1>
@@ -37,7 +37,7 @@ public class BaseBillController<
     protected DS detailService;
 
     @Description("审核")
-    @RequestMapping("audit")
+    @PostMapping("audit")
     @Filter(WhenGetDetail.class)
     public Json audit(@RequestBody @Validated(WhenIdRequired.class) E bill) {
         E savedBill = service.get(bill.getId());
@@ -49,7 +49,7 @@ public class BaseBillController<
     }
 
     @Description("驳回")
-    @RequestMapping("reject")
+    @PostMapping("reject")
     @Filter(WhenGetDetail.class)
     public Json reject(@RequestBody @Validated(WhenReject.class) E bill) {
         E savedBill = service.get(bill.getId());
@@ -61,7 +61,7 @@ public class BaseBillController<
     }
 
     @Description("添加完成数量")
-    @RequestMapping("addFinish")
+    @PostMapping("addFinish")
     @Filter(WhenGetDetail.class)
     public Json finish(@RequestBody @Validated(WhenAddFinish.class) D detail) {
         service.addFinish(detail);

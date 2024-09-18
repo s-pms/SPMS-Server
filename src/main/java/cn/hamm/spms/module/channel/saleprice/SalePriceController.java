@@ -6,8 +6,8 @@ import cn.hamm.airpower.annotation.Filter;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.base.BaseController;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * <h1>Controller</h1>
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Description("销售价格")
 public class SalePriceController extends BaseController<SalePriceEntity, SalePriceService, SalePriceRepository> implements ISalePriceAction {
     @Description("查询物料和客户的价格")
-    @RequestMapping("getByMaterialAndCustomer")
+    @PostMapping("getByMaterialAndCustomer")
     @Filter(WhenGetDetail.class)
     public Json getByMaterialAndCustomer(@RequestBody @Validated(WhenGetByMaterialAndCustomer.class) SalePriceEntity entity) {
         return Json.data(service.getByMaterialAndCustomer(entity.getMaterial(), entity.getCustomer()));

@@ -7,7 +7,7 @@ import cn.hamm.airpower.interfaces.IEntityAction;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.webhook.enums.WebHookScene;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -21,7 +21,7 @@ import java.util.Map;
 @Description("通知钩子")
 public class WebHookController extends BaseController<WebHookEntity, WebHookService, WebHookRepository> implements IEntityAction {
     @Description("获取支持通知的场景列表")
-    @RequestMapping("getSceneList")
+    @PostMapping("getSceneList")
     @Permission(authorize = false)
     public Json getSceneList() {
         return Json.data(Arrays.stream(WebHookScene.values())

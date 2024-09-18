@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,14 +37,14 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
     }
 
     @Description("获取实时采集数据")
-    @RequestMapping("getCurrentReport")
+    @PostMapping("getCurrentReport")
     @Permission(login = false)
     public Json getCurrentReport(@RequestBody @Validated(WhenIdRequired.class) DeviceEntity device) {
         return Json.data(service.getCurrentReport(device.getId()));
     }
 
     @Description("获取采集配置")
-    @RequestMapping("getDeviceConfig")
+    @PostMapping("getDeviceConfig")
     @Permission(login = false)
     public Json getDeviceConfig(@RequestBody @Validated(WhenGetDeviceConfig.class) DeviceEntity device) {
         device = service.getByUuid(device.getUuid());
@@ -64,7 +64,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
     }
 
     @Description("获取指定设备某个参数的历史")
-    @RequestMapping("getDevicePayloadHistory")
+    @PostMapping("getDevicePayloadHistory")
     @Permission(login = false)
     public Json getDevicePayloadHistory(@RequestBody @Validated(WhenGetDevicePayloadHistory.class) ReportPayload payload) {
         return Json.data(service.getDevicePayloadHistory(payload));

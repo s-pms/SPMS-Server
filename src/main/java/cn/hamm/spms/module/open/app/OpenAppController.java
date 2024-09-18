@@ -11,7 +11,6 @@ import cn.hamm.spms.base.BaseController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Base64;
 
@@ -43,7 +42,7 @@ public class OpenAppController extends BaseController<OpenAppEntity, OpenAppServ
     }
 
     @Description("重置密钥")
-    @RequestMapping("resetSecret")
+    @PostMapping("resetSecret")
     public Json resetSecret(@RequestBody @Validated(WhenIdRequired.class) OpenAppEntity openApp) {
         OpenAppEntity exist = service.get(openApp.getId());
         String appSecret = Base64.getEncoder().encodeToString(Utils.getRandomUtil().randomBytes());
@@ -53,7 +52,7 @@ public class OpenAppController extends BaseController<OpenAppEntity, OpenAppServ
     }
 
     @Description("重置密钥对")
-    @RequestMapping("resetKeyPair")
+    @PostMapping("resetKeyPair")
     public Json resetKeyPair(@RequestBody @Validated(WhenIdRequired.class) OpenAppEntity openApp) {
         OpenAppEntity exist = service.get(openApp.getId());
         service.resetKeyPare(exist);
