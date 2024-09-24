@@ -1,19 +1,20 @@
 package cn.hamm.spms.common.interceptor;
 
-import cn.hamm.airpower.config.Configs;
 import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
 import cn.hamm.airpower.util.ReflectUtil;
-import cn.hamm.airpower.util.Utils;
-import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.annotation.DisableLog;
 import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.module.personnel.user.UserEntity;
+import cn.hamm.spms.module.personnel.user.UserService;
 import cn.hamm.spms.module.system.log.LogEntity;
+import cn.hamm.spms.module.system.log.LogService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
+import cn.hamm.spms.module.system.permission.PermissionService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -31,6 +32,18 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
      */
     final static String LOG_REQUEST_KEY = "logId";
 
+    @Autowired
+    private ReflectUtil reflectUtil;
+
+    @Autowired
+    private PermissionService permissionService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private LogService logService;
+
     /**
      * <h2>验证指定的用户是否有指定权限标识的权限</h2>
      *
@@ -41,11 +54,11 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
      */
     @Override
     protected void checkUserPermission(Long userId, String permissionIdentity, HttpServletRequest request) {
-        UserEntity existUser = Services.getUserService().get(userId);
+        UserEntity existUser = userService.get(userId);
         if (existUser.isRootUser()) {
             return;
         }
-        PermissionEntity needPermission = Services.getPermissionService().getPermissionByIdentity(permissionIdentity);
+        PermissionEntity needPermission = permissionService.getPermissionByIdentity(permissionIdentity);
         if (existUser.getRoleList().stream()
                 .flatMap(role -> role.getPermissionList().stream())
                 .anyMatch(permission -> needPermission.getId().equals(permission.getId()))
@@ -68,18 +81,17 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
      */
     @Override
     protected void interceptRequest(HttpServletRequest request, HttpServletResponse response, Class<?> clazz, Method method) {
-        ReflectUtil reflectUtil = Utils.getReflectUtil();
         DisableLog disableLog = reflectUtil.getAnnotation(DisableLog.class, method);
         if (Objects.nonNull(disableLog)) {
             return;
         }
-        String accessToken = request.getHeader(Configs.getServiceConfig().getAuthorizeHeader());
+        String accessToken = request.getHeader(serviceConfig.getAuthorizeHeader());
         Long userId = null;
         int appVersion = request.getIntHeader(AppConstant.APP_VERSION_HEADER);
         String platform = Constant.EMPTY_STRING;
         String action = request.getRequestURI();
         try {
-            userId = Utils.getSecurityUtil().getIdFromAccessToken(accessToken);
+            userId = securityUtil.getIdFromAccessToken(accessToken);
             platform = request.getHeader(AppConstant.APP_PLATFORM_HEADER);
             String description = reflectUtil.getDescription(method);
             if (!description.equals(method.getName())) {
@@ -87,13 +99,13 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
             }
         } catch (Exception ignored) {
         }
-        String identity = Utils.getAccessUtil().getPermissionIdentity(clazz, method);
-        PermissionEntity permissionEntity = Services.getPermissionService().getPermissionByIdentity(identity);
+        String identity = accessUtil.getPermissionIdentity(clazz, method);
+        PermissionEntity permissionEntity = permissionService.getPermissionByIdentity(identity);
         if (Objects.nonNull(permissionEntity)) {
             action = permissionEntity.getName();
         }
-        long logId = Services.getLogService().add(new LogEntity()
-                .setIp(Utils.getRequestUtil().getIpAddress(request))
+        long logId = logService.add(new LogEntity()
+                .setIp(requestUtil.getIpAddress(request))
                 .setAction(action)
                 .setPlatform(platform)
                 .setRequest(getRequestBody(request))

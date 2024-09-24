@@ -1,7 +1,5 @@
 package cn.hamm.spms.module.iot.parameter;
 
-import cn.hamm.airpower.util.RedisUtil;
-import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -27,7 +25,6 @@ public class ParameterService extends BaseService<ParameterEntity, ParameterRepo
      * @return 参数
      */
     public ParameterEntity getByCode(String code) {
-        RedisUtil redisUtil = Utils.getRedisUtil();
         ParameterEntity parameterEntity = redisUtil.getEntity(PARAM_CODE_CACHE_PREFIX + code, new ParameterEntity());
         if (Objects.nonNull(parameterEntity)) {
             if (Objects.isNull(parameterEntity.getId())) {
@@ -48,7 +45,7 @@ public class ParameterService extends BaseService<ParameterEntity, ParameterRepo
 
     @Override
     protected ParameterEntity beforeAppSaveToDatabase(@NotNull ParameterEntity parameter) {
-        Utils.getRedisUtil().del(PARAM_CODE_CACHE_PREFIX + parameter.getCode());
+        redisUtil.del(PARAM_CODE_CACHE_PREFIX + parameter.getCode());
         return parameter;
     }
 }

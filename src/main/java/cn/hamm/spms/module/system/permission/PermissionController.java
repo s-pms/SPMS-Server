@@ -2,7 +2,6 @@ package cn.hamm.spms.module.system.permission;
 
 import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseController;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,6 +28,6 @@ public class PermissionController extends BaseController<PermissionEntity, Permi
 
     @Override
     protected List<PermissionEntity> afterGetList(List<PermissionEntity> list) {
-        return Utils.getTreeUtil().buildTreeList(list);
+        return treeUtil.buildTreeList(list);
     }
 }

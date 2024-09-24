@@ -3,11 +3,13 @@ package cn.hamm.spms.module.iot.report;
 
 import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.util.Utils;
+import cn.hamm.airpower.util.MqttUtil;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.helper.influxdb.InfluxHelper;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
+import cn.hamm.spms.module.asset.device.DeviceService;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
+import cn.hamm.spms.module.iot.parameter.ParameterService;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
@@ -65,6 +67,9 @@ public class ReportEvent {
     @Autowired
     private InfluxHelper influxHelper;
 
+    @Autowired
+    private MqttUtil mqttUtil;
+
 
     /**
      * <h2>开始监听MQTT</h2>
@@ -73,8 +78,8 @@ public class ReportEvent {
      * @noinspection AlibabaMethodTooLong
      */
     public void listen() throws MqttException {
-        try (MqttClient mqttClient = Utils.getMqttUtil().createClient()) {
-            mqttClient.connect(Utils.getMqttUtil().createOption());
+        try (MqttClient mqttClient = mqttUtil.createClient()) {
+            mqttClient.connect(mqttUtil.createOption());
             mqttClient.subscribe(ReportEvent.IOT_REPORT_TOPIC_V1);
             mqttClient.setCallback(new MqttCallback() {
                 @Override
@@ -94,11 +99,13 @@ public class ReportEvent {
                         if (Objects.isNull(reportData.getPayloads())) {
                             return;
                         }
+                        DeviceService deviceService = Services.getDeviceService();
+                        ParameterService parameterService = Services.getParameterService();
                         for (ReportPayload payload : reportData.getPayloads()) {
                             if (Objects.isNull(payload.getValue())) {
                                 continue;
                             }
-                            ParameterEntity parameterEntity = Services.getParameterService().getByCode(payload.getCode());
+                            ParameterEntity parameterEntity = parameterService.getByCode(payload.getCode());
                             if (Objects.isNull(parameterEntity)) {
                                 continue;
                             }
@@ -121,10 +128,10 @@ public class ReportEvent {
                                     redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_STATUS + Constant.UNDERLINE + reportData.getDeviceId(), payload
                                             .getValue());
                                     if (Objects.isNull(device)) {
-                                        device = Services.getDeviceService().getByUuid(reportData.getDeviceId());
+                                        device = deviceService.getByUuid(reportData.getDeviceId());
                                         if (Objects.nonNull(device) && device.getIsReporting()) {
                                             device.setStatus(Integer.parseInt(payload.getValue()));
-                                            Services.getDeviceService().update(device);
+                                            deviceService.update(device);
                                         }
                                     }
                                     break;
@@ -138,10 +145,10 @@ public class ReportEvent {
                                     redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_ALARM + Constant.UNDERLINE + reportData.getDeviceId(), payload
                                             .getValue());
                                     if (Objects.isNull(device)) {
-                                        device = Services.getDeviceService().getByUuid(reportData.getDeviceId());
+                                        device = deviceService.getByUuid(reportData.getDeviceId());
                                         if (Objects.nonNull(device) && device.getIsReporting()) {
                                             device.setAlarm(Integer.parseInt(payload.getValue()));
-                                            Services.getDeviceService().update(device);
+                                            deviceService.update(device);
                                         }
                                     }
                                     break;
@@ -155,10 +162,10 @@ public class ReportEvent {
                                     redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_PART_COUNT + Constant.UNDERLINE + reportData.getDeviceId(), payload
                                             .getValue());
                                     if (Objects.isNull(device)) {
-                                        device = Services.getDeviceService().getByUuid(reportData.getDeviceId());
+                                        device = deviceService.getByUuid(reportData.getDeviceId());
                                         if (Objects.nonNull(device) && device.getIsReporting()) {
                                             device.setPartCount(Long.parseLong(payload.getValue()));
-                                            Services.getDeviceService().update(device);
+                                            deviceService.update(device);
                                         }
                                     }
                                     break;

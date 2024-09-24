@@ -6,7 +6,6 @@ import cn.hamm.airpower.annotation.Filter;
 import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.root.RootEntity;
-import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.base.BaseController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +44,7 @@ public class OpenAppController extends BaseController<OpenAppEntity, OpenAppServ
     @PostMapping("resetSecret")
     public Json resetSecret(@RequestBody @Validated(WhenIdRequired.class) OpenAppEntity openApp) {
         OpenAppEntity exist = service.get(openApp.getId());
-        String appSecret = Base64.getEncoder().encodeToString(Utils.getRandomUtil().randomBytes());
+        String appSecret = Base64.getEncoder().encodeToString(randomUtil.randomBytes());
         exist.setAppSecret(appSecret);
         service.update(exist);
         return Json.data(appSecret);

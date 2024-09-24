@@ -3,15 +3,16 @@ package cn.hamm.spms.module.system.oauth2;
 import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.config.Configs;
 import cn.hamm.airpower.config.Constant;
+import cn.hamm.airpower.config.CookieConfig;
 import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.root.RootController;
-import cn.hamm.airpower.util.Utils;
-import cn.hamm.spms.common.Services;
+import cn.hamm.airpower.util.RandomUtil;
+import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.open.app.IOpenAppAction;
 import cn.hamm.spms.module.open.app.OpenAppEntity;
+import cn.hamm.spms.module.open.app.OpenAppService;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
 import jakarta.servlet.http.Cookie;
@@ -20,6 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,6 +49,22 @@ public class Oauth2Controller extends RootController implements IOpenAppAction {
     private static final String REDIRECT_URI = "redirectUri";
     private static final String REDIRECT_URI_MISSING = "RedirectUri missing!";
 
+    @Autowired
+    private RandomUtil randomUtil;
+
+    @Autowired
+    private OpenAppService openAppService;
+
+    @Autowired
+    private CookieConfig cookieConfig;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private AppConfig appConfig;
+
+
     @GetMapping("authorize")
     public ModelAndView index(
             HttpServletRequest request,
@@ -56,7 +74,7 @@ public class Oauth2Controller extends RootController implements IOpenAppAction {
         if (!StringUtils.hasText(appKey)) {
             return showError(INVALID_APP_KEY);
         }
-        OpenAppEntity openApp = Services.getOpenAppService().getByAppKey(appKey);
+        OpenAppEntity openApp = openAppService.getByAppKey(appKey);
         if (Objects.isNull(openApp)) {
             return showError(String.format(APP_NOT_FOUND, appKey));
         }
@@ -70,7 +88,7 @@ public class Oauth2Controller extends RootController implements IOpenAppAction {
             return redirectLogin(response, appKey, redirectUri);
         }
         String cookieString = Arrays.stream(cookies)
-                .filter(c -> Configs.getCookieConfig().getAuthCookieName().equals(c.getName()))
+                .filter(c -> cookieConfig.getAuthCookieName().equals(c.getName()))
                 .findFirst()
                 .map(Cookie::getValue)
                 .orElse(null);
@@ -78,16 +96,15 @@ public class Oauth2Controller extends RootController implements IOpenAppAction {
             // 没有cookie
             return redirectLogin(response, appKey, redirectUri);
         }
-        UserService userService = Services.getUserService();
         Long userId = userService.getUserIdByCookie(cookieString);
         if (Objects.isNull(userId)) {
             // cookie没有找到用户
             return redirectLogin(response, appKey, redirectUri);
         }
-        UserEntity userEntity = userService.get(userId);
-        String code = Utils.getRandomUtil().randomString();
+        UserEntity user = userService.get(userId);
+        String code = randomUtil.randomString();
         openApp.setCode(code).setAppKey(appKey);
-        userService.saveOauthCode(userEntity.getId(), openApp);
+        userService.saveOauthCode(user.getId(), openApp);
         String redirectTarget = URLDecoder.decode(redirectUri, Charset.defaultCharset());
         String querySplit = "?";
         if (redirectTarget.contains(querySplit)) {
@@ -104,12 +121,11 @@ public class Oauth2Controller extends RootController implements IOpenAppAction {
     @PostMapping("accessToken")
     public Json accessToken(@RequestBody @Validated(WhenCode2AccessToken.class) OpenAppEntity openApp) {
         String code = openApp.getCode();
-        UserService userService = Services.getUserService();
         Long userId = userService.getUserIdByOauthAppKeyAndCode(openApp.getAppKey(), code);
-        OpenAppEntity existApp = Services.getOpenAppService().getByAppKey(openApp.getAppKey());
+        OpenAppEntity existApp = openAppService.getByAppKey(openApp.getAppKey());
         ServiceError.FORBIDDEN.whenNotEquals(existApp.getAppSecret(), openApp.getAppSecret(), "应用秘钥错误");
         userService.removeOauthCode(existApp.getAppKey(), code);
-        String accessToken = Utils.getSecurityUtil().createAccessToken(userId);
+        String accessToken = securityUtil.createAccessToken(userId);
         return Json.data(accessToken);
     }
 
@@ -122,7 +138,7 @@ public class Oauth2Controller extends RootController implements IOpenAppAction {
      * @return 重定向页面
      */
     private @Nullable ModelAndView redirectLogin(HttpServletResponse response, String appKey, String redirectUri) {
-        String url = Services.getAppConfig().getLoginUrl() +
+        String url = appConfig.getLoginUrl() +
                 "?appKey=" +
                 appKey +
                 "&redirectUri=" +

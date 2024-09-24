@@ -6,18 +6,18 @@ import cn.hamm.airpower.annotation.Filter;
 import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.airpower.enums.ServiceError;
 import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.util.RandomUtil;
-import cn.hamm.airpower.util.Utils;
+import cn.hamm.airpower.util.CookieUtil;
 import cn.hamm.spms.base.BaseController;
-import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.open.app.OpenAppEntity;
+import cn.hamm.spms.module.open.app.OpenAppService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,12 @@ import java.util.List;
 @ApiController("user")
 @Description("用户")
 public class UserController extends BaseController<UserEntity, UserService, UserRepository> implements IUserAction {
+    @Autowired
+    private CookieUtil cookieUtil;
+
+    @Autowired
+    private OpenAppService openAppService;
+
     @Description("获取我的信息")
     @Permission(authorize = false)
     @PostMapping("getMyInfo")
@@ -112,13 +118,12 @@ public class UserController extends BaseController<UserEntity, UserService, User
         };
 
         // 开始处理Oauth2登录逻辑
-        Long userId = Utils.getSecurityUtil().getIdFromAccessToken(accessToken);
+        Long userId = securityUtil.getIdFromAccessToken(accessToken);
 
         // 存储Cookies
-        RandomUtil randomUtil = Utils.getRandomUtil();
         String cookieString = randomUtil.randomString();
         service.saveCookie(userId, cookieString);
-        response.addCookie(Utils.getCookieUtil().getAuthorizeCookie(cookieString));
+        response.addCookie(cookieUtil.getAuthorizeCookie(cookieString));
 
         String appKey = user.getAppKey();
         if (!StringUtils.hasText(appKey)) {
@@ -126,7 +131,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
         }
 
         // 验证应用信息
-        OpenAppEntity openApp = Services.getOpenAppService().getByAppKey(appKey);
+        OpenAppEntity openApp = openAppService.getByAppKey(appKey);
         ServiceError.PARAM_INVALID.whenNull(openApp, "登录失败,错误的应用ID");
 
         // 生成临时身份令牌code

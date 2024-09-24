@@ -3,14 +3,15 @@ package cn.hamm.spms.module.channel.sale;
 import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.spms.base.bill.BaseBillController;
-import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailEntity;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailRepository;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailService;
 import cn.hamm.spms.module.wms.output.OutputEntity;
+import cn.hamm.spms.module.wms.output.OutputService;
 import cn.hamm.spms.module.wms.output.OutputStatus;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 @ApiController("sale")
 @Description("销售单")
 public class SaleController extends BaseBillController<SaleEntity, SaleService, SaleRepository, SaleDetailEntity, SaleDetailService, SaleDetailRepository> {
+    @Autowired
+    private OutputService outputService;
 
     @Override
     public void afterAudit(@NotNull SaleEntity bill) {
@@ -36,6 +39,6 @@ public class SaleController extends BaseBillController<SaleEntity, SaleService, 
                         .setQuantity(detail.getQuantity()))
                 .collect(Collectors.toList());
         outputBill.setDetails(outputDetails);
-        Services.getOutputService().add(outputBill);
+        outputService.add(outputBill);
     }
 }
