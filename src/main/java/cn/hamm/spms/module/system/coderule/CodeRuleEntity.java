@@ -40,7 +40,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     @Description("流水号更新方式")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '流水号更新方式'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "流水号更新方式不能为空")
-    @Dictionary(value = SerialNumberUpdate.class)
+    @Dictionary(value = SerialNumberUpdate.class, groups = {WhenUpdate.class, WhenAdd.class})
     private Integer snType;
 
     @Description("流水号起始长度")
