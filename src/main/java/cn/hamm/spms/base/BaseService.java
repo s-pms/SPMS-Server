@@ -2,6 +2,7 @@ package cn.hamm.spms.base;
 
 
 import cn.hamm.airpower.root.RootService;
+import cn.hamm.airpower.util.ReflectUtil;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
@@ -32,19 +33,19 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
 
     @Override
     protected final @NotNull E beforeSaveToDatabase(@NotNull E entity) {
-        List<Field> fields = reflectUtil.getFieldList(entity.getClass());
+        List<Field> fields = ReflectUtil.getFieldList(entity.getClass());
         CodeRuleService codeRuleService = Services.getCodeRuleService();
         for (Field field : fields) {
-            AutoGenerateCode autoGenerateCode = reflectUtil.getAnnotation(AutoGenerateCode.class, field);
+            AutoGenerateCode autoGenerateCode = ReflectUtil.getAnnotation(AutoGenerateCode.class, field);
             if (Objects.isNull(autoGenerateCode)) {
                 continue;
             }
-            Object value = reflectUtil.getFieldValue(entity, field);
+            Object value = ReflectUtil.getFieldValue(entity, field);
             if (!Objects.isNull(value) && StringUtils.hasText(value.toString())) {
                 continue;
             }
             String code = codeRuleService.createCode(autoGenerateCode.value());
-            reflectUtil.setFieldValue(entity, field, code);
+            ReflectUtil.setFieldValue(entity, field, code);
             break;
         }
         entity = beforeAppSaveToDatabase(entity);

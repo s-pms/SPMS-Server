@@ -3,7 +3,7 @@ package cn.hamm.spms.module.asset.device;
 import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.enums.ServiceError;
+import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;

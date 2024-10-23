@@ -4,9 +4,11 @@ import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Filter;
 import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.enums.ServiceError;
+import cn.hamm.airpower.exception.ServiceError;
+import cn.hamm.airpower.helper.CookieHelper;
 import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.util.CookieUtil;
+import cn.hamm.airpower.util.AccessTokenUtil;
+import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.app.OpenAppEntity;
 import cn.hamm.spms.module.open.app.OpenAppService;
@@ -32,7 +34,7 @@ import java.util.List;
 @Description("用户")
 public class UserController extends BaseController<UserEntity, UserService, UserRepository> implements IUserAction {
     @Autowired
-    private CookieUtil cookieUtil;
+    private CookieHelper cookieHelper;
 
     @Autowired
     private OpenAppService openAppService;
@@ -118,12 +120,12 @@ public class UserController extends BaseController<UserEntity, UserService, User
         };
 
         // 开始处理Oauth2登录逻辑
-        Long userId = securityUtil.getIdFromAccessToken(accessToken);
+        Long userId = AccessTokenUtil.create().getPayloadId(accessToken, serviceConfig.getAccessTokenSecret());
 
         // 存储Cookies
-        String cookieString = randomUtil.randomString();
+        String cookieString = RandomUtil.randomString();
         service.saveCookie(userId, cookieString);
-        response.addCookie(cookieUtil.getAuthorizeCookie(cookieString));
+        response.addCookie(cookieHelper.getAuthorizeCookie(cookieString));
 
         String appKey = user.getAppKey();
         if (!StringUtils.hasText(appKey)) {
@@ -135,7 +137,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
         ServiceError.PARAM_INVALID.whenNull(openApp, "登录失败,错误的应用ID");
 
         // 生成临时身份令牌code
-        String code = randomUtil.randomString(32);
+        String code = RandomUtil.randomString(32);
         openApp.setCode(code);
 
         // 缓存临时身份令牌code

@@ -1,7 +1,8 @@
 package cn.hamm.spms.module.asset.device;
 
-import cn.hamm.airpower.enums.ServiceError;
+import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.model.Json;
+import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.helper.influxdb.InfluxHelper;
@@ -65,8 +66,8 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     public List<ReportInfluxPayload> getDevicePayloadHistory(@NotNull ReportPayload reportPayload) {
         ParameterEntity parameter = Services.getParameterService().getByCode(reportPayload.getCode());
         ServiceError.PARAM_INVALID.whenNull(parameter, "不支持的参数");
-        ReportGranularity reportGranularity = dictionaryUtil.getDictionary(ReportGranularity.class, reportPayload.getReportGranularity());
-        ReportDataType reportDataType = dictionaryUtil.getDictionary(ReportDataType.class, parameter.getDataType());
+        ReportGranularity reportGranularity = DictionaryUtil.getDictionary(ReportGranularity.class, reportPayload.getReportGranularity());
+        ReportDataType reportDataType = DictionaryUtil.getDictionary(ReportDataType.class, parameter.getDataType());
         return switch (reportDataType) {
             case QUANTITY -> influxHelper.queryQuantity(reportPayload, reportGranularity);
             case STATUS -> influxHelper.queryStatus(reportPayload, reportGranularity);

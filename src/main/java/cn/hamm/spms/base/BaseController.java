@@ -5,12 +5,8 @@ import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.model.query.QueryListRequest;
 import cn.hamm.airpower.model.query.QueryPageRequest;
 import cn.hamm.airpower.root.RootEntityController;
-import cn.hamm.airpower.util.DictionaryUtil;
-import cn.hamm.airpower.util.RandomUtil;
-import cn.hamm.airpower.util.TreeUtil;
 import cn.hamm.spms.common.annotation.DisableLog;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -24,15 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
  */
 @Permission
 public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>, R extends BaseRepository<E>> extends RootEntityController<E, S, R> {
-    @Autowired
-    protected TreeUtil treeUtil;
-
-    @Autowired
-    protected RandomUtil randomUtil;
-
-    @Autowired
-    protected DictionaryUtil dictionaryUtil;
-
     @DisableLog
     @Override
     public Json getList(@RequestBody QueryListRequest<E> queryRequest) {

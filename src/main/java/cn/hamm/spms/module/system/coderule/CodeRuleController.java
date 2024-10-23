@@ -4,6 +4,7 @@ import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.airpower.model.Json;
+import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.spms.base.BaseController;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -19,7 +20,7 @@ public class CodeRuleController extends BaseController<CodeRuleEntity, CodeRuleS
     @Permission(login = false)
     @PostMapping("getFieldList")
     public Json getFieldList() {
-        return Json.data(dictionaryUtil.getDictionaryList(CodeRuleField.class,
+        return Json.data(DictionaryUtil.getDictionaryList(CodeRuleField.class,
                 CodeRuleField::getKey,
                 CodeRuleField::getLabel,
                 CodeRuleField::getDefaultPrefix
@@ -30,7 +31,7 @@ public class CodeRuleController extends BaseController<CodeRuleEntity, CodeRuleS
     @Permission(login = false)
     @PostMapping("getParamList")
     public Json getParamList() {
-        return Json.data(dictionaryUtil.getDictionaryList(CodeRuleParam.class,
+        return Json.data(DictionaryUtil.getDictionaryList(CodeRuleParam.class,
                 CodeRuleParam::getKey,
                 CodeRuleParam::getLabel,
                 CodeRuleParam::getDesc,
@@ -42,6 +43,6 @@ public class CodeRuleController extends BaseController<CodeRuleEntity, CodeRuleS
     @Permission(login = false)
     @PostMapping("getSerialNumberUpdate")
     public Json getSerialNumberUpdate() {
-        return Json.data(dictionaryUtil.getDictionaryList(SerialNumberUpdate.class));
+        return Json.data(DictionaryUtil.getDictionaryList(SerialNumberUpdate.class));
     }
 }

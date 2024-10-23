@@ -5,9 +5,10 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.config.CookieConfig;
-import cn.hamm.airpower.enums.ServiceError;
+import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.root.RootController;
+import cn.hamm.airpower.util.AccessTokenUtil;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.open.app.IOpenAppAction;
@@ -48,9 +49,6 @@ public class Oauth2Controller extends RootController implements IOpenAppAction {
     private static final String APP_NOT_FOUND = "App(%s) not found!";
     private static final String REDIRECT_URI = "redirectUri";
     private static final String REDIRECT_URI_MISSING = "RedirectUri missing!";
-
-    @Autowired
-    private RandomUtil randomUtil;
 
     @Autowired
     private OpenAppService openAppService;
@@ -102,7 +100,7 @@ public class Oauth2Controller extends RootController implements IOpenAppAction {
             return redirectLogin(response, appKey, redirectUri);
         }
         UserEntity user = userService.get(userId);
-        String code = randomUtil.randomString();
+        String code = RandomUtil.randomString();
         openApp.setCode(code).setAppKey(appKey);
         userService.saveOauthCode(user.getId(), openApp);
         String redirectTarget = URLDecoder.decode(redirectUri, Charset.defaultCharset());
@@ -125,7 +123,9 @@ public class Oauth2Controller extends RootController implements IOpenAppAction {
         OpenAppEntity existApp = openAppService.getByAppKey(openApp.getAppKey());
         ServiceError.FORBIDDEN.whenNotEquals(existApp.getAppSecret(), openApp.getAppSecret(), "应用秘钥错误");
         userService.removeOauthCode(existApp.getAppKey(), code);
-        String accessToken = securityUtil.createAccessToken(userId);
+        String accessToken = AccessTokenUtil.create()
+                .setPayloadId(userId, serviceConfig.getAuthorizeExpireSecond())
+                .build(serviceConfig.getAccessTokenSecret());
         return Json.data(accessToken);
     }
 

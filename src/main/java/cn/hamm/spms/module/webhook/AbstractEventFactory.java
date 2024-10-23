@@ -1,8 +1,9 @@
 package cn.hamm.spms.module.webhook;
 
+import cn.hamm.airpower.helper.AirHelper;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.util.DictionaryUtil;
-import cn.hamm.airpower.util.Utils;
+import cn.hamm.airpower.util.HttpUtil;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.webhook.enums.WebHookScene;
 import cn.hamm.spms.module.webhook.enums.WebHookType;
@@ -42,7 +43,6 @@ public abstract class AbstractEventFactory<E> {
      * <h2>发起请求</h2>
      */
     public final void request() {
-        DictionaryUtil dictionaryUtil = Utils.getDictionaryUtil();
 
         // 查询指定场景的Hook列表
         List<WebHookEntity> notifyHookList = Services.getWebHookService().filter(
@@ -51,7 +51,7 @@ public abstract class AbstractEventFactory<E> {
         );
         notifyHookList.forEach(notifyHook -> {
             // 获取通知类型
-            WebHookType webHookType = dictionaryUtil.getDictionary(WebHookType.class, notifyHook.getType());
+            WebHookType webHookType = DictionaryUtil.getDictionary(WebHookType.class, notifyHook.getType());
 
             // 获取各个类型的通知内容(POST结构)
             Object object = switch (webHookType) {
@@ -82,12 +82,11 @@ public abstract class AbstractEventFactory<E> {
      * @param webHook 通知钩子
      */
     private void doRequest(@NotNull Object data, @NotNull WebHookEntity webHook) {
-        DictionaryUtil dictionaryUtil = Utils.getDictionaryUtil();
-        WebHookType webHookType = dictionaryUtil.getDictionary(WebHookType.class, webHook.getType());
+        WebHookType webHookType = DictionaryUtil.getDictionary(WebHookType.class, webHook.getType());
         if (webHookType == WebHookType.EMAIL) {
             // 如果是邮箱通知 直接发送邮件
             try {
-                Utils.getEmailUtil().sendEmail(webHook.getUrl(), scene.getLabel(), data.toString());
+                AirHelper.getEmailHelper().sendEmail(webHook.getUrl(), scene.getLabel(), data.toString());
             } catch (MessagingException e) {
                 log.error(e.getMessage(), e);
             }
@@ -95,7 +94,7 @@ public abstract class AbstractEventFactory<E> {
         }
 
         // 其他通知 发起网络请求
-        Utils.getHttpUtil().setUrl(webHook.getUrl()).post(data.toString());
+        HttpUtil.create().setUrl(webHook.getUrl()).post(data.toString());
     }
 
     /**

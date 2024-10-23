@@ -1,8 +1,8 @@
 package cn.hamm.spms;
 
+import cn.hamm.airpower.helper.AirHelper;
 import cn.hamm.airpower.util.PasswordUtil;
 import cn.hamm.airpower.util.RandomUtil;
-import cn.hamm.airpower.util.Utils;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
@@ -47,12 +47,6 @@ import java.util.Objects;
 public class InitializeRunner implements CommandLineRunner {
 
     public static final int FOUR = 4;
-
-    @Autowired
-    private PasswordUtil passwordUtil;
-
-    @Autowired
-    private RandomUtil randomUtil;
 
     @Autowired
     private ParameterService parameterService;
@@ -142,13 +136,13 @@ public class InitializeRunner implements CommandLineRunner {
         if (Objects.nonNull(userEntity)) {
             return;
         }
-        String salt = randomUtil.randomString(AppConstant.PASSWORD_SALT_LENGTH);
+        String salt = RandomUtil.randomString(AppConstant.PASSWORD_SALT_LENGTH);
         userService.add(new UserEntity()
                 .setNickname("Hamm")
                 .setAccount("hamm")
                 .setPhone("17666666666")
                 .setEmail("admin@hamm.cn")
-                .setPassword(passwordUtil.encode("Aa123456", salt))
+                .setPassword(PasswordUtil.encode("Aa123456", salt))
                 .setSalt(salt)
                 .setRemark("超级管理员,请勿数据库暴力直接删除"));
     }
@@ -163,7 +157,7 @@ public class InitializeRunner implements CommandLineRunner {
         Services.getMenuService().initMenu();
         System.out.println("---------------------------------");
         String[] localEnvList = {"local-hamm"};
-        if (Arrays.stream(localEnvList).toList().contains(Utils.getCurrentEnvironment())) {
+        if (Arrays.stream(localEnvList).toList().contains(AirHelper.getCurrentEnvironment())) {
             initDevData();
         }
     }
