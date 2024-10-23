@@ -24,7 +24,6 @@ airpower:
     port: your_mqtt_port_default_1883
     user: your_mqtt_username
     pass: your_mqtt_password
-  enable-document: true
 app:
   loginUrl: "http://localhost:3000/login"
   influxdb:
