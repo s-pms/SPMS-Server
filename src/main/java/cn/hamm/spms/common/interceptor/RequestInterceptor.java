@@ -53,7 +53,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
      * @apiNote 抛出异常则为拦截
      */
     @Override
-    protected void checkUserPermission(Long userId, String permissionIdentity, HttpServletRequest request) {
+    protected void checkUserPermission(long userId, String permissionIdentity, HttpServletRequest request) {
         UserEntity existUser = userService.get(userId);
         if (existUser.isRootUser()) {
             return;
