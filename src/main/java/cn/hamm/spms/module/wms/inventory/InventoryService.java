@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.wms.inventory;
 
+import cn.hamm.airpower.root.delegate.TreeServiceDelegate;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
@@ -43,16 +44,16 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
     /**
      * <h2>查询指定存储结构下的库存</h2>
      *
-     * @param storageEntity 存储结构
+     * @param storage 存储结构
      * @return 库存列表
      */
-    public List<InventoryEntity> getListByStorage(StorageEntity storageEntity) {
+    public List<InventoryEntity> getListByStorage(StorageEntity storage) {
         List<InventoryEntity> list;
-        if (Objects.isNull(storageEntity)) {
+        if (Objects.isNull(storage)) {
             return filter(new InventoryEntity().setType(InventoryType.STORAGE.getKey()));
         }
-        list = filter(new InventoryEntity().setStorage(storageEntity).setType(InventoryType.STORAGE.getKey()));
-        List<StorageEntity> storageList = Services.getStorageService().getByParentId(storageEntity.getId());
+        list = filter(new InventoryEntity().setStorage(storage).setType(InventoryType.STORAGE.getKey()));
+        List<StorageEntity> storageList = TreeServiceDelegate.findByParentId(Services.getStorageService(), storage.getId());
         storageList.stream()
                 .map(this::getListByStorage)
                 .forEach(list::addAll);
@@ -62,16 +63,16 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
     /**
      * <h2>查询指定工厂结构下的库存</h2>
      *
-     * @param structureEntity 工厂结构
+     * @param structure 工厂结构
      * @return 库存列表
      */
-    public List<InventoryEntity> getListByStructure(StructureEntity structureEntity) {
+    public List<InventoryEntity> getListByStructure(StructureEntity structure) {
         List<InventoryEntity> list;
-        if (Objects.isNull(structureEntity)) {
+        if (Objects.isNull(structure)) {
             return filter(new InventoryEntity().setType(InventoryType.STRUCTURE.getKey()));
         }
-        list = filter(new InventoryEntity().setStructure(structureEntity).setType(InventoryType.STRUCTURE.getKey()));
-        List<StructureEntity> structureList = Services.getStructureService().getByParentId(structureEntity.getId());
+        list = filter(new InventoryEntity().setStructure(structure).setType(InventoryType.STRUCTURE.getKey()));
+        List<StructureEntity> structureList = TreeServiceDelegate.findByParentId(Services.getStructureService(), structure.getId());
         structureList.stream()
                 .map(this::getListByStructure)
                 .forEach(list::addAll);

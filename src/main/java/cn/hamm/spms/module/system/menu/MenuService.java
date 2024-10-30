@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.system.menu;
 
-import cn.hamm.airpower.interfaces.IServiceTree;
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.model.query.QueryListRequest;
 import cn.hamm.airpower.root.RootEntity;
+import cn.hamm.airpower.root.delegate.TreeServiceDelegate;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.config.AppConstant;
 import org.jetbrains.annotations.NotNull;
@@ -18,10 +18,10 @@ import java.util.Objects;
  * @author Hamm.cn
  */
 @Service
-public class MenuService extends BaseService<MenuEntity, MenuRepository> implements IServiceTree<MenuEntity> {
+public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     @Override
     protected void beforeDelete(long id) {
-        ensureNoChildrenBeforeDelete(id);
+        TreeServiceDelegate.ensureNoChildrenBeforeDelete(this, id);
     }
 
     @Override

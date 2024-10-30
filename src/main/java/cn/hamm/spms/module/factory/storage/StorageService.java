@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.factory.storage;
 
-import cn.hamm.airpower.interfaces.IServiceTree;
 import cn.hamm.airpower.model.query.QueryListRequest;
+import cn.hamm.airpower.root.delegate.TreeServiceDelegate;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -15,15 +15,15 @@ import java.util.Objects;
  * @author Hamm.cn
  */
 @Service
-public class StorageService extends BaseService<StorageEntity, StorageRepository> implements IServiceTree<StorageEntity> {
+public class StorageService extends BaseService<StorageEntity, StorageRepository> {
     @Override
     protected @NotNull List<StorageEntity> afterGetList(@NotNull List<StorageEntity> list) {
-        return getAllChildren(list);
+        return TreeServiceDelegate.getAllChildren(this, list);
     }
 
     @Override
     protected void beforeDelete(long id) {
-        ensureNoChildrenBeforeDelete(id);
+        TreeServiceDelegate.ensureNoChildrenBeforeDelete(this, id);
     }
 
     @Override
