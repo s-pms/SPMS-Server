@@ -22,8 +22,7 @@ import java.util.Objects;
 public class MenuService extends BaseService<MenuEntity, MenuRepository> implements IServiceTree<MenuEntity> {
     @Override
     protected void beforeDelete(long id) {
-        List<MenuEntity> children = filter(new MenuEntity().setParentId(id));
-        ServiceError.FORBIDDEN_DELETE.when(!children.isEmpty(), "含有子菜单,无法删除!");
+        ensureNoChildrenBeforeDelete(id);
     }
 
     @Override

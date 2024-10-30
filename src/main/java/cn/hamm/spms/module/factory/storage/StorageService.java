@@ -22,6 +22,11 @@ public class StorageService extends BaseService<StorageEntity, StorageRepository
     }
 
     @Override
+    protected void beforeDelete(long id) {
+        ensureNoChildrenBeforeDelete(id);
+    }
+
+    @Override
     protected @NotNull QueryListRequest<StorageEntity> beforeGetList(@NotNull QueryListRequest<StorageEntity> sourceRequestData) {
         StorageEntity filter = sourceRequestData.getFilter();
         if (Objects.isNull(filter.getParentId())) {

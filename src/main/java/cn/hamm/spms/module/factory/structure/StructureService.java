@@ -22,6 +22,11 @@ public class StructureService extends BaseService<StructureEntity, StructureRepo
     }
 
     @Override
+    protected void beforeDelete(long id) {
+        ensureNoChildrenBeforeDelete(id);
+    }
+
+    @Override
     protected @NotNull QueryListRequest<StructureEntity> beforeGetList(@NotNull QueryListRequest<StructureEntity> sourceRequestData) {
         StructureEntity filter = sourceRequestData.getFilter();
         if (Objects.isNull(filter.getParentId())) {
