@@ -5,7 +5,7 @@ import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.helper.MqttHelper;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.common.Services;
-import cn.hamm.spms.common.helper.influxdb.InfluxHelper;
+import cn.hamm.spms.common.helper.InfluxHelper;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.asset.device.DeviceService;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;

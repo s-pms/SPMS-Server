@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.system.permission;
 
 import cn.hamm.airpower.exception.ServiceError;
+import cn.hamm.airpower.interfaces.IServiceTree;
 import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.util.PermissionUtil;
 import cn.hamm.spms.Application;
@@ -19,7 +20,7 @@ import java.util.Objects;
  */
 @Service
 @Slf4j
-public class PermissionService extends BaseService<PermissionEntity, PermissionRepository> {
+public class PermissionService extends BaseService<PermissionEntity, PermissionRepository> implements IServiceTree<PermissionEntity> {
     /**
      * <h2>通过标识获取一个权限</h2>
      *

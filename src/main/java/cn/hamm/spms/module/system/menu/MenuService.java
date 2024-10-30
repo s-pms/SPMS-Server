@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.system.menu;
 
 import cn.hamm.airpower.exception.ServiceError;
+import cn.hamm.airpower.interfaces.IServiceTree;
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.model.query.QueryListRequest;
 import cn.hamm.airpower.root.RootEntity;
@@ -18,7 +19,7 @@ import java.util.Objects;
  * @author Hamm.cn
  */
 @Service
-public class MenuService extends BaseService<MenuEntity, MenuRepository> {
+public class MenuService extends BaseService<MenuEntity, MenuRepository> implements IServiceTree<MenuEntity> {
     @Override
     protected void beforeDelete(long id) {
         List<MenuEntity> children = filter(new MenuEntity().setParentId(id));
