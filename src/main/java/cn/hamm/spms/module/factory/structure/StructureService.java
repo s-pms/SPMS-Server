@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.factory.structure;
 
+import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.model.query.QueryListRequest;
 import cn.hamm.airpower.root.delegate.TreeServiceDelegate;
 import cn.hamm.spms.base.BaseService;
@@ -30,7 +31,7 @@ public class StructureService extends BaseService<StructureEntity, StructureRepo
     protected @NotNull QueryListRequest<StructureEntity> beforeGetList(@NotNull QueryListRequest<StructureEntity> sourceRequestData) {
         StructureEntity filter = sourceRequestData.getFilter();
         if (Objects.isNull(filter.getParentId())) {
-            filter.setRootTree();
+            filter.setParentId(Constant.ZERO_LONG);
         }
         sourceRequestData.setFilter(filter);
         return sourceRequestData;
