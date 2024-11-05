@@ -1,4 +1,4 @@
-package cn.hamm.spms.common.helper.influxdb;
+package cn.hamm.spms.common.helper;
 
 import cn.hamm.airpower.config.Constant;
 import cn.hamm.spms.common.config.InfluxConfig;

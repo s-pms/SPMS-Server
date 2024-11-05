@@ -5,7 +5,7 @@ import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
-import cn.hamm.spms.common.helper.influxdb.InfluxHelper;
+import cn.hamm.spms.common.helper.InfluxHelper;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
 import cn.hamm.spms.module.iot.report.*;

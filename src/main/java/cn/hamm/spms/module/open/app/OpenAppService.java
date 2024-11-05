@@ -46,10 +46,9 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
      */
     public final void resetKeyPare(@NotNull OpenAppEntity openApp) {
         try {
-            RsaUtil rsaUtil = RsaUtil.create();
-            KeyPair keyPair = rsaUtil.generateKeyPair();
-            openApp.setPrivateKey(rsaUtil.convertPrivateKeyToPem(keyPair.getPrivate()));
-            openApp.setPublicKey(rsaUtil.convertPublicKeyToPem(keyPair.getPublic()));
+            KeyPair keyPair = RsaUtil.generateKeyPair();
+            openApp.setPrivateKey(RsaUtil.convertPrivateKeyToPem(keyPair.getPrivate()));
+            openApp.setPublicKey(RsaUtil.convertPublicKeyToPem(keyPair.getPublic()));
         } catch (NoSuchAlgorithmException e) {
             throw new ServiceException(e);
         }
