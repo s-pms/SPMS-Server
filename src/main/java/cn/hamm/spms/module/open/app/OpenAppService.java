@@ -2,10 +2,10 @@ package cn.hamm.spms.module.open.app;
 
 import cn.hamm.airpower.exception.ServiceException;
 import cn.hamm.airpower.open.IOpenAppService;
+import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.airpower.util.RsaUtil;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.KeyPair;
@@ -20,11 +20,7 @@ import java.util.Objects;
  */
 @SuppressWarnings("AlibabaServiceOrDaoClassShouldEndWithImpl")
 @Service
-public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository> implements IOpenAppService {
-    @Autowired
-    private RsaUtil rsaUtil;
-
-    /**
+public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository> implements IOpenAppService {    /**
      * <h2>通过AppKey获取一个应用</h2>
      *
      * @param appKey AppKey
@@ -38,7 +34,7 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
     @Override
     protected @NotNull OpenAppEntity beforeAdd(@NotNull OpenAppEntity openApp) {
         openApp.setAppKey(createAppKey());
-        openApp.setAppSecret(Base64.getEncoder().encodeToString(randomUtil.randomBytes()));
+        openApp.setAppSecret(Base64.getEncoder().encodeToString(RandomUtil.randomBytes()));
         resetKeyPare(openApp);
         return openApp;
     }
@@ -50,9 +46,9 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
      */
     public final void resetKeyPare(@NotNull OpenAppEntity openApp) {
         try {
-            KeyPair keyPair = rsaUtil.generateKeyPair();
-            openApp.setPrivateKey(rsaUtil.convertPrivateKeyToPem(keyPair.getPrivate()));
-            openApp.setPublicKey(rsaUtil.convertPublicKeyToPem(keyPair.getPublic()));
+            KeyPair keyPair = RsaUtil.generateKeyPair();
+            openApp.setPrivateKey(RsaUtil.convertPrivateKeyToPem(keyPair.getPrivate()));
+            openApp.setPublicKey(RsaUtil.convertPublicKeyToPem(keyPair.getPublic()));
         } catch (NoSuchAlgorithmException e) {
             throw new ServiceException(e);
         }
@@ -64,7 +60,7 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
      * @return AppKey
      */
     private String createAppKey() {
-        String appKey = randomUtil.randomString();
+        String appKey = RandomUtil.randomString();
         OpenAppEntity openApp = getByAppKey(appKey);
         if (Objects.isNull(openApp)) {
             return appKey;

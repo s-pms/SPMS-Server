@@ -2,7 +2,7 @@ package cn.hamm.spms.module.iot.parameter;
 
 import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.enums.ServiceError;
+import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.spms.base.BaseController;
 import org.jetbrains.annotations.NotNull;
 

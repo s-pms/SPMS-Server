@@ -1,7 +1,8 @@
 package cn.hamm.spms.module.system.coderule;
 
 import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.enums.ServiceError;
+import cn.hamm.airpower.exception.ServiceError;
+import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +32,7 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
         CodeRuleEntity codeRule = repository.getByRuleField(codeRuleField.getKey());
         ServiceError.SERVICE_ERROR.whenNull(codeRule, "保存失败,请先配置自定义编码规则!");
         String template = codeRule.getTemplate();
-        List<Map<String, Object>> mapList = dictionaryUtil.getDictionaryList(CodeRuleParam.class);
+        List<Map<String, Object>> mapList = DictionaryUtil.getDictionaryList(CodeRuleParam.class);
         Calendar calendar = Calendar.getInstance();
         for (val map : mapList) {
             String param = map.get(Constant.LABEL).toString();
