@@ -24,15 +24,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class WebHookService extends BaseService<WebHookEntity, WebHookRepository> {
     /**
-     * <h2>工厂列表</h2>
-     */
-    private final Map<WebHookScene, AbstractEventFactory<?>> factoryMap = Map.of(
-            WebHookScene.APP_SECRET_RESET, new AppSecretResetEvent(),
-            WebHookScene.SUPPLIER_ADD, new SupplierAddEvent(),
-            WebHookScene.SUPPLIER_UPDATE, new SupplierUpdateEvent()
-    );
-
-    /**
      * <h2>线程池</h2>
      */
     private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(
@@ -41,6 +32,14 @@ public class WebHookService extends BaseService<WebHookEntity, WebHookRepository
             3600L,
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<>()
+    );
+    /**
+     * <h2>工厂列表</h2>
+     */
+    private final Map<WebHookScene, AbstractEventFactory<?>> factoryMap = Map.of(
+            WebHookScene.APP_SECRET_RESET, new AppSecretResetEvent(),
+            WebHookScene.SUPPLIER_ADD, new SupplierAddEvent(),
+            WebHookScene.SUPPLIER_UPDATE, new SupplierUpdateEvent()
     );
 
     /**
