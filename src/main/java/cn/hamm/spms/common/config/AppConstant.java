@@ -25,7 +25,7 @@ public class AppConstant {
      * <h2>密码盐长度</h2>
      */
     public static final int PASSWORD_SALT_LENGTH = 4;
-    
+
     /**
      * <h2>自定义异常代码基数</h2>
      */
