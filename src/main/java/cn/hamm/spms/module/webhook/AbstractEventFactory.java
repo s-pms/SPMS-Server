@@ -78,7 +78,7 @@ public abstract class AbstractEventFactory<E> {
     /**
      * <h2>请求</h2>
      *
-     * @param data       数据
+     * @param data    数据
      * @param webHook 通知钩子
      */
     private void doRequest(@NotNull Object data, @NotNull WebHookEntity webHook) {

@@ -149,15 +149,14 @@ public class InitializeRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        System.out.println(Arrays.toString(args));
-        initRootUser();
-        initCodeRules();
-        initParameters();
-        Services.getPermissionService().loadPermission();
-        Services.getMenuService().initMenu();
         System.out.println("---------------------------------");
         String[] localEnvList = {"local-hamm"};
         if (Arrays.stream(localEnvList).toList().contains(AirHelper.getCurrentEnvironment())) {
+            initRootUser();
+            initCodeRules();
+            initParameters();
+            Services.getPermissionService().loadPermission();
+            Services.getMenuService().initMenu();
             initDevData();
         }
     }
