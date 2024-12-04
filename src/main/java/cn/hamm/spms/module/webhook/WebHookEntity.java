@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.webhook;
 
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.annotation.ExcelColumn;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
@@ -14,6 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.validator.constraints.Length;
 
 /**
  * <h1>实体</h1>
@@ -48,4 +50,11 @@ public class WebHookEntity extends BaseEntity<WebHookEntity> {
     @Description("令牌")
     @Column(columnDefinition = "varchar(255) default '' comment '令牌'")
     private String token;
+
+    @Description("备注")
+    @Search(Search.Mode.LIKE)
+    @Column(columnDefinition = "text comment '备注'")
+    @Length(max = 1000, message = "备注最多允许{max}个字符")
+    @ExcelColumn
+    private String remark;
 }
