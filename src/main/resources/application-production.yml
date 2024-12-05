@@ -1,29 +1,25 @@
 spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
   datasource:
-    url: jdbc:mysql://localhost:3306/airpower?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
-    username: your_database_username
-    password: your_database_password
+    url: jdbc:mysql://127.0.0.1:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: spms
+    password: spms
   data:
     redis:
-      host: your_redis_host_default_localhost
-      port: your_redis_port_default_6379
-      database: your_redis_database_default_0
-      password: your_redis_password
-  mail:
-    host: your_email_host
-    port: your_email_port
-    username: your_email@your_domain.com
-    password: your_password
+      host: 127.0.0.1
+      port: 6379
+      database: 5
 airpower:
   mqtt:
-    host: your_mqtt_host_default_127.0.0.1
-    port: your_mqtt_port_default_1883
-    user: your_mqtt_username
-    pass: your_mqtt_password
+    host: 127.0.0.1
+    port: 1883
 app:
-  loginUrl: "https://md4.cn:888/login"
+  loginUrl: "https://demo.spms.work/login"
   influxdb:
-    url: your_influxdb_url
-    token: your_influxdb_token
-    org: your_influxdb_org
-    bucket: your_influxdb_bucket
+    url: http://127.0.0.1:8086
+    token: spms
+    org: spms
+    bucket: spms

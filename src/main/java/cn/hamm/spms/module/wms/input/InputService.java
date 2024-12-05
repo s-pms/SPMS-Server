@@ -5,6 +5,7 @@ import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.purchase.PurchaseEntity;
+import cn.hamm.spms.module.channel.purchase.PurchaseService;
 import cn.hamm.spms.module.channel.purchase.PurchaseStatus;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.input.detail.InputDetailRepository;
@@ -45,8 +46,9 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
         bill.setStatus(InputStatus.DONE.getKey());
         update(bill);
         if (InputType.PURCHASE.equalsKey(bill.getType())) {
-            PurchaseEntity purchaseEntity = bill.getPurchase();
-            Services.getPurchaseService().update(purchaseEntity.setStatus(PurchaseStatus.FINISHED.getKey()));
+            PurchaseService purchaseService = Services.getPurchaseService();
+            PurchaseEntity purchaseBill = purchaseService.get(bill.getPurchase().getId());
+            purchaseService.update(purchaseBill.setStatus(PurchaseStatus.FINISHED.getKey()));
         }
     }
 
