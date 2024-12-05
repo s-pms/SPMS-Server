@@ -5,6 +5,7 @@ import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.sale.SaleEntity;
+import cn.hamm.spms.module.channel.sale.SaleService;
 import cn.hamm.spms.module.channel.sale.SaleStatus;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryService;
@@ -44,8 +45,9 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
         bill.setStatus(OutputStatus.DONE.getKey());
         update(bill);
         if (OutputType.SALE.equalsKey(bill.getType())) {
-            SaleEntity saleEntity = bill.getSale();
-            Services.getSaleService().update(saleEntity.setStatus(SaleStatus.DONE.getKey()));
+            SaleService saleService = Services.getSaleService();
+            SaleEntity saleBill = saleService.get(bill.getSale().getId());
+            saleService.update(saleBill.setStatus(SaleStatus.DONE.getKey()));
         }
     }
 

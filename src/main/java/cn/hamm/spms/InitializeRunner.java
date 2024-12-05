@@ -143,8 +143,7 @@ public class InitializeRunner implements CommandLineRunner {
                 .setPhone("17666666666")
                 .setEmail("admin@hamm.cn")
                 .setPassword(PasswordUtil.encode("Aa123456", salt))
-                .setSalt(salt)
-                .setRemark("超级管理员,请勿数据库暴力直接删除"));
+                .setSalt(salt));
     }
 
     @Override
