@@ -31,7 +31,7 @@ import java.util.Objects;
 @Component
 public class RequestInterceptor extends AbstractRequestInterceptor {
     /**
-     * <h2>日志前缀</h2>
+     * <h3>日志前缀</h3>
      */
     final static String LOG_REQUEST_KEY = "logId";
 
@@ -45,7 +45,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     private LogService logService;
 
     /**
-     * <h2>验证指定的用户是否有指定权限标识的权限</h2>
+     * <h3>验证指定的用户是否有指定权限标识的权限</h3>
      *
      * @param userId             用户ID
      * @param permissionIdentity 权限标识
@@ -71,7 +71,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     }
 
     /**
-     * <h2>拦截请求</h2>
+     * <h3>拦截请求</h3>
      *
      * @param request  请求对象
      * @param response 响应对象

@@ -22,7 +22,7 @@ import java.util.Objects;
 @Slf4j
 public class PermissionService extends BaseService<PermissionEntity, PermissionRepository> {
     /**
-     * <h2>通过标识获取一个权限</h2>
+     * <h3>通过标识获取一个权限</h3>
      *
      * @param identity 权限标识
      * @return 权限

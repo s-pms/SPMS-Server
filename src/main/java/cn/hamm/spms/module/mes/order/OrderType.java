@@ -13,12 +13,12 @@ import lombok.Getter;
 @Getter
 public enum OrderType implements IDictionary {
     /**
-     * <h2>计划订单</h2>
+     * <h3>计划订单</h3>
      */
     PLAN(1, "计划订单"),
 
     /**
-     * <h2>其他订单</h2>
+     * <h3>其他订单</h3>
      */
     OTHER(2, "其他订单");
 

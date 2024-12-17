@@ -14,19 +14,18 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class ReportData {
-
     /**
-     * <h2>设备ID,存入后台uuid字段</h2>
+     * <h3>设备ID,存入后台uuid字段</h3>
      */
     private String deviceId;
 
     /**
-     * <h2>时间戳</h2>
+     * <h3>时间戳</h3>
      */
     private Long timestamp;
 
     /**
-     * <h2>负载数据</h2>
+     * <h3>负载数据</h3>
      */
     private List<ReportPayload> payloads = new ArrayList<>();
 

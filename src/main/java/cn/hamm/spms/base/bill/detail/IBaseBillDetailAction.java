@@ -7,7 +7,7 @@ package cn.hamm.spms.base.bill.detail;
  */
 public interface IBaseBillDetailAction {
     /**
-     * <h2>添加完成数量</h2>
+     * <h3>添加完成数量</h3>
      */
     interface WhenAddFinish {
     }

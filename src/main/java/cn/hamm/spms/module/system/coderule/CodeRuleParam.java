@@ -14,27 +14,27 @@ import lombok.Getter;
 public enum CodeRuleParam implements IDictionary {
 
     /**
-     * <h2>完整年份</h2>
+     * <h3>完整年份</h3>
      */
     FULL_YEAR(1, "yyyy", "完整年份", "2023"),
 
     /**
-     * <h2>年份</h2>
+     * <h3>年份</h3>
      */
     YEAR(2, "yy", "年份", "23"),
 
     /**
-     * <h2>月份</h2>
+     * <h3>月份</h3>
      */
     MONTH(3, "mm", "月份", "12"),
 
     /**
-     * <h2>日期</h2>
+     * <h3>日期</h3>
      */
     DATE(4, "dd", "日期", "31"),
 
     /**
-     * <h2>小时</h2>
+     * <h3>小时</h3>
      */
     HOUR(5, "hh", "小时", "20"),
     ;
@@ -43,12 +43,12 @@ public enum CodeRuleParam implements IDictionary {
     private final String label;
 
     /**
-     * <h2>描述</h2>
+     * <h3>描述</h3>
      */
     private final String desc;
 
     /**
-     * <h2>示例</h2>
+     * <h3>示例</h3>
      */
     private final String demo;
 }

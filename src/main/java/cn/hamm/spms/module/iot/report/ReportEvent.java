@@ -32,32 +32,32 @@ import java.util.Objects;
 @Slf4j
 public class ReportEvent {
     /**
-     * <h2>数据上报毫秒最小</h2>
+     * <h3>数据上报毫秒最小</h3>
      */
     public static final int REPORT_RATE_MIN = 200;
 
     /**
-     * <h2>运行状态</h2>
+     * <h3>运行状态</h3>
      */
     public static final String REPORT_KEY_OF_STATUS = "Status";
 
     /**
-     * <h2>产量事件</h2>
+     * <h3>产量事件</h3>
      */
     public static final String REPORT_KEY_OF_PART_COUNT = "PartCnt";
 
     /**
-     * <h2>报警事件</h2>
+     * <h3>报警事件</h3>
      */
     public static final String REPORT_KEY_OF_ALARM = "Alarm";
 
     /**
-     * <h2>订阅Topic</h2>
+     * <h3>订阅Topic</h3>
      */
     public final static String IOT_REPORT_TOPIC_V1 = "sys/msg/v1";
 
     /**
-     * <h2>Redis存IOT采集数据的前缀</h2>
+     * <h3>Redis存IOT采集数据的前缀</h3>
      */
     public final static String CACHE_PREFIX = "iot_report_";
 
@@ -72,7 +72,7 @@ public class ReportEvent {
 
 
     /**
-     * <h2>开始监听MQTT</h2>
+     * <h3>开始监听MQTT</h3>
      *
      * @throws MqttException 异常
      * @noinspection AlibabaMethodTooLong

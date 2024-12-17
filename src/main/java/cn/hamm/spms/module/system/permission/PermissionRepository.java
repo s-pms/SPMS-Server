@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PermissionRepository extends BaseRepository<PermissionEntity> {
     /**
-     * <h2>根据权限标识获取一个权限</h2>
+     * <h3>根据权限标识获取一个权限</h3>
      *
      * @param identity 权限标识
      * @return 权限实体

@@ -7,7 +7,7 @@ package cn.hamm.spms.module.asset.device;
  */
 public interface IDeviceAction {
     /**
-     * <h2>获取设备采集配置</h2>
+     * <h3>获取设备采集配置</h3>
      */
     interface WhenGetDeviceConfig {
     }

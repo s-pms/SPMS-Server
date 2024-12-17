@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InventoryRepository extends BaseRepository<InventoryEntity> {
     /**
-     * <h2>查询指定物料在指定存储资源的库存</h2>
+     * <h3>查询指定物料在指定存储资源的库存</h3>
      *
      * @param material 物料
      * @param storage  存储资源
@@ -23,7 +23,7 @@ public interface InventoryRepository extends BaseRepository<InventoryEntity> {
     InventoryEntity getByMaterialAndStorage(MaterialEntity material, StorageEntity storage);
 
     /**
-     * <h2>查询指定物料在指定工厂结构下的库存</h2>
+     * <h3>查询指定物料在指定工厂结构下的库存</h3>
      *
      * @param material  物料
      * @param structure 工厂结构

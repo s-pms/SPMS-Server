@@ -22,7 +22,7 @@ import java.util.Objects;
  */
 public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> extends RootService<E, R> {
     /**
-     * <h2>当前服务的数据库最后一次确认</h2>
+     * <h3>当前服务的数据库最后一次确认</h3>
      *
      * @param entity 实体
      * @return 处理后的数据

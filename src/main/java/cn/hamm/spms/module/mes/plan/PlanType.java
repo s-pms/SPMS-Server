@@ -13,12 +13,12 @@ import lombok.Getter;
 @Getter
 public enum PlanType implements IDictionary {
     /**
-     * <h2>内部计划</h2>
+     * <h3>内部计划</h3>
      */
     INNER(1, "内部计划"),
 
     /**
-     * <h2>外销计划</h2>
+     * <h3>外销计划</h3>
      */
     SALE(2, "外销计划");
 
