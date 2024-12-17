@@ -73,9 +73,7 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<RoleEntity> roleList;
 
-    @Description("登录使用的App秘钥")
-    @Transient
-    private String appKey;
+    /// /////////////////////
 
     @Description("邮箱验证码")
     @Transient

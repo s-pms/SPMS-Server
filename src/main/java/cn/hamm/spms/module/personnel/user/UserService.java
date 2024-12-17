@@ -12,7 +12,6 @@ import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.common.exception.CustomError;
-import cn.hamm.spms.module.open.app.OpenAppEntity;
 import cn.hamm.spms.module.system.menu.MenuEntity;
 import cn.hamm.spms.module.system.menu.MenuService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
@@ -153,16 +152,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>存储Oauth的一次性Code</h3>
-     *
-     * @param userId  用户ID
-     * @param openApp 保存的应用信息
-     */
-    public void saveOauthCode(Long userId, @NotNull OpenAppEntity openApp) {
-        redisHelper.set(getAppCodeKey(openApp.getAppKey(), openApp.getCode()), userId, CACHE_CODE_EXPIRE_SECOND);
-    }
-
-    /**
      * <h3>获取指定应用的OauthCode缓存Key</h3>
      *
      * @param appKey 应用Key
@@ -187,16 +176,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>删除AppOauthCode缓存</h3>
-     *
-     * @param appKey AppKey
-     * @param code   Code
-     */
-    public void removeOauthCode(String appKey, String code) {
-        redisHelper.del(getAppCodeKey(appKey, code));
-    }
-
-    /**
      * <h3>存储Cookie</h3>
      *
      * @param userId UserId
@@ -204,20 +183,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public void saveCookie(Long userId, String cookie) {
         redisHelper.set(COOKIE_CODE_KEY + cookie, userId, CACHE_COOKIE_EXPIRE_SECOND);
-    }
-
-    /**
-     * <h3>通过Cookie获取一个用户</h3>
-     *
-     * @param cookie Cookie
-     * @return UserId
-     */
-    public Long getUserIdByCookie(String cookie) {
-        Object userId = redisHelper.get(COOKIE_CODE_KEY + cookie);
-        if (Objects.isNull(userId)) {
-            return null;
-        }
-        return Long.valueOf(userId.toString());
     }
 
     /**

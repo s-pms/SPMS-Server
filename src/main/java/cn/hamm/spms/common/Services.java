@@ -12,15 +12,12 @@ import cn.hamm.spms.module.channel.supplier.SupplierService;
 import cn.hamm.spms.module.factory.storage.StorageService;
 import cn.hamm.spms.module.factory.structure.StructureService;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
-import cn.hamm.spms.module.open.app.OpenAppService;
-import cn.hamm.spms.module.open.log.OpenLogService;
 import cn.hamm.spms.module.personnel.user.UserService;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import cn.hamm.spms.module.system.log.LogService;
 import cn.hamm.spms.module.system.menu.MenuService;
 import cn.hamm.spms.module.system.permission.PermissionService;
 import cn.hamm.spms.module.system.unit.UnitService;
-import cn.hamm.spms.module.webhook.WebHookService;
 import cn.hamm.spms.module.wms.input.InputService;
 import cn.hamm.spms.module.wms.inventory.InventoryService;
 import cn.hamm.spms.module.wms.output.OutputService;
@@ -98,15 +95,6 @@ public class Services {
     @Getter
     private static LogService logService;
 
-    @Getter
-    private static OpenAppService openAppService;
-
-    @Getter
-    private static OpenLogService openLogService;
-
-    @Getter
-    private static WebHookService webHookService;
-
     @Autowired
     private void initService(
             CodeRuleService codeRuleService,
@@ -129,10 +117,7 @@ public class Services {
             StructureService structureService,
             InventoryService inventoryService,
             LogService logService,
-            AppConfig appConfig,
-            OpenAppService openAppService,
-            OpenLogService openLogService,
-            WebHookService webHookService
+            AppConfig appConfig
     ) {
         Services.codeRuleService = codeRuleService;
         Services.purchaseService = purchaseService;
@@ -155,8 +140,5 @@ public class Services {
         Services.inventoryService = inventoryService;
         Services.logService = logService;
         Services.appConfig = appConfig;
-        Services.openAppService = openAppService;
-        Services.openLogService = openLogService;
-        Services.webHookService = webHookService;
     }
 }
