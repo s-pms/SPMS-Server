@@ -23,7 +23,7 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
     private static final String CODE_RULE_FORMATTER = "%02d";
 
     /**
-     * <h2>创建一个自定义编码</h2>
+     * <h3>创建一个自定义编码</h3>
      *
      * @param codeRuleField 为哪个字段创建
      * @return 一个自定义编码
@@ -65,7 +65,7 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
     }
 
     /**
-     * <h2>根据规则字段获取自定义编码规则</h2>
+     * <h3>根据规则字段获取自定义编码规则</h3>
      *
      * @param ruleField 规则字段
      * @return 自定义编码规则

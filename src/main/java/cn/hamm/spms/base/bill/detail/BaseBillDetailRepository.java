@@ -14,7 +14,7 @@ import java.util.List;
 @NoRepositoryBean
 public interface BaseBillDetailRepository<E extends BaseBillDetailEntity<E>> extends BaseRepository<E> {
     /**
-     * <h2>根据单据ID查询所有明细</h2>
+     * <h3>根据单据ID查询所有明细</h3>
      *
      * @param billId 单据ID
      * @return 明细

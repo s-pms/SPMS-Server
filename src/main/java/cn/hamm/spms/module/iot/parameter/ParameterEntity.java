@@ -55,7 +55,7 @@ public class ParameterEntity extends BaseEntity<ParameterEntity> {
     private Integer dataType;
 
     /**
-     * <h2>设置是系统内置参数</h2>
+     * <h3>设置是系统内置参数</h3>
      *
      * @param isSystem 内置参数
      * @return 实体

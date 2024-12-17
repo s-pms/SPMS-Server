@@ -4,19 +4,16 @@ import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Filter;
 import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.helper.CookieHelper;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.util.AccessTokenUtil;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseController;
-import cn.hamm.spms.module.open.app.OpenAppEntity;
-import cn.hamm.spms.module.open.app.OpenAppService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,9 +33,6 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Autowired
     private CookieHelper cookieHelper;
 
-    @Autowired
-    private OpenAppService openAppService;
-
     @Description("获取我的信息")
     @Permission(authorize = false)
     @PostMapping("getMyInfo")
@@ -55,6 +49,14 @@ public class UserController extends BaseController<UserEntity, UserService, User
         user.setRoleList(null);
         service.update(user);
         return Json.success("资料修改成功");
+    }
+
+    @Description("发送邮件")
+    @Permission(login = false)
+    @PostMapping("sendMail")
+    public Json sendMail(@RequestBody @Validated(WhenSendEmail.class) UserEntity user) throws MessagingException {
+        service.sendMail(user.getEmail());
+        return Json.success("发送成功");
     }
 
     @Description("获取我的菜单")
@@ -127,21 +129,6 @@ public class UserController extends BaseController<UserEntity, UserService, User
         service.saveCookie(userId, cookieString);
         response.addCookie(cookieHelper.getAuthorizeCookie(cookieString));
 
-        String appKey = user.getAppKey();
-        if (!StringUtils.hasText(appKey)) {
-            return Json.data(accessToken, "登录成功,请存储你的访问凭证");
-        }
-
-        // 验证应用信息
-        OpenAppEntity openApp = openAppService.getByAppKey(appKey);
-        ServiceError.PARAM_INVALID.whenNull(openApp, "登录失败,错误的应用ID");
-
-        // 生成临时身份令牌code
-        String code = RandomUtil.randomString(32);
-        openApp.setCode(code);
-
-        // 缓存临时身份令牌code
-        service.saveOauthCode(userId, openApp);
-        return Json.data(code, "登录成功,请重定向此Code");
+        return Json.data(accessToken, "登录成功,请存储你的访问凭证");
     }
 }

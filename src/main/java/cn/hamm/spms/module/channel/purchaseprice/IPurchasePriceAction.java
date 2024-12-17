@@ -7,7 +7,7 @@ package cn.hamm.spms.module.channel.purchaseprice;
  */
 public interface IPurchasePriceAction {
     /**
-     * <h2>通过物料和供应商查询采购价</h2>
+     * <h3>通过物料和供应商查询采购价</h3>
      */
     interface WhenGetByMaterialAndSupplier {
     }

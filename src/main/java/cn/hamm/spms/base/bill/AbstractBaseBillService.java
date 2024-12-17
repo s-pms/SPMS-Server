@@ -31,7 +31,7 @@ public abstract class AbstractBaseBillService<
     protected DS detailService;
 
     /**
-     * <h2>添加完成数量</h2>
+     * <h3>添加完成数量</h3>
      *
      * @param sourceDetail 提交明细
      */
@@ -57,7 +57,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h2>添加完成数量前置方法</h2>
+     * <h3>添加完成数量前置方法</h3>
      *
      * @param sourceDetail 提交明细
      */
@@ -65,7 +65,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h2>所有明细数量全部完成后置方法</h2>
+     * <h3>所有明细数量全部完成后置方法</h3>
      *
      * @param id 单据ID
      */
@@ -73,7 +73,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h2>单据明细保存后置方法</h2>
+     * <h3>单据明细保存后置方法</h3>
      *
      * @param bill 单据
      */
@@ -97,7 +97,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h2>保存单据明细</h2>
+     * <h3>保存单据明细</h3>
      * <li>
      * 请不要再重写后直接调用 {@link #update(RootEntity)} #{@link #updateWithNull(RootEntity)}，避免出现调用循环。
      * </li>
@@ -116,7 +116,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h2>设置为已审核状态</h2>
+     * <h3>设置为已审核状态</h3>
      *
      * @param bill 单据
      */
@@ -125,7 +125,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h2>设置为审核中状态</h2>
+     * <h3>设置为审核中状态</h3>
      *
      * @param bill 单据
      */
@@ -134,7 +134,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h2>单据是否可审核</h2>
+     * <h3>单据是否可审核</h3>
      *
      * @param bill 单据
      * @return 是否审核
@@ -144,7 +144,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h2>单据是否可驳回</h2>
+     * <h3>单据是否可驳回</h3>
      *
      * @param bill 单据
      * @return 是否可驳回
@@ -154,7 +154,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h2>设置单据为驳回状态</h2>
+     * <h3>设置单据为驳回状态</h3>
      *
      * @param bill 单据
      */
@@ -163,7 +163,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h2>单据是否可编辑</h2>
+     * <h3>单据是否可编辑</h3>
      *
      * @param bill 单据
      * @return 是否可编辑
@@ -173,21 +173,21 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h2>获取审核中状态</h2>
+     * <h3>获取审核中状态</h3>
      *
      * @return 审核中状态
      */
     public abstract IDictionary getAuditingStatus();
 
     /**
-     * <h2>获取已审核状态</h2>
+     * <h3>获取已审核状态</h3>
      *
      * @return 已审核状态
      */
     public abstract IDictionary getAuditedStatus();
 
     /**
-     * <h2>获取驳回状态</h2>
+     * <h3>获取驳回状态</h3>
      *
      * @return 驳回状态
      */

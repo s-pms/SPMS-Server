@@ -14,92 +14,92 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CodeRuleField implements IDictionary {
     /**
-     * <h2>角色</h2>
+     * <h3>角色</h3>
      */
     RoleCode(1, "角色编码", "RO", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
 
     /**
-     * <h2>供应商编码</h2>
+     * <h3>供应商编码</h3>
      */
     SupplierCode(2, "供应商编码", "SUP", SerialNumberUpdate.YEAR, "yyyy"),
 
     /**
-     * <h2>存储资源编码</h2>
+     * <h3>存储资源编码</h3>
      */
     StorageCode(3, "存储资源编码", "SRG", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
 
     /**
-     * <h2>工厂结构编码</h2>
+     * <h3>工厂结构编码</h3>
      */
     StructureCode(4, "工厂结构编码", "ST", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
 
     /**
-     * <h2>客户编码</h2>
+     * <h3>客户编码</h3>
      */
     CustomerCode(5, "客户编码", "CT", SerialNumberUpdate.YEAR, "yyyy"),
 
     /**
-     * <h2>物料编码</h2>
+     * <h3>物料编码</h3>
      */
     MaterialCode(6, "物料编码", "MA", SerialNumberUpdate.YEAR, "yyyy"),
 
     /**
-     * <h2>单位编码</h2>
+     * <h3>单位编码</h3>
      */
     UnitCode(7, "单位编码", "UT", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
 
     /**
-     * <h2>采购单号</h2>
+     * <h3>采购单号</h3>
      */
     PurchaseBillCode(8, "采购单号", "PC", SerialNumberUpdate.DAY, "yyyymmdd"),
 
     /**
-     * <h2>销售单号</h2>
+     * <h3>销售单号</h3>
      */
     SaleBillCode(9, "销售单号", "SL", SerialNumberUpdate.DAY, "yyyymmdd"),
 
     /**
-     * <h2>生产计划号</h2>
+     * <h3>生产计划号</h3>
      */
     PlanBillCode(10, "生产计划号", "PL", SerialNumberUpdate.DAY, "yyyymmdd"),
 
     /**
-     * <h2>生产订单号</h2>
+     * <h3>生产订单号</h3>
      */
     OrderBillCode(11, "生产订单号", "ODR", SerialNumberUpdate.DAY, "yyyymmdd"),
 
     /**
-     * <h2>领料单号</h2>
+     * <h3>领料单号</h3>
      */
     PickoutBillCode(12, "领料单号", "PK", SerialNumberUpdate.DAY, "yyyymmdd"),
 
     /**
-     * <h2>退料单号</h2>
+     * <h3>退料单号</h3>
      */
     RestoreBillCode(13, "退料单号", "RT", SerialNumberUpdate.DAY, "yyyymmdd"),
 
     /**
-     * <h2>入库单号</h2>
+     * <h3>入库单号</h3>
      */
     InputBillCode(14, "入库单号", "IN", SerialNumberUpdate.DAY, "yyyymmdd"),
 
     /**
-     * <h2>出库单号</h2>
+     * <h3>出库单号</h3>
      */
     OutputBillCode(15, "出库单号", "OUT", SerialNumberUpdate.DAY, "yyyymmdd"),
 
     /**
-     * <h2>移库单号</h2>
+     * <h3>移库单号</h3>
      */
     MoveBillCode(16, "移库单号", "MV", SerialNumberUpdate.DAY, "yyyymmdd"),
 
     /**
-     * <h2>设备编码</h2>
+     * <h3>设备编码</h3>
      */
     DeviceCode(17, "设备编码", "DE", SerialNumberUpdate.MONTH, "yyyymm"),
 
     /**
-     * <h2>工序编码</h2>
+     * <h3>工序编码</h3>
      */
     OperationCode(18, "工序编码", "OP", SerialNumberUpdate.YEAR, "yyyy");
 
@@ -107,17 +107,17 @@ public enum CodeRuleField implements IDictionary {
     private final String label;
 
     /**
-     * <h2>默认前缀</h2>
+     * <h3>默认前缀</h3>
      */
     private final String defaultPrefix;
 
     /**
-     * <h2>默认序列号类型</h2>
+     * <h3>默认序列号类型</h3>
      */
     private final SerialNumberUpdate defaultSnType;
 
     /**
-     * <h2>默认模板</h2>
+     * <h3>默认模板</h3>
      */
     private final String defaultTemplate;
 }

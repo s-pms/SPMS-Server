@@ -13,32 +13,32 @@ import lombok.Getter;
 @Getter
 public enum DeviceStatus implements IDictionary {
     /**
-     * <h2>未知</h2>
+     * <h3>未知</h3>
      */
     UNKNOWN(0, "未知"),
 
     /**
-     * <h2>报警</h2>
+     * <h3>报警</h3>
      */
     ALARM(1, "报警"),
 
     /**
-     * <h2>运行</h2>
+     * <h3>运行</h3>
      */
     RUNNING(2, "运行"),
 
     /**
-     * <h2>空闲</h2>
+     * <h3>空闲</h3>
      */
     FREE(3, "空闲"),
 
     /**
-     * <h2>关机</h2>
+     * <h3>关机</h3>
      */
     DOW(4, "关机"),
 
     /**
-     * <h2>调试</h2>
+     * <h3>调试</h3>
      */
     DEBUG(5, "调试"),
     ;

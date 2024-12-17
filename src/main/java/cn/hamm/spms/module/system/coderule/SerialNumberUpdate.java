@@ -14,22 +14,22 @@ import lombok.Getter;
 public enum SerialNumberUpdate implements IDictionary {
 
     /**
-     * <h2>按日更新</h2>
+     * <h3>按日更新</h3>
      */
     DAY(1, "按日更新"),
 
     /**
-     * <h2>按月更新</h2>
+     * <h3>按月更新</h3>
      */
     MONTH(2, "按月更新"),
 
     /**
-     * <h2>按年更新</h2>
+     * <h3>按年更新</h3>
      */
     YEAR(3, "按年更新"),
 
     /**
-     * <h2>不更新</h2>
+     * <h3>不更新</h3>
      */
     NEVER(4, "不更新"),
     ;

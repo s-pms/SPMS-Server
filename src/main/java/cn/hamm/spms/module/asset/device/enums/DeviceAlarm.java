@@ -13,22 +13,22 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum DeviceAlarm implements IDictionary {
     /**
-     * <h2>正常</h2>
+     * <h3>正常</h3>
      */
     NONE(0, "正常"),
 
     /**
-     * <h2>系统报警</h2>
+     * <h3>系统报警</h3>
      */
     SYSTEM(1, "系统报警"),
 
     /**
-     * <h2>手动报警</h2>
+     * <h3>手动报警</h3>
      */
     MANUAL(2, "手动报警"),
 
     /**
-     * <h2>规则报警</h2>
+     * <h3>规则报警</h3>
      */
     RULE(3, "规则报警"),
     ;

@@ -13,22 +13,22 @@ import lombok.Getter;
 @Getter
 public enum InputStatus implements IDictionary {
     /**
-     * <h2>审核中</h2>
+     * <h3>审核中</h3>
      */
     AUDITING(1, "审核中"),
 
     /**
-     * <h2>已驳回</h2>
+     * <h3>已驳回</h3>
      */
     REJECTED(2, "已驳回"),
 
     /**
-     * <h2>入库中</h2>
+     * <h3>入库中</h3>
      */
     INPUTTING(3, "入库中"),
 
     /**
-     * <h2>已完成</h2>
+     * <h3>已完成</h3>
      */
     DONE(4, "已完成");
 
