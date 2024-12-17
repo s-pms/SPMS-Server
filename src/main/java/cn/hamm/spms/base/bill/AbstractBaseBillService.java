@@ -24,7 +24,8 @@ import java.util.List;
  */
 public abstract class AbstractBaseBillService<
         E extends AbstractBaseBillEntity<E, D>, R extends BaseRepository<E>,
-        D extends BaseBillDetailEntity<D>, DS extends BaseBillDetailService<D, DR>, DR extends BaseBillDetailRepository<D>
+        D extends BaseBillDetailEntity<D>, DS extends BaseBillDetailService<D, DR>,
+        DR extends BaseBillDetailRepository<D>
         > extends BaseService<E, R> {
 
     @Autowired(required = false)
