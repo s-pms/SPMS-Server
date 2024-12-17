@@ -7,14 +7,14 @@ package cn.hamm.spms.module.open.app;
  */
 public interface IOpenAppAction {
     /**
-     * <h2>Code换AccessToken</h2>
+     * <h3>Code换AccessToken</h3>
      */
 
     interface WhenCode2AccessToken {
     }
 
     /**
-     * <h2>应用Key查询应用</h2>
+     * <h3>应用Key查询应用</h3>
      */
     interface WhenGetByAppKey {
     }

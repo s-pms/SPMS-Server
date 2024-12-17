@@ -13,17 +13,17 @@ import lombok.Getter;
 @Getter
 public enum OutputType implements IDictionary {
     /**
-     * <h2>其他出库</h2>
+     * <h3>其他出库</h3>
      */
     NORMAL(1, "普通出库"),
 
     /**
-     * <h2>转移出库</h2>
+     * <h3>转移出库</h3>
      */
     MOVE(2, "转移出库"),
 
     /**
-     * <h2>销售出库</h2>
+     * <h3>销售出库</h3>
      */
     SALE(3, "销售出库"),
     ;

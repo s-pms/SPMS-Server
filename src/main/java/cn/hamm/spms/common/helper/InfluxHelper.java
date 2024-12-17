@@ -39,7 +39,7 @@ public class InfluxHelper {
 
 
     /**
-     * <h2>保存数据</h2>
+     * <h3>保存数据</h3>
      *
      * @param code  参数名
      * @param value 数据
@@ -57,7 +57,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h2>保存数据</h2>
+     * <h3>保存数据</h3>
      *
      * @param code  参数名
      * @param value 数据
@@ -75,7 +75,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h2>保存数据</h2>
+     * <h3>保存数据</h3>
      *
      * @param code  参数名
      * @param value 数据
@@ -93,7 +93,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h2>获取写入API</h2>
+     * <h3>获取写入API</h3>
      *
      * @return 写入API
      */
@@ -110,7 +110,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h2>查询数量</h2>
+     * <h3>查询数量</h3>
      *
      * @param payload           报告负载
      * @param reportGranularity 报告颗粒度
@@ -121,7 +121,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h2>查询是否开启</h2>
+     * <h3>查询是否开启</h3>
      *
      * @param payload           报告负载
      * @param reportGranularity 报告颗粒度
@@ -132,7 +132,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h2>查询报告信息</h2>
+     * <h3>查询报告信息</h3>
      *
      * @param payload           报告负载
      * @param reportGranularity 报告颗粒度
@@ -143,7 +143,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h2>查询报告状态</h2>
+     * <h3>查询报告状态</h3>
      *
      * @param payload           报告负载
      * @param reportGranularity 报告颗粒度
@@ -154,7 +154,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h2>查询报告</h2>
+     * <h3>查询报告</h3>
      *
      * @param reportPayload     报告负载
      * @param reportDataType    数据类型
@@ -197,7 +197,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h2>初始化InfluxDB</h2>
+     * <h3>初始化InfluxDB</h3>
      */
     private void initInfluxDbClient() {
         if (Objects.isNull(influxDbClient)) {
@@ -211,7 +211,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h2>获取查询参数</h2>
+     * <h3>获取查询参数</h3>
      *
      * @param reportPayload     数采报告
      * @param reportDataType    数据类型

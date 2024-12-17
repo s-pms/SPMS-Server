@@ -13,22 +13,22 @@ import lombok.Getter;
 @Getter
 public enum ReportDataType implements IDictionary {
     /**
-     * <h2>数量</h2>
+     * <h3>数量</h3>
      */
     QUANTITY(1, "数量"),
 
     /**
-     * <h2>状态</h2>
+     * <h3>状态</h3>
      */
     STATUS(2, "状态"),
 
     /**
-     * <h2>开关</h2>
+     * <h3>开关</h3>
      */
     SWITCH(3, "开关"),
 
     /**
-     * <h2>信息</h2>
+     * <h3>信息</h3>
      */
     INFORMATION(4, "信息"),
     ;

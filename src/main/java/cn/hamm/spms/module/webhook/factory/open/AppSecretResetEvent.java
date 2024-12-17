@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class AppSecretResetEvent extends AbstractEventFactory<OpenAppEntity> {
 
     /**
-     * <h2>获取通知内容</h2>
+     * <h3>获取通知内容</h3>
      *
      * @param webHook 通知钩子
      * @return 准备的数据

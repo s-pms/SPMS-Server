@@ -43,7 +43,7 @@ public abstract class AbstractBaseBillEntity<
     private String rejectReason;
 
     /**
-     * <h2>设置驳回原因</h2>
+     * <h3>设置驳回原因</h3>
      *
      * @param rejectReason 驳回原因
      * @return 单据实体
@@ -57,7 +57,7 @@ public abstract class AbstractBaseBillEntity<
 
 
     /**
-     * <h2>设置单据明细</h2>
+     * <h3>设置单据明细</h3>
      *
      * @param details 明细
      * @return 单据实体
@@ -69,14 +69,14 @@ public abstract class AbstractBaseBillEntity<
     }
 
     /**
-     * <h2>获取状态</h2>
+     * <h3>获取状态</h3>
      *
      * @return 状态
      */
     public abstract Integer getStatus();
 
     /**
-     * <h2>设置状态</h2>
+     * <h3>设置状态</h3>
      *
      * @param status 状态值
      * @return 单据实体

@@ -13,12 +13,12 @@ import lombok.Getter;
 @Getter
 public enum MaterialType implements IDictionary {
     /**
-     * <h2>自产品</h2>
+     * <h3>自产品</h3>
      */
     PRODUCT(1, "自产品"),
 
     /**
-     * <h2>外购品</h2>
+     * <h3>外购品</h3>
      */
     PURCHASE(2, "外购品");
 

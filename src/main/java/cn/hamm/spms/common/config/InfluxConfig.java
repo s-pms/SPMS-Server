@@ -18,22 +18,22 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("app.influxdb")
 public class InfluxConfig {
     /**
-     * <h2>连接地址</h2>
+     * <h3>连接地址</h3>
      */
     private String url = "http://127.0.0.1:8086";
 
     /**
-     * <h2>连接令牌</h2>
+     * <h3>连接令牌</h3>
      */
     private String token = "spms";
 
     /**
-     * <h2>使用的组织名</h2>
+     * <h3>使用的组织名</h3>
      */
     private String org = "spms";
 
     /**
-     * <h2>使用的数据库</h2>
+     * <h3>使用的数据库</h3>
      */
     private String bucket = "spms";
 }

@@ -13,17 +13,17 @@ import lombok.Getter;
 @Getter
 public enum BomStatus implements IDictionary {
     /**
-     * <h2>审核中</h2>
+     * <h3>审核中</h3>
      */
     AUDITING(1, "审核中"),
 
     /**
-     * <h2>已驳回</h2>
+     * <h3>已驳回</h3>
      */
     REJECTED(2, "已驳回"),
 
     /**
-     * <h2>已发布</h2>
+     * <h3>已发布</h3>
      */
     PUBLISHED(3, "已发布");
 

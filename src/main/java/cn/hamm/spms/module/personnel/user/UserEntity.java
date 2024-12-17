@@ -89,7 +89,7 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
 
 
     /**
-     * <h2>用户是否是初始化的超管</h2>
+     * <h3>用户是否是初始化的超管</h3>
      *
      * @return 是否超管
      */

@@ -73,7 +73,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     private Boolean isSystem;
 
     /**
-     * <h2>设置是系统内置规则</h2>
+     * <h3>设置是系统内置规则</h3>
      *
      * @param isSystem 内置规则
      * @return 编码规则

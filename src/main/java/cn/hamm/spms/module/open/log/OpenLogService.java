@@ -19,7 +19,7 @@ import java.util.Objects;
 @Service
 public class OpenLogService extends BaseService<OpenLogEntity, OpenLogRepository> implements IOpenLogService {
     /**
-     * <h2>添加一个请求日志</h2>
+     * <h3>添加一个请求日志</h3>
      *
      * @param openApp     开放应用
      * @param url         请求地址
@@ -36,7 +36,7 @@ public class OpenLogService extends BaseService<OpenLogEntity, OpenLogRepository
     }
 
     /**
-     * <h2>更新请求日志</h2>
+     * <h3>更新请求日志</h3>
      *
      * @param openLogId    请求日志ID
      * @param responseBody 响应体

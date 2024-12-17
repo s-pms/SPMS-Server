@@ -17,34 +17,34 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReportInfluxPayload {
     /**
-     * <h2>属性值</h2>
+     * <h3>属性值</h3>
      */
     @Column
     private Double value;
 
     /**
-     * <h2>时序存储设备ID</h2>
+     * <h3>时序存储设备ID</h3>
      */
     @Column(tag = true)
     private String uuid;
 
     /**
-     * <h2>时间戳</h2>
+     * <h3>时间戳</h3>
      */
     private Long timestamp;
 
     /**
-     * <h2>布尔值</h2>
+     * <h3>布尔值</h3>
      */
     private Boolean boolValue;
 
     /**
-     * <h2>整形</h2>
+     * <h3>整形</h3>
      */
     private Integer intValue;
 
     /**
-     * <h2>字符串</h2>
+     * <h3>字符串</h3>
      */
     private String strValue;
 }

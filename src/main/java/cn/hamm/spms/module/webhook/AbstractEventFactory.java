@@ -29,18 +29,18 @@ import java.util.Map;
 @Accessors(chain = true)
 public abstract class AbstractEventFactory<E> {
     /**
-     * <h2>当前数据</h2>
+     * <h3>当前数据</h3>
      */
     private E data;
 
     /**
-     * <h2>场景</h2>
+     * <h3>场景</h3>
      */
     @Getter(AccessLevel.PRIVATE)
     private WebHookScene scene;
 
     /**
-     * <h2>发起请求</h2>
+     * <h3>发起请求</h3>
      */
     public final void request() {
 
@@ -68,7 +68,7 @@ public abstract class AbstractEventFactory<E> {
     }
 
     /**
-     * <h2>获取通知内容</h2>
+     * <h3>获取通知内容</h3>
      *
      * @param webHook 通知钩子
      * @return 准备的数据
@@ -76,7 +76,7 @@ public abstract class AbstractEventFactory<E> {
     protected abstract String getWebHookContent(WebHookEntity webHook);
 
     /**
-     * <h2>请求</h2>
+     * <h3>请求</h3>
      *
      * @param data    数据
      * @param webHook 通知钩子
@@ -98,7 +98,7 @@ public abstract class AbstractEventFactory<E> {
     }
 
     /**
-     * <h2>获取企业微信MarkDown格式</h2>
+     * <h3>获取企业微信MarkDown格式</h3>
      *
      * @param webHook 通知钩子
      * @return 企业微信MarkDown
@@ -113,7 +113,7 @@ public abstract class AbstractEventFactory<E> {
     }
 
     /**
-     * <h2>获取钉钉MarkDown格式</h2>
+     * <h3>获取钉钉MarkDown格式</h3>
      *
      * @param webHook 通知钩子
      * @return 钉钉MarkDown
@@ -129,7 +129,7 @@ public abstract class AbstractEventFactory<E> {
     }
 
     /**
-     * <h2>获取飞书MarkDown格式</h2>
+     * <h3>获取飞书MarkDown格式</h3>
      *
      * @param webHook 通知钩子
      * @return 飞书MarkDown
@@ -158,7 +158,7 @@ public abstract class AbstractEventFactory<E> {
     }
 
     /**
-     * <h2>获取邮件内容</h2>
+     * <h3>获取邮件内容</h3>
      *
      * @param webHook 通知钩子
      * @return 邮件内容
@@ -168,7 +168,7 @@ public abstract class AbstractEventFactory<E> {
     }
 
     /**
-     * <h2>获取WebHook请求包体</h2>
+     * <h3>获取WebHook请求包体</h3>
      *
      * @param webHook 通知钩子
      * @return WebHook内容
@@ -182,7 +182,7 @@ public abstract class AbstractEventFactory<E> {
     }
 
     /**
-     * <h2>获取WebHook通知的数据</h2>
+     * <h3>获取WebHook通知的数据</h3>
      *
      * @param webHook 通知钩子
      * @return 通知数据
