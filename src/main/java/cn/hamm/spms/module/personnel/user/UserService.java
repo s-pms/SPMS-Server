@@ -11,11 +11,16 @@ import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.airpower.util.TreeUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
-import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.common.exception.CustomError;
+import cn.hamm.spms.module.personnel.user.department.DepartmentEntity;
+import cn.hamm.spms.module.personnel.user.department.DepartmentService;
 import cn.hamm.spms.module.system.menu.MenuEntity;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import jakarta.mail.MessagingException;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * <h1>Service</h1>
@@ -46,18 +49,12 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * <h3>Code缓存秒数</h3>
      */
     private static final int CACHE_CODE_EXPIRE_SECOND = Constant.SECOND_PER_MINUTE * 5;
-    /**
-     * <h2>缓存房间用户</h2>
-     */
-    private final String CACHE_ROOM_KEY = "ROOM_USER_";
+
     @Autowired
     private EmailHelper emailHelper;
 
     @Autowired
     private CookieHelper cookieHelper;
-
-    @Autowired
-    private AppConfig appConfig;
 
     /**
      * <h3>获取新的密码盐</h3>
@@ -362,5 +359,36 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     protected void beforeDisable(long id) {
         UserEntity existUser = get(id);
         ServiceError.FORBIDDEN_DISABLED_NOT_ALLOWED.when(existUser.isRootUser(), "系统内置用户无法被禁用!");
+    }
+
+    @Override
+    protected @NotNull List<Predicate> addSearchPredicate(@NotNull Root<UserEntity> root, @NotNull CriteriaBuilder builder, @NotNull UserEntity search) {
+        Long departmentId = search.getDepartmentId();
+        if (Objects.isNull(departmentId)) {
+            return new ArrayList<>();
+        }
+        List<Predicate> predicateList = new ArrayList<>();
+        Set<Long> departmentIdList = getDepartmentList(departmentId);
+        if (!departmentIdList.isEmpty()) {
+            Join<UserEntity, DepartmentEntity> departmentJoin = root.join("departmentList");
+            Predicate inPredicate = departmentJoin.get(Constant.ID).in(departmentIdList);
+            predicateList.add(inPredicate);
+        }
+        return predicateList;
+    }
+
+    @Contract("_ -> new")
+    private @NotNull Set<Long> getDepartmentList(long parentId) {
+        Set<Long> departmentList = new HashSet<>();
+        getDepartmentList(parentId, departmentList);
+        return departmentList;
+    }
+
+    private void getDepartmentList(long parentId, @NotNull Set<Long> departmentIds) {
+        DepartmentService departmentService = Services.getDepartmentService();
+        DepartmentEntity parent = departmentService.get(parentId);
+        departmentIds.add(parent.getId());
+        List<DepartmentEntity> children = departmentService.filter(new DepartmentEntity().setParentId(parent.getId()));
+        children.forEach(child -> getDepartmentList(child.getId(), departmentIds));
     }
 }

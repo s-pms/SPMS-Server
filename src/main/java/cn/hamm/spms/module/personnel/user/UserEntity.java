@@ -7,6 +7,7 @@ import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.airpower.validate.phone.Phone;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
+import cn.hamm.spms.module.personnel.user.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.user.enums.UserGender;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -90,6 +91,10 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<RoleEntity> roleList;
 
+    @Description("部门列表")
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<DepartmentEntity> departmentList;
+
     /// ////////////////////
 
     @Description("邮箱验证码")
@@ -101,6 +106,10 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @NotBlank(groups = {WhenUpdateMyPassword.class}, message = "原始密码不能为空")
     @Transient
     private String oldPassword;
+
+    @Description("部门ID查询")
+    @Transient
+    private Long departmentId;
 
     /**
      * <h3>获取是否超级管理员</h3>

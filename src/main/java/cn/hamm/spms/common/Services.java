@@ -15,6 +15,7 @@ import cn.hamm.spms.module.iot.parameter.ParameterService;
 import cn.hamm.spms.module.open.app.OpenAppService;
 import cn.hamm.spms.module.open.notify.NotifyService;
 import cn.hamm.spms.module.personnel.user.UserService;
+import cn.hamm.spms.module.personnel.user.department.DepartmentService;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import cn.hamm.spms.module.system.log.LogService;
 import cn.hamm.spms.module.system.menu.MenuService;
@@ -103,6 +104,9 @@ public class Services {
     @Getter
     private static NotifyService notifyService;
 
+    @Getter
+    private static DepartmentService departmentService;
+
     @Autowired
     private void initService(
             CodeRuleService codeRuleService,
@@ -127,7 +131,8 @@ public class Services {
             LogService logService,
             AppConfig appConfig,
             OpenAppService openAppService,
-            NotifyService notifyService
+            NotifyService notifyService,
+            DepartmentService departmentService
     ) {
         Services.codeRuleService = codeRuleService;
         Services.purchaseService = purchaseService;
@@ -152,5 +157,6 @@ public class Services {
         Services.appConfig = appConfig;
         Services.openAppService = openAppService;
         Services.notifyService = notifyService;
+        Services.departmentService = departmentService;
     }
 }
