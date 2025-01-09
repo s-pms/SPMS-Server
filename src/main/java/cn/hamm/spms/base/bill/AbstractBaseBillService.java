@@ -60,6 +60,7 @@ public abstract class AbstractBaseBillService<
     /**
      * <h3>添加完成数量前置方法</h3>
      *
+     * @param detailId     明细ID
      * @param sourceDetail 提交明细
      */
     protected void afterAddDetailFinish(long detailId, D sourceDetail) {
