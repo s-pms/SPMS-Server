@@ -101,7 +101,13 @@ public enum CodeRuleField implements IDictionary {
     /**
      * <h3>工序编码</h3>
      */
-    OperationCode(18, "工序编码", "OP", SerialNumberUpdate.YEAR, "yyyy");
+    OperationCode(18, "工序编码", "OP", SerialNumberUpdate.YEAR, "yyyy"),
+
+    /**
+     * <h3>部门编码</h3>
+     */
+    DEPARTMENT_CODE(19, "部门编码", "DP", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
+    ;
 
     private final int key;
     private final String label;

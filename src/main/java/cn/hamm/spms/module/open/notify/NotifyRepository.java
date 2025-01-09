@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.personnel.role;
+package cn.hamm.spms.module.open.notify;
 
 import cn.hamm.spms.base.BaseRepository;
 import org.springframework.stereotype.Repository;
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * @author Hamm.cn
  */
 @Repository
-public interface RoleRepository extends BaseRepository<RoleEntity> {
+public interface NotifyRepository extends BaseRepository<NotifyEntity> {
 }

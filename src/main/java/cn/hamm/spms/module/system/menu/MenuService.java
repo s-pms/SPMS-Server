@@ -6,7 +6,6 @@ import cn.hamm.airpower.model.query.QueryListRequest;
 import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.root.delegate.TreeServiceDelegate;
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.common.config.AppConstant;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +19,11 @@ import java.util.Objects;
  */
 @Service
 public class MenuService extends BaseService<MenuEntity, MenuRepository> {
+    /**
+     * <h3>排序字段</h3>
+     */
+    private static final String ORDER_FIELD_NAME = "orderNo";
+
     @Override
     protected void beforeDelete(long id) {
         TreeServiceDelegate.ensureNoChildrenBeforeDelete(this, id);
@@ -28,9 +32,10 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     @Override
     protected @NotNull QueryListRequest<MenuEntity> beforeGetList(@NotNull QueryListRequest<MenuEntity> sourceRequestData) {
         MenuEntity filter = sourceRequestData.getFilter();
-        if (Objects.isNull(sourceRequestData.getSort())) {
-            sourceRequestData.setSort(new Sort().setField(AppConstant.ORDER_NO));
-        }
+        sourceRequestData.setSort(Objects.requireNonNullElse(
+                sourceRequestData.getSort(),
+                new Sort().setField(ORDER_FIELD_NAME)
+        ));
         sourceRequestData.setFilter(filter);
         return sourceRequestData;
     }
@@ -60,6 +65,8 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         thirdMenu = new MenuEntity().setName("员工管理").setPath("/console/personnel/user/list").setParentId(secondMenu.getId());
         add(thirdMenu);
         thirdMenu = new MenuEntity().setName("角色管理").setPath("/console/personnel/role/list").setParentId(secondMenu.getId());
+        add(thirdMenu);
+        thirdMenu = new MenuEntity().setName("部门管理").setPath("/console/personnel/department/list").setParentId(secondMenu.getId());
         add(thirdMenu);
 
         secondMenu = new MenuEntity().setName("资产管理").setParentId(firstMenu.getId());
@@ -149,6 +156,16 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         secondMenu = new MenuEntity().setName("设备概览").setPath("/console/iot/monitor/preview").setParentId(firstMenu.getId());
         add(secondMenu);
         secondMenu = new MenuEntity().setName("参数管理").setPath("/console/iot/parameter/list").setParentId(firstMenu.getId());
+        add(secondMenu);
+
+        // 开放能力
+        firstMenu = new MenuEntity().setName("开放能力").setOrderNo(10).setParentId(0L);
+        firstMenu = get(add(firstMenu));
+
+        secondMenu = new MenuEntity().setName("我的应用").setPath("/console/open/app/list").setParentId(firstMenu.getId());
+        add(secondMenu);
+
+        secondMenu = new MenuEntity().setName("通知管理").setPath("/console/open/notify/list").setParentId(firstMenu.getId());
         add(secondMenu);
 
         // 系统设置

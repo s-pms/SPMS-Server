@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.personnel.role;
+package cn.hamm.spms.module.personnel.user.role;
 
 /**
  * <h1>角色动静做</h1>

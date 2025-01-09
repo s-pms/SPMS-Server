@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.personnel.role;
+package cn.hamm.spms.module.personnel.user.role;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.spms.base.BaseEntity;

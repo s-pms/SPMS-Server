@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.personnel.user;
+package cn.hamm.spms.module.personnel.user.common.enums;
 
 /**
  * <h1>用户登录方式</h1>
@@ -7,7 +7,7 @@ package cn.hamm.spms.module.personnel.user;
  */
 public enum UserLoginType {
     /**
-     * <h3>ID+密码 账号+密码</h3>
+     * <h3>ID+密码 邮箱+密码</h3>
      */
     VIA_ACCOUNT_PASSWORD,
 
@@ -15,9 +15,4 @@ public enum UserLoginType {
      * <h3>邮箱+验证码</h3>
      */
     VIA_EMAIL_CODE,
-
-    /**
-     * <h3>手机+验证码</h3>
-     */
-    VIA_PHONE_CODE,
 }

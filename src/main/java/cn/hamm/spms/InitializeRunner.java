@@ -4,7 +4,6 @@ import cn.hamm.airpower.helper.AirHelper;
 import cn.hamm.airpower.util.PasswordUtil;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.common.Services;
-import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.asset.device.DeviceService;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
@@ -136,10 +135,9 @@ public class InitializeRunner implements CommandLineRunner {
         if (Objects.nonNull(userEntity)) {
             return;
         }
-        String salt = RandomUtil.randomString(AppConstant.PASSWORD_SALT_LENGTH);
+        String salt = RandomUtil.randomString(UserService.PASSWORD_SALT_LENGTH);
         userService.add(new UserEntity()
                 .setNickname("Hamm")
-                .setAccount("hamm")
                 .setPhone("17666666666")
                 .setEmail("admin@hamm.cn")
                 .setPassword(PasswordUtil.encode("Aa123456", salt))
