@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.personnel.user.common.enums;
+package cn.hamm.spms.module.personnel.user.enums;
 
 import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;

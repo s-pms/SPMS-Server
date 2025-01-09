@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.personnel.user.common.enums;
+package cn.hamm.spms.module.personnel.user.enums;
 
 /**
  * <h1>用户登录方式</h1>

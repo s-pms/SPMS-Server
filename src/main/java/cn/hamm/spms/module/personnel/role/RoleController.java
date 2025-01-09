@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.personnel.user.role;
+package cn.hamm.spms.module.personnel.role;
 
 import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;

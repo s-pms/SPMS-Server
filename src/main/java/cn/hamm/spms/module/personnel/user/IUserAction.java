@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.personnel.user.common.interfaces;
+package cn.hamm.spms.module.personnel.user;
 
 /**
  * <h1>用户行为</h1>

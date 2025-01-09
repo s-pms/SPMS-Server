@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.personnel.user.thirdlogin;
+package cn.hamm.spms.module.open.thirdlogin;
 
 import cn.hamm.spms.base.BaseRepository;
 import org.springframework.stereotype.Repository;

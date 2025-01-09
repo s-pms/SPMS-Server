@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.personnel.user.thirdlogin;
+package cn.hamm.spms.module.open.thirdlogin;
 
 import cn.hamm.spms.base.BaseService;
 import lombok.extern.slf4j.Slf4j;
