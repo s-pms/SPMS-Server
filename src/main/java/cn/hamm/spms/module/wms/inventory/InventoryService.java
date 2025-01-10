@@ -1,15 +1,25 @@
 package cn.hamm.spms.module.wms.inventory;
 
-import cn.hamm.airpower.root.delegate.TreeServiceDelegate;
+import cn.hamm.airpower.config.Constant;
+import cn.hamm.airpower.interfaces.ITree;
+import cn.hamm.airpower.model.query.QueryPageRequest;
+import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
+import cn.hamm.spms.module.factory.storage.StorageService;
 import cn.hamm.spms.module.factory.structure.StructureEntity;
+import cn.hamm.spms.module.factory.structure.StructureService;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * <h1>Service</h1>
@@ -18,6 +28,15 @@ import java.util.Objects;
  */
 @Service
 public class InventoryService extends BaseService<InventoryEntity, InventoryRepository> {
+    private final StorageService storageService;
+    private final StructureService structureService;
+
+    public InventoryService(StorageService storageService, StructureService structureService) {
+        super();
+        this.storageService = storageService;
+        this.structureService = structureService;
+    }
+
     /**
      * <h3>查询指定物料ID和存储资源ID下的库存</h3>
      *
@@ -38,44 +57,88 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
      */
     @SuppressWarnings("unused")
     public InventoryEntity getByMaterialIdAndStructureId(Long materialId, Long structureId) {
-        return repository.getByMaterialAndStructure(new MaterialEntity().setId(materialId), new StructureEntity().setId(structureId));
+        return repository.getByMaterialAndStructure(
+                new MaterialEntity().setId(materialId), new StructureEntity().setId(structureId)
+        );
     }
 
-    /**
-     * <h3>查询指定存储结构下的库存</h3>
-     *
-     * @param storage 存储结构
-     * @return 库存列表
-     */
-    public List<InventoryEntity> getListByStorage(StorageEntity storage) {
-        List<InventoryEntity> list;
-        if (Objects.isNull(storage)) {
-            return filter(new InventoryEntity().setType(InventoryType.STORAGE.getKey()));
+    @Override
+    protected @NotNull QueryPageRequest<InventoryEntity> beforeGetPage(@NotNull QueryPageRequest<InventoryEntity> sourceRequestData) {
+        return super.beforeGetPage(sourceRequestData);
+    }
+
+    @Override
+    protected InventoryEntity beforeCreatePredicate(@NotNull InventoryEntity filter) {
+        // 需要移除本身的查询条件
+        switch (DictionaryUtil.getDictionary(InventoryType.class, filter.getType())) {
+            case STORAGE -> filter.setStorage(null);
+            case STRUCTURE -> filter.setStructure(null);
         }
-        list = filter(new InventoryEntity().setStorage(storage).setType(InventoryType.STORAGE.getKey()));
-        List<StorageEntity> storageList = TreeServiceDelegate.findByParentId(Services.getStorageService(), storage.getId());
-        storageList.stream()
-                .map(this::getListByStorage)
-                .forEach(list::addAll);
+        return filter;
+    }
+
+    @Override
+    protected @NotNull List<Predicate> addSearchPredicate(
+            @NotNull Root<InventoryEntity> root,
+            @NotNull CriteriaBuilder builder,
+            @NotNull InventoryEntity search
+    ) {
+        List<Predicate> predicateList = new ArrayList<>();
+        if (Objects.isNull(search.getType())) {
+            return predicateList;
+        }
+        switch (DictionaryUtil.getDictionary(InventoryType.class, search.getType())) {
+            case STORAGE -> {
+                if (Objects.isNull(search.getStorage())) {
+                    return predicateList;
+                }
+                Set<Long> idList = getIdList(search.getStorage().getId(), storageService, StorageEntity.class);
+                if (!idList.isEmpty()) {
+                    Join<InventoryEntity, StorageEntity> join = root.join("storage");
+                    Predicate inPredicate = join.get(Constant.ID).in(idList);
+                    predicateList.add(inPredicate);
+                }
+            }
+            case STRUCTURE -> {
+                if (Objects.isNull(search.getStructure())) {
+                    return predicateList;
+                }
+                Set<Long> idList = getIdList(search.getStorage().getId(), structureService, StructureEntity.class);
+                if (!idList.isEmpty()) {
+                    Join<InventoryEntity, StructureEntity> join = root.join("structure");
+                    Predicate inPredicate = join.get(Constant.ID).in(idList);
+                    predicateList.add(inPredicate);
+                }
+            }
+        }
+        return predicateList;
+    }
+
+    private <T extends BaseEntity<T> & ITree<T>> @NotNull Set<Long> getIdList(
+            long parentId,
+            @NotNull BaseService<T, ?> service,
+            @NotNull Class<T> entityClass
+    ) {
+        Set<Long> list = new HashSet<>();
+        getIdList(parentId, service, entityClass, list);
         return list;
     }
 
-    /**
-     * <h3>查询指定工厂结构下的库存</h3>
-     *
-     * @param structure 工厂结构
-     * @return 库存列表
-     */
-    public List<InventoryEntity> getListByStructure(StructureEntity structure) {
-        List<InventoryEntity> list;
-        if (Objects.isNull(structure)) {
-            return filter(new InventoryEntity().setType(InventoryType.STRUCTURE.getKey()));
+    private <T extends BaseEntity<T> & ITree<T>> void getIdList(
+            long parentId,
+            @NotNull BaseService<T, ?> service,
+            @NotNull Class<T> entityClass,
+            @NotNull Set<Long> list
+    ) {
+        T parent = service.get(parentId);
+        list.add(parent.getId());
+        List<T> children;
+        try {
+            children = service.filter(entityClass.getConstructor().newInstance().setParentId(parent.getId()));
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
+            throw new RuntimeException(e);
         }
-        list = filter(new InventoryEntity().setStructure(structure).setType(InventoryType.STRUCTURE.getKey()));
-        List<StructureEntity> structureList = TreeServiceDelegate.findByParentId(Services.getStructureService(), structure.getId());
-        structureList.stream()
-                .map(this::getListByStructure)
-                .forEach(list::addAll);
-        return list;
+        children.forEach(child -> getIdList(child.getId(), service, entityClass, list));
     }
 }

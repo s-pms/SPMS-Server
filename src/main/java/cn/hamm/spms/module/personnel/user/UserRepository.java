@@ -19,14 +19,6 @@ public interface UserRepository extends BaseRepository<UserEntity> {
     UserEntity getByEmail(String email);
 
     /**
-     * <h3>根据账号查询一个用户</h3>
-     *
-     * @param account 账号
-     * @return 用户
-     */
-    UserEntity getByAccount(String account);
-
-    /**
      * <h3>根据手机查询一个用户</h3>
      *
      * @param phone 手机

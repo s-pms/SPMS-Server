@@ -18,9 +18,15 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("app")
 public class AppConfig {
     /**
-     * <h3>登录地址 用于Oauth2</h3>
+     * <h3>登录地址 用于 {@code OAuth2}</h3>
      */
     private String loginUrl;
+
+    /**
+     * <h3>授权地址 用于 {@code OAuth2}</h3>
+     */
+    private String authorizeUrl;
+
     /**
      * <h3>Influx配置</h3>
      */

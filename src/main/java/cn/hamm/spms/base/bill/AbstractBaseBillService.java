@@ -24,7 +24,8 @@ import java.util.List;
  */
 public abstract class AbstractBaseBillService<
         E extends AbstractBaseBillEntity<E, D>, R extends BaseRepository<E>,
-        D extends BaseBillDetailEntity<D>, DS extends BaseBillDetailService<D, DR>, DR extends BaseBillDetailRepository<D>
+        D extends BaseBillDetailEntity<D>, DS extends BaseBillDetailService<D, DR>,
+        DR extends BaseBillDetailRepository<D>
         > extends BaseService<E, R> {
 
     @Autowired(required = false)
@@ -59,6 +60,7 @@ public abstract class AbstractBaseBillService<
     /**
      * <h3>添加完成数量前置方法</h3>
      *
+     * @param detailId     明细ID
      * @param sourceDetail 提交明细
      */
     protected void afterAddDetailFinish(long detailId, D sourceDetail) {

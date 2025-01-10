@@ -4,7 +4,6 @@ import cn.hamm.airpower.helper.AirHelper;
 import cn.hamm.airpower.util.PasswordUtil;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.common.Services;
-import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.asset.device.DeviceService;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
@@ -26,6 +25,8 @@ import cn.hamm.spms.module.iot.report.ReportDataType;
 import cn.hamm.spms.module.iot.report.ReportEvent;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
+import cn.hamm.spms.module.personnel.user.department.DepartmentEntity;
+import cn.hamm.spms.module.personnel.user.department.DepartmentService;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
@@ -36,7 +37,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * <h1>初始化</h1>
@@ -80,6 +83,8 @@ public class InitializeRunner implements CommandLineRunner {
 
     @Autowired
     private StorageService storageService;
+    @Autowired
+    private DepartmentService departmentService;
 
     private void initParameters() {
         ParameterEntity parameter;
@@ -136,12 +141,23 @@ public class InitializeRunner implements CommandLineRunner {
         if (Objects.nonNull(userEntity)) {
             return;
         }
-        String salt = RandomUtil.randomString(AppConstant.PASSWORD_SALT_LENGTH);
+        long departmentId = departmentService.add(new DepartmentEntity().setCode("a1").setName("生产部"));
+        long departmentMaterial = departmentService.add(new DepartmentEntity().setName("材料部").setCode("aaa1").setParentId(departmentId));
+        String salt = RandomUtil.randomString(UserService.PASSWORD_SALT_LENGTH);
+        Set<DepartmentEntity> departmentList = new HashSet<>();
+        departmentList.add(new DepartmentEntity().setId(departmentMaterial));
         userService.add(new UserEntity()
                 .setNickname("Hamm")
-                .setAccount("hamm")
                 .setPhone("17666666666")
                 .setEmail("admin@hamm.cn")
+                .setPassword(PasswordUtil.encode("Aa123456", salt))
+                .setSalt(salt)
+                .setDepartmentList(departmentList)
+        );
+        userService.add(new UserEntity()
+                .setNickname("Ghost")
+                .setPhone("13888888888")
+                .setEmail("hamm@hamm.cn")
                 .setPassword(PasswordUtil.encode("Aa123456", salt))
                 .setSalt(salt));
     }
