@@ -4,13 +4,17 @@ import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Filter;
 import cn.hamm.airpower.annotation.Permission;
+import cn.hamm.airpower.config.Constant;
+import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.helper.CookieHelper;
 import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.util.AccessTokenUtil;
-import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseController;
+import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginEntity;
+import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginService;
+import cn.hamm.spms.module.personnel.user.enums.UserLoginType;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +36,10 @@ import java.util.List;
 public class UserController extends BaseController<UserEntity, UserService, UserRepository> implements IUserAction {
     @Autowired
     private CookieHelper cookieHelper;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserThirdLoginService userThirdLoginService;
 
     @Description("获取我的信息")
     @Permission(authorize = false)
@@ -46,17 +54,9 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @PostMapping("updateMyInfo")
     public Json updateMyInfo(@RequestBody @Validated(WhenUpdateMyInfo.class) UserEntity user) {
         user.setId(getCurrentUserId());
-        user.setRoleList(null);
+        user.setRoleList(null).setPhone(null).setEmail(null).setRealName(null).setIdCard(null);
         service.update(user);
         return Json.success("资料修改成功");
-    }
-
-    @Description("发送邮件")
-    @Permission(login = false)
-    @PostMapping("sendMail")
-    public Json sendMail(@RequestBody @Validated(WhenSendEmail.class) UserEntity user) throws MessagingException {
-        service.sendMail(user.getEmail());
-        return Json.success("发送成功");
     }
 
     @Description("获取我的菜单")
@@ -76,13 +76,30 @@ public class UserController extends BaseController<UserEntity, UserService, User
         return Json.data(permissions);
     }
 
+    @Description("获取我绑定的社交账号")
+    @Permission(authorize = false)
+    @PostMapping("getMyThirdList")
+    public Json getMyThirdList() {
+        UserEntity user = service.get(getCurrentUserId());
+        List<UserThirdLoginEntity> list = userThirdLoginService.filter(new UserThirdLoginEntity().setUser(user));
+        return Json.data(list.stream().map(item -> item.setUser(null)));
+    }
+
     @Description("修改我的密码")
     @Permission(authorize = false)
     @PostMapping("updateMyPassword")
     public Json updateMyPassword(@RequestBody @Validated(WhenUpdateMyPassword.class) UserEntity user) {
         user.setId(getCurrentUserId());
-        service.modifyUserPassword(user);
+        service.modifyMyPassword(user);
         return Json.success("密码修改成功");
+    }
+
+    @Description("找回密码")
+    @Permission(login = false)
+    @PostMapping("resetMyPassword")
+    public Json resetMyPassword(@RequestBody @Validated(WhenResetMyPassword.class) UserEntity user) {
+        service.resetMyPassword(user);
+        return Json.success("密码重置成功");
     }
 
     @Description("账号密码登录")
@@ -92,6 +109,20 @@ public class UserController extends BaseController<UserEntity, UserService, User
         return doLogin(UserLoginType.VIA_ACCOUNT_PASSWORD, user, httpServletResponse);
     }
 
+
+    @Description("退出登录")
+    @Permission(login = false)
+    @PostMapping("logout")
+    public Json logout(HttpServletResponse httpServletResponse) {
+        Cookie cookie = cookieHelper.getAuthorizeCookie("");
+        cookie.setHttpOnly(false);
+        cookie.setPath(Constant.SLASH);
+        // 清除cookie
+        cookie.setMaxAge(0);
+        httpServletResponse.addCookie(cookie);
+        return Json.success("退出登录成功");
+    }
+
     @Description("邮箱验证码登录")
     @Permission(login = false)
     @PostMapping("loginViaEmail")
@@ -99,36 +130,37 @@ public class UserController extends BaseController<UserEntity, UserService, User
         return doLogin(UserLoginType.VIA_EMAIL_CODE, user, httpServletResponse);
     }
 
-    @Description("手机验证码登录")
+    @Description("发送邮件")
     @Permission(login = false)
-    @PostMapping("loginViaPhone")
-    public Json loginViaPhone(@RequestBody @Validated(WhenLoginViaPhone.class) UserEntity user, HttpServletResponse httpServletResponse) {
-        return doLogin(UserLoginType.VIA_PHONE_CODE, user, httpServletResponse);
+    @PostMapping("sendEmail")
+    public Json sendEmail(@RequestBody @Validated(WhenSendEmail.class) UserEntity user) throws MessagingException {
+        service.sendMail(user.getEmail());
+        return Json.success("发送成功");
+    }
+
+    @Description("发送短信")
+    @Permission(login = false)
+    @PostMapping("sendSms")
+    public Json sendSms(@RequestBody @Validated(WhenSendSms.class) UserEntity user) {
+        service.sendSms(user.getPhone());
+        return Json.success("发送成功");
     }
 
     /**
      * <h1>处理用户登录</h1>
      *
      * @param userLoginType 登录方式
-     * @param user          登录数据
+     * @param login         登录数据
      * @param response      响应的请求
      * @return JsonData
      */
-    private Json doLogin(@NotNull UserLoginType userLoginType, UserEntity user, HttpServletResponse response) {
-        String accessToken = switch (userLoginType) {
-            case VIA_ACCOUNT_PASSWORD -> service.login(user);
-            case VIA_EMAIL_CODE -> service.loginViaEmail(user);
-            case VIA_PHONE_CODE -> service.loginViaPhone(user);
+    private Json doLogin(@NotNull UserLoginType userLoginType, UserEntity login, HttpServletResponse response) {
+        UserEntity user = switch (userLoginType) {
+            case VIA_ACCOUNT_PASSWORD -> service.login(login);
+            case VIA_EMAIL_CODE -> service.loginViaEmail(login);
         };
+        ServiceError.FORBIDDEN_DISABLED.when(user.getIsDisabled(), "登录失败，你的账号已被禁用");
 
-        // 开始处理Oauth2登录逻辑
-        Long userId = AccessTokenUtil.create().getPayloadId(accessToken, serviceConfig.getAccessTokenSecret());
-
-        // 存储Cookies
-        String cookieString = RandomUtil.randomString();
-        service.saveCookie(userId, cookieString);
-        response.addCookie(cookieHelper.getAuthorizeCookie(cookieString));
-
-        return Json.data(accessToken, "登录成功,请存储你的访问凭证");
+        return Json.data(userService.loginWithCookieAndResponse(response, user), "登录成功");
     }
 }
