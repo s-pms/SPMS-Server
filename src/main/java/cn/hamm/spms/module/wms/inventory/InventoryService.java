@@ -73,6 +73,8 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
         switch (DictionaryUtil.getDictionary(InventoryType.class, filter.getType())) {
             case STORAGE -> filter.setStorage(null);
             case STRUCTURE -> filter.setStructure(null);
+            default -> {
+            }
         }
         return filter;
     }
@@ -109,6 +111,8 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
                     Predicate inPredicate = join.get(Constant.ID).in(idList);
                     predicateList.add(inPredicate);
                 }
+            }
+            default -> {
             }
         }
         return predicateList;
