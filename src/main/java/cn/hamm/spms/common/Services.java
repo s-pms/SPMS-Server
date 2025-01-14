@@ -12,6 +12,7 @@ import cn.hamm.spms.module.channel.supplier.SupplierService;
 import cn.hamm.spms.module.factory.storage.StorageService;
 import cn.hamm.spms.module.factory.structure.StructureService;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
+import cn.hamm.spms.module.mes.order.OrderService;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailService;
 import cn.hamm.spms.module.open.app.OpenAppService;
 import cn.hamm.spms.module.open.notify.NotifyService;
@@ -115,6 +116,9 @@ public class Services {
     @Getter
     private static OrderDetailService orderDetailService;
 
+    @Getter
+    private static OrderService orderService;
+
     @Autowired
     private void initService(
             CodeRuleService codeRuleService,
@@ -142,7 +146,8 @@ public class Services {
             NotifyService notifyService,
             DepartmentService departmentService,
             ConfigService configService,
-            OrderDetailService orderDetailService
+            OrderDetailService orderDetailService,
+            OrderService orderService
     ) {
         Services.codeRuleService = codeRuleService;
         Services.purchaseService = purchaseService;
@@ -170,5 +175,6 @@ public class Services {
         Services.departmentService = departmentService;
         Services.configService = configService;
         Services.orderDetailService = orderDetailService;
+        Services.orderService = orderService;
     }
 }

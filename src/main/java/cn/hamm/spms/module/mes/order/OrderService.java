@@ -67,8 +67,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
 
         config = Services.getConfigService().get(ConfigFlag.ORDER_AUTO_FINISH);
         if (config.booleanConfig() && order.getFinishQuantity() >= order.getQuantity()) {
-            order.setStatus(OrderStatus.INPUTTING.getKey());
-            update(order);
+            finish(order.getId());
         }
     }
 

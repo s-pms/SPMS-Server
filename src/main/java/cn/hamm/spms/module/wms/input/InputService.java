@@ -2,11 +2,15 @@ package cn.hamm.spms.module.wms.input;
 
 import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.purchase.PurchaseEntity;
 import cn.hamm.spms.module.channel.purchase.PurchaseService;
 import cn.hamm.spms.module.channel.purchase.PurchaseStatus;
+import cn.hamm.spms.module.mes.order.OrderEntity;
+import cn.hamm.spms.module.mes.order.OrderService;
+import cn.hamm.spms.module.mes.order.OrderStatus;
 import cn.hamm.spms.module.system.config.ConfigEntity;
 import cn.hamm.spms.module.system.config.ConfigFlag;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
@@ -47,10 +51,20 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
         InputEntity bill = get(id);
         bill.setStatus(InputStatus.DONE.getKey());
         update(bill);
-        if (InputType.PURCHASE.equalsKey(bill.getType())) {
-            PurchaseService purchaseService = Services.getPurchaseService();
-            PurchaseEntity purchaseBill = purchaseService.get(bill.getPurchase().getId());
-            purchaseService.update(purchaseBill.setStatus(PurchaseStatus.FINISHED.getKey()));
+        InputType inputType = DictionaryUtil.getDictionary(InputType.class, bill.getType());
+        switch (inputType) {
+            case PURCHASE -> {
+                PurchaseService purchaseService = Services.getPurchaseService();
+                PurchaseEntity purchaseBill = purchaseService.get(bill.getPurchase().getId());
+                purchaseService.update(purchaseBill.setStatus(PurchaseStatus.FINISHED.getKey()));
+            }
+            case PRODUCTION -> {
+                OrderService orderService = Services.getOrderService();
+                OrderEntity orderBill = orderService.get(bill.getOrder().getId());
+                orderService.update(orderBill.setStatus(OrderStatus.DONE.getKey()));
+            }
+            default -> {
+            }
         }
     }
 
