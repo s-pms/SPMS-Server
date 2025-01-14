@@ -11,7 +11,6 @@ import cn.hamm.spms.module.channel.purchase.PurchaseStatus;
 import cn.hamm.spms.module.mes.order.OrderEntity;
 import cn.hamm.spms.module.mes.order.OrderService;
 import cn.hamm.spms.module.mes.order.OrderStatus;
-import cn.hamm.spms.module.system.config.ConfigEntity;
 import cn.hamm.spms.module.system.config.ConfigFlag;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.input.detail.InputDetailRepository;
@@ -47,20 +46,23 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
     }
 
     @Override
-    public void afterAllDetailsFinished(Long id) {
-        InputEntity bill = get(id);
-        bill.setStatus(InputStatus.DONE.getKey());
-        update(bill);
-        InputType inputType = DictionaryUtil.getDictionary(InputType.class, bill.getType());
+    public IDictionary getFinishedStatus() {
+        return InputStatus.DONE;
+    }
+
+    @Override
+    public void afterBillFinished(Long billId) {
+        InputEntity inputBill = get(billId);
+        InputType inputType = DictionaryUtil.getDictionary(InputType.class, inputBill.getType());
         switch (inputType) {
             case PURCHASE -> {
                 PurchaseService purchaseService = Services.getPurchaseService();
-                PurchaseEntity purchaseBill = purchaseService.get(bill.getPurchase().getId());
-                purchaseService.update(purchaseBill.setStatus(PurchaseStatus.FINISHED.getKey()));
+                PurchaseEntity purchaseBill = purchaseService.get(inputBill.getPurchase().getId());
+                purchaseService.update(purchaseBill.setStatus(PurchaseStatus.DONE.getKey()));
             }
             case PRODUCTION -> {
                 OrderService orderService = Services.getOrderService();
-                OrderEntity orderBill = orderService.get(bill.getOrder().getId());
+                OrderEntity orderBill = orderService.get(inputBill.getOrder().getId());
                 orderService.update(orderBill.setStatus(OrderStatus.DONE.getKey()));
             }
             default -> {
@@ -69,7 +71,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
     }
 
     @Override
-    protected void afterAddDetailFinish(long detailId, @NotNull InputDetailEntity sourceDetail) {
+    protected void afterDetailFinishAdded(long detailId, @NotNull InputDetailEntity sourceDetail) {
         if (Objects.isNull(sourceDetail.getStorage()) || Objects.isNull(sourceDetail.getStorage().getId())) {
             ServiceError.FORBIDDEN.show("请传入入库存储资源");
             return;
@@ -91,10 +93,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
     }
 
     @Override
-    protected void afterBillAdd(long id) {
-        ConfigEntity config = Services.getConfigService().get(ConfigFlag.INPUT_ORDER_AUTO_AUDIT);
-        if (config.booleanConfig()) {
-            audit(id);
-        }
+    protected ConfigFlag getAutoAuditConfigFlag() {
+        return ConfigFlag.INPUT_ORDER_AUTO_AUDIT;
     }
 }

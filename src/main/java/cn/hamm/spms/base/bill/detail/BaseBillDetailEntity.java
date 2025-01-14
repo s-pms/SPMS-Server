@@ -23,20 +23,20 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
     @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '单据ID'")
     private Long billId;
 
-    @Description("明细状态")
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '明细状态'")
-    @ReadOnly
+    @Description("是否已完成")
     @Search(Search.Mode.EQUALS)
-    private Integer status;
+    @ReadOnly
+    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否已完成'")
+    private Boolean isFinished;
 
     /**
-     * <h3>设置状态</h3>
+     * <h3>设置是否已完成</h3>
      *
-     * @param status 状态
-     * @return 明细实体
+     * @param isFinished 是否已完成
+     * @return 单据明细
      */
-    public E setStatus(Integer status) {
-        this.status = status;
+    public E setIsFinished(Boolean isFinished) {
+        this.isFinished = isFinished;
         return (E) this;
     }
 

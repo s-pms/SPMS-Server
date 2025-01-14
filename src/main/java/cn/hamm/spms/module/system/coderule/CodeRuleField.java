@@ -107,8 +107,12 @@ public enum CodeRuleField implements IDictionary {
      * <h3>部门编码</h3>
      */
     DEPARTMENT_CODE(19, "部门编码", "DP", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
-    ;
 
+    /**
+     * <h3>BOM编码</h3>
+     */
+    BOM_CODE(20, "配方编码", "BOM", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING);
+    
     private final int key;
     private final String label;
 

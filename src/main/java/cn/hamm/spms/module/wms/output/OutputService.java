@@ -7,7 +7,6 @@ import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.sale.SaleEntity;
 import cn.hamm.spms.module.channel.sale.SaleService;
 import cn.hamm.spms.module.channel.sale.SaleStatus;
-import cn.hamm.spms.module.system.config.ConfigEntity;
 import cn.hamm.spms.module.system.config.ConfigFlag;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryService;
@@ -42,19 +41,22 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
     }
 
     @Override
-    public void afterAllDetailsFinished(Long id) {
-        OutputEntity bill = get(id);
-        bill.setStatus(OutputStatus.DONE.getKey());
-        update(bill);
-        if (OutputType.SALE.equalsKey(bill.getType())) {
+    public IDictionary getFinishedStatus() {
+        return OutputStatus.DONE;
+    }
+
+    @Override
+    public void afterBillFinished(Long billId) {
+        OutputEntity outputBill = get(billId);
+        if (OutputType.SALE.equalsKey(outputBill.getType())) {
             SaleService saleService = Services.getSaleService();
-            SaleEntity saleBill = saleService.get(bill.getSale().getId());
+            SaleEntity saleBill = saleService.get(outputBill.getSale().getId());
             saleService.update(saleBill.setStatus(SaleStatus.DONE.getKey()));
         }
     }
 
     @Override
-    protected void afterAddDetailFinish(long detailId, @NotNull OutputDetailEntity sourceDetail) {
+    protected void afterDetailFinishAdded(long detailId, @NotNull OutputDetailEntity sourceDetail) {
         InventoryEntity inventory = sourceDetail.getInventory();
         if (Objects.isNull(inventory)) {
             ServiceError.FORBIDDEN.show("请传入库存信息");
@@ -73,10 +75,7 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
     }
 
     @Override
-    protected void afterBillAdd(long id) {
-        ConfigEntity config = Services.getConfigService().get(ConfigFlag.OUTPUT_ORDER_AUTO_AUDIT);
-        if (config.booleanConfig()) {
-            audit(id);
-        }
+    protected ConfigFlag getAutoAuditConfigFlag() {
+        return ConfigFlag.OUTPUT_ORDER_AUTO_AUDIT;
     }
 }
