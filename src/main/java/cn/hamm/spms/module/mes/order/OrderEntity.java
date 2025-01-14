@@ -2,6 +2,7 @@ package cn.hamm.spms.module.mes.order;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
+import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
@@ -35,16 +36,19 @@ public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetail
     @Description("订单号")
     @Column(columnDefinition = "varchar(255) default '' comment '订单号'", unique = true)
     @AutoGenerateCode(CodeRuleField.OrderBillCode)
+    @Search(Search.Mode.LIKE)
     private String billCode;
 
     @Description("订单状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '订单状态'")
     @Dictionary(value = OrderStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
+    @Search(Search.Mode.EQUALS)
     private Integer status;
 
     @Description("订单类型")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '订单类型'")
     @Dictionary(value = OrderType.class, groups = {WhenAdd.class, WhenUpdate.class})
+    @Search(Search.Mode.EQUALS)
     private Integer type;
 
     @Description("开始时间")
