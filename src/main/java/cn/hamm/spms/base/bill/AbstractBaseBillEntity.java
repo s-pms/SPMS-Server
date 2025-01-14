@@ -82,5 +82,4 @@ public abstract class AbstractBaseBillEntity<
      * @return 单据实体
      */
     public abstract E setStatus(Integer status);
-
 }

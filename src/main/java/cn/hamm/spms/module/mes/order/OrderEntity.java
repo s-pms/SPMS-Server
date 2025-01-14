@@ -78,6 +78,10 @@ public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetail
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已完成数量'")
     private Double finishQuantity;
 
+    @Description("异常数量")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '异常数量'")
+    private Double ngQuantity;
+
     @Description("计划信息")
     @ManyToOne(fetch = FetchType.EAGER)
     private PlanEntity plan;

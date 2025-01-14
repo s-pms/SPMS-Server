@@ -38,7 +38,7 @@ public abstract class AbstractBaseBillService<
      *
      * @param sourceDetail 提交明细
      */
-    public final void addFinish(@NotNull D sourceDetail) {
+    public void addFinish(@NotNull D sourceDetail) {
         // 查保存的明细
         D savedDetail = detailService.get(sourceDetail.getId());
         // 更新保存明细的完成数量 = 保存明细的完成数量 + 提交的完成数量
