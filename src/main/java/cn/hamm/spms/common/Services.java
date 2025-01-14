@@ -17,6 +17,7 @@ import cn.hamm.spms.module.open.notify.NotifyService;
 import cn.hamm.spms.module.personnel.user.UserService;
 import cn.hamm.spms.module.personnel.user.department.DepartmentService;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
+import cn.hamm.spms.module.system.config.ConfigService;
 import cn.hamm.spms.module.system.log.LogService;
 import cn.hamm.spms.module.system.menu.MenuService;
 import cn.hamm.spms.module.system.permission.PermissionService;
@@ -107,6 +108,9 @@ public class Services {
     @Getter
     private static DepartmentService departmentService;
 
+    @Getter
+    private static ConfigService configService;
+
     @Autowired
     private void initService(
             CodeRuleService codeRuleService,
@@ -132,7 +136,8 @@ public class Services {
             AppConfig appConfig,
             OpenAppService openAppService,
             NotifyService notifyService,
-            DepartmentService departmentService
+            DepartmentService departmentService,
+            ConfigService configService
     ) {
         Services.codeRuleService = codeRuleService;
         Services.purchaseService = purchaseService;
@@ -158,5 +163,6 @@ public class Services {
         Services.openAppService = openAppService;
         Services.notifyService = notifyService;
         Services.departmentService = departmentService;
+        Services.configService = configService;
     }
 }

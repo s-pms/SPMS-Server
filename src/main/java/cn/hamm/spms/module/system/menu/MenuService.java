@@ -172,7 +172,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         add(secondMenu);
         secondMenu = new MenuEntity().setName("菜单管理").setPath("/console/system/menu/list").setParentId(firstMenu.getId());
         add(secondMenu);
-//        secondMenu = new MenuEntity().setName("请求日志").setPath("/console/system/log/list").setParentId(firstMenu.getId());
-//        add(secondMenu);
+        secondMenu = new MenuEntity().setName("系统配置").setPath("/console/system/config/list").setParentId(firstMenu.getId());
+        add(secondMenu);
     }
 }

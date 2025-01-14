@@ -7,6 +7,8 @@ import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.purchase.PurchaseEntity;
 import cn.hamm.spms.module.channel.purchase.PurchaseService;
 import cn.hamm.spms.module.channel.purchase.PurchaseStatus;
+import cn.hamm.spms.module.system.config.ConfigEntity;
+import cn.hamm.spms.module.system.config.ConfigFlag;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.input.detail.InputDetailRepository;
 import cn.hamm.spms.module.wms.input.detail.InputDetailService;
@@ -72,6 +74,13 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
                     .setType(InventoryType.STORAGE.getKey());
             inventoryService.add(inventory);
         }
+    }
 
+    @Override
+    protected void afterBillAdd(long id) {
+        ConfigEntity config = Services.getConfigService().get(ConfigFlag.INPUT_ORDER_AUTO_AUDIT);
+        if (config.booleanConfig()) {
+            audit(id);
+        }
     }
 }

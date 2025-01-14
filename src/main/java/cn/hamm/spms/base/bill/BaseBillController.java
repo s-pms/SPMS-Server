@@ -40,10 +40,8 @@ public class BaseBillController<
     @PostMapping("audit")
     @Filter(WhenGetDetail.class)
     public Json audit(@RequestBody @Validated(WhenIdRequired.class) E bill) {
+        service.audit(bill.getId());
         E savedBill = service.get(bill.getId());
-        ServiceError.FORBIDDEN.when(!service.canAudit(savedBill), "该单据状态无法审核");
-        service.setAudited(savedBill);
-        service.update(savedBill);
         afterAudit(savedBill);
         return Json.success("审核成功");
     }

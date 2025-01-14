@@ -2,9 +2,12 @@ package cn.hamm.spms.module.channel.sale;
 
 import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
+import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailEntity;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailRepository;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailService;
+import cn.hamm.spms.module.system.config.ConfigEntity;
+import cn.hamm.spms.module.system.config.ConfigFlag;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +43,13 @@ public class SaleService extends AbstractBaseBillService<SaleEntity, SaleReposit
                 .sum();
         sale.setTotalPrice(totalPrice);
         updateToDatabase(sale);
+    }
+
+    @Override
+    protected void afterBillAdd(long id) {
+        ConfigEntity config = Services.getConfigService().get(ConfigFlag.SALE_ORDER_AUTO_AUDIT);
+        if (config.booleanConfig()) {
+            audit(id);
+        }
     }
 }

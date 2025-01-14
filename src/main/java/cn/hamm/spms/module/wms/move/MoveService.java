@@ -4,6 +4,8 @@ import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
+import cn.hamm.spms.module.system.config.ConfigEntity;
+import cn.hamm.spms.module.system.config.ConfigFlag;
 import cn.hamm.spms.module.wms.input.InputEntity;
 import cn.hamm.spms.module.wms.input.InputStatus;
 import cn.hamm.spms.module.wms.input.InputType;
@@ -113,5 +115,13 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
         Services.getInputService().add(inputBill);
         outputBill.setDetails(outputDetails);
         Services.getOutputService().add(outputBill);
+    }
+
+    @Override
+    protected void afterBillAdd(long id) {
+        ConfigEntity config = Services.getConfigService().get(ConfigFlag.MOVE_ORDER_AUTO_AUDIT);
+        if (config.booleanConfig()) {
+            audit(id);
+        }
     }
 }

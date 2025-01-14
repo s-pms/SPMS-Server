@@ -1,7 +1,9 @@
 package cn.hamm.spms.base.bill;
 
+import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.airpower.root.RootEntity;
+import cn.hamm.airpower.util.TaskUtil;
 import cn.hamm.spms.base.BaseRepository;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
@@ -89,8 +91,13 @@ public abstract class AbstractBaseBillService<
     }
 
     @Override
-    protected void afterAdd(long id, @NotNull E source) {
+    protected final void afterAdd(long id, @NotNull E source) {
         saveDetails(id, source.getDetails());
+        TaskUtil.run(() -> afterBillAdd(id));
+    }
+
+    protected void afterBillAdd(long id) {
+
     }
 
     @Override
@@ -115,6 +122,13 @@ public abstract class AbstractBaseBillService<
         details = detailService.saveDetails(bill.getId(), details);
         bill.setDetails(details);
         afterDetailSaved(bill);
+    }
+
+    protected void audit(long billId) {
+        E bill = get(billId);
+        ServiceError.FORBIDDEN.when(!canAudit(bill), "该单据状态无法审核");
+        setAudited(bill);
+        update(bill);
     }
 
     /**

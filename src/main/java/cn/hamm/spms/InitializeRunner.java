@@ -30,8 +30,12 @@ import cn.hamm.spms.module.personnel.user.department.DepartmentService;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
+import cn.hamm.spms.module.system.config.ConfigEntity;
+import cn.hamm.spms.module.system.config.ConfigFlag;
+import cn.hamm.spms.module.system.config.ConfigService;
 import cn.hamm.spms.module.system.unit.UnitEntity;
 import cn.hamm.spms.module.system.unit.UnitService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -47,6 +51,7 @@ import java.util.Set;
  * @author Hamm.cn
  */
 @Component
+@Slf4j
 public class InitializeRunner implements CommandLineRunner {
 
     public static final int FOUR = 4;
@@ -85,6 +90,8 @@ public class InitializeRunner implements CommandLineRunner {
     private StorageService storageService;
     @Autowired
     private DepartmentService departmentService;
+    @Autowired
+    private ConfigService configService;
 
     private void initParameters() {
         ParameterEntity parameter;
@@ -169,10 +176,31 @@ public class InitializeRunner implements CommandLineRunner {
         if (Arrays.stream(localEnvList).toList().contains(AirHelper.getCurrentEnvironment())) {
             initRootUser();
             initCodeRules();
+            initConfigs();
             initParameters();
             Services.getPermissionService().loadPermission();
             Services.getMenuService().initMenu();
             initDevData();
+        }
+    }
+
+    private void initConfigs() {
+        ConfigFlag[] configFlags = ConfigFlag.class.getEnumConstants();
+        for (ConfigFlag configFlag : configFlags) {
+            try {
+                ConfigEntity config = configService.get(configFlag);
+                if (Objects.nonNull(config)) {
+                    continue;
+                }
+            } catch (RuntimeException exception) {
+                log.info("需要初始化配置");
+            }
+            configService.add(new ConfigEntity()
+                    .setConfig(configFlag.getDefaultValue())
+                    .setType(configFlag.getType().getKey())
+                    .setName(configFlag.getLabel())
+                    .setFlag(configFlag.name())
+            );
         }
     }
 

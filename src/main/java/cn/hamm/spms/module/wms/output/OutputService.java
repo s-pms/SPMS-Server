@@ -7,6 +7,8 @@ import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.sale.SaleEntity;
 import cn.hamm.spms.module.channel.sale.SaleService;
 import cn.hamm.spms.module.channel.sale.SaleStatus;
+import cn.hamm.spms.module.system.config.ConfigEntity;
+import cn.hamm.spms.module.system.config.ConfigFlag;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryService;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
@@ -68,5 +70,13 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
         }
         inventory.setQuantity(inventory.getQuantity() - sourceDetail.getQuantity());
         inventoryService.update(inventory);
+    }
+
+    @Override
+    protected void afterBillAdd(long id) {
+        ConfigEntity config = Services.getConfigService().get(ConfigFlag.OUTPUT_ORDER_AUTO_AUDIT);
+        if (config.booleanConfig()) {
+            audit(id);
+        }
     }
 }
