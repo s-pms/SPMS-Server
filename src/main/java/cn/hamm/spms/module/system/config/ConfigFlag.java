@@ -20,6 +20,7 @@ public enum ConfigFlag implements IDictionary {
     MOVE_ORDER_AUTO_AUDIT(5, "移库单开启自动审核", ConfigType.BOOLEAN, "0"),
     PURCHASE_ORDER_AUTO_AUDIT(6, "采购单开启自动审核", ConfigType.BOOLEAN, "0"),
     SALE_ORDER_AUTO_AUDIT(7, "销售单开启自动审核", ConfigType.BOOLEAN, "0"),
+    ORDER_ENABLE_SUBMIT_WORK(8, "订单报工开启", ConfigType.BOOLEAN, "0"),
     ;
 
     private final int key;
