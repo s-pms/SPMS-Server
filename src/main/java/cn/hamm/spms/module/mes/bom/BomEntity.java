@@ -9,10 +9,7 @@ import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.mes.bom.detail.BomDetailEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -21,8 +18,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 /**
  * <h1>BOM实体</h1>
@@ -64,7 +60,7 @@ public class BomEntity extends BaseEntity<BomEntity> {
     private Integer type;
 
     @Description("配方明细")
-    @Transient
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "配方明细不能为空")
-    private List<BomDetailEntity> details = new ArrayList<>();
+    private Set<BomDetailEntity> details;
 }
