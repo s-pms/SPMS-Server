@@ -19,6 +19,11 @@ public class RoutingService extends BaseService<RoutingEntity, RoutingRepository
     @Override
     protected void afterUpdate(long id, @NotNull RoutingEntity source) {
         Services.getRoutingOperationService().deleteByRoutingId(id);
+        afterAdd(id, source);
+    }
+
+    @Override
+    protected void afterAdd(long id, @NotNull RoutingEntity source) {
         List<RoutingOperationEntity> routingOperationList = source.getDetails();
         for (RoutingOperationEntity routingOperation : routingOperationList) {
             routingOperation.setRoutingId(id);
