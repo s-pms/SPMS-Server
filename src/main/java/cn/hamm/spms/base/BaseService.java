@@ -1,6 +1,5 @@
 package cn.hamm.spms.base;
 
-
 import cn.hamm.airpower.root.RootService;
 import cn.hamm.airpower.util.ReflectUtil;
 import cn.hamm.spms.common.Services;

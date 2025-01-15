@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.mes.craft;
+package cn.hamm.spms.module.mes.routing;
 
 import cn.hamm.spms.base.BaseService;
 import org.springframework.stereotype.Service;
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Service;
  * @author zfy
  */
 @Service
-public class CraftRouterService extends BaseService<CraftRouterEntity, CraftRouterRepository> {
+public class RoutingService extends BaseService<RoutingEntity, RoutingRepository> {
 }

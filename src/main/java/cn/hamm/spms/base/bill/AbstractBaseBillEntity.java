@@ -55,7 +55,6 @@ public abstract class AbstractBaseBillEntity<
         return (E) this;
     }
 
-
     /**
      * <h3>设置单据明细</h3>
      *

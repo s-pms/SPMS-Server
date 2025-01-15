@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.mes.bom.detail;
 
-import cn.hamm.spms.base.bill.detail.BaseBillDetailService;
+import cn.hamm.spms.base.BaseService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Service;
  * @author Hamm.cn
  */
 @Service
-public class BomDetailService extends BaseBillDetailService<BomDetailEntity, BomDetailRepository> {
+public class BomDetailService extends BaseService<BomDetailEntity, BomDetailRepository> {
 }

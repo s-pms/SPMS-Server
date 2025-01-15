@@ -5,19 +5,24 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
-import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
+import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.mes.bom.detail.BomDetailEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <h1>BOM实体</h1>
@@ -32,12 +37,12 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "bom")
 @Description("BOM")
-public class BomEntity extends AbstractBaseBillEntity<BomEntity, BomDetailEntity> {
+public class BomEntity extends BaseEntity<BomEntity> {
     @Description("配方编码")
     @Column(columnDefinition = "varchar(255) default '' comment '配方编码'", unique = true)
-    @AutoGenerateCode(CodeRuleField.BOM_CODE)
+    @AutoGenerateCode(CodeRuleField.BomCode)
     @Search(Search.Mode.LIKE)
-    private String billCode;
+    private String code;
 
     @Description("配方名称")
     @Search
@@ -57,4 +62,9 @@ public class BomEntity extends AbstractBaseBillEntity<BomEntity, BomDetailEntity
     @Dictionary(value = BomType.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Search(Search.Mode.EQUALS)
     private Integer type;
+
+    @Description("配方明细")
+    @Transient
+    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "配方明细不能为空")
+    private List<BomDetailEntity> details = new ArrayList<>();
 }

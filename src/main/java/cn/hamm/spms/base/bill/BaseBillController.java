@@ -76,7 +76,7 @@ public class BaseBillController<
     }
 
     @Override
-    protected final @NotNull E beforeUpdate(@NotNull E bill) {
+    protected final @NotNull E beforeAppUpdate(@NotNull E bill) {
         E savedBill = service.get(bill.getId());
         ServiceError.FORBIDDEN.when(!service.canEdit(savedBill), "该单据状态下无法编辑");
         service.setAuditing(savedBill.setStatus(null));

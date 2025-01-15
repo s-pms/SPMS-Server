@@ -76,7 +76,7 @@ public enum CodeRuleField implements IDictionary {
     /**
      * <h3>退料单号</h3>
      */
-    RestoreBillCode(13, "退料单号", "RT", SerialNumberUpdate.DAY, "yyyymmdd"),
+    RestoreBillCode(13, "退料单号", "RET", SerialNumberUpdate.DAY, "yyyymmdd"),
 
     /**
      * <h3>入库单号</h3>
@@ -106,13 +106,20 @@ public enum CodeRuleField implements IDictionary {
     /**
      * <h3>部门编码</h3>
      */
-    DEPARTMENT_CODE(19, "部门编码", "DP", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
+    DepartmentCode(19, "部门编码", "DP", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
 
     /**
      * <h3>BOM编码</h3>
      */
-    BOM_CODE(20, "配方编码", "BOM", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING);
-    
+    BomCode(20, "配方编码", "BOM", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
+
+    /**
+     * <h3>工艺编码</h3>
+     */
+    RoutingCode(21, "工艺编码", "RT", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
+
+    ;
+
     private final int key;
     private final String label;
 
