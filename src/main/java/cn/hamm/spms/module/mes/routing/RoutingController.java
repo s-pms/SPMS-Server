@@ -14,5 +14,4 @@ import org.springframework.web.bind.annotation.RestController;
 @Description("生产工艺")
 @ApiController("routing")
 public class RoutingController extends BaseController<RoutingEntity, RoutingService, RoutingRepository> {
-
 }

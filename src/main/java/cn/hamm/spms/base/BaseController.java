@@ -44,7 +44,8 @@ public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>
 
     @Override
     protected final E beforeUpdate(@NotNull E entity) {
-        ServiceError.FORBIDDEN_EDIT.when(entity.getIsPublished(), "无法修改已经发布的数据");
+        E exist = service.get(entity.getId());
+        ServiceError.FORBIDDEN_EDIT.when(exist.getIsPublished(), "无法修改已经发布的数据");
         entity = beforeAppUpdate(entity);
         return entity;
     }

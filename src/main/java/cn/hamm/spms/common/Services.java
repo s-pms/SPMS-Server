@@ -16,6 +16,7 @@ import cn.hamm.spms.module.mes.order.OrderService;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailService;
 import cn.hamm.spms.module.mes.plan.PlanService;
 import cn.hamm.spms.module.mes.plan.detail.PlanDetailService;
+import cn.hamm.spms.module.mes.routing.operation.RoutingOperationService;
 import cn.hamm.spms.module.open.app.OpenAppService;
 import cn.hamm.spms.module.open.notify.NotifyService;
 import cn.hamm.spms.module.personnel.user.UserService;
@@ -127,6 +128,9 @@ public class Services {
     @Getter
     private static PlanDetailService planDetailService;
 
+    @Getter
+    private static RoutingOperationService routingOperationService;
+
     @Autowired
     private void initService(
             CodeRuleService codeRuleService,
@@ -157,7 +161,8 @@ public class Services {
             OrderDetailService orderDetailService,
             OrderService orderService,
             PlanService planService,
-            PlanDetailService planDetailService
+            PlanDetailService planDetailService,
+            RoutingOperationService routingOperationService
     ) {
         Services.codeRuleService = codeRuleService;
         Services.purchaseService = purchaseService;
@@ -188,5 +193,6 @@ public class Services {
         Services.orderService = orderService;
         Services.planService = planService;
         Services.planDetailService = planDetailService;
+        Services.routingOperationService = routingOperationService;
     }
 }

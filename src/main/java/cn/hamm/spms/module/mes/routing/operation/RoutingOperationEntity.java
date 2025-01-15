@@ -6,7 +6,6 @@ import cn.hamm.airpower.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.mes.bom.BomEntity;
 import cn.hamm.spms.module.mes.operation.OperationEntity;
-import cn.hamm.spms.module.mes.routing.RoutingEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -29,18 +28,19 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "routing_operation")
 @Description("工序配置")
 public class RoutingOperationEntity extends BaseEntity<RoutingOperationEntity> {
-    @Description("所属工艺")
-    @ManyToOne(fetch = FetchType.EAGER)
-    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "所属工艺")
-    private RoutingEntity routing;
+    @Description("工艺ID")
+    @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '工艺ID'")
+    private Long routingId;
 
     @Description("工序信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "工序信息")
+    @Search(Search.Mode.JOIN)
     private OperationEntity operation;
 
     @Description("BOM信息")
     @ManyToOne(fetch = FetchType.EAGER)
+    @Search(Search.Mode.JOIN)
     private BomEntity bom;
 
     @Description("排序号")

@@ -77,10 +77,10 @@ public class BaseBillController<
 
     @Override
     protected final @NotNull E beforeAppUpdate(@NotNull E bill) {
-        E savedBill = service.get(bill.getId());
-        ServiceError.FORBIDDEN.when(!service.canEdit(savedBill), "该单据状态下无法编辑");
-        service.setAuditing(savedBill.setStatus(null));
-        return savedBill;
+        E exist = service.get(bill.getId());
+        ServiceError.FORBIDDEN.when(!service.canEdit(exist), "该单据状态下无法编辑");
+        service.setAuditing(exist.setStatus(null));
+        return exist;
     }
 
     @Override
