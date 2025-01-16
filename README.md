@@ -31,6 +31,7 @@
 
 ## 产品截图
 
+<p align="center">
 <img src="/docs/img/1.png" width="18%"/>
 <img src="/docs/img/2.png" width="18%"/>
 <img src="/docs/img/3.png" width="18%"/>
@@ -51,6 +52,7 @@
 <img src="/docs/img/18.png" width="18%"/>
 <img src="/docs/img/19.png" width="18%"/>
 <img src="/docs/img/20.png" width="18%"/>
+</p>
 
 ## 开发者指南
 
