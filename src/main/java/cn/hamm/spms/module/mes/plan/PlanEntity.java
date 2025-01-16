@@ -2,6 +2,7 @@ package cn.hamm.spms.module.mes.plan;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
+import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
@@ -32,16 +33,19 @@ public class PlanEntity extends AbstractBaseBillEntity<PlanEntity, PlanDetailEnt
     @Description("生产计划号")
     @Column(columnDefinition = "varchar(255) default '' comment '生产计划号'", unique = true)
     @AutoGenerateCode(CodeRuleField.PlanBillCode)
+    @Search(Search.Mode.LIKE)
     private String billCode;
 
     @Description("计划状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '计划状态'")
     @Dictionary(value = PlanStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
+    @Search(Search.Mode.EQUALS)
     private Integer status;
 
     @Description("计划类型")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '计划类型'")
     @Dictionary(value = PlanType.class, groups = {WhenAdd.class, WhenUpdate.class})
+    @Search(Search.Mode.EQUALS)
     private Integer type;
 
     @Description("交付时间")

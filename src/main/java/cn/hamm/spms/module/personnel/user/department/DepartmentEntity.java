@@ -35,7 +35,7 @@ import java.util.List;
 public class DepartmentEntity extends BaseEntity<DepartmentEntity> implements ITree<DepartmentEntity> {
     @Description("部门编码")
     @Column(columnDefinition = "varchar(255) default '' comment 'code'", unique = true)
-    @AutoGenerateCode(CodeRuleField.DEPARTMENT_CODE)
+    @AutoGenerateCode(CodeRuleField.DepartmentCode)
     private String code;
 
     @Description("部门名称")

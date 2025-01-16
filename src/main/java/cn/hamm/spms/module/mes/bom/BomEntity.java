@@ -2,12 +2,13 @@ package cn.hamm.spms.module.mes.bom;
 
 
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
-import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
-import cn.hamm.spms.module.asset.material.MaterialEntity;
+import cn.hamm.spms.base.BaseEntity;
+import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.mes.bom.detail.BomDetailEntity;
-import cn.hamm.spms.module.wms.input.InputStatus;
+import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +17,8 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import java.util.Set;
 
 /**
  * <h1>BOM实体</h1>
@@ -30,26 +33,34 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "bom")
 @Description("BOM")
-public class BomEntity extends AbstractBaseBillEntity<BomEntity, BomDetailEntity> {
-    @Description("物料信息")
-    @ManyToOne(fetch = FetchType.EAGER)
-    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料信息不能为空")
-    private MaterialEntity material;
+public class BomEntity extends BaseEntity<BomEntity> {
+    @Description("配方编码")
+    @Column(columnDefinition = "varchar(255) default '' comment '配方编码'", unique = true)
+    @AutoGenerateCode(CodeRuleField.BomCode)
+    @Search(Search.Mode.LIKE)
+    private String code;
 
-    @Description("BOM版本号")
+    @Description("配方名称")
     @Search
-    @Column(columnDefinition = "varchar(255) default '' comment 'BOM版本号'", unique = true)
-    @NotBlank(groups = {WhenAdd.class, WhenUpdate.class}, message = "BOM版本号不能为空")
-    private String version;
+    @Column(columnDefinition = "varchar(255) default '' comment '配方名称'")
+    @NotBlank(groups = {WhenAdd.class, WhenUpdate.class}, message = "配方名称不能为空")
+    private String name;
 
-    @Description("是否默认版本")
+    @Description("配方状态")
+    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '配方状态'")
+    @Dictionary(value = BomStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Search(Search.Mode.EQUALS)
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否默认版本'")
-    private Boolean defaultVersion;
-
-    @Description("BOM状态")
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '入库状态'")
-    @Dictionary(value = InputStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Search(Search.Mode.EQUALS)
+    @ReadOnly
     private Integer status;
+
+    @Description("配方类型")
+    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '配方类型'")
+    @Dictionary(value = BomType.class, groups = {WhenAdd.class, WhenUpdate.class})
+    @Search(Search.Mode.EQUALS)
+    private Integer type;
+
+    @Description("配方明细")
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "配方明细不能为空")
+    private Set<BomDetailEntity> details;
 }

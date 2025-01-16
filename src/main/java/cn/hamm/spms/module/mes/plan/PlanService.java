@@ -28,4 +28,9 @@ public class PlanService extends AbstractBaseBillService<PlanEntity, PlanReposit
     public IDictionary getRejectedStatus() {
         return PlanStatus.REJECTED;
     }
+
+    @Override
+    public IDictionary getFinishedStatus() {
+        return PlanStatus.DONE;
+    }
 }

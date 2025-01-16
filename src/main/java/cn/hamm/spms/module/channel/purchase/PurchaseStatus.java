@@ -27,15 +27,16 @@ public enum PurchaseStatus implements IDictionary {
      */
     PURCHASING(3, "采购中"),
 
+
+    /**
+     * <h3>入库中</h3>
+     */
+    INPUTTING(4, "入库中"),
+
     /**
      * <h3>已完成</h3>
      */
-    DONE(4, "已完成"),
-
-    /**
-     * <h3>已入库</h3>
-     */
-    FINISHED(5, "已入库");
+    DONE(5, "已完成");
 
     private final int key;
     private final String label;

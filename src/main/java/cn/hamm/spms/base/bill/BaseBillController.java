@@ -36,14 +36,20 @@ public class BaseBillController<
     @Autowired(required = false)
     protected DS detailService;
 
+    @Description("手动标记完成")
+    @PostMapping("finish")
+    @Filter(WhenGetDetail.class)
+    public Json finish(@RequestBody @Validated(WhenIdRequired.class) E bill) {
+        service.manualFinish(bill.getId());
+        return Json.success("标记完成成功");
+    }
+
     @Description("审核")
     @PostMapping("audit")
     @Filter(WhenGetDetail.class)
     public Json audit(@RequestBody @Validated(WhenIdRequired.class) E bill) {
+        service.audit(bill.getId());
         E savedBill = service.get(bill.getId());
-        ServiceError.FORBIDDEN.when(!service.canAudit(savedBill), "该单据状态无法审核");
-        service.setAudited(savedBill);
-        service.update(savedBill);
         afterAudit(savedBill);
         return Json.success("审核成功");
     }
@@ -63,17 +69,17 @@ public class BaseBillController<
     @Description("添加完成数量")
     @PostMapping("addFinish")
     @Filter(WhenGetDetail.class)
-    public Json finish(@RequestBody @Validated(WhenAddFinish.class) D detail) {
+    public Json addFinish(@RequestBody @Validated(WhenAddFinish.class) D detail) {
         service.addFinish(detail);
         return Json.success("添加完成数量成功");
     }
 
     @Override
-    protected final @NotNull E beforeUpdate(@NotNull E bill) {
-        E savedBill = service.get(bill.getId());
-        ServiceError.FORBIDDEN.when(!service.canEdit(savedBill), "该单据状态下无法编辑");
-        service.setAuditing(savedBill.setStatus(null));
-        return savedBill;
+    protected final @NotNull E beforeAppUpdate(@NotNull E bill) {
+        E exist = service.get(bill.getId());
+        ServiceError.FORBIDDEN.when(!service.canEdit(exist), "该单据状态下无法编辑");
+        service.setAuditing(exist.setStatus(null));
+        return exist;
     }
 
     @Override

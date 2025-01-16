@@ -1,6 +1,8 @@
 package cn.hamm.spms.base.bill.detail;
 
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.annotation.ReadOnly;
+import cn.hamm.airpower.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
@@ -16,10 +18,27 @@ import lombok.Getter;
 @MappedSuperclass
 @Getter
 @Description("")
-public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> extends BaseEntity<E> {
+public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> extends BaseEntity<E> implements IBaseBillDetailAction {
     @Description("单据ID")
     @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '单据ID'")
     private Long billId;
+
+    @Description("是否已完成")
+    @Search(Search.Mode.EQUALS)
+    @ReadOnly
+    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否已完成'")
+    private Boolean isFinished;
+
+    /**
+     * <h3>设置是否已完成</h3>
+     *
+     * @param isFinished 是否已完成
+     * @return 单据明细
+     */
+    public E setIsFinished(Boolean isFinished) {
+        this.isFinished = isFinished;
+        return (E) this;
+    }
 
     /**
      * <h3>设置单据ID</h3>
@@ -61,15 +80,4 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
      * @return 明细实体
      */
     public abstract E setFinishQuantity(Double finishQuantity);
-
-    /**
-     * <h3>添加完成数量</h3>
-     *
-     * @param quantity 数量
-     * @return 明细实体
-     */
-    public E addFinishQuantity(Double quantity) {
-        this.setFinishQuantity(this.getFinishQuantity() + quantity);
-        return (E) this;
-    }
 }

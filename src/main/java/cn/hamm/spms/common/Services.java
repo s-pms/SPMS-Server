@@ -12,11 +12,17 @@ import cn.hamm.spms.module.channel.supplier.SupplierService;
 import cn.hamm.spms.module.factory.storage.StorageService;
 import cn.hamm.spms.module.factory.structure.StructureService;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
+import cn.hamm.spms.module.mes.order.OrderService;
+import cn.hamm.spms.module.mes.order.detail.OrderDetailService;
+import cn.hamm.spms.module.mes.plan.PlanService;
+import cn.hamm.spms.module.mes.plan.detail.PlanDetailService;
+import cn.hamm.spms.module.mes.routing.operation.RoutingOperationService;
 import cn.hamm.spms.module.open.app.OpenAppService;
 import cn.hamm.spms.module.open.notify.NotifyService;
 import cn.hamm.spms.module.personnel.user.UserService;
 import cn.hamm.spms.module.personnel.user.department.DepartmentService;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
+import cn.hamm.spms.module.system.config.ConfigService;
 import cn.hamm.spms.module.system.log.LogService;
 import cn.hamm.spms.module.system.menu.MenuService;
 import cn.hamm.spms.module.system.permission.PermissionService;
@@ -107,6 +113,24 @@ public class Services {
     @Getter
     private static DepartmentService departmentService;
 
+    @Getter
+    private static ConfigService configService;
+
+    @Getter
+    private static OrderDetailService orderDetailService;
+
+    @Getter
+    private static OrderService orderService;
+
+    @Getter
+    private static PlanService planService;
+
+    @Getter
+    private static PlanDetailService planDetailService;
+
+    @Getter
+    private static RoutingOperationService routingOperationService;
+
     @Autowired
     private void initService(
             CodeRuleService codeRuleService,
@@ -132,7 +156,13 @@ public class Services {
             AppConfig appConfig,
             OpenAppService openAppService,
             NotifyService notifyService,
-            DepartmentService departmentService
+            DepartmentService departmentService,
+            ConfigService configService,
+            OrderDetailService orderDetailService,
+            OrderService orderService,
+            PlanService planService,
+            PlanDetailService planDetailService,
+            RoutingOperationService routingOperationService
     ) {
         Services.codeRuleService = codeRuleService;
         Services.purchaseService = purchaseService;
@@ -158,5 +188,11 @@ public class Services {
         Services.openAppService = openAppService;
         Services.notifyService = notifyService;
         Services.departmentService = departmentService;
+        Services.configService = configService;
+        Services.orderDetailService = orderDetailService;
+        Services.orderService = orderService;
+        Services.planService = planService;
+        Services.planDetailService = planDetailService;
+        Services.routingOperationService = routingOperationService;
     }
 }

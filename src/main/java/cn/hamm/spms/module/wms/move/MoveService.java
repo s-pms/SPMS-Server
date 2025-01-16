@@ -4,6 +4,7 @@ import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
+import cn.hamm.spms.module.system.config.ConfigFlag;
 import cn.hamm.spms.module.wms.input.InputEntity;
 import cn.hamm.spms.module.wms.input.InputStatus;
 import cn.hamm.spms.module.wms.input.InputType;
@@ -47,7 +48,12 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
     }
 
     @Override
-    protected void afterAddDetailFinish(long detailId, MoveDetailEntity sourceDetail) {
+    public IDictionary getFinishedStatus() {
+        return MoveStatus.DONE;
+    }
+
+    @Override
+    protected void afterDetailFinishAdded(long detailId, MoveDetailEntity sourceDetail) {
         sourceDetail = detailService.get(detailId);
         if (sourceDetail.getInventory().getQuantity() < sourceDetail.getQuantity()) {
             // 判断来源库存
@@ -79,11 +85,8 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
     }
 
     @Override
-    public void afterAllDetailsFinished(Long id) {
-        MoveEntity moveBill = get(id);
-        moveBill.setStatus(MoveStatus.DONE.getKey());
-        update(moveBill);
-
+    public void afterBillFinished(Long billId) {
+        MoveEntity moveBill = get(billId);
         InputEntity inputBill = new InputEntity()
                 .setType(InputType.MOVE.getKey())
                 .setMove(moveBill)
@@ -113,5 +116,10 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
         Services.getInputService().add(inputBill);
         outputBill.setDetails(outputDetails);
         Services.getOutputService().add(outputBill);
+    }
+
+    @Override
+    protected ConfigFlag getAutoAuditConfigFlag() {
+        return ConfigFlag.MOVE_ORDER_AUTO_AUDIT;
     }
 }

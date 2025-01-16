@@ -1,11 +1,11 @@
 package cn.hamm.spms.module.mes.order.detail;
 
-
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -30,7 +30,12 @@ public class OrderDetailEntity extends BaseBillDetailEntity<OrderDetailEntity> {
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '数量'")
     private Double quantity;
 
-    @Description("已完成数量")
-    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已完成数量'")
+    @Description("完成数量")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '完成数量'")
+    @NotNull(groups = {WhenAddFinish.class}, message = "完成数量不能为空")
     private Double finishQuantity;
+
+    @Description("异常数量")
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '异常数量'")
+    private Double ngQuantity;
 }

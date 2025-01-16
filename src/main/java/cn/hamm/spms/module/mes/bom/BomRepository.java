@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.mes.bom;
 
-import cn.hamm.spms.base.bill.BaseBillRepository;
-import cn.hamm.spms.module.mes.bom.detail.BomDetailEntity;
+import cn.hamm.spms.base.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * @author Hamm.cn
  */
 @Repository
-public interface BomRepository extends BaseBillRepository<BomEntity, BomDetailEntity> {
+public interface BomRepository extends BaseRepository<BomEntity> {
 }

@@ -55,7 +55,6 @@ public abstract class AbstractBaseBillEntity<
         return (E) this;
     }
 
-
     /**
      * <h3>设置单据明细</h3>
      *
@@ -82,5 +81,4 @@ public abstract class AbstractBaseBillEntity<
      * @return 单据实体
      */
     public abstract E setStatus(Integer status);
-
 }
