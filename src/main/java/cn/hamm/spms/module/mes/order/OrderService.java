@@ -16,6 +16,7 @@ import cn.hamm.spms.module.mes.plan.detail.PlanDetailService;
 import cn.hamm.spms.module.system.config.ConfigEntity;
 import cn.hamm.spms.module.system.config.ConfigFlag;
 import cn.hamm.spms.module.wms.input.InputEntity;
+import cn.hamm.spms.module.wms.input.InputService;
 import cn.hamm.spms.module.wms.input.InputType;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import org.jetbrains.annotations.NotNull;
@@ -96,54 +97,24 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         }
 
         if (OrderType.PLAN.equalsKey(orderBill.getType())) {
-            PlanEntity plan = orderBill.getPlan();
-            double finishQuantity = orderBill.getFinishQuantity();
-            PlanDetailService planDetailService = Services.getPlanDetailService();
-            List<PlanDetailEntity> planDetails = planDetailService.getAllByBillId(plan.getId());
-            for (PlanDetailEntity planDetail : planDetails) {
-                if (finishQuantity <= 0) {
-                    break;
-                }
-                if (!planDetail.getMaterial().getId().equals(orderBill.getMaterial().getId())) {
-                    // 不操作其他物料
-                    continue;
-                }
-                if (planDetail.getIsFinished()) {
-                    // 不操作非生产中的
-                    continue;
-                }
-
-                // 还需要完成的数量
-                double detailNeedQuantity = NumberUtil.sub(planDetail.getQuantity(), planDetail.getFinishQuantity());
-                if (finishQuantity < detailNeedQuantity) {
-                    // 添加单据完成数量
-                    planDetail.setFinishQuantity(finishQuantity);
-                } else {
-                    finishQuantity = NumberUtil.sub(finishQuantity, detailNeedQuantity);
-                    planDetail.setFinishQuantity(planDetail.getQuantity()).setIsFinished(true);
-                }
-                planDetailService.update(planDetail);
-            }
-            // 判断所有明细是否完成
-            ConfigEntity configPlanAutoFinish = Services.getConfigService().get(ConfigFlag.PLAN_AUTO_FINISH);
-            if (configPlanAutoFinish.booleanConfig()) {
-                planDetails = planDetailService.getAllByBillId(plan.getId());
-                boolean isAllFinished = planDetails.stream()
-                        .allMatch(PlanDetailEntity::getIsFinished);
-                if (isAllFinished) {
-                    // 明细已全部完成
-                    plan = Services.getPlanService().get(plan.getId());
-                    plan.setStatus(PlanStatus.DONE.getKey()).setFinishTime(System.currentTimeMillis());
-                    Services.getPlanService().update(plan);
-                }
-            }
+            // 更新计划单
+            updatePlanBill(orderBill);
         }
-
         // 添加入库单
+        addInputBill(orderBill);
+    }
+
+    /**
+     * <h2>添加入库单</h2>
+     *
+     * @param orderBill 订单
+     */
+    private void addInputBill(OrderEntity orderBill) {
+        InputService inputService = Services.getInputService();
         InputEntity input = new InputEntity();
         input.setType(InputType.PRODUCTION.getKey());
         input.setOrder(orderBill);
-        long inputId = Services.getInputService().add(input);
+        long inputId = inputService.add(input);
 
         List<InputDetailEntity> details = new ArrayList<>();
         details.add(new InputDetailEntity()
@@ -151,9 +122,58 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
                 .setBillId(inputId)
                 .setMaterial(orderBill.getMaterial())
         );
-        input = Services.getInputService().get(inputId);
+        input = inputService.get(inputId);
         input.setDetails(details);
-        Services.getInputService().update(input);
+        inputService.update(input);
+    }
+
+    /**
+     * <h2>更新计划单</h2>
+     *
+     * @param orderBill 订单
+     */
+    private void updatePlanBill(@NotNull OrderEntity orderBill) {
+        PlanEntity plan = orderBill.getPlan();
+        double finishQuantity = orderBill.getFinishQuantity();
+        PlanDetailService planDetailService = Services.getPlanDetailService();
+        List<PlanDetailEntity> planDetails = planDetailService.getAllByBillId(plan.getId());
+        for (PlanDetailEntity planDetail : planDetails) {
+            if (finishQuantity <= 0) {
+                break;
+            }
+            if (!planDetail.getMaterial().getId().equals(orderBill.getMaterial().getId())) {
+                // 不操作其他物料
+                continue;
+            }
+            if (planDetail.getIsFinished()) {
+                // 不操作非生产中的
+                continue;
+            }
+
+            // 还需要完成的数量
+            double detailNeedQuantity = NumberUtil.sub(planDetail.getQuantity(), planDetail.getFinishQuantity());
+            if (finishQuantity < detailNeedQuantity) {
+                // 添加单据完成数量
+                planDetail.setFinishQuantity(finishQuantity);
+            } else {
+                finishQuantity = NumberUtil.sub(finishQuantity, detailNeedQuantity);
+                planDetail.setFinishQuantity(planDetail.getQuantity()).setIsFinished(true);
+            }
+            planDetailService.update(planDetail);
+        }
+        // 判断所有明细是否完成
+        ConfigEntity configPlanAutoFinish = Services.getConfigService().get(ConfigFlag.PLAN_AUTO_FINISH);
+        if (configPlanAutoFinish.booleanConfig()) {
+            planDetails = planDetailService.getAllByBillId(plan.getId());
+            boolean isAllFinished = planDetails.stream()
+                    .allMatch(PlanDetailEntity::getIsFinished);
+            if (isAllFinished) {
+                // 明细已全部完成
+                plan = Services.getPlanService().get(plan.getId());
+                plan.setStatus(PlanStatus.DONE.getKey()).setFinishTime(System.currentTimeMillis());
+                Services.getPlanService().update(plan);
+            }
+        }
     }
 
     @Override
