@@ -2,6 +2,7 @@ package cn.hamm.spms.module.mes.order;
 
 import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -32,7 +34,7 @@ import java.util.List;
 public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepository, OrderDetailEntity, OrderDetailService, OrderDetailRepository> {
     @Override
     public IDictionary getAuditedStatus() {
-        return OrderStatus.PRODUCING;
+        return OrderStatus.PREPARE;
     }
 
     @Override
@@ -48,6 +50,11 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     @Override
     public IDictionary getFinishedStatus() {
         return OrderStatus.INPUTTING;
+    }
+
+    @Override
+    protected ConfigFlag getManualFinishConfigFlag() {
+        return ConfigFlag.ORDER_MANUAL_FINISH;
     }
 
     @Override
@@ -88,7 +95,6 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
             return;
         }
 
-//        OrderType orderType = DictionaryUtil.getDictionary(OrderType.class, orderBill.getType());
         if (OrderType.PLAN.equalsKey(orderBill.getType())) {
             PlanEntity plan = orderBill.getPlan();
             double finishQuantity = orderBill.getFinishQuantity();
@@ -154,5 +160,41 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     protected @NotNull OrderEntity beforeAdd(@NotNull OrderEntity order) {
         order.setDetails(new ArrayList<>());
         return order;
+    }
+
+    @Override
+    protected void afterBillAudited(long id) {
+        ConfigEntity config = Services.getConfigService().get(ConfigFlag.ORDER_AUTO_START_AFTER_AUDIT);
+        if (config.booleanConfig()) {
+            start(id);
+        }
+    }
+
+    /**
+     * <h3>开始生产</h3>
+     *
+     * @param id 单据ID
+     */
+    public final void start(long id) {
+        OrderEntity order = get(id);
+        OrderStatus[] canStartStatusList = {OrderStatus.PREPARE, OrderStatus.PAUSED};
+        OrderStatus currentStatus = DictionaryUtil.getDictionary(OrderStatus.class, order.getStatus());
+        ServiceError.FORBIDDEN.when(!Arrays.asList(canStartStatusList).contains(currentStatus), "该单据状态无法开始生产");
+        order.setStatus(OrderStatus.PRODUCING.getKey());
+        update(order);
+    }
+
+    /**
+     * <h3>暂停生产</h3>
+     *
+     * @param id 单据ID
+     */
+    public final void pause(long id) {
+        OrderEntity order = get(id);
+        OrderStatus[] canStartStatusList = {OrderStatus.PRODUCING};
+        OrderStatus currentStatus = DictionaryUtil.getDictionary(OrderStatus.class, order.getStatus());
+        ServiceError.FORBIDDEN.when(!Arrays.asList(canStartStatusList).contains(currentStatus), "该单据状态无法暂停生产");
+        order.setStatus(OrderStatus.PAUSED.getKey());
+        update(order);
     }
 }

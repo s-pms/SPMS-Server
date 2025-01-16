@@ -22,7 +22,10 @@ public enum ConfigFlag implements IDictionary {
     SALE_ORDER_AUTO_AUDIT(7, "销售单开启自动审核", ConfigType.BOOLEAN, "0"),
     ORDER_ENABLE_SUBMIT_WORK(8, "订单报工模式", ConfigType.BOOLEAN, "1"),
     BOM_AUTO_AUDIT(8, "生产配方自动审核", ConfigType.BOOLEAN, "0"),
-    PLAN_AUTO_FINISH(9, "生产计划开启自动完成", ConfigType.BOOLEAN, "1");
+    PLAN_AUTO_FINISH(9, "生产计划开启自动完成", ConfigType.BOOLEAN, "1"),
+    ORDER_AUTO_START_AFTER_AUDIT(10, "订单审核后自动开始生产", ConfigType.BOOLEAN, "0"),
+
+    ;
 
     private final int key;
     private final String label;

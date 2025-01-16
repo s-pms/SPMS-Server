@@ -78,7 +78,7 @@ public abstract class AbstractBaseBillService<
      *
      * @param billId 单据ID
      */
-    public final void finish(long billId) {
+    protected final void finish(long billId) {
         IDictionary finishedStatus = getFinishedStatus();
         ServiceError.FORBIDDEN.whenNull(finishedStatus, "标记完成失败，没有找到完成状态");
 
@@ -153,7 +153,7 @@ public abstract class AbstractBaseBillService<
     }
 
     @Override
-    protected E afterGet(@NotNull E bill) {
+    protected final E afterGet(@NotNull E bill) {
         List<D> details = detailService.getAllByBillId(bill.getId());
         return bill.setDetails(details);
     }
@@ -181,7 +181,7 @@ public abstract class AbstractBaseBillService<
     }
 
     @Override
-    protected void afterUpdate(long id, @NotNull E source) {
+    protected final void afterUpdate(long id, @NotNull E source) {
         saveDetails(id, source.getDetails());
     }
 
@@ -209,11 +209,16 @@ public abstract class AbstractBaseBillService<
      *
      * @param billId 单据ID
      */
-    protected void audit(long billId) {
+    protected final void audit(long billId) {
         E bill = get(billId);
         ServiceError.FORBIDDEN.when(!canAudit(bill), "该单据状态无法审核");
         setAudited(bill);
         update(bill);
+        TaskUtil.run(() -> afterBillAudited(bill.getId()));
+    }
+
+    protected void afterBillAudited(long billId) {
+
     }
 
     /**
@@ -240,7 +245,7 @@ public abstract class AbstractBaseBillService<
      * @param bill 单据
      * @return 是否审核
      */
-    public boolean canAudit(@NotNull E bill) {
+    public final boolean canAudit(@NotNull E bill) {
         return getAuditingStatus().equalsKey(bill.getStatus());
     }
 
@@ -250,7 +255,7 @@ public abstract class AbstractBaseBillService<
      * @param bill 单据
      * @return 是否可驳回
      */
-    public boolean canReject(@NotNull E bill) {
+    public final boolean canReject(@NotNull E bill) {
         return getAuditingStatus().equalsKey(bill.getStatus());
     }
 
@@ -269,7 +274,7 @@ public abstract class AbstractBaseBillService<
      * @param bill 单据
      * @return 是否可编辑
      */
-    public boolean canEdit(@NotNull E bill) {
+    public final boolean canEdit(@NotNull E bill) {
         return getRejectedStatus().equalsKey(bill.getStatus());
     }
 
@@ -278,26 +283,26 @@ public abstract class AbstractBaseBillService<
      *
      * @return 审核中状态
      */
-    public abstract IDictionary getAuditingStatus();
+    protected abstract IDictionary getAuditingStatus();
 
     /**
      * <h3>获取已审核状态</h3>
      *
      * @return 已审核状态
      */
-    public abstract IDictionary getAuditedStatus();
+    protected abstract IDictionary getAuditedStatus();
 
     /**
      * <h3>获取驳回状态</h3>
      *
      * @return 驳回状态
      */
-    public abstract IDictionary getRejectedStatus();
+    protected abstract IDictionary getRejectedStatus();
 
     /**
      * <h3>获取完成状态</h3>
      *
      * @return 完成状态
      */
-    public abstract IDictionary getFinishedStatus();
+    protected abstract IDictionary getFinishedStatus();
 }
