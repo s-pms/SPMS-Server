@@ -10,7 +10,6 @@ import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailService;
 import cn.hamm.spms.base.bill.detail.IBaseBillDetailAction;
-import cn.hamm.spms.module.mes.order.OrderEntity;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -40,8 +39,8 @@ public class BaseBillController<
     @Description("手动标记完成")
     @PostMapping("finish")
     @Filter(WhenGetDetail.class)
-    public Json finish(@RequestBody @Validated(WhenIdRequired.class) OrderEntity order) {
-        service.manualFinish(order.getId());
+    public Json finish(@RequestBody @Validated(WhenIdRequired.class) E bill) {
+        service.manualFinish(bill.getId());
         return Json.success("标记完成成功");
     }
 

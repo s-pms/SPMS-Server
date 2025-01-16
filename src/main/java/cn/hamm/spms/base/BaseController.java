@@ -68,8 +68,13 @@ public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>
     @PostMapping("publish")
     @Filter(WhenGetDetail.class)
     public Json publish(@RequestBody @Validated(WhenIdRequired.class) E entity) {
+        entity = beforePublish(entity);
         entity.setIsPublished(true);
         service.update(entity);
         return Json.success("发布成功");
+    }
+
+    protected E beforePublish(@NotNull E entity) {
+        return entity;
     }
 }
