@@ -23,14 +23,29 @@ public enum OrderStatus implements IDictionary {
     REJECTED(2, "已驳回"),
 
     /**
+     * <h3>准备中</h3>
+     */
+    PREPARE(3, "准备中"),
+
+    /**
      * <h3>生产中</h3>
      */
-    PRODUCING(3, "生产中"),
+    PRODUCING(4, "生产中"),
+
+    /**
+     * <h3>入库中</h3>
+     */
+    INPUTTING(5, "入库中"),
 
     /**
      * <h3>已完成</h3>
      */
-    DONE(4, "已完成");
+    DONE(6, "已完成"),
+
+    /**
+     * <h3>暂停中</h3>
+     */
+    PAUSED(7, "暂停中");
 
     private final int key;
     private final String label;

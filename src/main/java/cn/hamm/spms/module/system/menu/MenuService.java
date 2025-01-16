@@ -50,41 +50,35 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     public final void initMenu() {
         MenuEntity firstMenu;
         MenuEntity secondMenu;
-        MenuEntity thirdMenu;
 
         firstMenu = new MenuEntity().setName("首页").setOrderNo(99).setPath("/console").setComponent("/console/index/index").setParentId(Constant.ZERO_LONG);
         add(firstMenu);
 
         // 基础数据
-        firstMenu = new MenuEntity().setName("基础数据").setOrderNo(88).setParentId(Constant.ZERO_LONG);
+        firstMenu = new MenuEntity().setName("资产管理").setOrderNo(88).setParentId(Constant.ZERO_LONG);
         firstMenu = get(add(firstMenu));
 
         secondMenu = new MenuEntity().setName("物料管理").setPath("/console/asset/material/list").setParentId(firstMenu.getId());
         add(secondMenu);
-//        secondMenu = new MenuEntity().setName("设备管理").setPath("/console/asset/device/list").setParentId(firstMenu.getId());
-//        add(secondMenu);
-        secondMenu = new MenuEntity().setName("存储资源").setPath("/console/factory/storage/list").setParentId(firstMenu.getId());
+        secondMenu = new MenuEntity().setName("设备管理").setPath("/console/asset/device/list").setParentId(firstMenu.getId());
         add(secondMenu);
-//        secondMenu = new MenuEntity().setName("工厂结构").setPath("/console/factory/structure/list").setParentId(firstMenu.getId());
-//        add(secondMenu);
-
 
         // 渠道管理
-//        firstMenu = new MenuEntity().setName("渠道管理").setOrderNo(77).setParentId(Constant.ZERO_LONG);
-//        firstMenu = get(add(firstMenu));
-//
-//        secondMenu = new MenuEntity().setName("采购管理").setPath("/console/channel/purchase/list").setParentId(firstMenu.getId());
-//        add(secondMenu);
-//        secondMenu = new MenuEntity().setName("销售管理").setPath("/console/channel/sale/list").setParentId(firstMenu.getId());
-//        add(secondMenu);
-//        secondMenu = new MenuEntity().setName("供应商管理").setPath("/console/channel/supplier/list").setParentId(firstMenu.getId());
-//        add(secondMenu);
-//        secondMenu = new MenuEntity().setName("客户管理").setPath("/console/channel/customer/list").setParentId(firstMenu.getId());
-//        add(secondMenu);
-//        secondMenu = new MenuEntity().setName("采购价管理").setPath("/console/channel/purchasePrice/list").setParentId(firstMenu.getId());
-//        add(secondMenu);
-//        secondMenu = new MenuEntity().setName("销售价管理").setPath("/console/channel/salePrice/list").setParentId(firstMenu.getId());
-//        add(secondMenu);
+        firstMenu = new MenuEntity().setName("渠道管理").setOrderNo(77).setParentId(Constant.ZERO_LONG);
+        firstMenu = get(add(firstMenu));
+
+        secondMenu = new MenuEntity().setName("供应商管理").setPath("/console/channel/supplier/list").setParentId(firstMenu.getId());
+        add(secondMenu);
+        secondMenu = new MenuEntity().setName("采购单价").setPath("/console/channel/purchasePrice/list").setParentId(firstMenu.getId());
+        add(secondMenu);
+        secondMenu = new MenuEntity().setName("采购管理").setPath("/console/channel/purchase/list").setParentId(firstMenu.getId());
+        add(secondMenu);
+        secondMenu = new MenuEntity().setName("客户管理").setPath("/console/channel/customer/list").setParentId(firstMenu.getId());
+        add(secondMenu);
+        secondMenu = new MenuEntity().setName("销售单价").setPath("/console/channel/salePrice/list").setParentId(firstMenu.getId());
+        add(secondMenu);
+        secondMenu = new MenuEntity().setName("销售管理").setPath("/console/channel/sale/list").setParentId(firstMenu.getId());
+        add(secondMenu);
 
 
         // 仓储管理 - WMS
@@ -100,32 +94,23 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         secondMenu = new MenuEntity().setName("移库管理").setPath("/console/wms/move/list").setParentId(firstMenu.getId());
         add(secondMenu);
 
-
         // 生产管理 - MES
         firstMenu = new MenuEntity().setName("生产管理").setOrderNo(55).setParentId(Constant.ZERO_LONG);
         firstMenu = get(add(firstMenu));
 
-//        secondMenu = new MenuEntity().setName("生产资源").setParentId(firstMenu.getId());
-//        secondMenu = get(add(secondMenu));
-//
 //        thirdMenu = new MenuEntity().setName("物料领取").setPath("/console/mes/pickout/list").setParentId(secondMenu.getId());
 //        add(thirdMenu);
 //        thirdMenu = new MenuEntity().setName("物料退还").setPath("/console/mes/restore/list").setParentId(secondMenu.getId());
 //        add(thirdMenu);
-
-//        secondMenu = new MenuEntity().setName("工艺工序").setParentId(firstMenu.getId());
-//        secondMenu = get(add(secondMenu));
-//
-//        thirdMenu = new MenuEntity().setName("工艺流程").setPath("/console/mes/process/list").setParentId(secondMenu.getId());
-//        add(thirdMenu);
-//        thirdMenu = new MenuEntity().setName("工序管理").setPath("/console/mes/operation/list").setParentId(secondMenu.getId());
-//        add(thirdMenu);
-//        thirdMenu = new MenuEntity().setName("BOM管理").setPath("/console/mes/bom/list").setParentId(secondMenu.getId());
-//        add(thirdMenu);
-
-        secondMenu = new MenuEntity().setName("生产计划").setPath("/console/mes/plan/list").setParentId(firstMenu.getId());
+        secondMenu = new MenuEntity().setName("计划管理").setPath("/console/mes/plan/list").setParentId(firstMenu.getId());
         add(secondMenu);
-        secondMenu = new MenuEntity().setName("生产订单").setPath("/console/mes/order/list").setParentId(firstMenu.getId());
+        secondMenu = new MenuEntity().setName("订单管理").setPath("/console/mes/order/list").setParentId(firstMenu.getId());
+        add(secondMenu);
+        secondMenu = new MenuEntity().setName("生产工艺").setPath("/console/mes/routing/list").setParentId(firstMenu.getId());
+        add(secondMenu);
+        secondMenu = new MenuEntity().setName("生产工序").setPath("/console/mes/operation/list").setParentId(firstMenu.getId());
+        add(secondMenu);
+        secondMenu = new MenuEntity().setName("生产配方").setPath("/console/mes/bom/list").setParentId(firstMenu.getId());
         add(secondMenu);
 
 
@@ -138,21 +123,14 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
 //        secondMenu = new MenuEntity().setName("参数管理").setPath("/console/iot/parameter/list").setParentId(firstMenu.getId());
 //        add(secondMenu);
 
-        // 开放能力
-//        firstMenu = new MenuEntity().setName("开放能力").setOrderNo(10).setParentId(0L);
-//        firstMenu = get(add(firstMenu));
-//
-//        secondMenu = new MenuEntity().setName("我的应用").setPath("/console/open/app/list").setParentId(firstMenu.getId());
-//        add(secondMenu);
-//
-//        secondMenu = new MenuEntity().setName("通知管理").setPath("/console/open/notify/list").setParentId(firstMenu.getId());
-//        add(secondMenu);
-
-
         // 系统管理
         firstMenu = new MenuEntity().setName("系统管理").setOrderNo(3).setParentId(Constant.ZERO_LONG);
         firstMenu = get(add(firstMenu));
 
+        secondMenu = new MenuEntity().setName("仓库管理").setPath("/console/factory/storage/list").setParentId(firstMenu.getId());
+        add(secondMenu);
+        secondMenu = new MenuEntity().setName("工厂结构").setPath("/console/factory/structure/list").setParentId(firstMenu.getId());
+        add(secondMenu);
         secondMenu = new MenuEntity().setName("员工管理").setPath("/console/personnel/user/list").setParentId(firstMenu.getId());
         add(secondMenu);
         secondMenu = new MenuEntity().setName("角色管理").setPath("/console/personnel/role/list").setParentId(firstMenu.getId());
@@ -172,7 +150,11 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         add(secondMenu);
         secondMenu = new MenuEntity().setName("菜单管理").setPath("/console/system/menu/list").setParentId(firstMenu.getId());
         add(secondMenu);
-//        secondMenu = new MenuEntity().setName("请求日志").setPath("/console/system/log/list").setParentId(firstMenu.getId());
-//        add(secondMenu);
+        secondMenu = new MenuEntity().setName("系统配置").setPath("/console/system/config/list").setParentId(firstMenu.getId());
+        add(secondMenu);
+        secondMenu = new MenuEntity().setName("应用管理").setPath("/console/open/app/list").setParentId(firstMenu.getId());
+        add(secondMenu);
+        secondMenu = new MenuEntity().setName("通知管理").setPath("/console/open/notify/list").setParentId(firstMenu.getId());
+        add(secondMenu);
     }
 }

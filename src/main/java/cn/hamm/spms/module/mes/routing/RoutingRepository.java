@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.mes.craft;
+package cn.hamm.spms.module.mes.routing;
 
 import cn.hamm.spms.base.BaseRepository;
 import org.springframework.stereotype.Repository;
@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
  * @author zfy
  */
 @Repository
-public interface CraftRouterRepository extends BaseRepository<CraftRouterEntity> {
+public interface RoutingRepository extends BaseRepository<RoutingEntity> {
 
 }

@@ -2,13 +2,16 @@ package cn.hamm.spms.module.channel.purchase;
 
 import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailEntity;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailRepository;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailService;
+import cn.hamm.spms.module.system.config.ConfigFlag;
 import cn.hamm.spms.module.wms.input.InputEntity;
 import cn.hamm.spms.module.wms.input.InputStatus;
+import cn.hamm.spms.module.wms.input.InputType;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -40,10 +43,14 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
     }
 
     @Override
-    public void afterAllDetailsFinished(Long id) {
-        PurchaseEntity bill = get(id);
-        bill.setStatus(PurchaseStatus.DONE.getKey());
-        List<PurchaseDetailEntity> details = detailService.getAllByBillId(bill.getId());
+    public IDictionary getFinishedStatus() {
+        return PurchaseStatus.INPUTTING;
+    }
+
+    @Override
+    public void afterBillFinished(Long billId) {
+        PurchaseEntity purchaseBill = get(billId);
+        List<PurchaseDetailEntity> details = detailService.getAllByBillId(purchaseBill.getId());
         List<InputDetailEntity> inputDetails = new ArrayList<>();
         double totalRealPrice = Constant.ZERO_DOUBLE;
         for (PurchaseDetailEntity detail : details) {
@@ -53,13 +60,14 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
                     .setMaterial(detail.getMaterial())
             );
         }
-        bill.setTotalRealPrice(totalRealPrice);
-        update(bill);
+        purchaseBill.setTotalRealPrice(totalRealPrice);
+        update(purchaseBill);
 
         // 创建采购入库单
         InputEntity inputBill = new InputEntity()
                 .setStatus(InputStatus.AUDITING.getKey())
-                .setPurchase(bill)
+                .setPurchase(purchaseBill)
+                .setType(InputType.PURCHASE.getKey())
                 .setDetails(inputDetails);
         Services.getInputService().add(inputBill);
     }
@@ -68,9 +76,14 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
     protected void afterDetailSaved(@NotNull PurchaseEntity purchase) {
         List<PurchaseDetailEntity> details = detailService.getAllByBillId(purchase.getId());
         double totalPrice = details.stream()
-                .mapToDouble(detail -> detail.getPrice() * detail.getQuantity())
+                .mapToDouble(detail -> NumberUtil.mul(detail.getPrice(), detail.getQuantity()))
                 .sum();
         purchase.setTotalPrice(totalPrice);
         updateToDatabase(purchase);
+    }
+
+    @Override
+    protected ConfigFlag getAutoAuditConfigFlag() {
+        return ConfigFlag.PURCHASE_ORDER_AUTO_AUDIT;
     }
 }

@@ -15,13 +15,13 @@ import org.jetbrains.annotations.NotNull;
 @Description("采集参数")
 public class ParameterController extends BaseController<ParameterEntity, ParameterService, ParameterRepository> {
     @Override
-    protected ParameterEntity beforeUpdate(@NotNull ParameterEntity entity) {
+    protected ParameterEntity beforeAppUpdate(@NotNull ParameterEntity entity) {
         ServiceError.FORBIDDEN_DELETE.when(entity.getIsSystem(), "系统内置参数不允许编辑!");
         return entity;
     }
 
     @Override
-    protected void beforeDelete(long id) {
+    protected void beforeAppDelete(long id) {
         ParameterEntity parameter = service.get(id);
         ServiceError.FORBIDDEN_DELETE.when(parameter.getIsSystem(), "系统内置参数不允许删除!");
     }
