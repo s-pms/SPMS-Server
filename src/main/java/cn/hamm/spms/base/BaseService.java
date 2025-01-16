@@ -50,4 +50,24 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
         entity = beforeAppSaveToDatabase(entity);
         return entity;
     }
+
+    /**
+     * <h2>发布</h2>
+     *
+     * @param id ID
+     */
+    public final void publish(Long id) {
+        E exist = get(id);
+        beforePublish(exist.copy());
+        exist.setIsPublished(true);
+        update(exist);
+    }
+
+    /**
+     * <h2>发布前</h2>
+     *
+     * @param entity 实体
+     */
+    protected void beforePublish(@NotNull E entity) {
+    }
 }

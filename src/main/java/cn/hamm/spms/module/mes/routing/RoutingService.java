@@ -7,6 +7,7 @@ import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.mes.routing.operation.RoutingOperationEntity;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -52,5 +53,10 @@ public class RoutingService extends BaseService<RoutingEntity, RoutingRepository
         }
         ServiceError.PARAM_INVALID.whenNull(routing.getBom(), "请配置工艺使用的BOM");
         return routing;
+    }
+
+    @Override
+    protected void beforePublish(@NotNull RoutingEntity entity) {
+        ServiceError.FORBIDDEN_EDIT.when(CollectionUtils.isEmpty(entity.getDetails()), "发布失败，工艺没有任何工序流程");
     }
 }
