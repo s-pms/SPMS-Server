@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.mes.routing;
 
+import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
@@ -8,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <h1>Service</h1>
@@ -17,14 +19,14 @@ import java.util.List;
 @Service
 public class RoutingService extends BaseService<RoutingEntity, RoutingRepository> {
     @Override
-    protected void afterUpdate(long id, @NotNull RoutingEntity source) {
+    protected void afterUpdate(long id, @NotNull RoutingEntity routing) {
         Services.getRoutingOperationService().deleteByRoutingId(id);
-        afterAdd(id, source);
+        afterAdd(id, routing);
     }
 
     @Override
-    protected void afterAdd(long id, @NotNull RoutingEntity source) {
-        List<RoutingOperationEntity> routingOperationList = source.getDetails();
+    protected void afterAdd(long id, @NotNull RoutingEntity routing) {
+        List<RoutingOperationEntity> routingOperationList = routing.getDetails();
         for (RoutingOperationEntity routingOperation : routingOperationList) {
             routingOperation.setRoutingId(id);
             Services.getRoutingOperationService().add(routingOperation);
@@ -36,6 +38,19 @@ public class RoutingService extends BaseService<RoutingEntity, RoutingRepository
         RoutingOperationEntity filter = new RoutingOperationEntity().setRoutingId(routing.getId());
         List<RoutingOperationEntity> details = Services.getRoutingOperationService().filter(filter, new Sort().setField("orderNo").setDirection("asc"));
         routing.setDetails(details);
+        return routing;
+    }
+
+    @Override
+    protected RoutingEntity beforeAppSaveToDatabase(@NotNull RoutingEntity routing) {
+        if (Objects.isNull(routing.getIsRoutingBom())) {
+            return routing;
+        }
+        if (!routing.getIsRoutingBom()) {
+            routing.setBom(null);
+            return routing;
+        }
+        ServiceError.PARAM_INVALID.whenNull(routing.getBom(), "请配置工艺使用的BOM");
         return routing;
     }
 }

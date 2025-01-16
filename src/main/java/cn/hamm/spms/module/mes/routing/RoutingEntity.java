@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.mes.routing;
 
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.annotation.ExcelColumn;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
@@ -60,6 +61,12 @@ public class RoutingEntity extends BaseEntity<RoutingEntity> {
     @Description("BOM信息")
     @ManyToOne(fetch = FetchType.EAGER)
     private BomEntity bom;
+
+    @Description("使用工艺BOM")
+    @Search(Search.Mode.EQUALS)
+    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '使用工艺BOM'")
+    @ExcelColumn(ExcelColumn.Type.BOOLEAN)
+    private Boolean isRoutingBom;
 
     @Description("工序配置列表")
     @Transient
