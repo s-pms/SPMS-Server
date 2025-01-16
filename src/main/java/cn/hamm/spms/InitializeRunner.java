@@ -1,6 +1,5 @@
 package cn.hamm.spms;
 
-import cn.hamm.airpower.helper.AirHelper;
 import cn.hamm.airpower.util.PasswordUtil;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.common.Services;
@@ -184,16 +183,16 @@ public class InitializeRunner implements CommandLineRunner {
     @Override
     public void run(String... args) {
         System.out.println("---------------------------------");
-        String[] localEnvList = {"local-hamm"};
-        if (Arrays.stream(localEnvList).toList().contains(AirHelper.getCurrentEnvironment())) {
-            initRootUser();
-            initCodeRules();
-            initConfigs();
-            initParameters();
-            Services.getPermissionService().loadPermission();
-            Services.getMenuService().initMenu();
-            initDevData();
-        }
+        initRootUser();
+        initCodeRules();
+        initConfigs();
+        initParameters();
+        Services.getPermissionService().loadPermission();
+        Services.getMenuService().initMenu();
+        initDevData();
+//        String[] localEnvList = {"local-hamm"};
+//        if (Arrays.stream(localEnvList).toList().contains(AirHelper.getCurrentEnvironment())) {
+//        }
     }
 
     private void initConfigs() {
