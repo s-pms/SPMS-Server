@@ -57,8 +57,6 @@ public abstract class AbstractBaseBillService<
         return null;
     }
 
-    // 手动标记完成
-
     /**
      * <h3>标记单据完成</h3>
      *
@@ -217,6 +215,11 @@ public abstract class AbstractBaseBillService<
         TaskUtil.run(() -> afterBillAudited(bill.getId()));
     }
 
+    /**
+     * <h3>单据审核后置</h3>
+     *
+     * @param billId 单据ID
+     */
     protected void afterBillAudited(long billId) {
 
     }
