@@ -13,6 +13,7 @@ import cn.hamm.spms.module.wms.input.InputEntity;
 import cn.hamm.spms.module.wms.input.InputStatus;
 import cn.hamm.spms.module.wms.input.InputType;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ import java.util.List;
  *
  * @author Hamm.cn
  */
+@Slf4j
 @Service
 public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, PurchaseRepository, PurchaseDetailEntity, PurchaseDetailService, PurchaseDetailRepository> {
 
@@ -43,12 +45,17 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
     }
 
     @Override
-    public IDictionary getFinishedStatus() {
+    public IDictionary getBillDetailsFinishStatus() {
         return PurchaseStatus.INPUTTING;
     }
 
     @Override
-    public void afterBillFinished(Long billId) {
+    public IDictionary getFinishedStatus() {
+        return PurchaseStatus.DONE;
+    }
+
+    @Override
+    protected void afterAllBillDetailFinished(long billId) {
         PurchaseEntity purchaseBill = get(billId);
         List<PurchaseDetailEntity> details = detailService.getAllByBillId(purchaseBill.getId());
         List<InputDetailEntity> inputDetails = new ArrayList<>();
@@ -62,6 +69,7 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
         }
         purchaseBill.setTotalRealPrice(totalRealPrice);
         update(purchaseBill);
+        log.info("采购单已经全部采购完成，单据ID:{}", purchaseBill.getId());
 
         // 创建采购入库单
         InputEntity inputBill = new InputEntity()
@@ -70,6 +78,7 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
                 .setType(InputType.PURCHASE.getKey())
                 .setDetails(inputDetails);
         Services.getInputService().add(inputBill);
+        log.info("创建采购入库单：{}", inputBill);
     }
 
     @Override
@@ -84,6 +93,6 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
 
     @Override
     protected ConfigFlag getAutoAuditConfigFlag() {
-        return ConfigFlag.PURCHASE_ORDER_AUTO_AUDIT;
+        return ConfigFlag.PURCHASE_BILL_AUTO_AUDIT;
     }
 }

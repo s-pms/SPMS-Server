@@ -43,12 +43,12 @@ public class InventoryEntity extends BaseEntity<InventoryEntity> {
     @Search(Search.Mode.EQUALS)
     private Integer type;
 
-    @Description("存储资源")
+    @Description("仓库")
     @ManyToOne(fetch = FetchType.EAGER)
     @Search(Search.Mode.JOIN)
     private StorageEntity storage;
 
-    @Description("工厂结构")
+    @Description("生产单元")
     @ManyToOne(fetch = FetchType.EAGER)
     @Search(Search.Mode.JOIN)
     private StructureEntity structure;

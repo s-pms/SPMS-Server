@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.mes.pickout.detail;
+package cn.hamm.spms.module.mes.picking.detail;
 
 import cn.hamm.spms.base.bill.detail.BaseBillDetailService;
 import org.springframework.stereotype.Service;
@@ -9,5 +9,6 @@ import org.springframework.stereotype.Service;
  * @author Hamm.cn
  */
 @Service
-public class PickoutDetailService extends BaseBillDetailService<PickoutDetailEntity, PickoutDetailRepository> {
+public class PickingDetailService extends BaseBillDetailService<PickingDetailEntity, PickingDetailRepository> {
+
 }

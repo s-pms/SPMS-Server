@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.mes.pickout.detail;
+package cn.hamm.spms.module.mes.picking.detail;
 
 import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
 import org.springframework.stereotype.Repository;
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * @author Hamm.cn
  */
 @Repository
-public interface PickoutDetailRepository extends BaseBillDetailRepository<PickoutDetailEntity> {
+public interface PickingDetailRepository extends BaseBillDetailRepository<PickingDetailEntity> {
 }

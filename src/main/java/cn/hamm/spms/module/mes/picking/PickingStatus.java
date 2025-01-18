@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.mes.pickout;
+package cn.hamm.spms.module.mes.picking;
 
 import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum PickoutStatus implements IDictionary {
+public enum PickingStatus implements IDictionary {
     /**
      * <h3>审核中</h3>
      */
@@ -25,7 +25,7 @@ public enum PickoutStatus implements IDictionary {
     /**
      * <h3>出库中</h3>
      */
-    PURCHASING(3, "出库中"),
+    OUTPUTTING(3, "出库中"),
 
     /**
      * <h3>已完成</h3>

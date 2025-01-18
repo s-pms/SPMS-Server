@@ -13,17 +13,18 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ConfigFlag implements IDictionary {
-    ORDER_AUTO_FINISH(1, "生产订单开启自动完成", ConfigType.BOOLEAN, "1"),
-    ORDER_MANUAL_FINISH(2, "生产订单允许手动完成", ConfigType.BOOLEAN, "1"),
-    INPUT_ORDER_AUTO_AUDIT(3, "入库单开启自动审核", ConfigType.BOOLEAN, "0"),
-    OUTPUT_ORDER_AUTO_AUDIT(4, "出库单开启自动审核", ConfigType.BOOLEAN, "0"),
-    MOVE_ORDER_AUTO_AUDIT(5, "移库单开启自动审核", ConfigType.BOOLEAN, "0"),
-    PURCHASE_ORDER_AUTO_AUDIT(6, "采购单开启自动审核", ConfigType.BOOLEAN, "0"),
-    SALE_ORDER_AUTO_AUDIT(7, "销售单开启自动审核", ConfigType.BOOLEAN, "0"),
+    ORDER_AUTO_FINISH(1, "生产订单开启自动标记生产完成", ConfigType.BOOLEAN, "1"),
+    ORDER_MANUAL_FINISH(2, "生产订单允许手动标记生产完成", ConfigType.BOOLEAN, "1"),
+    INPUT_BILL_AUTO_AUDIT(3, "入库单开启自动审核", ConfigType.BOOLEAN, "0"),
+    OUTPUT_BILL_AUTO_AUDIT(4, "出库单开启自动审核", ConfigType.BOOLEAN, "0"),
+    MOVE_BILL_AUTO_AUDIT(5, "移库单开启自动审核", ConfigType.BOOLEAN, "0"),
+    PURCHASE_BILL_AUTO_AUDIT(6, "采购单开启自动审核", ConfigType.BOOLEAN, "0"),
+    SALE_BILL_AUTO_AUDIT(7, "销售单开启自动审核", ConfigType.BOOLEAN, "0"),
     ORDER_ENABLE_SUBMIT_WORK(8, "订单报工模式", ConfigType.BOOLEAN, "1"),
     BOM_AUTO_AUDIT(8, "生产配方自动审核", ConfigType.BOOLEAN, "0"),
     PLAN_AUTO_FINISH(9, "生产计划开启自动完成", ConfigType.BOOLEAN, "1"),
     ORDER_AUTO_START_AFTER_AUDIT(10, "订单审核后自动开始生产", ConfigType.BOOLEAN, "0"),
+    PICKING_BILL_AUTO_AUDIT(11, "领料单开启自动审核", ConfigType.BOOLEAN, "0"),
 
     ;
 

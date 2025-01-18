@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.mes.pickout;
+package cn.hamm.spms.module.mes.picking;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
@@ -7,7 +7,7 @@ import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.factory.structure.StructureEntity;
 import cn.hamm.spms.module.mes.order.OrderEntity;
-import cn.hamm.spms.module.mes.pickout.detail.PickoutDetailEntity;
+import cn.hamm.spms.module.mes.picking.detail.PickingDetailEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -28,23 +28,23 @@ import org.hibernate.annotations.DynamicUpdate;
 @Data
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "pickout")
+@Table(name = "picking")
 @Description("领料单")
-public class PickoutEntity extends AbstractBaseBillEntity<PickoutEntity, PickoutDetailEntity> {
+public class PickingEntity extends AbstractBaseBillEntity<PickingEntity, PickingDetailEntity> {
     @Description("领料单号")
     @Column(columnDefinition = "varchar(255) default '' comment '领料单号'", unique = true)
-    @AutoGenerateCode(CodeRuleField.PickoutBillCode)
+    @AutoGenerateCode(CodeRuleField.PickingBillCode)
     private String billCode;
 
     @Description("领料状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '领料状态'")
-    @Dictionary(value = PickoutStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
+    @Dictionary(value = PickingStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     @ReadOnly
     private Integer status;
 
     @Description("领料类型")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '领料类型'")
-    @Dictionary(value = PickoutType.class, groups = {WhenAdd.class, WhenUpdate.class})
+    @Dictionary(value = PickingType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 
     @Description("领料位置")

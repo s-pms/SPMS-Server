@@ -24,14 +24,14 @@ public enum CodeRuleField implements IDictionary {
     SupplierCode(2, "供应商编码", "SUP", SerialNumberUpdate.YEAR, "yyyy"),
 
     /**
-     * <h3>存储资源编码</h3>
+     * <h3>仓库编码</h3>
      */
-    StorageCode(3, "存储资源编码", "SRG", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
+    StorageCode(3, "仓库编码", "SRG", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
 
     /**
-     * <h3>工厂结构编码</h3>
+     * <h3>生产单元编码</h3>
      */
-    StructureCode(4, "工厂结构编码", "ST", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
+    StructureCode(4, "生产单元编码", "ST", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
 
     /**
      * <h3>客户编码</h3>
@@ -71,7 +71,7 @@ public enum CodeRuleField implements IDictionary {
     /**
      * <h3>领料单号</h3>
      */
-    PickoutBillCode(12, "领料单号", "PK", SerialNumberUpdate.DAY, "yyyymmdd"),
+    PickingBillCode(12, "领料单号", "PK", SerialNumberUpdate.DAY, "yyyymmdd"),
 
     /**
      * <h3>退料单号</h3>

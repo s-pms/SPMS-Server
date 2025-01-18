@@ -5,11 +5,16 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Extends;
 import cn.hamm.airpower.annotation.Filter;
 import cn.hamm.airpower.enums.Api;
+import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.base.bill.BaseBillController;
+import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailEntity;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailRepository;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailService;
+import cn.hamm.spms.module.system.config.ConfigEntity;
+import cn.hamm.spms.module.system.config.ConfigFlag;
+import cn.hamm.spms.module.system.config.ConfigService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,5 +43,24 @@ public class OrderController extends BaseBillController<OrderEntity, OrderServic
     public Json pause(@RequestBody @Validated(WhenIdRequired.class) OrderEntity order) {
         service.pause(order.getId());
         return Json.success("暂停生产成功");
+    }
+
+    @Description("订单报工")
+    @PostMapping("addOrderDetail")
+    @Filter(WhenGetDetail.class)
+    public Json addOrderDetail(@RequestBody @Validated(WhenAddFinish.class) OrderDetailEntity detail) {
+        service.addOrderDetail(detail);
+        return Json.success("提交订单报工成功");
+    }
+
+    @Description("手动设置为生产完成待入库状态")
+    @PostMapping("setFinishToInput")
+    @Filter(WhenGetDetail.class)
+    public Json setFinishToInput(@RequestBody @Validated(WhenIdRequired.class) OrderEntity order) {
+        ConfigService configService = Services.getConfigService();
+        ConfigEntity config = configService.get(ConfigFlag.ORDER_MANUAL_FINISH);
+        ServiceError.FORBIDDEN.when(!config.booleanConfig(), "未开启手动标记订单生产完成");
+        service.setBillDetailsAllFinished(order.getId());
+        return Json.success("手动设置为生产完成待入库状态成功");
     }
 }

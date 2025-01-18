@@ -10,6 +10,6 @@ import cn.hamm.spms.base.BaseController;
  * @author Hamm.cn
  */
 @ApiController("storage")
-@Description("存储资源")
+@Description("仓库")
 public class StorageController extends BaseController<StorageEntity, StorageService, StorageRepository> {
 }

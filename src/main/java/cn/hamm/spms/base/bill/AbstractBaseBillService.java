@@ -1,8 +1,10 @@
 package cn.hamm.spms.base.bill;
 
 import cn.hamm.airpower.exception.ServiceError;
+import cn.hamm.airpower.helper.TransactionHelper;
 import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.airpower.root.RootEntity;
+import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.airpower.util.TaskUtil;
 import cn.hamm.spms.base.BaseRepository;
 import cn.hamm.spms.base.BaseService;
@@ -10,10 +12,9 @@ import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailService;
 import cn.hamm.spms.common.Services;
-import cn.hamm.spms.module.mes.order.OrderStatus;
 import cn.hamm.spms.module.system.config.ConfigEntity;
 import cn.hamm.spms.module.system.config.ConfigFlag;
-import cn.hamm.spms.module.system.config.ConfigService;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,6 +31,7 @@ import java.util.Objects;
  * @param <DR>> 明细数据源
  * @author Hamm.cn
  */
+@Slf4j
 public abstract class AbstractBaseBillService<
         E extends AbstractBaseBillEntity<E, D>, R extends BaseRepository<E>,
         D extends BaseBillDetailEntity<D>, DS extends BaseBillDetailService<D, DR>,
@@ -39,14 +41,8 @@ public abstract class AbstractBaseBillService<
     @Autowired(required = false)
     protected DS detailService;
 
-    /**
-     * <h3>获取手动标记完成配置</h3>
-     *
-     * @return 配置标识
-     */
-    protected ConfigFlag getManualFinishConfigFlag() {
-        return null;
-    }
+    @Autowired
+    protected TransactionHelper transactionHelper;
 
     /**
      * <h3>获取自动审核配置</h3>
@@ -58,71 +54,81 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>标记单据完成</h3>
+     * <h3>设置单据所有明细都已完成</h3>
      *
      * @param billId 单据ID
      */
-    public final void manualFinish(long billId) {
-        ConfigService configService = Services.getConfigService();
-        ConfigFlag configFlag = getManualFinishConfigFlag();
-        ServiceError.FORBIDDEN.whenNull(configFlag, "标记完成失败，没有找到配置项");
-        ConfigEntity config = configService.get(configFlag);
-        ServiceError.FORBIDDEN.when(!config.booleanConfig(), "未开启手动标记完成");
-        finish(billId);
+    public final void setBillDetailsAllFinished(long billId) {
+        log.info("标记明细已全部完成，单据ID:{}", billId);
+        IDictionary status = getBillDetailsFinishStatus();
+        ServiceError.FORBIDDEN.whenNull(status, "没有找到明细完成状态");
+        E bill = get(billId);
+        bill.setStatus(status.getKey());
+        update(bill);
+        afterAllBillDetailFinished(bill.getId());
+        if (status.equals(getFinishedStatus())) {
+            log.info("明细完成状态是终态");
+            setBillFinished(bill.getId());
+        }
     }
 
+
     /**
-     * <h3>标记单据完成</h3>
+     * <h3>设置单据已完成</h3>
      *
      * @param billId 单据ID
      */
-    protected final void finish(long billId) {
-        IDictionary finishedStatus = getFinishedStatus();
-        ServiceError.FORBIDDEN.whenNull(finishedStatus, "标记完成失败，没有找到完成状态");
-
+    public final void setBillFinished(long billId) {
+        log.info("标记单据已完成，单据ID:{}, 单据类型:{}", billId, this.getClass().getSimpleName());
+        IDictionary status = getFinishedStatus();
+        ServiceError.FORBIDDEN.whenNull(status, "标记完成失败，没有找到完成状态");
         E bill = get(billId);
-        ServiceError.FORBIDDEN.when(OrderStatus.PRODUCING.notEqualsKey(bill.getStatus()), "该订单状态无法标记完成");
-        bill.setStatus(finishedStatus.getKey());
+        beforeBillFinish(bill.copy());
+        bill.setStatus(status.getKey());
         update(bill);
-
         afterBillFinished(bill.getId());
     }
 
     /**
-     * <h3>添加完成数量</h3>
+     * <h3>单据完成前置方法</h3>
+     *
+     * @param bill 单据
+     */
+    protected void beforeBillFinish(E bill) {
+    }
+
+    /**
+     * <h3>添加明细的完成数量</h3>
      *
      * @param sourceDetail 提交明细
      */
-    public void addFinish(@NotNull D sourceDetail) {
-        // 查保存的明细
-        D savedDetail = detailService.get(sourceDetail.getId());
-        // 更新保存明细的完成数量 = 保存明细的完成数量 + 提交的完成数量
-        double finishQuantity = savedDetail.getFinishQuantity() + sourceDetail.getQuantity();
-        // 如果完成数量 >= 数量 则标记明细完成
-        savedDetail.setFinishQuantity(finishQuantity).setIsFinished(finishQuantity >= savedDetail.getQuantity());
-        detailService.update(savedDetail);
+    public final void addDetailFinishQuantity(@NotNull D sourceDetail) {
+        log.info("添加明细完成数量: 单据ID:{}, 明细数量:{}, 完成数量:{}, 单据类型:{}", sourceDetail.getBillId(), sourceDetail.getId(), sourceDetail.getQuantity(), this.getClass().getSimpleName());
+        transactionHelper.run(() -> {
+            // 查保存的明细
+            D savedDetail = detailService.get(sourceDetail.getId());
+            ServiceError.FORBIDDEN.when(savedDetail.getIsFinished(), "该明细已标记完成，无法再添加明细完成数量");
+            // 更新保存明细的完成数量 = 保存明细的完成数量 + 提交的完成数量
+            double finishQuantity = NumberUtil.add(savedDetail.getFinishQuantity(), sourceDetail.getQuantity());
+            // 如果完成数量 >= 数量 则标记明细完成
+            savedDetail.setFinishQuantity(finishQuantity).setIsFinished(finishQuantity >= savedDetail.getQuantity());
+            detailService.update(savedDetail);
+            log.info("修改明细完成 数量:{} 是否完成:{}", finishQuantity, savedDetail.getIsFinished());
 
-        // 明细添加成功后置方法
-        afterDetailFinishAdded(savedDetail.getId(), sourceDetail);
+            // 明细添加成功后置方法
+            afterDetailFinishAdded(savedDetail.getId(), sourceDetail);
 
-        // 开始判断是否整个单据数量已超标
-        List<D> details = detailService.getAllByBillId(savedDetail.getBillId());
-        // 判断所有明细是否完成
-        boolean isAllFinished = details.stream()
-                .allMatch(BaseBillDetailEntity::getIsFinished);
-        if (!isAllFinished) {
-            return;
-        }
-        IDictionary finishedStatus = getFinishedStatus();
-        if (Objects.isNull(finishedStatus)) {
-            return;
-        }
-        E bill = get(savedDetail.getBillId());
-        bill.setStatus(finishedStatus.getKey());
-
-        update(bill);
-        // 触发单据完成的后置方法
-        afterBillFinished(savedDetail.getBillId());
+            // 开始判断是否整个单据数量已超标
+            List<D> details = detailService.getAllByBillId(savedDetail.getBillId());
+            // 判断所有明细是否完成
+            boolean isAllFinished = details.stream()
+                    .allMatch(BaseBillDetailEntity::getIsFinished);
+            log.info("所有明细是否已完成: {}", isAllFinished);
+            if (!isAllFinished) {
+                return;
+            }
+            setBillDetailsAllFinished(savedDetail.getBillId());
+        });
     }
 
     /**
@@ -138,8 +144,20 @@ public abstract class AbstractBaseBillService<
      * <h3>单据完成的后置方法</h3>
      *
      * @param billId 单据ID
+     * @apiNote 一般用于在当前单据完成后同步标记关联的其他单据为完成状态
+     * @see #afterAllBillDetailFinished(long)
      */
     protected void afterBillFinished(Long billId) {
+    }
+
+    /**
+     * <h3>单据所有明细完成的后置方法</h3>
+     *
+     * @param billId 单据ID
+     * @apiNote 一般用于当前单据的所有明细都已完成，可能会创建其他的单据，也可能去修改其他单据的明细
+     * @see #afterBillFinished(Long)
+     */
+    protected void afterAllBillDetailFinished(long billId) {
     }
 
     /**
@@ -216,9 +234,10 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>单据审核后置</h3>
+     * <h3>单据审核的后置方法</h3>
      *
      * @param billId 单据ID
+     * @apiNote 可以添加一些审核后的业务逻辑
      */
     protected void afterBillAudited(long billId) {
 
@@ -303,9 +322,20 @@ public abstract class AbstractBaseBillService<
     protected abstract IDictionary getRejectedStatus();
 
     /**
-     * <h3>获取完成状态</h3>
+     * <h3>获取所有明细均已完成的单据状态</h3>
      *
-     * @return 完成状态
+     * @return 所有明细均已完成的单据状态
+     * @apiNote 可单独配置 {@link #getFinishedStatus()}
      */
-    protected abstract IDictionary getFinishedStatus();
+    public abstract IDictionary getBillDetailsFinishStatus();
+
+    /**
+     * <h3>获取单据已完成状态</h3>
+     *
+     * @return 单据已完成状态
+     * @apiNote 默认为 {@link #getBillDetailsFinishStatus()}
+     */
+    public IDictionary getFinishedStatus() {
+        return getBillDetailsFinishStatus();
+    }
 }

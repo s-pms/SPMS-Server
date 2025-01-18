@@ -35,12 +35,13 @@ public class SaleService extends AbstractBaseBillService<SaleEntity, SaleReposit
     }
 
     @Override
-    public IDictionary getFinishedStatus() {
+    public IDictionary getBillDetailsFinishStatus() {
         return SaleStatus.DONE;
     }
 
     @Override
     protected void afterDetailSaved(@NotNull SaleEntity sale) {
+        // 计算总金额
         List<SaleDetailEntity> details = sale.getDetails();
         double totalPrice = details.stream()
                 .mapToDouble(detail -> NumberUtil.mul(detail.getQuantity(), detail.getPrice()))
@@ -51,6 +52,6 @@ public class SaleService extends AbstractBaseBillService<SaleEntity, SaleReposit
 
     @Override
     protected ConfigFlag getAutoAuditConfigFlag() {
-        return ConfigFlag.SALE_ORDER_AUTO_AUDIT;
+        return ConfigFlag.SALE_BILL_AUTO_AUDIT;
     }
 }

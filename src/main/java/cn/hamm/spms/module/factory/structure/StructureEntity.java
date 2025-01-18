@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * <h1>工厂结构实体</h1>
+ * <h1>生产单元实体</h1>
  *
  * @author Hamm.cn
  */
@@ -31,10 +31,10 @@ import java.util.Set;
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "structure")
-@Description("工厂结构")
+@Description("生产单元")
 public class StructureEntity extends BaseEntity<StructureEntity> implements ITree<StructureEntity> {
-    @Description("工厂结构编码")
-    @Column(columnDefinition = "varchar(255) default '' comment '工厂结构编码'", unique = true)
+    @Description("生产单元编码")
+    @Column(columnDefinition = "varchar(255) default '' comment '生产单元编码'", unique = true)
     @AutoGenerateCode(CodeRuleField.StructureCode)
     private String code;
 

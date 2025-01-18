@@ -38,27 +38,31 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
     }
 
     /**
-     * <h3>查询指定物料ID和存储资源ID下的库存</h3>
+     * <h3>查询指定物料ID和仓库ID下的库存</h3>
      *
      * @param materialId 物料ID
-     * @param storageId  存储资源ID
+     * @param storageId  仓库ID
      * @return 库存
      */
     public InventoryEntity getByMaterialIdAndStorageId(Long materialId, Long storageId) {
-        return repository.getByMaterialAndStorage(new MaterialEntity().setId(materialId), new StorageEntity().setId(storageId));
+        return repository.getByMaterialAndStorage(
+                new MaterialEntity().setId(materialId),
+                new StorageEntity().setId(storageId)
+        );
     }
 
     /**
-     * <h3>查询指定物料ID和工厂结构ID下的库存</h3>
+     * <h3>查询指定物料ID和生产单元ID下的库存</h3>
      *
      * @param materialId  物料ID
-     * @param structureId 工厂结构ID
+     * @param structureId 生产单元ID
      * @return 库存
      */
     @SuppressWarnings("unused")
     public InventoryEntity getByMaterialIdAndStructureId(Long materialId, Long structureId) {
         return repository.getByMaterialAndStructure(
-                new MaterialEntity().setId(materialId), new StructureEntity().setId(structureId)
+                new MaterialEntity().setId(materialId),
+                new StructureEntity().setId(structureId)
         );
     }
 
@@ -105,7 +109,7 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
                 if (Objects.isNull(search.getStructure())) {
                     return predicateList;
                 }
-                Set<Long> idList = getIdList(search.getStorage().getId(), structureService, StructureEntity.class);
+                Set<Long> idList = getIdList(search.getStructure().getId(), structureService, StructureEntity.class);
                 if (!idList.isEmpty()) {
                     Join<InventoryEntity, StructureEntity> join = root.join("structure");
                     Predicate inPredicate = join.get(Constant.ID).in(idList);

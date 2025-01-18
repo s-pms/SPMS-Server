@@ -6,6 +6,7 @@ import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.channel.sale.SaleEntity;
+import cn.hamm.spms.module.mes.picking.PickingEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import cn.hamm.spms.module.wms.move.MoveEntity;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
@@ -55,4 +56,8 @@ public class OutputEntity extends AbstractBaseBillEntity<OutputEntity, OutputDet
     @Description("移库单")
     @ManyToOne(fetch = FetchType.EAGER)
     private MoveEntity move;
+
+    @Description("领料单")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private PickingEntity picking;
 }
