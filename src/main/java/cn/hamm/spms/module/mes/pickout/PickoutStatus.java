@@ -30,12 +30,7 @@ public enum PickoutStatus implements IDictionary {
     /**
      * <h3>已完成</h3>
      */
-    DONE(4, "已完成"),
-
-    /**
-     * <h3>已取消</h3>
-     */
-    CANCELED(5, "已取消");
+    DONE(4, "已完成");
 
     private final int key;
     private final String label;
