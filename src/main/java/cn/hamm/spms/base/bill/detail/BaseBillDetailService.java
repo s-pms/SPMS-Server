@@ -66,7 +66,6 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
      * @param detailCheck 明细检查函数
      */
     public <B extends AbstractBaseBillEntity<B, ?>, BS extends AbstractBaseBillService<B, ?, ?, ?, ?>> void updateDetailQuantity(long billId, double quantity, @NotNull BS billService, Consumer<E> detailCheck) {
-        B bill = billService.get(billId);
         List<E> details = getAllByBillId(billId);
         for (E detail : details) {
             if (quantity <= 0) {
