@@ -9,6 +9,7 @@ import cn.hamm.airpower.model.query.QueryListRequest;
 import cn.hamm.airpower.model.query.QueryPageRequest;
 import cn.hamm.airpower.root.RootEntityController;
 import cn.hamm.spms.common.annotation.DisableLog;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @param <R> 数据源
  * @author Hamm.cn
  */
+@Slf4j
 @Permission
 public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>, R extends BaseRepository<E>> extends RootEntityController<E, S, R> {
     @DisableLog
@@ -51,10 +53,12 @@ public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>
     }
 
     protected E beforeAppUpdate(@NotNull E entity) {
+        log.info("修改数据，ID:{}", entity.getId());
         return entity;
     }
 
     protected void beforeAppDelete(long id) {
+        log.info("删除数据，ID:{}", id);
     }
 
     @Override

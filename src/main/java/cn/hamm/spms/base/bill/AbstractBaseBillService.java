@@ -50,6 +50,7 @@ public abstract class AbstractBaseBillService<
      * @return 配置标识
      */
     protected ConfigFlag getAutoAuditConfigFlag() {
+        log.info("获取自动审核配置, 无需自动审核");
         return null;
     }
 
@@ -94,6 +95,7 @@ public abstract class AbstractBaseBillService<
      * @param bill 单据
      */
     protected void beforeBillFinish(E bill) {
+        log.info("单据完成前置方法，单据ID:{}, 单据类型:{}", bill.getId(), this.getClass().getSimpleName());
     }
 
     /**
@@ -137,6 +139,7 @@ public abstract class AbstractBaseBillService<
      * @param sourceDetail 提交明细
      */
     protected void afterDetailFinishAdded(long detailId, D sourceDetail) {
+        log.info("添加完成数量成功后置，明细ID:{}, 提交明细:{}", detailId, sourceDetail);
     }
 
     /**
@@ -147,6 +150,7 @@ public abstract class AbstractBaseBillService<
      * @see #afterAllBillDetailFinished(long)
      */
     protected void afterBillFinished(Long billId) {
+        log.info("单据完成的后置，单据ID:{}", billId);
     }
 
     /**
@@ -157,6 +161,7 @@ public abstract class AbstractBaseBillService<
      * @see #afterBillFinished(Long)
      */
     protected void afterAllBillDetailFinished(long billId) {
+        log.info("单据所有明细完成的后置，单据ID:{}", billId);
     }
 
     /**
@@ -165,6 +170,7 @@ public abstract class AbstractBaseBillService<
      * @param bill 单据
      */
     protected void afterDetailSaved(E bill) {
+        log.info("单据明细保存后置，单据ID:{}", bill.getId());
     }
 
     @Override
@@ -192,7 +198,7 @@ public abstract class AbstractBaseBillService<
      * @param id 单据ID
      */
     protected void afterBillAdd(long id) {
-
+        log.info("单据添加后置，单据ID:{}", id);
     }
 
     @Override
@@ -239,7 +245,7 @@ public abstract class AbstractBaseBillService<
      * @apiNote 可以添加一些审核后的业务逻辑
      */
     protected void afterBillAudited(long billId) {
-
+        log.info("单据审核后置方法: 单据ID:{}, 单据类型:{}", billId, this.getClass().getSimpleName());
     }
 
     /**
@@ -335,6 +341,7 @@ public abstract class AbstractBaseBillService<
      * @apiNote 默认为 {@link #getBillDetailsFinishStatus()}
      */
     public IDictionary getFinishedStatus() {
+        log.info("获取单据已完成状态: {}", getBillDetailsFinishStatus().getLabel());
         return getBillDetailsFinishStatus();
     }
 }

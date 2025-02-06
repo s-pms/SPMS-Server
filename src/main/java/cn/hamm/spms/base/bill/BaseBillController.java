@@ -10,6 +10,7 @@ import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailService;
 import cn.hamm.spms.base.bill.detail.IBaseBillDetailAction;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @param <DR> 明细数据源
  * @author Hamm.cn
  */
+@Slf4j
 @Permission
 public class BaseBillController<
         E extends AbstractBaseBillEntity<E, D>, S extends AbstractBaseBillService<E, R, D, DS, DR>, R extends BaseBillRepository<E, D>,
@@ -101,5 +103,6 @@ public class BaseBillController<
      * @param bill 单据
      */
     protected void afterAudit(@NotNull E bill) {
+        log.info("单据审核成功，单据ID：{}", bill.getId());
     }
 }

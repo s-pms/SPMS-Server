@@ -42,11 +42,7 @@ public class ConfigService extends BaseService<ConfigEntity, ConfigRepository> {
         ServiceError.FORBIDDEN_DELETE.when(config.getIsSystem(), "系统内置配置无法被删除!");
     }
 
-    @Override
-    protected ConfigEntity beforeAppSaveToDatabase(@NotNull ConfigEntity configuration) {
-        String key = configuration.getFlag();
-        // 如果 Configuration枚举中包含这个标识 则设置为系统标识
-        configuration.setIsSystem(false);
+    private static void extracted(@NotNull ConfigEntity configuration, String key) {
         for (ConfigFlag configFlag : ConfigFlag.values()) {
             if (configFlag.name().equals(key)) {
                 configuration.setIsSystem(true);
@@ -69,6 +65,14 @@ public class ConfigService extends BaseService<ConfigEntity, ConfigRepository> {
                 break;
             }
         }
+    }
+
+    @Override
+    protected ConfigEntity beforeAppSaveToDatabase(@NotNull ConfigEntity configuration) {
+        String key = configuration.getFlag();
+        // 如果 Configuration枚举中包含这个标识 则设置为系统标识
+        configuration.setIsSystem(false);
+        extracted(configuration, key);
         return configuration;
     }
 }
