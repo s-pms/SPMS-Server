@@ -94,7 +94,7 @@ public abstract class AbstractBaseBillService<
      *
      * @param bill 单据
      */
-    protected void beforeBillFinish(E bill) {
+    protected void beforeBillFinish(@NotNull E bill) {
         log.info("单据完成前置方法，单据ID:{}, 单据类型:{}", bill.getId(), this.getClass().getSimpleName());
     }
 
@@ -169,7 +169,7 @@ public abstract class AbstractBaseBillService<
      *
      * @param bill 单据
      */
-    protected void afterDetailSaved(E bill) {
+    protected void afterDetailSaved(@NotNull E bill) {
         log.info("单据明细保存后置，单据ID:{}", bill.getId());
     }
 
