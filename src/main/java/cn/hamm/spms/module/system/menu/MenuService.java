@@ -100,8 +100,6 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
 
         secondMenu = new MenuEntity().setName("物料领取").setPath("/console/mes/picking/list").setParentId(firstMenu.getId());
         add(secondMenu);
-//        thirdMenu = new MenuEntity().setName("物料退还").setPath("/console/mes/restore/list").setParentId(secondMenu.getId());
-//        add(thirdMenu);
         secondMenu = new MenuEntity().setName("计划管理").setPath("/console/mes/plan/list").setParentId(firstMenu.getId());
         add(secondMenu);
         secondMenu = new MenuEntity().setName("订单管理").setPath("/console/mes/order/list").setParentId(firstMenu.getId());

@@ -99,7 +99,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>添加明细的完成数量</h3>
+     * <h3>添加明细完成数量</h3>
      *
      * @param sourceDetail 提交明细
      */
@@ -109,7 +109,7 @@ public abstract class AbstractBaseBillService<
             // 查保存的明细
             D savedDetail = detailService.get(sourceDetail.getId());
             ServiceError.FORBIDDEN.when(savedDetail.getIsFinished(), "该明细已标记完成，无法再添加明细完成数量");
-            // 更新保存明细的完成数量 = 保存明细的完成数量 + 提交的完成数量
+            // 更新保存明细完成数量 = 保存明细完成数量 + 提交完成数量
             double finishQuantity = NumberUtil.add(savedDetail.getFinishQuantity(), sourceDetail.getQuantity());
             // 如果完成数量 >= 数量 则标记明细完成
             savedDetail.setFinishQuantity(finishQuantity).setIsFinished(finishQuantity >= savedDetail.getQuantity());

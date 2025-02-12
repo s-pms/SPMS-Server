@@ -194,9 +194,6 @@ public class InitializeRunner implements CommandLineRunner {
         Services.getPermissionService().loadPermission();
         Services.getMenuService().initMenu();
         initDevData();
-//        String[] localEnvList = {"local-hamm"};
-//        if (Arrays.stream(localEnvList).toList().contains(AirHelper.getCurrentEnvironment())) {
-//        }
     }
 
     private void initConfigs() {
