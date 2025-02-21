@@ -58,6 +58,33 @@
 
 本仓库为 **S-PMS** Server后端项目仓库，你可以查看 [开发者指南@Github](https://github.com/s-pms/SPMS-Docs)、[开发者指南@Gitee](https://gitee.com/s-pms/SPMS-Docs) 等帮助文档。
 
+## 快速入门
+
+这是 **`AirPower4J`**（[Github](https://github.com/HammCn/AirPower4J)/[Gitee](https://gitee.com/air-power/AirPower4J)
+）的宿主项目，你可以使用下面的方式进行使用：
+
+### 创建项目文件夹
+
+创建项目文件夹， 如 `SPMS`，然后使用 **Git** 将源代码clone至此目录。
+
+### 下载源代码
+
+- 通过 **Github** 代码仓库初始化
+
+  ```shell
+  git clone https://github.com/s-pms/SPMS-Server.git
+  ```
+
+- 通过 **Gitee** 代码仓库初始化(推荐)
+
+  ```shell
+  git clone https://gitee.com/s-pms/SPMS-Server.git
+  ```
+
+### IDEA打开项目文件夹
+
+使用 IDEA 打开 `SPMS-Server` 目录，刷新项目的 `maven` 依赖，等待依赖安装完成即可。
+
 ## 联系我们
 
 **S-PMS** 所有代码均在 **MIT** 开源协议规范下免费提供，你可以放心使用。
