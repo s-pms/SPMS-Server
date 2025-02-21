@@ -81,12 +81,12 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
             }
 
             // 还需要完成的数量
-            double detailNeedQuantity = NumberUtil.sub(detail.getQuantity(), detail.getFinishQuantity());
+            double detailNeedQuantity = NumberUtil.subtract(detail.getQuantity(), detail.getFinishQuantity());
             if (quantity < detailNeedQuantity) {
                 // 添加单据完成数量
                 detail.setFinishQuantity(quantity);
             } else {
-                quantity = NumberUtil.sub(quantity, detailNeedQuantity);
+                quantity = NumberUtil.subtract(quantity, detailNeedQuantity);
                 detail.setFinishQuantity(detail.getQuantity()).setIsFinished(true);
             }
             update(detail);

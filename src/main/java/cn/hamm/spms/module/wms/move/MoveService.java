@@ -63,7 +63,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
 
         // 扣除来源库存
         InventoryEntity from = sourceDetail.getInventory();
-        from.setQuantity(NumberUtil.sub(from.getQuantity(), sourceDetail.getQuantity()));
+        from.setQuantity(NumberUtil.subtract(from.getQuantity(), sourceDetail.getQuantity()));
         InventoryService inventoryService = Services.getInventoryService();
         inventoryService.update(from);
 

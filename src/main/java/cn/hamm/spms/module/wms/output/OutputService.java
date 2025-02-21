@@ -71,7 +71,7 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
             // 判断库存
             ServiceError.FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
         }
-        inventory.setQuantity(NumberUtil.sub(inventory.getQuantity(), sourceDetail.getQuantity()));
+        inventory.setQuantity(NumberUtil.subtract(inventory.getQuantity(), sourceDetail.getQuantity()));
         inventoryService.update(inventory);
 
         OutputEntity bill = get(existDetail.getBillId());
