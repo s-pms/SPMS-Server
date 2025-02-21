@@ -7,6 +7,7 @@ import cn.hamm.spms.module.channel.customer.CustomerService;
 import cn.hamm.spms.module.channel.purchase.PurchaseService;
 import cn.hamm.spms.module.channel.purchaseprice.PurchasePriceService;
 import cn.hamm.spms.module.channel.sale.SaleService;
+import cn.hamm.spms.module.channel.sale.detail.SaleDetailService;
 import cn.hamm.spms.module.channel.saleprice.SalePriceService;
 import cn.hamm.spms.module.channel.supplier.SupplierService;
 import cn.hamm.spms.module.factory.storage.StorageService;
@@ -14,6 +15,8 @@ import cn.hamm.spms.module.factory.structure.StructureService;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
 import cn.hamm.spms.module.mes.order.OrderService;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailService;
+import cn.hamm.spms.module.mes.picking.PickingService;
+import cn.hamm.spms.module.mes.picking.detail.PickingDetailService;
 import cn.hamm.spms.module.mes.plan.PlanService;
 import cn.hamm.spms.module.mes.plan.detail.PlanDetailService;
 import cn.hamm.spms.module.mes.routing.operation.RoutingOperationService;
@@ -30,6 +33,7 @@ import cn.hamm.spms.module.system.unit.UnitService;
 import cn.hamm.spms.module.wms.input.InputService;
 import cn.hamm.spms.module.wms.inventory.InventoryService;
 import cn.hamm.spms.module.wms.output.OutputService;
+import cn.hamm.spms.module.wms.output.detail.OutputDetailService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -131,6 +135,18 @@ public class Services {
     @Getter
     private static RoutingOperationService routingOperationService;
 
+    @Getter
+    private static PickingService pickingService;
+
+    @Getter
+    private static PickingDetailService pickingDetailService;
+
+    @Getter
+    private static SaleDetailService saleDetailService;
+
+    @Getter
+    private static OutputDetailService outputDetailService;
+
     @Autowired
     private void initService(
             CodeRuleService codeRuleService,
@@ -162,7 +178,11 @@ public class Services {
             OrderService orderService,
             PlanService planService,
             PlanDetailService planDetailService,
-            RoutingOperationService routingOperationService
+            RoutingOperationService routingOperationService,
+            PickingService pickingService,
+            PickingDetailService pickingDetailService,
+            SaleDetailService saleDetailService,
+            OutputDetailService outputDetailService
     ) {
         Services.codeRuleService = codeRuleService;
         Services.purchaseService = purchaseService;
@@ -194,5 +214,9 @@ public class Services {
         Services.planService = planService;
         Services.planDetailService = planDetailService;
         Services.routingOperationService = routingOperationService;
+        Services.pickingService = pickingService;
+        Services.pickingDetailService = pickingDetailService;
+        Services.saleDetailService = saleDetailService;
+        Services.outputDetailService = outputDetailService;
     }
 }

@@ -40,7 +40,7 @@ public class InputDetailEntity extends BaseBillDetailEntity<InputDetailEntity> {
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已入库数量'")
     private Double finishQuantity;
 
-    @Description("存储资源")
+    @Description("仓库")
     @Transient
     private StorageEntity storage;
 }

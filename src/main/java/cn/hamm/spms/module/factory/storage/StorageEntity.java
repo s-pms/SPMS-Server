@@ -21,7 +21,7 @@ import org.hibernate.validator.constraints.Length;
 import java.util.List;
 
 /**
- * <h1>存储资源实体</h1>
+ * <h1>仓库实体</h1>
  *
  * @author Hamm.cn
  */
@@ -32,10 +32,10 @@ import java.util.List;
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "storage")
-@Description("存储资源")
+@Description("仓库")
 public class StorageEntity extends BaseEntity<StorageEntity> implements ITree<StorageEntity> {
-    @Description("存储资源编码")
-    @Column(columnDefinition = "varchar(255) default '' comment '存储资源编码'", unique = true)
+    @Description("仓库编码")
+    @Column(columnDefinition = "varchar(255) default '' comment '仓库编码'", unique = true)
     @AutoGenerateCode(CodeRuleField.StorageCode)
     private String code;
 

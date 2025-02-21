@@ -10,6 +10,6 @@ import cn.hamm.spms.base.BaseController;
  * @author Hamm.cn
  */
 @ApiController("structure")
-@Description("工厂结构")
+@Description("生产单元")
 public class StructureController extends BaseController<StructureEntity, StructureService, StructureRepository> {
 }

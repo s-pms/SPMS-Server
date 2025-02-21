@@ -18,6 +18,8 @@ import cn.hamm.spms.module.channel.supplier.SupplierEntity;
 import cn.hamm.spms.module.channel.supplier.SupplierService;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
 import cn.hamm.spms.module.factory.storage.StorageService;
+import cn.hamm.spms.module.factory.structure.StructureEntity;
+import cn.hamm.spms.module.factory.structure.StructureService;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
 import cn.hamm.spms.module.iot.report.ReportDataType;
@@ -103,6 +105,8 @@ public class InitializeRunner implements CommandLineRunner {
     private BomService bomService;
     @Autowired
     private RoutingService routingService;
+    @Autowired
+    private StructureService structureService;
 
     private void initParameters() {
         ParameterEntity parameter;
@@ -190,9 +194,6 @@ public class InitializeRunner implements CommandLineRunner {
         Services.getPermissionService().loadPermission();
         Services.getMenuService().initMenu();
         initDevData();
-//        String[] localEnvList = {"local-hamm"};
-//        if (Arrays.stream(localEnvList).toList().contains(AirHelper.getCurrentEnvironment())) {
-//        }
     }
 
     private void initConfigs() {
@@ -309,6 +310,21 @@ public class InitializeRunner implements CommandLineRunner {
                 ))
         );
 
+
+        StructureEntity structure = new StructureEntity().setName("笔记本电脑产线");
+        structure = structureService.get(structureService.add(structure));
+
+        for (int i = 0; i < TWO; i++) {
+            structureService.add(new StructureEntity()
+                    .setParentId(structure.getId())
+                    .setName(String.format("工位%s", (i + 1)))
+                    .setOperationList(new HashSet<>(Arrays.asList(
+                            operationService.get(operationIdKeyboard),
+                            operationService.get(operationIdScreen),
+                            operationService.get(operationIdSystem)
+                    )))
+            );
+        }
 
     }
 }

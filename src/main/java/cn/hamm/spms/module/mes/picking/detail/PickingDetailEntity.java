@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.mes.pickout.detail;
+package cn.hamm.spms.module.mes.picking.detail;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
@@ -22,9 +22,9 @@ import org.hibernate.annotations.DynamicUpdate;
 @Data
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "pickout_detail")
+@Table(name = "picking_detail")
 @Description("领料明细")
-public class PickoutDetailEntity extends BaseBillDetailEntity<PickoutDetailEntity> {
+public class PickingDetailEntity extends BaseBillDetailEntity<PickingDetailEntity> {
     @Description("物料信息")
     @ManyToOne(fetch = FetchType.EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料不能为空")

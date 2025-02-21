@@ -9,7 +9,6 @@ import lombok.Getter;
  *
  * @author Hamm.cn
  */
-@SuppressWarnings("AlibabaEnumConstantsMustHaveComment")
 @Getter
 @AllArgsConstructor
 public enum ConfigType implements IDictionary {

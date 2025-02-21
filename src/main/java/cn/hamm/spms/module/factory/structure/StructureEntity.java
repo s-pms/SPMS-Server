@@ -5,11 +5,9 @@ import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.interfaces.ITree;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
+import cn.hamm.spms.module.mes.operation.OperationEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,9 +17,10 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
+import java.util.Set;
 
 /**
- * <h1>工厂结构实体</h1>
+ * <h1>生产单元实体</h1>
  *
  * @author Hamm.cn
  */
@@ -32,10 +31,10 @@ import java.util.List;
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "structure")
-@Description("工厂结构")
+@Description("生产单元")
 public class StructureEntity extends BaseEntity<StructureEntity> implements ITree<StructureEntity> {
-    @Description("工厂结构编码")
-    @Column(columnDefinition = "varchar(255) default '' comment '工厂结构编码'", unique = true)
+    @Description("生产单元编码")
+    @Column(columnDefinition = "varchar(255) default '' comment '生产单元编码'", unique = true)
     @AutoGenerateCode(CodeRuleField.StructureCode)
     private String code;
 
@@ -54,4 +53,8 @@ public class StructureEntity extends BaseEntity<StructureEntity> implements ITre
     @Description("树子集节点数组")
     @Transient
     private List<StructureEntity> children;
+
+    @Description("可执行工序")
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<OperationEntity> operationList;
 }

@@ -5,6 +5,7 @@ import cn.hamm.airpower.util.ReflectUtil;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StringUtils;
 
@@ -19,6 +20,7 @@ import java.util.Objects;
  * @param <R> 数据源
  * @author Hamm.cn
  */
+@Slf4j
 public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> extends RootService<E, R> {
     /**
      * <h3>当前服务的数据库最后一次确认</h3>
@@ -26,7 +28,8 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
      * @param entity 实体
      * @return 处理后的数据
      */
-    protected E beforeAppSaveToDatabase(E entity) {
+    protected E beforeAppSaveToDatabase(@NotNull E entity) {
+        log.info("保存数据到数据库，ID:{}", entity.getId());
         return entity;
     }
 
@@ -69,5 +72,6 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
      * @param entity 实体
      */
     protected void beforePublish(@NotNull E entity) {
+        log.info("单据发布前，ID:{}", entity.getId());
     }
 }
