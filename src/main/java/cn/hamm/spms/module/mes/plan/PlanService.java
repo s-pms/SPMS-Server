@@ -30,7 +30,7 @@ public class PlanService extends AbstractBaseBillService<PlanEntity, PlanReposit
     }
 
     @Override
-    public IDictionary getFinishedStatus() {
+    public IDictionary getBillDetailsFinishStatus() {
         return PlanStatus.DONE;
     }
 }

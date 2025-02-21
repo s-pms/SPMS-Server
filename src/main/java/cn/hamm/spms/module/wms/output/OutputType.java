@@ -26,7 +26,11 @@ public enum OutputType implements IDictionary {
      * <h3>销售出库</h3>
      */
     SALE(3, "销售出库"),
-    ;
+
+    /**
+     * <h3>领料出库</h3>
+     */
+    PICKING(4, "领料出库");
 
     private final int key;
     private final String label;

@@ -2,6 +2,7 @@ package cn.hamm.spms.module.wms.move;
 
 import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.system.config.ConfigFlag;
@@ -48,7 +49,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
     }
 
     @Override
-    public IDictionary getFinishedStatus() {
+    public IDictionary getBillDetailsFinishStatus() {
         return MoveStatus.DONE;
     }
 
@@ -62,7 +63,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
 
         // 扣除来源库存
         InventoryEntity from = sourceDetail.getInventory();
-        from.setQuantity(from.getQuantity() - sourceDetail.getQuantity());
+        from.setQuantity(NumberUtil.subtract(from.getQuantity(), sourceDetail.getQuantity()));
         InventoryService inventoryService = Services.getInventoryService();
         inventoryService.update(from);
 
@@ -71,7 +72,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
         InventoryEntity to = inventoryService.getByMaterialIdAndStorageId(sourceDetail.getInventory().getMaterial().getId(), bill.getStorage().getId());
         if (Objects.nonNull(to)) {
             // 更新目标库存
-            to.setQuantity(to.getQuantity() + sourceDetail.getQuantity());
+            to.setQuantity(NumberUtil.add(to.getQuantity(), sourceDetail.getQuantity()));
             inventoryService.update(to);
         } else {
             // 创建目标库存
@@ -85,7 +86,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
     }
 
     @Override
-    public void afterBillFinished(Long billId) {
+    protected void afterAllBillDetailFinished(long billId) {
         MoveEntity moveBill = get(billId);
         InputEntity inputBill = new InputEntity()
                 .setType(InputType.MOVE.getKey())
@@ -120,6 +121,6 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
 
     @Override
     protected ConfigFlag getAutoAuditConfigFlag() {
-        return ConfigFlag.MOVE_ORDER_AUTO_AUDIT;
+        return ConfigFlag.MOVE_BILL_AUTO_AUDIT;
     }
 }

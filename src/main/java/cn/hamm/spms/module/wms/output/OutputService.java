@@ -2,11 +2,10 @@ package cn.hamm.spms.module.wms.output;
 
 import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
-import cn.hamm.spms.module.channel.sale.SaleEntity;
-import cn.hamm.spms.module.channel.sale.SaleService;
-import cn.hamm.spms.module.channel.sale.SaleStatus;
 import cn.hamm.spms.module.system.config.ConfigFlag;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryService;
@@ -41,17 +40,19 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
     }
 
     @Override
-    public IDictionary getFinishedStatus() {
+    public IDictionary getBillDetailsFinishStatus() {
         return OutputStatus.DONE;
     }
 
     @Override
     public void afterBillFinished(Long billId) {
         OutputEntity outputBill = get(billId);
-        if (OutputType.SALE.equalsKey(outputBill.getType())) {
-            SaleService saleService = Services.getSaleService();
-            SaleEntity saleBill = saleService.get(outputBill.getSale().getId());
-            saleService.update(saleBill.setStatus(SaleStatus.DONE.getKey()));
+        OutputType outputType = DictionaryUtil.getDictionary(OutputType.class, outputBill.getType());
+        switch (outputType) {
+            case SALE -> Services.getSaleService().setBillFinished(outputBill.getSale().getId());
+            case PICKING -> Services.getPickingService().setBillFinished(outputBill.getPicking().getId());
+            default -> {
+            }
         }
     }
 
@@ -70,12 +71,34 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
             // 判断库存
             ServiceError.FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
         }
-        inventory.setQuantity(inventory.getQuantity() - sourceDetail.getQuantity());
+        inventory.setQuantity(NumberUtil.subtract(inventory.getQuantity(), sourceDetail.getQuantity()));
         inventoryService.update(inventory);
+
+        OutputEntity bill = get(existDetail.getBillId());
+        OutputType outputType = DictionaryUtil.getDictionary(OutputType.class, bill.getType());
+        switch (outputType) {
+            case SALE -> Services.getSaleDetailService().updateDetailQuantity(
+                    bill.getSale().getId(),
+                    sourceDetail.getQuantity(),
+                    Services.getSaleService(),
+                    detail -> ServiceError.FORBIDDEN.whenNotEquals(
+                            detail.getMaterial().getId(),
+                            existDetail.getMaterial().getId(),
+                            "物料信息不匹配"));
+            case PICKING -> Services.getPickingDetailService().updateDetailQuantity(
+                    bill.getPicking().getId(),
+                    sourceDetail.getQuantity(),
+                    Services.getPickingService(), detail -> ServiceError.FORBIDDEN.whenNotEquals(
+                            detail.getMaterial().getId(),
+                            existDetail.getMaterial().getId(),
+                            "物料信息不匹配"));
+            default -> {
+            }
+        }
     }
 
     @Override
     protected ConfigFlag getAutoAuditConfigFlag() {
-        return ConfigFlag.OUTPUT_ORDER_AUTO_AUDIT;
+        return ConfigFlag.OUTPUT_BILL_AUTO_AUDIT;
     }
 }

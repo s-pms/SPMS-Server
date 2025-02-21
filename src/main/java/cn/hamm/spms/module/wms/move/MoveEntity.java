@@ -42,8 +42,8 @@ public class MoveEntity extends AbstractBaseBillEntity<MoveEntity, MoveDetailEnt
     @Search(Search.Mode.EQUALS)
     private Integer status;
 
-    @Description("入库存储资源")
+    @Description("入库仓库")
     @ManyToOne(fetch = FetchType.EAGER)
-    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "入库存储资源")
+    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "入库仓库")
     private StorageEntity storage;
 }

@@ -10,6 +10,7 @@ import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailService;
 import cn.hamm.spms.base.bill.detail.IBaseBillDetailAction;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @param <DR> 明细数据源
  * @author Hamm.cn
  */
+@Slf4j
 @Permission
 public class BaseBillController<
         E extends AbstractBaseBillEntity<E, D>, S extends AbstractBaseBillService<E, R, D, DS, DR>, R extends BaseBillRepository<E, D>,
@@ -36,14 +38,6 @@ public class BaseBillController<
     @Autowired(required = false)
     protected DS detailService;
 
-    @Description("手动标记完成")
-    @PostMapping("finish")
-    @Filter(WhenGetDetail.class)
-    public Json finish(@RequestBody @Validated(WhenIdRequired.class) E bill) {
-        service.manualFinish(bill.getId());
-        return Json.success("标记完成成功");
-    }
-
     @Description("审核")
     @PostMapping("audit")
     @Filter(WhenGetDetail.class)
@@ -52,6 +46,22 @@ public class BaseBillController<
         E savedBill = service.get(bill.getId());
         afterAudit(savedBill);
         return Json.success("审核成功");
+    }
+
+    @Description("设置所有明细已完成")
+    @PostMapping("setBillDetailsAllFinished")
+    @Filter(WhenGetDetail.class)
+    public Json setBillDetailsAllFinished(@RequestBody @Validated(WhenIdRequired.class) E bill) {
+        service.setBillDetailsAllFinished(bill.getId());
+        return Json.success("设置所有明细已完成成功");
+    }
+
+    @Description("设置单据已完成")
+    @PostMapping("setBillFinished")
+    @Filter(WhenGetDetail.class)
+    public Json setBillFinished(@RequestBody @Validated(WhenIdRequired.class) E bill) {
+        service.setBillFinished(bill.getId());
+        return Json.success("设置单据已完成成功");
     }
 
     @Description("驳回")
@@ -66,11 +76,11 @@ public class BaseBillController<
         return Json.success("驳回成功");
     }
 
-    @Description("添加完成数量")
+    @Description("添加明细的完成数量")
     @PostMapping("addFinish")
     @Filter(WhenGetDetail.class)
     public Json addFinish(@RequestBody @Validated(WhenAddFinish.class) D detail) {
-        service.addFinish(detail);
+        service.addDetailFinishQuantity(detail);
         return Json.success("添加完成数量成功");
     }
 
@@ -93,5 +103,6 @@ public class BaseBillController<
      * @param bill 单据
      */
     protected void afterAudit(@NotNull E bill) {
+        log.info("单据审核成功，单据ID：{}", bill.getId());
     }
 }

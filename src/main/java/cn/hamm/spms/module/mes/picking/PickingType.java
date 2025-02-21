@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.mes.pickout;
+package cn.hamm.spms.module.mes.picking;
 
 import cn.hamm.airpower.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum PickoutType implements IDictionary {
+public enum PickingType implements IDictionary {
     /**
      * <h3>生产领料</h3>
      */

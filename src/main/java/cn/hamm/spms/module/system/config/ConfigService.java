@@ -45,8 +45,8 @@ public class ConfigService extends BaseService<ConfigEntity, ConfigRepository> {
     @Override
     protected ConfigEntity beforeAppSaveToDatabase(@NotNull ConfigEntity configuration) {
         String key = configuration.getFlag();
-        // 如果 Configuration枚举中包含这个标识 则设置为系统标识
         configuration.setIsSystem(false);
+        // 如果 Configuration枚举中包含这个标识 则设置为系统标识
         for (ConfigFlag configFlag : ConfigFlag.values()) {
             if (configFlag.name().equals(key)) {
                 configuration.setIsSystem(true);
