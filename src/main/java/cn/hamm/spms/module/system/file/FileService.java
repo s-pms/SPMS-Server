@@ -132,7 +132,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
                     .setPlatform(appConfig.getUploadPlatform().getKey())
                     .setName(multipartFile.getOriginalFilename())
                     .setHashMd5(hashMd5)
-                    .setPath(savedFilePath);
+                    .setUrl(savedFilePath);
             long fileId = add(file);
             return get(fileId);
         } catch (Exception exception) {

@@ -39,7 +39,7 @@ public class FileEntity extends BaseEntity<FileEntity> {
     @Description("文件路径")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '文件路径'")
-    private String path;
+    private String url;
 
     @Description("存储平台")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '存储平台'")
