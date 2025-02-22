@@ -1,5 +1,7 @@
 package cn.hamm.spms.common.config;
 
+import cn.hamm.airpower.config.Constant;
+import cn.hamm.spms.common.enums.UploadPlatform;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -26,6 +28,38 @@ public class AppConfig {
      * <h3>授权地址 用于 {@code OAuth2}</h3>
      */
     private String authorizeUrl;
+
+    /**
+     * <h2>默认房间ID {@code 不是房间号}</h2>
+     */
+    private long defaultRoomId = 1L;
+
+    /**
+     * <h2>上传文件目录</h2>
+     */
+    private String uploadDirectory = "upload";
+
+    /**
+     * <h2>上传文件最大大小</h2>
+     */
+    private long uploadMaxSize = Constant.FILE_SCALE * Constant.FILE_SCALE * 10;
+
+    /**
+     * <h2>上传文件允许的扩展名</h2>
+     */
+    private String[] uploadAllowExtensions = new String[]{
+            "jpg", "jpeg", "png", "gif", "bmp",
+            "mp4",
+            "mp3", "wav", "wma",
+            "zip", "rar", "7z", "tar", "gz",
+            "pdf", "doc", "docx", "xls", "xlsx",
+            "markdown"
+    };
+
+    /**
+     * <h2>上传平台</h2>
+     */
+    private UploadPlatform uploadPlatform = UploadPlatform.LOCAL;
 
     /**
      * <h3>Influx配置</h3>
