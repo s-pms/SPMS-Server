@@ -51,10 +51,15 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
 
     @Description("物料类型")
     @Search(Search.Mode.EQUALS)
-    @Column(columnDefinition = "bigint UNSIGNED default 0 comment '物料类型'")
-    @NotNull(groups = {WhenAdd.class, WhenUpdate.class}, message = "物料类型不能为空")
+    @Column(columnDefinition = "bigint UNSIGNED default 1 comment '物料类型'")
     @Dictionary(value = MaterialType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer materialType;
+
+    @Description("使用方式")
+    @Search(Search.Mode.EQUALS)
+    @Column(columnDefinition = "bigint UNSIGNED default 1 comment '使用方式'")
+    @Dictionary(value = MaterialUseType.class, groups = {WhenAdd.class, WhenUpdate.class})
+    private Integer useType;
 
     @Description("默认单位")
     @ManyToOne
