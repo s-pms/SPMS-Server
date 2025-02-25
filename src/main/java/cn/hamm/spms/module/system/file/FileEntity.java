@@ -47,7 +47,7 @@ public class FileEntity extends BaseEntity<FileEntity> {
     private Integer platform;
 
     @Description("文件类别")
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '文件类别'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '文件类别'")
     @Search(Search.Mode.EQUALS)
     private Integer category;
 
