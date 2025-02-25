@@ -46,6 +46,11 @@ public class FileEntity extends BaseEntity<FileEntity> {
     @Search(Search.Mode.EQUALS)
     private Integer platform;
 
+    @Description("文件类别")
+    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '文件类别'")
+    @Search(Search.Mode.EQUALS)
+    private Integer category;
+
     @Description("MD5")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment 'MD5'")

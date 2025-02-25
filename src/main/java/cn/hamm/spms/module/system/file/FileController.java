@@ -23,7 +23,7 @@ import java.util.Objects;
 public class FileController extends BaseController<FileEntity, FileService, FileRepository> {
     @PostMapping("upload")
     @Description("文件上传")
-    @Permission(authorize = false, login = false)
+    @Permission(authorize = false)
     public Json upload(@NotNull(message = "文件不能为空") @RequestParam("file") MultipartFile file, @RequestParam("category") Integer category) {
         category = Objects.requireNonNullElse(category, FileCategory.NORMAL.getKey());
         FileCategory fileCategory = DictionaryUtil.getDictionary(FileCategory.class, category);

@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * <h1>Service</h1>
@@ -111,11 +112,13 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
         try {
             // 获取文件的MD5
             String hashMd5 = DigestUtils.md5DigestAsHex(multipartFile.getBytes());
+            FileEntity file = repository.getByCategoryAndHashMd5(category.getKey(), hashMd5);
+            if (Objects.nonNull(file)) {
+                return file;
+            }
 
             // 文件名
-            String fileName = DateTimeUtil.format(milliSecond, DateTimeFormatter.FULL_TIME.getValue()
-                    .replaceAll(Constant.COLON, Constant.EMPTY_STRING)
-            ) + Constant.UNDERLINE + hashMd5 + Constant.DOT + extension;
+            String fileName = hashMd5 + Constant.DOT + extension;
 
             // 保存的相对文件路径
             String savedFilePath = category.name().toLowerCase() + File.separator + todayDir + File.separator + fileName;
@@ -129,9 +132,10 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
                 default -> throw new ServiceException("暂不支持该平台");
             }
 
-            FileEntity file = new FileEntity().setExtension(extension)
+            file = new FileEntity().setExtension(extension)
                     .setSize(multipartFile.getSize())
                     .setPlatform(appConfig.getUploadPlatform().getKey())
+                    .setCategory(category.getKey())
                     .setName(multipartFile.getOriginalFilename())
                     .setHashMd5(hashMd5)
                     .setUrl(savedFilePath);
