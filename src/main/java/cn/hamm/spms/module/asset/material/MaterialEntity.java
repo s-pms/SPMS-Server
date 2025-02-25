@@ -64,7 +64,7 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
     @Description("默认单位")
     @ManyToOne
     @Search(Search.Mode.JOIN)
-    @NotNull(groups = {WhenAdd.class, WhenUpdate.class}, message = "物料类型不能为空")
+    @NotNull(groups = {WhenAdd.class, WhenUpdate.class}, message = "默认单位不能为空")
     private UnitEntity unitInfo;
 
     @Description("采购标准价")
