@@ -104,8 +104,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
 
         // 追加今日文件夹 定时任务将按存储文件夹进行删除过时文件
         String todayDir = DateTimeUtil.format(milliSecond,
-                DateTimeFormatter.FULL_DATE.getValue()
-                        .replaceAll(Constant.LINE, Constant.EMPTY_STRING)
+                DateTimeFormatter.FULL_DATE.getValue().replaceAll(Constant.LINE, Constant.EMPTY_STRING)
         );
         String absoluteDirectory = uploadDirectory + todayDir + File.separator;
 
