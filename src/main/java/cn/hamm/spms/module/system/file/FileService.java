@@ -51,13 +51,15 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
     /**
      * <h3>创建文件夹</h3>
      *
-     * @param path 文件夹路径
+     * @param pathString 文件夹路径
      */
-    private void createDirectory(String path) {
-        if (!Files.exists(Paths.get(path))) {
+    private void createDirectory(String pathString) {
+        Path path = Paths.get(pathString);
+        if (!Files.exists(path)) {
             try {
-                Files.createDirectory(Paths.get(path));
+                Files.createDirectories(path);
             } catch (IOException e) {
+                log.error(e.getMessage(), e);
                 throw new RuntimeException("自动创建文件夹失败，请确认权限是否正常");
             }
         }
