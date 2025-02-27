@@ -8,8 +8,6 @@ import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.asset.device.DeviceService;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -48,10 +46,8 @@ public class ReportMqCallback implements MqttCallback {
     @Override
     public void messageArrived(String topic, @NotNull MqttMessage mqttMessage) {
         String reportString = new String(mqttMessage.getPayload());
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         try {
-            ReportData reportData = mapper.readValue(reportString, ReportData.class);
+            ReportData reportData = Json.parse(reportString, ReportData.class);
             DeviceEntity device = null;
             String lastDataInCache;
             List<ReportPayload> payloadList = new ArrayList<>();
