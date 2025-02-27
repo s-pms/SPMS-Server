@@ -9,7 +9,7 @@ import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.device.enums.DeviceAlarm;
 import cn.hamm.spms.module.asset.device.enums.DeviceStatus;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
-import cn.hamm.spms.module.iot.report.ReportEvent;
+import cn.hamm.spms.module.iot.report.ReportConstant;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -79,7 +79,7 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAct
     @Description("采集频率")
     @Column(columnDefinition = "int UNSIGNED default 1000 comment '采集频率'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "采集频率不能为空")
-    @Min(ReportEvent.REPORT_RATE_MIN)
+    @Min(ReportConstant.REPORT_RATE_MIN)
     private Integer rate;
 
     @Description("参数列表")
