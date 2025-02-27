@@ -13,6 +13,10 @@
 <a href="https://github.com/s-pms/SPMS-Server">@Github</a> <a href="https://gitee.com/s-pms/SPMS-Server">@Gitee</a>
 </p>
 
+## 在线交流群
+
+我们开通了QQ群 **773726377**，如果你对本项目有任何疑问，或者是在智能制造、工业互联网、物联网行业进行交流，欢迎加入我们的交流群。
+
 ## S-PMS介绍（后端项目）
 
 **S-PMS** `(Smart Production Management System)` **智能生产管理系统** ，是一个集成化、智能化的企业级应用软件，它集成了多个核心的生产管理模块，包括 **制造执行系统** `(MES, Manufacturing Execution System)`、**仓库管理系统** `(WMS, Warehouse Management System)`、**企业资源计划系统** `(ERP, Enterprise Resource Planning)`、**质量管理系统** `(QMS, Quality Management System)` 以及 **物联网管理系统** `(IoTS,Internet of Things System)` 等。
