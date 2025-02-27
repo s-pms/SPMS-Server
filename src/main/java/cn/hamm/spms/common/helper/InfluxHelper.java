@@ -49,7 +49,7 @@ public class InfluxHelper {
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
             writeApi.writePoint(influxConfig.getBucket(), influxConfig.getOrg(),
-                    new Point(ReportEvent.CACHE_PREFIX + code)
+                    new Point(ReportConstant.CACHE_PREFIX + code)
                             .addField(INFLUX_FIELD_VALUE, value)
                             .addTag(INFLUX_TAG_UUID, uuid)
             );
@@ -67,7 +67,7 @@ public class InfluxHelper {
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
             writeApi.writePoint(influxConfig.getBucket(), influxConfig.getOrg(),
-                    new Point(ReportEvent.CACHE_PREFIX + code)
+                    new Point(ReportConstant.CACHE_PREFIX + code)
                             .addField(INFLUX_FIELD_VALUE, value)
                             .addTag(INFLUX_TAG_UUID, uuid)
             );
@@ -85,7 +85,7 @@ public class InfluxHelper {
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
             writeApi.writePoint(influxConfig.getBucket(), influxConfig.getOrg(),
-                    new Point(ReportEvent.CACHE_PREFIX + code)
+                    new Point(ReportConstant.CACHE_PREFIX + code)
                             .addField(INFLUX_FIELD_VALUE, value)
                             .addTag(INFLUX_TAG_UUID, uuid)
             );
@@ -222,7 +222,7 @@ public class InfluxHelper {
         List<String> queryParams = new ArrayList<>();
         queryParams.add(String.format("from(bucket:\"%s\")", influxConfig.getBucket()));
         queryParams.add(String.format("range(start: %s, stop: %s)", Integer.parseInt(String.valueOf(reportPayload.getStartTime() / 1000)), Integer.parseInt(String.valueOf(reportPayload.getEndTime() / 1000))));
-        queryParams.add(String.format("filter(fn: (r) => r._measurement == \"%s\" and r.uuid == \"%s\")", ReportEvent.CACHE_PREFIX + reportPayload.getCode(), reportPayload.getUuid()));
+        queryParams.add(String.format("filter(fn: (r) => r._measurement == \"%s\" and r.uuid == \"%s\")", ReportConstant.CACHE_PREFIX + reportPayload.getCode(), reportPayload.getUuid()));
         queryParams.add("filter(fn: (r) => r._field == \"value\")");
         if (Objects.requireNonNull(reportDataType) == ReportDataType.QUANTITY) {
             queryParams.add("aggregateWindow(every: " + reportGranularity.getMark() + ", fn: mean)");

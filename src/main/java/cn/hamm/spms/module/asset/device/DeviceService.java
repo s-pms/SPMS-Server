@@ -40,7 +40,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
      */
     public List<ReportPayload> getCurrentReport(long deviceId) {
         DeviceEntity device = get(deviceId);
-        Object data = redisTemplate.opsForValue().get(ReportEvent.CACHE_PREFIX + device.getUuid());
+        Object data = redisTemplate.opsForValue().get(ReportConstant.CACHE_PREFIX + device.getUuid());
         if (Objects.isNull(data)) {
             return new ArrayList<>();
         }
@@ -91,9 +91,9 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
                     .filter(parameter -> !parameter.getIsSystem())
                     .collect(Collectors.toSet());
         }
-        parameters.add(parameterService.getByCode(ReportEvent.REPORT_KEY_OF_STATUS));
-        parameters.add(parameterService.getByCode(ReportEvent.REPORT_KEY_OF_ALARM));
-        parameters.add(parameterService.getByCode(ReportEvent.REPORT_KEY_OF_PART_COUNT));
+        parameters.add(parameterService.getByCode(ReportConstant.REPORT_KEY_OF_STATUS));
+        parameters.add(parameterService.getByCode(ReportConstant.REPORT_KEY_OF_ALARM));
+        parameters.add(parameterService.getByCode(ReportConstant.REPORT_KEY_OF_PART_COUNT));
         device.setParameters(parameters);
         return device;
     }

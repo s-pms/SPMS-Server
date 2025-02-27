@@ -23,8 +23,8 @@ import cn.hamm.spms.module.factory.structure.StructureEntity;
 import cn.hamm.spms.module.factory.structure.StructureService;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
+import cn.hamm.spms.module.iot.report.ReportConstant;
 import cn.hamm.spms.module.iot.report.ReportDataType;
-import cn.hamm.spms.module.iot.report.ReportEvent;
 import cn.hamm.spms.module.mes.bom.BomEntity;
 import cn.hamm.spms.module.mes.bom.BomService;
 import cn.hamm.spms.module.mes.bom.BomType;
@@ -112,28 +112,28 @@ public class InitializeRunner implements CommandLineRunner {
     private void initParameters() {
         ParameterEntity parameter;
 
-        parameter = parameterService.getByCode(ReportEvent.REPORT_KEY_OF_STATUS);
+        parameter = parameterService.getByCode(ReportConstant.REPORT_KEY_OF_STATUS);
         if (Objects.isNull(parameter)) {
             parameterService.add(new ParameterEntity()
-                    .setCode(ReportEvent.REPORT_KEY_OF_STATUS)
+                    .setCode(ReportConstant.REPORT_KEY_OF_STATUS)
                     .setLabel("运行状态")
                     .setDataType(ReportDataType.STATUS.getKey())
                     .setIsSystem(true)
             );
         }
-        parameter = parameterService.getByCode(ReportEvent.REPORT_KEY_OF_ALARM);
+        parameter = parameterService.getByCode(ReportConstant.REPORT_KEY_OF_ALARM);
         if (Objects.isNull(parameter)) {
             parameterService.add(new ParameterEntity()
-                    .setCode(ReportEvent.REPORT_KEY_OF_ALARM)
+                    .setCode(ReportConstant.REPORT_KEY_OF_ALARM)
                     .setLabel("报警状态")
                     .setDataType(ReportDataType.STATUS.getKey())
                     .setIsSystem(true)
             );
         }
-        parameter = parameterService.getByCode(ReportEvent.REPORT_KEY_OF_PART_COUNT);
+        parameter = parameterService.getByCode(ReportConstant.REPORT_KEY_OF_PART_COUNT);
         if (Objects.isNull(parameter)) {
             parameterService.add(new ParameterEntity()
-                    .setCode(ReportEvent.REPORT_KEY_OF_PART_COUNT)
+                    .setCode(ReportConstant.REPORT_KEY_OF_PART_COUNT)
                     .setLabel("实时产量")
                     .setDataType(ReportDataType.QUANTITY.getKey())
                     .setIsSystem(true)
@@ -233,6 +233,7 @@ public class InitializeRunner implements CommandLineRunner {
         }
     }
 
+    @SuppressWarnings("AlibabaMethodTooLong")
     private void initDevData() {
         int deviceCount = 2;
         for (int i = 0; i < deviceCount; i++) {
