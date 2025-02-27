@@ -27,11 +27,10 @@ import java.util.Objects;
  */
 @Configuration
 public class InfluxHelper {
+    public static final String INFLUX_FIELD_VALUE = Constant.STRING_VALUE;
     private static final String INFLUX_TAG_UUID = "uuid";
     private static final String INFLUX_SQL_SPLIT = " |> ";
     private static final String INFLUX_RECORD_VALUE_KEY = "_value";
-    public static final String INFLUX_FIELD_VALUE = Constant.STRING_VALUE;
-
     @Autowired
     private InfluxConfig influxConfig;
 
