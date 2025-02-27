@@ -1,6 +1,5 @@
 package cn.hamm.spms.common;
 
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.helper.WebsocketHelper;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.websocket.WebSocketHandler;
@@ -24,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
 
 /**
  * <h1>应用自定义的事件处理器</h1>
@@ -76,7 +77,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
                 roomUserIdList.remove(userId);
                 break;
             default:
-                ServiceError.PARAM_INVALID.show("错误的房间事件异常类型");
+                PARAM_INVALID.show("错误的房间事件异常类型");
         }
         roomOnlineUserList.put(GROUP_PREFIX + roomId, roomUserIdList);
         MemberEntity member = memberService.getMemberWithAutoCreate(userId, roomId);

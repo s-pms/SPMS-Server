@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.personnel.user;
 
 import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.helper.CookieHelper;
 import cn.hamm.airpower.helper.EmailHelper;
 import cn.hamm.airpower.model.Sort;
@@ -35,6 +34,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+
+import static cn.hamm.airpower.exception.ServiceError.*;
 
 /**
  * <h1>Service</h1>
@@ -171,7 +172,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
 
         // 判断原始密码
         String oldPassword = user.getOldPassword();
-        ServiceError.PARAM_INVALID.whenNotEqualsIgnoreCase(
+        PARAM_INVALID.whenNotEqualsIgnoreCase(
                 PasswordUtil.encode(oldPassword, existUser.getSalt()),
                 existUser.getPassword(),
                 "原密码输入错误，修改密码失败"
@@ -197,10 +198,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             existUser = repository.getByEmail(user.getEmail());
             code = getEmailCode(user.getEmail());
         } else {
-            ServiceError.PARAM_MISSING.show("请传入邮箱或手机号");
+            PARAM_MISSING.show("请传入邮箱或手机号");
         }
-        ServiceError.PARAM_INVALID.whenNotEqualsIgnoreCase(code, user.getCode(), "验证码不正确，请重新获取");
-        ServiceError.PARAM_INVALID.whenNull(existUser, "重置密码失败，用户信息异常");
+        PARAM_INVALID.whenNotEqualsIgnoreCase(code, user.getCode(), "验证码不正确，请重新获取");
+        PARAM_INVALID.whenNull(existUser, "重置密码失败，用户信息异常");
 
         // 验证通过 开始重置密码和盐
         String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
@@ -298,7 +299,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             // 邮箱登录
             existUser = repository.getByEmail(user.getEmail());
         } else {
-            ServiceError.PARAM_INVALID.show("ID或邮箱不能为空，请确认是否传入");
+            PARAM_INVALID.show("ID或邮箱不能为空，请确认是否传入");
         }
         CustomError.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNull(existUser);
         // 将用户传入的密码加密与数据库存储匹配
@@ -315,7 +316,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public UserEntity loginViaEmail(@NotNull UserEntity user) {
         String code = getEmailCode(user.getEmail());
-        ServiceError.PARAM_INVALID.whenNotEquals(code, user.getCode(), "邮箱验证码不正确");
+        PARAM_INVALID.whenNotEquals(code, user.getCode(), "邮箱验证码不正确");
         UserEntity existUser = repository.getByEmail(user.getEmail());
         ConfigEntity configuration = configService.get(ConfigFlag.AUTO_REGISTER_EMAIL_LOGIN);
         if (configuration.booleanConfig()) {
@@ -323,7 +324,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             long userId = registerUserViaEmail(user.getEmail());
             existUser = get(userId);
         }
-        ServiceError.PARAM_INVALID.whenNull(existUser, "登录的邮箱账户不存在");
+        PARAM_INVALID.whenNull(existUser, "登录的邮箱账户不存在");
         return existUser;
     }
 
@@ -389,13 +390,13 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     @Override
     protected void beforeDelete(long id) {
         UserEntity entity = get(id);
-        ServiceError.FORBIDDEN_DELETE.when(entity.isRootUser(), "系统内置用户无法被删除!");
+        FORBIDDEN_DELETE.when(entity.isRootUser(), "系统内置用户无法被删除!");
     }
 
     @Override
     protected @NotNull UserEntity beforeAdd(@NotNull UserEntity user) {
         UserEntity existUser = repository.getByEmail(user.getEmail());
-        ServiceError.FORBIDDEN_EXIST.whenNotNull(existUser, "邮箱已经存在，请勿重复添加用户");
+        FORBIDDEN_EXIST.whenNotNull(existUser, "邮箱已经存在，请勿重复添加用户");
         if (!StringUtils.hasLength(user.getPassword())) {
             // 创建时没有设置密码的话 随机一个密码
             String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
@@ -408,7 +409,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     @Override
     protected void beforeDisable(long id) {
         UserEntity existUser = get(id);
-        ServiceError.FORBIDDEN_DISABLED_NOT_ALLOWED.when(existUser.isRootUser(), "系统内置用户无法被禁用!");
+        FORBIDDEN_DISABLED_NOT_ALLOWED.when(existUser.isRootUser(), "系统内置用户无法被禁用!");
     }
 
     @Override

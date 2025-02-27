@@ -3,7 +3,6 @@ package cn.hamm.spms.base;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Filter;
 import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.model.query.QueryListRequest;
 import cn.hamm.airpower.model.query.QueryPageRequest;
@@ -14,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EDIT;
 
 /**
  * <h1>实体控制器基类</h1>
@@ -47,7 +48,7 @@ public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>
     @Override
     protected final E beforeUpdate(@NotNull E entity) {
         E exist = service.get(entity.getId());
-        ServiceError.FORBIDDEN_EDIT.when(exist.getIsPublished(), "无法修改已经发布的数据");
+        FORBIDDEN_EDIT.when(exist.getIsPublished(), "无法修改已经发布的数据");
         entity = beforeAppUpdate(entity);
         return entity;
     }
@@ -64,7 +65,7 @@ public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>
     @Override
     protected final void beforeDelete(long id) {
         E entity = service.get(id);
-        ServiceError.FORBIDDEN_EDIT.when(entity.getIsPublished(), "无法删除已经发布的数据");
+        FORBIDDEN_EDIT.when(entity.getIsPublished(), "无法删除已经发布的数据");
         beforeAppDelete(id);
     }
 

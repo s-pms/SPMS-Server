@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.chat.member;
 
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.chat.room.RoomEntity;
@@ -8,6 +7,8 @@ import cn.hamm.spms.module.personnel.user.UserEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EXIST;
 
 /**
  * <h1>Service</h1>
@@ -36,7 +37,7 @@ public class MemberService extends BaseService<MemberEntity, MemberRepository> {
      */
     public long addMember(long userId, long roomId) {
         MemberEntity member = getMember(userId, roomId);
-        ServiceError.FORBIDDEN_EXIST.whenNotNull(member);
+        FORBIDDEN_EXIST.whenNotNull(member);
         // 没有查到成员信息
         RoomEntity room = Services.getRoomService().get(roomId);
         member = new MemberEntity()

@@ -1,7 +1,6 @@
 package cn.hamm.spms.common.interceptor;
 
 import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
 import cn.hamm.airpower.util.AccessTokenUtil;
 import cn.hamm.airpower.util.PermissionUtil;
@@ -22,6 +21,8 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
+
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 
 /**
  * <h1>请求拦截器</h1>
@@ -65,7 +66,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         ) {
             return;
         }
-        ServiceError.FORBIDDEN.show(String.format(
+        FORBIDDEN.show(String.format(
                 "你无权访问 %s (%s)", needPermission.getName(), needPermission.getIdentity()
         ));
     }

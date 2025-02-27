@@ -6,7 +6,6 @@ import cn.hamm.airpower.annotation.DesensitizeExclude;
 import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.config.CookieConfig;
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.interfaces.IEntityAction;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.root.RootController;
@@ -45,6 +44,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static cn.hamm.airpower.exception.ServiceError.*;
+
 /**
  * <h1>Controller</h1>
  *
@@ -57,7 +58,7 @@ public class OauthController extends RootController implements IOauthAction {
     private static final String APP_NOT_FOUND = "App(%s) not found!";
     private static final String REDIRECT_URI = "redirectUri";
     private static final String REDIRECT_URI_MISSING = "RedirectUri missing!";
-    private static final String INVALID_APP_KEY = "Invalid appKey!";
+    private static final String INVALID_APPKEY = "Invalid appKey!";
     private static final String APP_KEY = "appKey";
     private static final String SCOPE = "scope";
 
@@ -86,7 +87,7 @@ public class OauthController extends RootController implements IOauthAction {
     ) {
         String appKey = request.getParameter(APP_KEY);
         if (!StringUtils.hasText(appKey)) {
-            return showError(INVALID_APP_KEY);
+            return showError(INVALID_APPKEY);
         }
         OpenAppEntity openApp = openAppService.getByAppKey(appKey);
         if (Objects.isNull(openApp)) {
@@ -133,7 +134,7 @@ public class OauthController extends RootController implements IOauthAction {
         Long userId = service.getOauthUserCache(request.getAppKey(), request.getCode());
         // 查询App信息
         OpenAppEntity existApp = openAppService.getByAppKey(request.getAppKey());
-        ServiceError.FORBIDDEN.whenNotEquals(existApp.getAppSecret(), request.getAppSecret(), "应用秘钥错误");
+        FORBIDDEN.whenNotEquals(existApp.getAppSecret(), request.getAppSecret(), "应用秘钥错误");
         // 移除缓存的用户
         service.removeOauthUserCache(existApp.getAppKey(), request.getCode());
         // 获取Scope
@@ -186,7 +187,7 @@ public class OauthController extends RootController implements IOauthAction {
         UserEntity user = userService.get(userId);
         String appKey = Objects.requireNonNull(verify.getPayload(APP_KEY), "无效的AppKey").toString();
         OpenAppEntity existApp = openAppService.getByAppKey(appKey);
-        ServiceError.FORBIDDEN.whenNull(existApp, "应用信息异常");
+        FORBIDDEN.whenNull(existApp, "应用信息异常");
         String scope = Objects.requireNonNull(verify.getPayload(SCOPE), "无效的Scope").toString();
         List<String> scopeList = Arrays.stream(scope.split(Constant.COMMA)).toList();
         OauthScope[] oauthScopes = OauthScope.values();
@@ -226,10 +227,10 @@ public class OauthController extends RootController implements IOauthAction {
     @PostMapping("createCode")
     public Json createCode(@RequestBody @Validated({WhenAppKeyRequired.class, OauthCreateCodeRequest.WhenCreateCode.class}) OauthCreateCodeRequest request) {
         OpenAppEntity openApp = openAppService.getByAppKey(request.getAppKey());
-        ServiceError.INVALID_APP_KEY.whenNull(openApp, "AppKey无效");
+        INVALID_APP_KEY.whenNull(openApp, "AppKey无效");
         String[] scopes = request.getScope().split(Constant.COMMA);
         List<String> scopeList = new ArrayList<>();
-        ServiceError.PARAM_INVALID.when(scopes.length == 0, "授权范围无效");
+        PARAM_INVALID.when(scopes.length == 0, "授权范围无效");
         OauthScope[] oauthScopes = OauthScope.values();
 
         for (OauthScope oauthScope : oauthScopes) {

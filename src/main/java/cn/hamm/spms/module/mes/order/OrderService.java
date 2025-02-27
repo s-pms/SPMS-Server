@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.mes.order;
 
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.airpower.util.NumberUtil;
@@ -21,6 +20,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 
 /**
  * <h1>Service</h1>
@@ -61,7 +62,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
      */
     public void addOrderDetail(@NotNull OrderDetailEntity orderDetail) {
         ConfigEntity config = Services.getConfigService().get(ConfigFlag.ORDER_ENABLE_SUBMIT_WORK);
-        ServiceError.FORBIDDEN.when(!config.booleanConfig(), "未开启订单报工模式");
+        FORBIDDEN.when(!config.booleanConfig(), "未开启订单报工模式");
         // 更新明细数量和状态
         orderDetail.setQuantity(orderDetail.getFinishQuantity()).setIsFinished(true);
         Services.getOrderDetailService().add(orderDetail);
@@ -102,7 +103,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
                     orderBill.getPlan().getId(),
                     orderBill.getFinishQuantity(),
                     Services.getPlanService(),
-                    detail -> ServiceError.FORBIDDEN.whenNotEquals(
+                    detail -> FORBIDDEN.whenNotEquals(
                             detail.getMaterial().getId(),
                             orderBill.getMaterial().getId(),
                             "物料信息不匹配")
@@ -158,7 +159,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         OrderEntity order = get(id);
         OrderStatus[] canStartStatusList = {OrderStatus.PREPARE, OrderStatus.PAUSED};
         OrderStatus currentStatus = DictionaryUtil.getDictionary(OrderStatus.class, order.getStatus());
-        ServiceError.FORBIDDEN.when(!Arrays.asList(canStartStatusList).contains(currentStatus), "该单据状态无法开始生产");
+        FORBIDDEN.when(!Arrays.asList(canStartStatusList).contains(currentStatus), "该单据状态无法开始生产");
         order.setStatus(OrderStatus.PRODUCING.getKey());
         update(order);
     }
@@ -172,7 +173,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         OrderEntity order = get(id);
         OrderStatus[] canStartStatusList = {OrderStatus.PRODUCING};
         OrderStatus currentStatus = DictionaryUtil.getDictionary(OrderStatus.class, order.getStatus());
-        ServiceError.FORBIDDEN.when(!Arrays.asList(canStartStatusList).contains(currentStatus), "该单据状态无法暂停生产");
+        FORBIDDEN.when(!Arrays.asList(canStartStatusList).contains(currentStatus), "该单据状态无法暂停生产");
         order.setStatus(OrderStatus.PAUSED.getKey());
         update(order);
     }

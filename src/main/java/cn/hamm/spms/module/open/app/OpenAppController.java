@@ -2,7 +2,6 @@ package cn.hamm.spms.module.open.app;
 
 import cn.hamm.airpower.annotation.*;
 import cn.hamm.airpower.enums.Api;
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.util.RandomUtil;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Base64;
+
+import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
 
 /**
  * <h1>Controller</h1>
@@ -35,7 +36,7 @@ public class OpenAppController extends BaseController<OpenAppEntity, OpenAppServ
     @Filter(RootEntity.WhenGetDetail.class)
     public Json getByAppKey(@RequestBody @Validated(WhenGetByAppKey.class) OpenAppEntity openApp) {
         openApp = service.getByAppKey(openApp.getAppKey());
-        ServiceError.DATA_NOT_FOUND.whenNull(openApp, "没有查到指定AppKey的应用");
+        DATA_NOT_FOUND.whenNull(openApp, "没有查到指定AppKey的应用");
         return Json.data(openApp);
     }
 

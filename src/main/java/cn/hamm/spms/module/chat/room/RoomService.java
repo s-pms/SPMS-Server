@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.chat.room;
 
 import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseService;
@@ -17,6 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
+
 /**
  * <h1>Service</h1>
  *
@@ -31,7 +32,7 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
 
     @Override
     protected @NotNull RoomEntity beforeAppSaveToDatabase(@NotNull RoomEntity room) {
-        ServiceError.PARAM_INVALID.when(
+        PARAM_INVALID.when(
                 Objects.nonNull(room.getIsPrivate()) &&
                         room.getIsPrivate() &&
                         StringUtils.isEmpty(room.getPassword()),
@@ -49,7 +50,7 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
     public final long create(RoomEntity room, long userId) {
         RoomEntity filter = new RoomEntity().setOwner(new UserEntity().setId(userId));
         List<RoomEntity> list = filter(filter);
-        ServiceError.PARAM_INVALID.when(list.size() >= MAX_ROOM_COUNT, "您最多只能创建" + MAX_ROOM_COUNT + "个房间");
+        PARAM_INVALID.when(list.size() >= MAX_ROOM_COUNT, "您最多只能创建" + MAX_ROOM_COUNT + "个房间");
         int code = RandomUtil.randomInt(100000, 999999);
         filter = new RoomEntity().setCode(code);
         list = filter(filter);
