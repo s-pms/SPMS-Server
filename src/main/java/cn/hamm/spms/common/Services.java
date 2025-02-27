@@ -10,6 +10,7 @@ import cn.hamm.spms.module.channel.sale.SaleService;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailService;
 import cn.hamm.spms.module.channel.saleprice.SalePriceService;
 import cn.hamm.spms.module.channel.supplier.SupplierService;
+import cn.hamm.spms.module.chat.room.RoomService;
 import cn.hamm.spms.module.factory.storage.StorageService;
 import cn.hamm.spms.module.factory.structure.StructureService;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
@@ -147,6 +148,9 @@ public class Services {
     @Getter
     private static OutputDetailService outputDetailService;
 
+    @Getter
+    private static RoomService roomService;
+
     @Autowired
     private void initService(
             CodeRuleService codeRuleService,
@@ -182,7 +186,8 @@ public class Services {
             PickingService pickingService,
             PickingDetailService pickingDetailService,
             SaleDetailService saleDetailService,
-            OutputDetailService outputDetailService
+            OutputDetailService outputDetailService,
+            RoomService roomService
     ) {
         Services.codeRuleService = codeRuleService;
         Services.purchaseService = purchaseService;
@@ -218,5 +223,6 @@ public class Services {
         Services.pickingDetailService = pickingDetailService;
         Services.saleDetailService = saleDetailService;
         Services.outputDetailService = outputDetailService;
+        Services.roomService = roomService;
     }
 }
