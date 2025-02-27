@@ -42,7 +42,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
      */
     public List<ReportPayload> getCurrentReport(long deviceId) {
         DeviceEntity device = get(deviceId);
-        Object data = redisTemplate.opsForValue().get(CACHE_PREFIX + device.getUuid());
+        Object data = redisTemplate.opsForValue().get(ReportConstant.getDeviceReportCacheKey(device.getUuid()));
         if (Objects.isNull(data)) {
             return new ArrayList<>();
         }
