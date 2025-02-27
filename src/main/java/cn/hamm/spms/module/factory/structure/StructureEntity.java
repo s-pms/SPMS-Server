@@ -3,6 +3,7 @@ package cn.hamm.spms.module.factory.structure;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.interfaces.ITree;
+import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.mes.operation.OperationEntity;
@@ -44,6 +45,12 @@ public class StructureEntity extends BaseEntity<StructureEntity> implements ITre
     @Length(max = 200, message = "名称最多允许{max}个字符")
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "名称不能为空")
     private String name;
+
+    @Description("生产单元类型")
+    @Search(Search.Mode.EQUALS)
+    @Column(columnDefinition = "bigint UNSIGNED default 1 comment '生产单元类型'")
+    @Dictionary(value = StructureType.class, groups = {WhenAdd.class, WhenUpdate.class})
+    private Integer type;
 
     @Description("父级ID")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '父级ID'")

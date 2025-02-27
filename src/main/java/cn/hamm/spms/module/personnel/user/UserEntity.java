@@ -45,6 +45,10 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @Search()
     private String nickname;
 
+    @Description("头像")
+    @Column(columnDefinition = "varchar(255) default '' comment '头像'")
+    private String avatar;
+
     @Description("真实姓名")
     @Desensitize(Desensitize.Type.CHINESE_NAME)
     @Column(columnDefinition = "varchar(255) default '' comment '真实姓名'")
