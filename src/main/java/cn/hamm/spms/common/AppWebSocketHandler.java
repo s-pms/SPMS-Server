@@ -44,10 +44,13 @@ public class AppWebSocketHandler extends WebSocketHandler {
 
     @Autowired
     private WebsocketHelper websocketHelper;
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private MemberService memberService;
+
     @Autowired
     private RoomService roomService;
 
