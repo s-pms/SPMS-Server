@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.wms.inventory;
 
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.interfaces.ITree;
 import cn.hamm.airpower.model.query.QueryPageRequest;
+import cn.hamm.airpower.root.RootService;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.base.BaseService;
@@ -101,7 +101,7 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
                 Set<Long> idList = getIdList(search.getStorage().getId(), storageService, StorageEntity.class);
                 if (!idList.isEmpty()) {
                     Join<InventoryEntity, StorageEntity> join = root.join("storage");
-                    Predicate inPredicate = join.get(Constant.ID).in(idList);
+                    Predicate inPredicate = join.get(RootService.STRING_ID).in(idList);
                     predicateList.add(inPredicate);
                 }
             }
@@ -112,7 +112,7 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
                 Set<Long> idList = getIdList(search.getStructure().getId(), structureService, StructureEntity.class);
                 if (!idList.isEmpty()) {
                     Join<InventoryEntity, StructureEntity> join = root.join("structure");
-                    Predicate inPredicate = join.get(Constant.ID).in(idList);
+                    Predicate inPredicate = join.get(RootService.STRING_ID).in(idList);
                     predicateList.add(inPredicate);
                 }
             }

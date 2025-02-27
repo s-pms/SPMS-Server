@@ -1,6 +1,6 @@
 package cn.hamm.spms.common.config;
 
-import cn.hamm.airpower.config.Constant;
+import cn.hamm.airpower.util.FileUtil;
 import cn.hamm.spms.common.enums.UploadPlatform;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -42,7 +42,7 @@ public class AppConfig {
     /**
      * <h2>上传文件最大大小</h2>
      */
-    private long uploadMaxSize = Constant.FILE_SCALE * Constant.FILE_SCALE * 10;
+    private long uploadMaxSize = FileUtil.FILE_SCALE * FileUtil.FILE_SCALE * 10;
 
     /**
      * <h2>上传文件允许的扩展名</h2>

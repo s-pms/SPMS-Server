@@ -77,13 +77,13 @@ public class ConfigEntity extends BaseEntity<ConfigEntity> {
         if (Objects.isNull(config)) {
             return false;
         }
-        return Constant.ONE_STRING.equals(config);
+        return Constant.STRING_ONE.equals(config);
     }
 
     @Transient
     public Long numberConfig() {
         if (Objects.isNull(config)) {
-            return Constant.ZERO_LONG;
+            return 0L;
         }
         return Long.parseLong(config);
     }

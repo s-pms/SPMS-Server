@@ -89,7 +89,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         String accessToken = request.getHeader(serviceConfig.getAuthorizeHeader());
         Long userId = null;
         int appVersion = request.getIntHeader(AppConstant.APP_VERSION_HEADER);
-        String platform = Constant.EMPTY_STRING;
+        String platform = Constant.STRING_EMPTY;
         String action = request.getRequestURI();
         try {
             userId = AccessTokenUtil.create().getPayloadId(accessToken, serviceConfig.getAccessTokenSecret());

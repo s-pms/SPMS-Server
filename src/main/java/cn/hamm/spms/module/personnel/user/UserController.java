@@ -117,7 +117,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
     public Json logout(HttpServletResponse httpServletResponse) {
         Cookie cookie = cookieHelper.getAuthorizeCookie("");
         cookie.setHttpOnly(false);
-        cookie.setPath(Constant.SLASH);
+        cookie.setPath(Constant.STRING_SLASH);
         // 清除cookie
         cookie.setMaxAge(0);
         httpServletResponse.addCookie(cookie);

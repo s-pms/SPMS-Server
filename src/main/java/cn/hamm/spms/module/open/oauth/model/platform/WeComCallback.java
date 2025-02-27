@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.open.oauth.model.platform;
 
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.helper.AirHelper;
 import cn.hamm.airpower.model.Json;
+import cn.hamm.airpower.util.DateTimeUtil;
 import cn.hamm.airpower.util.HttpUtil;
 import cn.hamm.spms.module.open.oauth.OauthConfig;
 import cn.hamm.spms.module.open.oauth.model.base.AbstractOauthCallback;
@@ -50,7 +50,7 @@ public class WeComCallback extends AbstractOauthCallback {
         Map<String, Object> map = Json.parse2Map(httpResponse.body());
         Object accessToken = Objects.requireNonNull(map.get("access_token"), "AccessToken获取失败");
         FORBIDDEN.when(!StringUtils.hasText(accessToken.toString()), "AccessToken获取失败");
-        AirHelper.getRedisHelper().set(ACCESS_TOKEN_CACHE_KEY, accessToken.toString(), Constant.SECOND_PER_HOUR);
+        AirHelper.getRedisHelper().set(ACCESS_TOKEN_CACHE_KEY, accessToken.toString(), DateTimeUtil.SECOND_PER_HOUR);
         log.info("企业微信获取AccessToken: {}", accessToken);
         return accessToken.toString();
     }

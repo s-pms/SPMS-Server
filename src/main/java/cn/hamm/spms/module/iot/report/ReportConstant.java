@@ -60,6 +60,6 @@ public class ReportConstant {
      */
     @Contract(pure = true)
     static @NotNull String getDeviceReportParamCacheKey(String code, String uuid) {
-        return CACHE_PREFIX + code + Constant.UNDERLINE + uuid;
+        return CACHE_PREFIX + code + Constant.STRING_UNDERLINE + uuid;
     }
 }

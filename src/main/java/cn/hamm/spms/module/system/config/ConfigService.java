@@ -56,9 +56,9 @@ public class ConfigService extends BaseService<ConfigEntity, ConfigRepository> {
                 switch (type) {
                     case BOOLEAN:
                         configuration.setConfig(
-                                Constant.ONE_STRING.equals(configuration.getConfig()) ?
-                                        Constant.ONE_STRING :
-                                        Constant.ZERO_STRING
+                                Constant.STRING_ONE.equals(configuration.getConfig()) ?
+                                        Constant.STRING_ONE :
+                                        Constant.STRING_ZERO
                         );
                         break;
                     case NUMBER:

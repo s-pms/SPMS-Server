@@ -30,7 +30,7 @@ public class InfluxHelper {
     private static final String INFLUX_TAG_UUID = "uuid";
     private static final String INFLUX_SQL_SPLIT = " |> ";
     private static final String INFLUX_RECORD_VALUE_KEY = "_value";
-    public static final String INFLUX_FIELD_VALUE = Constant.VALUE;
+    public static final String INFLUX_FIELD_VALUE = Constant.STRING_VALUE;
 
     @Autowired
     private InfluxConfig influxConfig;
@@ -150,10 +150,10 @@ public class InfluxHelper {
                         payload.setValue(Objects.isNull(value) ? 0 : Double.parseDouble(value.toString()));
                         break;
                     case INFORMATION:
-                        payload.setStrValue(Objects.isNull(value) ? Constant.EMPTY_STRING : value.toString());
+                        payload.setStrValue(Objects.isNull(value) ? Constant.STRING_EMPTY : value.toString());
                         break;
                     case SWITCH:
-                        payload.setBoolValue(!Objects.isNull(value) && Constant.ONE_STRING.equals(value.toString()));
+                        payload.setBoolValue(!Objects.isNull(value) && Constant.STRING_ONE.equals(value.toString()));
                         break;
                     case STATUS:
                         payload.setIntValue(Objects.isNull(value) ? 0 : Integer.parseInt(value.toString()));

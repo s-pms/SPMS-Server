@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.open.app;
 
 import cn.hamm.airpower.annotation.*;
-import cn.hamm.airpower.enums.Api;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.util.RandomUtil;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Base64;
 
+import static cn.hamm.airpower.enums.Api.Export;
+import static cn.hamm.airpower.enums.Api.QueryExport;
 import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
 
 /**
@@ -25,7 +26,7 @@ import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
  */
 @ApiController("openApp")
 @Description("开放应用")
-@Extends(exclude = {Api.Export, Api.QueryExport})
+@Extends(exclude = {Export, QueryExport})
 public class OpenAppController extends BaseController<OpenAppEntity, OpenAppService, OpenAppRepository> implements IOpenAppAction {
     @Autowired
     private NotifyService notifyService;

@@ -4,10 +4,8 @@ import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.helper.CookieHelper;
 import cn.hamm.airpower.helper.EmailHelper;
 import cn.hamm.airpower.model.Sort;
-import cn.hamm.airpower.util.AccessTokenUtil;
-import cn.hamm.airpower.util.PasswordUtil;
-import cn.hamm.airpower.util.RandomUtil;
-import cn.hamm.airpower.util.TreeUtil;
+import cn.hamm.airpower.root.RootService;
+import cn.hamm.airpower.util.*;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConfig;
@@ -53,7 +51,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * <h3>Code缓存秒数</h3>
      */
-    private static final int CACHE_CODE_EXPIRE_SECOND = Constant.SECOND_PER_MINUTE * 5;
+    private static final int CACHE_CODE_EXPIRE_SECOND = DateTimeUtil.SECOND_PER_MINUTE * 5;
 
     /**
      * <h2>缓存房间用户</h2>
@@ -255,7 +253,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         saveCookie(user.getId(), cookieString);
         Cookie cookie = cookieHelper.getAuthorizeCookie(cookieString);
         cookie.setHttpOnly(false);
-        cookie.setPath(Constant.SLASH);
+        cookie.setPath(Constant.STRING_SLASH);
         response.addCookie(cookie);
         return accessToken;
     }
@@ -267,7 +265,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param cookie Cookie
      */
     public void saveCookie(Long userId, String cookie) {
-        redisHelper.set(getCookieCodeKey(cookie), userId, Constant.SECOND_PER_DAY);
+        redisHelper.set(getCookieCodeKey(cookie), userId, DateTimeUtil.SECOND_PER_DAY);
     }
 
     /**
@@ -347,7 +345,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public long registerUserViaEmail(@NotNull String email, String password) {
         // 昵称默认为邮箱账号 @ 前面的
-        String nickname = email.split(Constant.AT)[0];
+        String nickname = email.split(Constant.STRING_AT)[0];
         String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
         UserEntity user = new UserEntity().setPassword(PasswordUtil.encode(password, salt))
                 .setSalt(salt)
@@ -373,7 +371,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     private String getEmailCode(String email) {
         Object code = redisHelper.get(getEmailCacheKey(email));
-        return Objects.isNull(code) ? Constant.EMPTY_STRING : code.toString();
+        return Objects.isNull(code) ? Constant.STRING_EMPTY : code.toString();
     }
 
     /**
@@ -384,7 +382,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     private String getSmsCode(String phone) {
         Object code = redisHelper.get(getPhoneCodeCacheKey(phone));
-        return Objects.isNull(code) ? Constant.EMPTY_STRING : code.toString();
+        return Objects.isNull(code) ? Constant.STRING_EMPTY : code.toString();
     }
 
     @Override
@@ -422,7 +420,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         Set<Long> departmentIdList = getDepartmentList(departmentId);
         if (!departmentIdList.isEmpty()) {
             Join<UserEntity, DepartmentEntity> departmentJoin = root.join("departmentList");
-            Predicate inPredicate = departmentJoin.get(Constant.ID).in(departmentIdList);
+            Predicate inPredicate = departmentJoin.get(RootService.STRING_ID).in(departmentIdList);
             predicateList.add(inPredicate);
         }
         return predicateList;
@@ -464,6 +462,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param roomId 房间ID
      */
     public void saveCurrentRoomId(long userId, long roomId) {
-        redisHelper.set(CACHE_ROOM_KEY + userId, roomId, Constant.SECOND_PER_DAY * 30);
+        redisHelper.set(CACHE_ROOM_KEY + userId, roomId, DateTimeUtil.SECOND_PER_DAY * 30);
     }
 }

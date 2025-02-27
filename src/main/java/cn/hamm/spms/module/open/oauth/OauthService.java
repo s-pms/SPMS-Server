@@ -2,6 +2,7 @@ package cn.hamm.spms.module.open.oauth;
 
 import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.helper.RedisHelper;
+import cn.hamm.airpower.util.DateTimeUtil;
 import cn.hamm.spms.module.open.oauth.model.base.AbstractOauthCallback;
 import cn.hamm.spms.module.open.oauth.model.base.OauthUserInfo;
 import cn.hamm.spms.module.open.oauth.model.enums.OauthPlatform;
@@ -35,7 +36,7 @@ public class OauthService {
     /**
      * <h3>Code缓存秒数</h3>
      */
-    private static final int CACHE_CODE_EXPIRE_SECOND = Constant.SECOND_PER_MINUTE * 5;
+    private static final int CACHE_CODE_EXPIRE_SECOND = DateTimeUtil.SECOND_PER_MINUTE * 5;
 
     @Autowired
     private RedisHelper redisHelper;
@@ -148,7 +149,7 @@ public class OauthService {
     public String getOauthScopeCache(String appKey, String code) {
         Object object = redisHelper.get(getScopeCacheKey(appKey, code));
         if (Objects.isNull(object)) {
-            return Constant.EMPTY_STRING;
+            return Constant.STRING_EMPTY;
         }
         return object.toString();
     }

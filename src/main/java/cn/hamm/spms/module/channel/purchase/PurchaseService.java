@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.channel.purchase;
 
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
@@ -59,7 +58,7 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
         PurchaseEntity purchaseBill = get(billId);
         List<PurchaseDetailEntity> details = detailService.getAllByBillId(purchaseBill.getId());
         List<InputDetailEntity> inputDetails = new ArrayList<>();
-        double totalRealPrice = Constant.ZERO_DOUBLE;
+        double totalRealPrice = 0D;
         for (PurchaseDetailEntity detail : details) {
             totalRealPrice += detail.getPrice() * detail.getFinishQuantity();
             inputDetails.add(new InputDetailEntity()

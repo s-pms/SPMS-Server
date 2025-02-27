@@ -106,7 +106,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
 
         // 追加今日文件夹 定时任务将按存储文件夹进行删除过时文件
         String todayDir = DateTimeUtil.format(milliSecond,
-                DateTimeFormatter.FULL_DATE.getValue().replaceAll(Constant.LINE, Constant.EMPTY_STRING)
+                DateTimeFormatter.FULL_DATE.getValue().replaceAll(Constant.STRING_LINE, Constant.STRING_EMPTY)
         );
         String absoluteDirectory = uploadDirectory + todayDir + File.separator;
 
@@ -119,7 +119,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
             }
 
             // 文件名
-            String fileName = hashMd5 + Constant.DOT + extension;
+            String fileName = hashMd5 + Constant.STRING_DOT + extension;
 
             // 保存的相对文件路径
             String savedFilePath = category.name().toLowerCase() + File.separator + todayDir + File.separator + fileName;

@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.chat.room;
 
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseService;
@@ -72,7 +71,7 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
      * @return 房间列表
      */
     public List<RoomEntity> getHotRoomList() {
-        Sort sort = new Sort().setField("orderNumber").setDirection(Constant.DESC);
+        Sort sort = new Sort().setField("orderNumber").setDirection(Sort.DESC);
         return filter(new RoomEntity().setIsHot(true), sort);
     }
 

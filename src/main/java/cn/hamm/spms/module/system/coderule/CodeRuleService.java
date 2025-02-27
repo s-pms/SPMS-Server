@@ -37,7 +37,7 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
         List<Map<String, Object>> mapList = DictionaryUtil.getDictionaryList(CodeRuleParam.class);
         Calendar calendar = Calendar.getInstance();
         for (val map : mapList) {
-            String param = map.get(Constant.LABEL).toString();
+            String param = map.get(Constant.STRING_LABEL).toString();
             if (CodeRuleParam.FULL_YEAR.getLabel().equals(param)) {
                 template = template.replaceAll(param, String.valueOf(calendar.get(Calendar.YEAR)));
                 continue;
