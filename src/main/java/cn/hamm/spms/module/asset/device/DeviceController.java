@@ -8,7 +8,7 @@ import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.report.IReportPayloadAction;
-import cn.hamm.spms.module.iot.report.ReportEvent;
+import cn.hamm.spms.module.iot.report.ReportConstant;
 import cn.hamm.spms.module.iot.report.ReportPayload;
 import jakarta.annotation.Resource;
 import org.jetbrains.annotations.NotNull;
@@ -72,7 +72,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
 
     @Override
     protected DeviceEntity beforeAppUpdate(@NotNull DeviceEntity device) {
-        redisTemplate.delete(ReportEvent.CACHE_PREFIX + device.getUuid());
+        redisTemplate.delete(ReportConstant.CACHE_PREFIX + device.getUuid());
         return service.getDeviceParameters(device);
     }
 
