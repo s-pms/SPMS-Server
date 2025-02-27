@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.iot.report;
 
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.helper.InfluxHelper;
@@ -14,6 +13,7 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.function.BiFunction;
 
 import static cn.hamm.spms.module.iot.report.ReportConstant.*;
 
@@ -48,98 +50,96 @@ public class ReportMqCallback implements MqttCallback {
         String reportString = new String(mqttMessage.getPayload());
         try {
             ReportData reportData = Json.parse(reportString, ReportData.class);
-            DeviceEntity device = null;
-            String lastDataInCache;
-            List<ReportPayload> payloadList = new ArrayList<>();
             if (Objects.isNull(reportData.getPayloads())) {
                 return;
             }
-            DeviceService deviceService = Services.getDeviceService();
             ParameterService parameterService = Services.getParameterService();
+            String uuid = reportData.getDeviceId();
+            DeviceService deviceService = Services.getDeviceService();
+            DeviceEntity device = deviceService.getByUuid(uuid);
+            List<ReportPayload> payloadList = new ArrayList<>();
             for (ReportPayload payload : reportData.getPayloads()) {
-                if (Objects.isNull(payload.getValue())) {
+                String reportValue = payload.getValue();
+                if (Objects.isNull(reportValue)) {
                     continue;
                 }
-                ParameterEntity parameterEntity = parameterService.getByCode(payload.getCode());
-                if (Objects.isNull(parameterEntity)) {
+                String parameterCode = payload.getCode();
+                String lastDataInCache = getLastDataInCache(parameterCode, uuid);
+                if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(reportValue)) {
+                    // 查到了数据 没过期 跳过
                     continue;
                 }
-                payload.setUuid(reportData.getDeviceId());
-                ReportPayload newPayload = new ReportPayload()
-                        .setCode(payload.getCode())
-                        .setValue(payload.getValue())
-                        .setLabel(parameterEntity.getLabel())
-                        .setDataType(parameterEntity.getDataType());
-                payloadList.add(newPayload);
-                payload.setUuid(reportData.getDeviceId());
-                switch (payload.getCode()) {
+                ParameterEntity parameter = parameterService.getByCode(parameterCode);
+                if (Objects.isNull(parameter)) {
+                    continue;
+                }
+                payloadList.add(new ReportPayload()
+                        .setCode(parameterCode)
+                        .setValue(reportValue)
+                        .setLabel(parameter.getLabel())
+                        .setDataType(parameter.getDataType()));
+                saveLastReportParameterValue(parameterCode, uuid, reportValue);
+                int intValue;
+                switch (parameterCode) {
                     case REPORT_KEY_OF_STATUS:
-                        lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_STATUS + Constant.UNDERLINE + reportData.getDeviceId());
-                        if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
-                            // 查到了数据 没过期 跳过
-                            continue;
-                        }
-                        influxHelper.save(payload.getCode(), Integer.parseInt(payload.getValue()), reportData.getDeviceId());
-                        redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_STATUS + Constant.UNDERLINE + reportData.getDeviceId(), payload
-                                .getValue());
-                        if (Objects.isNull(device)) {
-                            device = deviceService.getByUuid(reportData.getDeviceId());
-                            if (Objects.nonNull(device) && device.getIsReporting()) {
-                                device.setStatus(Integer.parseInt(payload.getValue()));
-                                deviceService.update(device);
-                            }
-                        }
+                        intValue = Integer.parseInt(reportValue);
+                        influxHelper.save(parameterCode, uuid, intValue);
+                        saveIfNotNull(device, DeviceEntity::setStatus, intValue);
                         break;
                     case REPORT_KEY_OF_ALARM:
-                        lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_ALARM + Constant.UNDERLINE + reportData.getDeviceId());
-                        if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
-                            // 查到了数据 没过期 跳过
-                            continue;
-                        }
-                        influxHelper.save(payload.getCode(), Integer.parseInt(payload.getValue()), reportData.getDeviceId());
-                        redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_ALARM + Constant.UNDERLINE + reportData.getDeviceId(), payload
-                                .getValue());
-                        if (Objects.isNull(device)) {
-                            device = deviceService.getByUuid(reportData.getDeviceId());
-                            if (Objects.nonNull(device) && device.getIsReporting()) {
-                                device.setAlarm(Integer.parseInt(payload.getValue()));
-                                deviceService.update(device);
-                            }
-                        }
+                        intValue = Integer.parseInt(reportValue);
+                        influxHelper.save(parameterCode, uuid, intValue);
+                        saveIfNotNull(device, DeviceEntity::setAlarm, intValue);
                         break;
                     case REPORT_KEY_OF_PART_COUNT:
-                        lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + REPORT_KEY_OF_PART_COUNT + Constant.UNDERLINE + reportData.getDeviceId());
-                        if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
-                            // 查到了数据 没过期 跳过
-                            continue;
-                        }
-                        influxHelper.save(payload.getCode(), Double.parseDouble(payload.getValue()), reportData.getDeviceId());
-                        redisTemplate.opsForValue().set(CACHE_PREFIX + REPORT_KEY_OF_PART_COUNT + Constant.UNDERLINE + reportData.getDeviceId(), payload
-                                .getValue());
-                        if (Objects.isNull(device)) {
-                            device = deviceService.getByUuid(reportData.getDeviceId());
-                            if (Objects.nonNull(device) && device.getIsReporting()) {
-                                device.setPartCount(Long.parseLong(payload.getValue()));
-                                deviceService.update(device);
-                            }
-                        }
+                        long longValue = Long.parseLong(reportValue);
+                        influxHelper.save(parameterCode, uuid, longValue);
+                        saveIfNotNull(device, DeviceEntity::setPartCount, longValue);
                         break;
                     default:
-                        influxHelper.save(payload.getCode(), payload.getValue(), reportData.getDeviceId());
-                        lastDataInCache = (String) redisTemplate.opsForValue().get(CACHE_PREFIX + payload.getCode() + Constant.UNDERLINE + reportData.getDeviceId());
-                        if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(payload.getValue())) {
-                            // 查到了数据 没过期 跳过
-                            continue;
-                        }
-                        redisTemplate.opsForValue().set(CACHE_PREFIX + payload.getCode() + Constant.UNDERLINE + reportData.getDeviceId(), payload
-                                .getValue());
+                        influxHelper.save(parameterCode, uuid, reportValue);
                 }
             }
+            Optional.ofNullable(device).ifPresent(deviceService::update);
             reportData.setPayloads(payloadList);
-            redisTemplate.opsForValue().set(CACHE_PREFIX + reportData.getDeviceId(), Json.toString(reportData));
+            redisTemplate.opsForValue().set(getDeviceReportCacheKey(uuid), Json.toString(reportData));
         } catch (java.lang.Exception e) {
             log.error(e.getMessage());
         }
+    }
+
+    /**
+     * <h2>保存数据</h2>
+     *
+     * @param device   设备
+     * @param function 设置的函数
+     * @param value    保存的值
+     * @param <T>      保存值的类型
+     */
+    private <T> void saveIfNotNull(DeviceEntity device, BiFunction<DeviceEntity, T, DeviceEntity> function, T value) {
+        Optional.ofNullable(device).ifPresent(d -> function.apply(d, value));
+    }
+
+    /**
+     * <h2>缓存设备指定参数的数据</h2>
+     *
+     * @param code        参数编码
+     * @param uuid        设备的UUID
+     * @param reportValue 上报的数据
+     */
+    private void saveLastReportParameterValue(String code, String uuid, String reportValue) {
+        redisTemplate.opsForValue().set(getDeviceReportParamCacheKey(code, uuid), reportValue);
+    }
+
+    /**
+     * <h2>获取设备指定参数的缓存数据</h2>
+     *
+     * @param code 参数Key
+     * @param uuid 设备的UUID
+     * @return 上报的数据
+     */
+    private @Nullable String getLastDataInCache(String code, String uuid) {
+        return (String) redisTemplate.opsForValue().get(getDeviceReportParamCacheKey(code, uuid));
     }
 
     @Override

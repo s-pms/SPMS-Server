@@ -30,7 +30,7 @@ public class InfluxHelper {
     private static final String INFLUX_TAG_UUID = "uuid";
     private static final String INFLUX_SQL_SPLIT = " |> ";
     private static final String INFLUX_RECORD_VALUE_KEY = "_value";
-    private static final String INFLUX_FIELD_VALUE = Constant.VALUE;
+    public static final String INFLUX_FIELD_VALUE = Constant.VALUE;
 
     @Autowired
     private InfluxConfig influxConfig;
@@ -39,56 +39,27 @@ public class InfluxHelper {
 
 
     /**
-     * <h3>保存数据</h3>
+     * <h2>保存数据</h2>
      *
      * @param code  参数名
-     * @param value 数据
      * @param uuid  设备ID
+     * @param value 数据
      */
-    public void save(String code, double value, String uuid) {
+    public void save(String code, String uuid, Object value) {
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
-            writeApi.writePoint(influxConfig.getBucket(), influxConfig.getOrg(),
-                    new Point(ReportConstant.CACHE_PREFIX + code)
-                            .addField(INFLUX_FIELD_VALUE, value)
-                            .addTag(INFLUX_TAG_UUID, uuid)
-            );
-        }
-    }
-
-    /**
-     * <h3>保存数据</h3>
-     *
-     * @param code  参数名
-     * @param value 数据
-     * @param uuid  设备ID
-     */
-    public void save(String code, String value, String uuid) {
-        WriteApiBlocking writeApi = getWriteApi();
-        if (Objects.nonNull(writeApi)) {
-            writeApi.writePoint(influxConfig.getBucket(), influxConfig.getOrg(),
-                    new Point(ReportConstant.CACHE_PREFIX + code)
-                            .addField(INFLUX_FIELD_VALUE, value)
-                            .addTag(INFLUX_TAG_UUID, uuid)
-            );
-        }
-    }
-
-    /**
-     * <h3>保存数据</h3>
-     *
-     * @param code  参数名
-     * @param value 数据
-     * @param uuid  设备ID
-     */
-    public void save(String code, int value, String uuid) {
-        WriteApiBlocking writeApi = getWriteApi();
-        if (Objects.nonNull(writeApi)) {
-            writeApi.writePoint(influxConfig.getBucket(), influxConfig.getOrg(),
-                    new Point(ReportConstant.CACHE_PREFIX + code)
-                            .addField(INFLUX_FIELD_VALUE, value)
-                            .addTag(INFLUX_TAG_UUID, uuid)
-            );
+            Point point = new Point(ReportConstant.CACHE_PREFIX + code)
+                    .addTag(INFLUX_TAG_UUID, uuid);
+            if (value instanceof Number numberValue) {
+                point.addField(INFLUX_FIELD_VALUE, numberValue);
+            } else if (value instanceof Boolean booleanValue) {
+                point.addField(INFLUX_FIELD_VALUE, booleanValue);
+            } else if (value instanceof String stringValue) {
+                point.addField(INFLUX_FIELD_VALUE, stringValue);
+            } else {
+                throw new RuntimeException("不支持的数据类型");
+            }
+            writeApi.writePoint(influxConfig.getBucket(), influxConfig.getOrg(), point);
         }
     }
 

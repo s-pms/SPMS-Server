@@ -23,7 +23,6 @@ import cn.hamm.spms.module.factory.structure.StructureEntity;
 import cn.hamm.spms.module.factory.structure.StructureService;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
-import cn.hamm.spms.module.iot.report.ReportConstant;
 import cn.hamm.spms.module.iot.report.ReportDataType;
 import cn.hamm.spms.module.mes.bom.BomEntity;
 import cn.hamm.spms.module.mes.bom.BomService;
@@ -52,6 +51,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+
+import static cn.hamm.spms.module.iot.report.ReportConstant.*;
 
 /**
  * <h1>初始化</h1>
@@ -112,28 +113,28 @@ public class InitializeRunner implements CommandLineRunner {
     private void initParameters() {
         ParameterEntity parameter;
 
-        parameter = parameterService.getByCode(ReportConstant.REPORT_KEY_OF_STATUS);
+        parameter = parameterService.getByCode(REPORT_KEY_OF_STATUS);
         if (Objects.isNull(parameter)) {
             parameterService.add(new ParameterEntity()
-                    .setCode(ReportConstant.REPORT_KEY_OF_STATUS)
+                    .setCode(REPORT_KEY_OF_STATUS)
                     .setLabel("运行状态")
                     .setDataType(ReportDataType.STATUS.getKey())
                     .setIsSystem(true)
             );
         }
-        parameter = parameterService.getByCode(ReportConstant.REPORT_KEY_OF_ALARM);
+        parameter = parameterService.getByCode(REPORT_KEY_OF_ALARM);
         if (Objects.isNull(parameter)) {
             parameterService.add(new ParameterEntity()
-                    .setCode(ReportConstant.REPORT_KEY_OF_ALARM)
+                    .setCode(REPORT_KEY_OF_ALARM)
                     .setLabel("报警状态")
                     .setDataType(ReportDataType.STATUS.getKey())
                     .setIsSystem(true)
             );
         }
-        parameter = parameterService.getByCode(ReportConstant.REPORT_KEY_OF_PART_COUNT);
+        parameter = parameterService.getByCode(REPORT_KEY_OF_PART_COUNT);
         if (Objects.isNull(parameter)) {
             parameterService.add(new ParameterEntity()
-                    .setCode(ReportConstant.REPORT_KEY_OF_PART_COUNT)
+                    .setCode(REPORT_KEY_OF_PART_COUNT)
                     .setLabel("实时产量")
                     .setDataType(ReportDataType.QUANTITY.getKey())
                     .setIsSystem(true)

@@ -19,6 +19,8 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static cn.hamm.spms.module.iot.report.ReportConstant.*;
+
 /**
  * <h1>Service</h1>
  *
@@ -40,7 +42,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
      */
     public List<ReportPayload> getCurrentReport(long deviceId) {
         DeviceEntity device = get(deviceId);
-        Object data = redisTemplate.opsForValue().get(ReportConstant.CACHE_PREFIX + device.getUuid());
+        Object data = redisTemplate.opsForValue().get(CACHE_PREFIX + device.getUuid());
         if (Objects.isNull(data)) {
             return new ArrayList<>();
         }
@@ -91,9 +93,9 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
                     .filter(parameter -> !parameter.getIsSystem())
                     .collect(Collectors.toSet());
         }
-        parameters.add(parameterService.getByCode(ReportConstant.REPORT_KEY_OF_STATUS));
-        parameters.add(parameterService.getByCode(ReportConstant.REPORT_KEY_OF_ALARM));
-        parameters.add(parameterService.getByCode(ReportConstant.REPORT_KEY_OF_PART_COUNT));
+        parameters.add(parameterService.getByCode(REPORT_KEY_OF_STATUS));
+        parameters.add(parameterService.getByCode(REPORT_KEY_OF_ALARM));
+        parameters.add(parameterService.getByCode(REPORT_KEY_OF_PART_COUNT));
         device.setParameters(parameters);
         return device;
     }
