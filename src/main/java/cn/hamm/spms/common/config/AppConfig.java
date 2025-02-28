@@ -22,6 +22,11 @@ import static cn.hamm.spms.common.enums.UploadPlatform.LOCAL;
 @ConfigurationProperties("app")
 public class AppConfig {
     /**
+     * <h2>项目名称</h2>
+     */
+    private String projectName = "SPMS";
+
+    /**
      * <h3>登录地址 用于 {@code OAuth2}</h3>
      */
     private String loginUrl;

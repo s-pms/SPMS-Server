@@ -222,7 +222,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         EMAIL_SEND_BUSY.when(redisHelper.hasKey(getEmailCacheKey(email)));
         String code = getNewSalt();
         redisHelper.set(getEmailCacheKey(email), code, CACHE_CODE_EXPIRE_SECOND);
-        emailHelper.sendCode(email, "你收到一个邮箱验证码", code, "DEMO");
+        emailHelper.sendCode(email, "你收到一个邮箱验证码", code, appConfig.getProjectName());
     }
 
     /**
