@@ -5,7 +5,6 @@ import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.interfaces.ITree;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
-import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -18,6 +17,10 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.List;
+
+import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.airpower.annotation.Search.Mode.LIKE;
+import static cn.hamm.spms.module.system.coderule.CodeRuleField.DepartmentCode;
 
 /**
  * <h1>实体</h1>
@@ -35,18 +38,18 @@ import java.util.List;
 public class DepartmentEntity extends BaseEntity<DepartmentEntity> implements ITree<DepartmentEntity> {
     @Description("部门编码")
     @Column(columnDefinition = "varchar(255) default '' comment 'code'", unique = true)
-    @AutoGenerateCode(CodeRuleField.DepartmentCode)
+    @AutoGenerateCode(DepartmentCode)
     private String code;
 
     @Description("部门名称")
     @Column(columnDefinition = "varchar(255) default '' comment '部门名称'")
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "应用名称不能为空")
-    @Search(Search.Mode.LIKE)
+    @Search(LIKE)
     private String name;
 
     @Description("父级ID")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '父级ID'")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     private Long parentId;
 
     @Description("排序号")

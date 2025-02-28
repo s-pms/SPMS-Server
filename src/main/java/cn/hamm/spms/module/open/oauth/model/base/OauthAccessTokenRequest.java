@@ -16,9 +16,9 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
-public class OauthAccessTokenRequest extends RootModel<OauthAccessTokenRequest> {
+public class OauthAccessTokenRequest extends RootModel<OauthAccessTokenRequest> implements IOauthAction {
     @Description("AccessToken")
-    @NotBlank(groups = {IOauthAction.WhenAccessTokenRequired.class}, message = "AccessToken不能为空")
+    @NotBlank(groups = {WhenAccessTokenRequired.class}, message = "AccessToken不能为空")
     private String accessToken;
 
 }

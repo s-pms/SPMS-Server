@@ -1,6 +1,5 @@
 package cn.hamm.spms.common.helper;
 
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.spms.common.config.InfluxConfig;
 import cn.hamm.spms.module.iot.report.*;
 import com.influxdb.LogLevel;
@@ -20,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static cn.hamm.airpower.config.Constant.*;
+
 /**
  * <h1>Influx助手类</h1>
  *
@@ -27,7 +28,7 @@ import java.util.Objects;
  */
 @Configuration
 public class InfluxHelper {
-    public static final String INFLUX_FIELD_VALUE = Constant.STRING_VALUE;
+    public static final String INFLUX_FIELD_VALUE = STRING_VALUE;
     private static final String INFLUX_TAG_UUID = "uuid";
     private static final String INFLUX_SQL_SPLIT = " |> ";
     private static final String INFLUX_RECORD_VALUE_KEY = "_value";
@@ -149,10 +150,10 @@ public class InfluxHelper {
                         payload.setValue(Objects.isNull(value) ? 0 : Double.parseDouble(value.toString()));
                         break;
                     case INFORMATION:
-                        payload.setStrValue(Objects.isNull(value) ? Constant.STRING_EMPTY : value.toString());
+                        payload.setStrValue(Objects.isNull(value) ? STRING_EMPTY : value.toString());
                         break;
                     case SWITCH:
-                        payload.setBoolValue(!Objects.isNull(value) && Constant.STRING_ONE.equals(value.toString()));
+                        payload.setBoolValue(!Objects.isNull(value) && STRING_ONE.equals(value.toString()));
                         break;
                     case STATUS:
                         payload.setIntValue(Objects.isNull(value) ? 0 : Integer.parseInt(value.toString()));

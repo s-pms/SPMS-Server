@@ -20,6 +20,9 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Objects;
 
+import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
+
 /**
  * <h1>配置信息实体</h1>
  *
@@ -49,13 +52,13 @@ public class ConfigEntity extends BaseEntity<ConfigEntity> {
     private String config;
 
     @Description("配置类型")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '配置类型'")
     @Dictionary(value = ConfigType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 
     @Description("内置配置")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '内置配置'")
     private Boolean isSystem;
@@ -72,7 +75,7 @@ public class ConfigEntity extends BaseEntity<ConfigEntity> {
     }
 
     @Transient
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = WRITE_ONLY)
     public Boolean booleanConfig() {
         if (Objects.isNull(config)) {
             return false;

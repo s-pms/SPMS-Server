@@ -20,6 +20,11 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import static cn.hamm.airpower.annotation.ExcelColumn.Type.BOOLEAN;
+import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.airpower.annotation.Search.Mode.JOIN;
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
+
 /**
  * <h1>角色实体</h1>
  *
@@ -37,7 +42,7 @@ public class RoomEntity extends BaseEntity<RoomEntity> implements IRoomAction {
     @Description("房间号")
     @Column(nullable = false, columnDefinition = "int UNSIGNED comment '房间号'", unique = true)
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "房间号不能为空")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     private Integer code;
 
     @Description("房间名称")
@@ -55,31 +60,31 @@ public class RoomEntity extends BaseEntity<RoomEntity> implements IRoomAction {
     private Integer orderNumber;
 
     @Description("是否热门")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否热门'")
-    @ExcelColumn(ExcelColumn.Type.BOOLEAN)
+    @ExcelColumn(BOOLEAN)
     private Boolean isHot;
 
     @Description("是否官方")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否官方'")
-    @ExcelColumn(ExcelColumn.Type.BOOLEAN)
+    @ExcelColumn(BOOLEAN)
     private Boolean isOfficial;
 
     @Description("是否私有房间")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否私有房间'")
-    @ExcelColumn(ExcelColumn.Type.BOOLEAN)
+    @ExcelColumn(BOOLEAN)
     private Boolean isPrivate;
 
     @Description("房间密码")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = WRITE_ONLY)
     @Column(nullable = false, columnDefinition = "varchar(255) default '' comment '房间密码'")
     private String password;
 
     @Description("房主信息")
     @ManyToOne
-    @Search(Search.Mode.JOIN)
+    @Search(JOIN)
     @ReadOnly
     private UserEntity owner;
 

@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
+import static cn.hamm.spms.module.chat.enums.ChatEventType.*;
 
 /**
  * <h1>应用自定义的事件处理器</h1>
@@ -91,7 +92,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
                 .setType(event.getKeyString())
                 .setData(Json.toString(roomMemberEvent)));
         websocketHelper.publishToChannel(GROUP_PREFIX + roomId, new WebSocketPayload()
-                .setType(ChatEventType.ONLINE_COUNT_CHANGED.getKeyString())
+                .setType(ONLINE_COUNT_CHANGED.getKeyString())
                 .setData(Json.toString(roomUserIdList))
         );
     }
@@ -102,14 +103,14 @@ public class AppWebSocketHandler extends WebSocketHandler {
         if (Objects.isNull(userId)) {
             return;
         }
-        switch (ChatEventType.getByStringKey(webSocketPayload.getType())) {
+        switch (getByStringKey(webSocketPayload.getType())) {
             case ROOM_MEMBER_JOIN:
                 RoomJoinRequest joinRequest = Json.parse(webSocketPayload.getData(), RoomJoinRequest.class);
                 // 查房间信息
                 RoomEntity room = roomService.getByCode(joinRequest.getRoomCode());
                 if (Objects.isNull(room)) {
                     webSocketPayload = new WebSocketPayload()
-                            .setType(ChatEventType.ROOM_JOIN_FAIL.getKeyString())
+                            .setType(ROOM_JOIN_FAIL.getKeyString())
                             .setData("房间号 " + joinRequest.getRoomCode() + "不存在");
                     sendWebSocketPayload(session, webSocketPayload);
                     return;
@@ -119,7 +120,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
                         !room.getPassword().equalsIgnoreCase(joinRequest.getPassword())) {
                     // todo 密码不正确
                     webSocketPayload = new WebSocketPayload()
-                            .setType(ChatEventType.ROOM_JOIN_FAIL.getKeyString())
+                            .setType(ROOM_JOIN_FAIL.getKeyString())
                             .setData("进入房间失败，房间密码错误！");
                     sendWebSocketPayload(session, webSocketPayload);
                     return;
@@ -127,18 +128,18 @@ public class AppWebSocketHandler extends WebSocketHandler {
 
                 // 更新用户当前所在房间ID到缓存
                 userService.saveCurrentRoomId(userId, room.getId());
-                onRoomEvent(userId, room.getId(), ChatEventType.ROOM_MEMBER_JOIN);
+                onRoomEvent(userId, room.getId(), ROOM_MEMBER_JOIN);
                 subscribe(GROUP_PREFIX + room.getId(), session);
 
                 RoomMemberEvent memberJoinEvent = new RoomMemberEvent();
                 memberJoinEvent.setMember(getCurrentMember(userId));
                 sendWebSocketPayload(session, new WebSocketPayload()
-                        .setType(ChatEventType.ROOM_JOIN_SUCCESS.getKeyString())
+                        .setType(ROOM_JOIN_SUCCESS.getKeyString())
                         .setData(Json.toString(memberJoinEvent)));
 
                 List<Long> roomUserIdList = roomOnlineUserList.get(GROUP_PREFIX + room.getId());
                 sendWebSocketPayload(session, new WebSocketPayload()
-                        .setType(ChatEventType.ONLINE_COUNT_CHANGED.getKeyString())
+                        .setType(ONLINE_COUNT_CHANGED.getKeyString())
                         .setData(Json.toString(roomUserIdList)));
                 break;
             case ROOM_MEMBER_LEAVE:
@@ -147,7 +148,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
             case ROOM_TEXT_MESSAGE:
                 MemberTextMessageEvent memberTextMessageEvent = new MemberTextMessageEvent();
                 memberTextMessageEvent.setText(webSocketPayload.getData()).setMember(getCurrentMember(userId));
-                publishToUserRoom(userId, ChatEventType.ROOM_TEXT_MESSAGE, memberTextMessageEvent);
+                publishToUserRoom(userId, ROOM_TEXT_MESSAGE, memberTextMessageEvent);
                 break;
             default:
         }
@@ -161,11 +162,11 @@ public class AppWebSocketHandler extends WebSocketHandler {
      */
     private void leaveRoom(@NotNull WebSocketSession session, long userId) {
         long leaveRoomId = userService.getCurrentRoomId(userId);
-        onRoomEvent(userId, leaveRoomId, ChatEventType.ROOM_MEMBER_LEAVE);
+        onRoomEvent(userId, leaveRoomId, ROOM_MEMBER_LEAVE);
         unsubscribe(GROUP_PREFIX + leaveRoomId, session);
 
         sendWebSocketPayload(session, new WebSocketPayload()
-                .setType(ChatEventType.ROOM_LEAVE_SUCCESS.getKeyString())
+                .setType(ROOM_LEAVE_SUCCESS.getKeyString())
         );
     }
 

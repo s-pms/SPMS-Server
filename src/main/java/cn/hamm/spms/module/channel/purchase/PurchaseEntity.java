@@ -7,7 +7,6 @@ import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailEntity;
-import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -18,6 +17,9 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
+
+import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.spms.module.system.coderule.CodeRuleField.PurchaseBillCode;
 
 /**
  * <h1>采购单实体</h1>
@@ -35,15 +37,15 @@ import org.hibernate.validator.constraints.Length;
 public class PurchaseEntity extends AbstractBaseBillEntity<PurchaseEntity, PurchaseDetailEntity> {
     @Description("采购单号")
     @Column(columnDefinition = "varchar(255) default '' comment '采购单号'", unique = true)
-    @AutoGenerateCode(CodeRuleField.PurchaseBillCode)
-    @Search(Search.Mode.LIKE)
+    @AutoGenerateCode(PurchaseBillCode)
+    @Search
     private String billCode;
 
     @Description("采购事由")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "采购事由")
     @Column(columnDefinition = "varchar(255) default '' comment '采购事由'")
     @Length(max = 80, message = "采购事由最多允许输入{max}个字符")
-    @Search(Search.Mode.LIKE)
+    @Search
     private String reason;
 
     @Description("总金额")
@@ -59,6 +61,6 @@ public class PurchaseEntity extends AbstractBaseBillEntity<PurchaseEntity, Purch
     @Description("采购状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '采购状态'")
     @Dictionary(value = PurchaseStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     private Integer status;
 }

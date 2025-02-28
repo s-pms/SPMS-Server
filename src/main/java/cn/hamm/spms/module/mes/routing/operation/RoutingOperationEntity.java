@@ -6,13 +6,20 @@ import cn.hamm.airpower.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.mes.bom.BomEntity;
 import cn.hamm.spms.module.mes.operation.OperationEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.airpower.annotation.Search.Mode.JOIN;
+import static jakarta.persistence.FetchType.EAGER;
 
 /**
  * <h1>实体</h1>
@@ -33,14 +40,14 @@ public class RoutingOperationEntity extends BaseEntity<RoutingOperationEntity> {
     private Long routingId;
 
     @Description("工序信息")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "工序信息")
-    @Search(Search.Mode.JOIN)
+    @Search(JOIN)
     private OperationEntity operation;
 
     @Description("BOM信息")
-    @ManyToOne(fetch = FetchType.EAGER)
-    @Search(Search.Mode.JOIN)
+    @ManyToOne(fetch = EAGER)
+    @Search(JOIN)
     private BomEntity bom;
 
     @Description("排序号")
@@ -48,7 +55,7 @@ public class RoutingOperationEntity extends BaseEntity<RoutingOperationEntity> {
     private Integer orderNo;
 
     @Description("是否自动流转")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否自动流转'")
     private Boolean isAutoNext;

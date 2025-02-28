@@ -12,6 +12,8 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import static jakarta.persistence.FetchType.EAGER;
+
 /**
  * <h1>入库明细实体</h1>
  *
@@ -27,7 +29,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Description("入库明细")
 public class InputDetailEntity extends BaseBillDetailEntity<InputDetailEntity> {
     @Description("物料信息")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料不能为空")
     private MaterialEntity material;
 

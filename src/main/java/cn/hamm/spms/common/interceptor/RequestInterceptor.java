@@ -1,13 +1,11 @@
 package cn.hamm.spms.common.interceptor;
 
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
 import cn.hamm.airpower.util.AccessTokenUtil;
 import cn.hamm.airpower.util.PermissionUtil;
 import cn.hamm.airpower.util.ReflectUtil;
 import cn.hamm.airpower.util.RequestUtil;
 import cn.hamm.spms.common.annotation.DisableLog;
-import cn.hamm.spms.common.config.AppConstant;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
 import cn.hamm.spms.module.system.log.LogEntity;
@@ -22,7 +20,10 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
+import static cn.hamm.airpower.config.Constant.STRING_EMPTY;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.spms.common.config.AppConstant.APP_PLATFORM_HEADER;
+import static cn.hamm.spms.common.config.AppConstant.APP_VERSION_HEADER;
 
 /**
  * <h1>请求拦截器</h1>
@@ -88,12 +89,12 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         }
         String accessToken = request.getHeader(serviceConfig.getAuthorizeHeader());
         Long userId = null;
-        int appVersion = request.getIntHeader(AppConstant.APP_VERSION_HEADER);
-        String platform = Constant.STRING_EMPTY;
+        int appVersion = request.getIntHeader(APP_VERSION_HEADER);
+        String platform = STRING_EMPTY;
         String action = request.getRequestURI();
         try {
             userId = AccessTokenUtil.create().getPayloadId(accessToken, serviceConfig.getAccessTokenSecret());
-            platform = request.getHeader(AppConstant.APP_PLATFORM_HEADER);
+            platform = request.getHeader(APP_PLATFORM_HEADER);
             String description = ReflectUtil.getDescription(method);
             if (!description.equals(method.getName())) {
                 action = description;

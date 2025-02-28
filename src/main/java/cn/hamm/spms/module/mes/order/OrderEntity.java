@@ -10,14 +10,20 @@ import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.channel.customer.CustomerEntity;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailEntity;
 import cn.hamm.spms.module.mes.plan.PlanEntity;
-import cn.hamm.spms.module.system.coderule.CodeRuleField;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.spms.module.system.coderule.CodeRuleField.OrderBillCode;
+import static jakarta.persistence.FetchType.EAGER;
 
 /**
  * <h1>领料单实体</h1>
@@ -35,20 +41,20 @@ import org.hibernate.annotations.DynamicUpdate;
 public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetailEntity> {
     @Description("订单号")
     @Column(columnDefinition = "varchar(255) default '' comment '订单号'", unique = true)
-    @AutoGenerateCode(CodeRuleField.OrderBillCode)
-    @Search(Search.Mode.LIKE)
+    @AutoGenerateCode(OrderBillCode)
+    @Search
     private String billCode;
 
     @Description("订单状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '订单状态'")
     @Dictionary(value = OrderStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     private Integer status;
 
     @Description("订单类型")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '订单类型'")
     @Dictionary(value = OrderType.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     private Integer type;
 
     @Description("开始时间")
@@ -65,7 +71,7 @@ public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetail
     private Long deliverTime;
 
     @Description("物料信息")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料不能为空")
     private MaterialEntity material;
 
@@ -83,10 +89,10 @@ public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetail
     private Double ngQuantity;
 
     @Description("计划信息")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = EAGER)
     private PlanEntity plan;
 
     @Description("客户信息")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = EAGER)
     private CustomerEntity customer;
 }

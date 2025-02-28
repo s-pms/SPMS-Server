@@ -25,6 +25,11 @@ import org.hibernate.validator.constraints.Length;
 import java.util.Objects;
 import java.util.Set;
 
+import static cn.hamm.airpower.annotation.Desensitize.Type.CHINESE_NAME;
+import static cn.hamm.airpower.annotation.Desensitize.Type.ID_CARD;
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
+import static jakarta.persistence.FetchType.EAGER;
+
 /**
  * <h1>用户实体</h1>
  *
@@ -42,7 +47,7 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @Description("用户昵称")
     @Column(columnDefinition = "varchar(255) default '' comment '昵称'")
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class, WhenUpdateMyInfo.class}, message = "昵称不能为空")
-    @Search()
+    @Search
     private String nickname;
 
     @Description("头像")
@@ -50,12 +55,12 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     private String avatar;
 
     @Description("真实姓名")
-    @Desensitize(Desensitize.Type.CHINESE_NAME)
+    @Desensitize(CHINESE_NAME)
     @Column(columnDefinition = "varchar(255) default '' comment '真实姓名'")
     private String realName;
 
     @Description("身份证号")
-    @Desensitize(Desensitize.Type.ID_CARD)
+    @Desensitize(ID_CARD)
     @Column(columnDefinition = "varchar(255) default '' comment '身份证号'")
     private String idCard;
 
@@ -78,7 +83,7 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @Search(Search.Mode.EQUALS)
     private Integer gender;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = WRITE_ONLY)
     @Description("密码")
     @Column(columnDefinition = "varchar(255) default '' comment '密码'")
     @NotBlank(groups = {WhenLogin.class, WhenResetMyPassword.class, WhenUpdateMyPassword.class}, message = "密码不能为空")
@@ -92,11 +97,11 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     private String salt;
 
     @Description("角色列表")
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = EAGER)
     private Set<RoleEntity> roleList;
 
     @Description("部门列表")
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = EAGER)
     private Set<DepartmentEntity> departmentList;
 
     /// ////////////////////
