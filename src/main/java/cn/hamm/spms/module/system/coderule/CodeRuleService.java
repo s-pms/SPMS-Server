@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.system.coderule;
 
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
 import lombok.val;
@@ -11,8 +10,10 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import static cn.hamm.airpower.config.Constant.STRING_LABEL;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
 import static cn.hamm.airpower.exception.ServiceError.SERVICE_ERROR;
+import static cn.hamm.spms.module.system.coderule.CodeRuleParam.*;
 
 /**
  * <h1>Service</h1>
@@ -37,25 +38,25 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
         List<Map<String, Object>> mapList = DictionaryUtil.getDictionaryList(CodeRuleParam.class);
         Calendar calendar = Calendar.getInstance();
         for (val map : mapList) {
-            String param = map.get(Constant.STRING_LABEL).toString();
-            if (CodeRuleParam.FULL_YEAR.getLabel().equals(param)) {
+            String param = map.get(STRING_LABEL).toString();
+            if (FULL_YEAR.getLabel().equals(param)) {
                 template = template.replaceAll(param, String.valueOf(calendar.get(Calendar.YEAR)));
                 continue;
             }
-            if (CodeRuleParam.YEAR.getLabel().equals(param)) {
+            if (YEAR.getLabel().equals(param)) {
                 String fullYear = String.valueOf(calendar.get(Calendar.YEAR));
                 template = template.replaceAll(param, fullYear.substring(SHORT_YEAR_LENGTH));
                 continue;
             }
-            if (CodeRuleParam.MONTH.getLabel().equals(param)) {
+            if (MONTH.getLabel().equals(param)) {
                 template = template.replaceAll(param, String.format(CODE_RULE_FORMATTER, calendar.get(Calendar.MONTH) + 1));
                 continue;
             }
-            if (CodeRuleParam.DATE.getLabel().equals(param)) {
+            if (DATE.getLabel().equals(param)) {
                 template = template.replaceAll(param, String.format(CODE_RULE_FORMATTER, calendar.get(Calendar.DAY_OF_MONTH)));
                 continue;
             }
-            if (CodeRuleParam.HOUR.getLabel().equals(param)) {
+            if (HOUR.getLabel().equals(param)) {
                 template = template.replaceAll(param, String.format(CODE_RULE_FORMATTER, calendar.get(Calendar.HOUR_OF_DAY)));
             }
         }

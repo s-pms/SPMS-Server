@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static cn.hamm.spms.module.system.config.ConfigFlag.SALE_BILL_AUTO_AUDIT;
+
 /**
  * <h1>Service</h1>
  *
@@ -52,6 +54,6 @@ public class SaleService extends AbstractBaseBillService<SaleEntity, SaleReposit
 
     @Override
     protected ConfigFlag getAutoAuditConfigFlag() {
-        return ConfigFlag.SALE_BILL_AUTO_AUDIT;
+        return SALE_BILL_AUTO_AUDIT;
     }
 }

@@ -1,11 +1,12 @@
 package cn.hamm.spms.module.system.config;
 
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+import static cn.hamm.airpower.config.Constant.STRING_ONE;
+import static cn.hamm.airpower.config.Constant.STRING_ZERO;
 import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
 
@@ -55,10 +56,9 @@ public class ConfigService extends BaseService<ConfigEntity, ConfigRepository> {
                 ConfigType type = DictionaryUtil.getDictionary(ConfigType.class, configuration.getType());
                 switch (type) {
                     case BOOLEAN:
-                        configuration.setConfig(
-                                Constant.STRING_ONE.equals(configuration.getConfig()) ?
-                                        Constant.STRING_ONE :
-                                        Constant.STRING_ZERO
+                        configuration.setConfig(STRING_ONE.equals(configuration.getConfig()) ?
+                                STRING_ONE :
+                                STRING_ZERO
                         );
                         break;
                     case NUMBER:

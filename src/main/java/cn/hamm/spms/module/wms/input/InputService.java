@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.spms.module.system.config.ConfigFlag.INPUT_BILL_AUTO_AUDIT;
 
 /**
  * <h1>Service</h1>
@@ -86,6 +87,6 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
 
     @Override
     protected ConfigFlag getAutoAuditConfigFlag() {
-        return ConfigFlag.INPUT_BILL_AUTO_AUDIT;
+        return INPUT_BILL_AUTO_AUDIT;
     }
 }

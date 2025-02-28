@@ -21,6 +21,11 @@ import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
  */
 @Service
 public class RoutingService extends BaseService<RoutingEntity, RoutingRepository> {
+    /**
+     * <h3>排序字段</h3>
+     */
+    private static final String ORDER_FIELD_NAME = "orderNo";
+
     @Override
     protected void afterUpdate(long id, @NotNull RoutingEntity routing) {
         Services.getRoutingOperationService().deleteByRoutingId(id);
@@ -39,7 +44,7 @@ public class RoutingService extends BaseService<RoutingEntity, RoutingRepository
     @Override
     protected RoutingEntity afterGet(@NotNull RoutingEntity routing) {
         RoutingOperationEntity filter = new RoutingOperationEntity().setRoutingId(routing.getId());
-        List<RoutingOperationEntity> details = Services.getRoutingOperationService().filter(filter, new Sort().setField("orderNo").setDirection("asc"));
+        List<RoutingOperationEntity> details = Services.getRoutingOperationService().filter(filter, new Sort().setField(ORDER_FIELD_NAME).setDirection(Sort.ASC));
         routing.setDetails(details);
         return routing;
     }

@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static cn.hamm.spms.module.system.config.ConfigFlag.PURCHASE_BILL_AUTO_AUDIT;
+
 /**
  * <h1>Service</h1>
  *
@@ -92,6 +94,6 @@ public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, Pur
 
     @Override
     protected ConfigFlag getAutoAuditConfigFlag() {
-        return ConfigFlag.PURCHASE_BILL_AUTO_AUDIT;
+        return PURCHASE_BILL_AUTO_AUDIT;
     }
 }

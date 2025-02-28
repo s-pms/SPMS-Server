@@ -1,7 +1,5 @@
 package cn.hamm.spms.module.system.file;
 
-import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.enums.DateTimeFormatter;
 import cn.hamm.airpower.exception.ServiceException;
 import cn.hamm.airpower.util.DateTimeUtil;
 import cn.hamm.airpower.util.FileUtil;
@@ -23,6 +21,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static cn.hamm.airpower.config.Constant.*;
+import static cn.hamm.airpower.enums.DateTimeFormatter.FULL_DATE;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_UPLOAD_MAX_SIZE;
 import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
 
@@ -106,7 +106,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
 
         // 追加今日文件夹 定时任务将按存储文件夹进行删除过时文件
         String todayDir = DateTimeUtil.format(milliSecond,
-                DateTimeFormatter.FULL_DATE.getValue().replaceAll(Constant.STRING_LINE, Constant.STRING_EMPTY)
+                FULL_DATE.getValue().replaceAll(STRING_LINE, STRING_EMPTY)
         );
         String absoluteDirectory = uploadDirectory + todayDir + File.separator;
 
@@ -119,7 +119,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
             }
 
             // 文件名
-            String fileName = hashMd5 + Constant.STRING_DOT + extension;
+            String fileName = hashMd5 + STRING_DOT + extension;
 
             // 保存的相对文件路径
             String savedFilePath = category.name().toLowerCase() + File.separator + todayDir + File.separator + fileName;

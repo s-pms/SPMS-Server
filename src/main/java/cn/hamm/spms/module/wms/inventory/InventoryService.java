@@ -2,7 +2,6 @@ package cn.hamm.spms.module.wms.inventory;
 
 import cn.hamm.airpower.interfaces.ITree;
 import cn.hamm.airpower.model.query.QueryPageRequest;
-import cn.hamm.airpower.root.RootService;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.base.BaseService;
@@ -16,6 +15,7 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
@@ -28,14 +28,11 @@ import java.util.*;
  */
 @Service
 public class InventoryService extends BaseService<InventoryEntity, InventoryRepository> {
-    private final StorageService storageService;
-    private final StructureService structureService;
+    @Autowired
+    private StorageService storageService;
 
-    public InventoryService(StorageService storageService, StructureService structureService) {
-        super();
-        this.storageService = storageService;
-        this.structureService = structureService;
-    }
+    @Autowired
+    private StructureService structureService;
 
     /**
      * <h3>查询指定物料ID和仓库ID下的库存</h3>
@@ -101,7 +98,7 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
                 Set<Long> idList = getIdList(search.getStorage().getId(), storageService, StorageEntity.class);
                 if (!idList.isEmpty()) {
                     Join<InventoryEntity, StorageEntity> join = root.join("storage");
-                    Predicate inPredicate = join.get(RootService.STRING_ID).in(idList);
+                    Predicate inPredicate = join.get(STRING_ID).in(idList);
                     predicateList.add(inPredicate);
                 }
             }
@@ -112,7 +109,7 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
                 Set<Long> idList = getIdList(search.getStructure().getId(), structureService, StructureEntity.class);
                 if (!idList.isEmpty()) {
                     Join<InventoryEntity, StructureEntity> join = root.join("structure");
-                    Predicate inPredicate = join.get(RootService.STRING_ID).in(idList);
+                    Predicate inPredicate = join.get(STRING_ID).in(idList);
                     predicateList.add(inPredicate);
                 }
             }

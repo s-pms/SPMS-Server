@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.spms.module.system.config.ConfigFlag.MOVE_BILL_AUTO_AUDIT;
 
 /**
  * <h1>Service</h1>
@@ -122,6 +123,6 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
 
     @Override
     protected ConfigFlag getAutoAuditConfigFlag() {
-        return ConfigFlag.MOVE_BILL_AUTO_AUDIT;
+        return MOVE_BILL_AUTO_AUDIT;
     }
 }

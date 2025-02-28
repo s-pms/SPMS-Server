@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.open.oauth;
 
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.helper.RedisHelper;
 import cn.hamm.airpower.util.DateTimeUtil;
 import cn.hamm.spms.module.open.oauth.model.base.AbstractOauthCallback;
@@ -22,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static cn.hamm.airpower.config.Constant.STRING_EMPTY;
 import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 
@@ -149,7 +149,7 @@ public class OauthService {
     public String getOauthScopeCache(String appKey, String code) {
         Object object = redisHelper.get(getScopeCacheKey(appKey, code));
         if (Objects.isNull(object)) {
-            return Constant.STRING_EMPTY;
+            return STRING_EMPTY;
         }
         return object.toString();
     }

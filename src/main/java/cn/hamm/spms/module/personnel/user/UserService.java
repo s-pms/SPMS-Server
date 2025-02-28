@@ -1,15 +1,12 @@
 package cn.hamm.spms.module.personnel.user;
 
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.helper.CookieHelper;
 import cn.hamm.airpower.helper.EmailHelper;
 import cn.hamm.airpower.model.Sort;
-import cn.hamm.airpower.root.RootService;
 import cn.hamm.airpower.util.*;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConfig;
-import cn.hamm.spms.common.exception.CustomError;
 import cn.hamm.spms.module.personnel.user.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.user.department.DepartmentService;
 import cn.hamm.spms.module.system.config.ConfigEntity;
@@ -33,7 +30,9 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 
+import static cn.hamm.airpower.config.Constant.*;
 import static cn.hamm.airpower.exception.ServiceError.*;
+import static cn.hamm.spms.common.exception.CustomError.*;
 
 /**
  * <h1>Service</h1>
@@ -220,7 +219,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param email 邮箱
      */
     public void sendMail(String email) throws MessagingException {
-        CustomError.EMAIL_SEND_BUSY.when(redisHelper.hasKey(getEmailCacheKey(email)));
+        EMAIL_SEND_BUSY.when(redisHelper.hasKey(getEmailCacheKey(email)));
         String code = getNewSalt();
         redisHelper.set(getEmailCacheKey(email), code, CACHE_CODE_EXPIRE_SECOND);
         emailHelper.sendCode(email, "你收到一个邮箱验证码", code, "DEMO");
@@ -230,7 +229,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * <h3>发送短信验证码</h3>
      */
     public void sendSms(String phone) {
-        CustomError.SMS_SEND_BUSY.when(redisHelper.hasKey(getPhoneCodeCacheKey(phone)));
+        SMS_SEND_BUSY.when(redisHelper.hasKey(getPhoneCodeCacheKey(phone)));
         String code = getNewSalt();
         redisHelper.set(getPhoneCodeCacheKey(phone), code, CACHE_CODE_EXPIRE_SECOND);
         log.info("短信验证码：{}", code);
@@ -253,7 +252,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         saveCookie(user.getId(), cookieString);
         Cookie cookie = cookieHelper.getAuthorizeCookie(cookieString);
         cookie.setHttpOnly(false);
-        cookie.setPath(Constant.STRING_SLASH);
+        cookie.setPath(STRING_SLASH);
         response.addCookie(cookie);
         return accessToken;
     }
@@ -299,10 +298,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         } else {
             PARAM_INVALID.show("ID或邮箱不能为空，请确认是否传入");
         }
-        CustomError.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNull(existUser);
+        USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNull(existUser);
         // 将用户传入的密码加密与数据库存储匹配
         String encodePassword = PasswordUtil.encode(user.getPassword(), existUser.getSalt());
-        CustomError.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNotEqualsIgnoreCase(encodePassword, existUser.getPassword());
+        USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNotEqualsIgnoreCase(encodePassword, existUser.getPassword());
         return existUser;
     }
 
@@ -345,7 +344,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public long registerUserViaEmail(@NotNull String email, String password) {
         // 昵称默认为邮箱账号 @ 前面的
-        String nickname = email.split(Constant.STRING_AT)[0];
+        String nickname = email.split(STRING_AT)[0];
         String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
         UserEntity user = new UserEntity().setPassword(PasswordUtil.encode(password, salt))
                 .setSalt(salt)
@@ -371,7 +370,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     private String getEmailCode(String email) {
         Object code = redisHelper.get(getEmailCacheKey(email));
-        return Objects.isNull(code) ? Constant.STRING_EMPTY : code.toString();
+        return Objects.isNull(code) ? STRING_EMPTY : code.toString();
     }
 
     /**
@@ -382,7 +381,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     private String getSmsCode(String phone) {
         Object code = redisHelper.get(getPhoneCodeCacheKey(phone));
-        return Objects.isNull(code) ? Constant.STRING_EMPTY : code.toString();
+        return Objects.isNull(code) ? STRING_EMPTY : code.toString();
     }
 
     @Override
@@ -420,7 +419,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         Set<Long> departmentIdList = getDepartmentList(departmentId);
         if (!departmentIdList.isEmpty()) {
             Join<UserEntity, DepartmentEntity> departmentJoin = root.join("departmentList");
-            Predicate inPredicate = departmentJoin.get(RootService.STRING_ID).in(departmentIdList);
+            Predicate inPredicate = departmentJoin.get(STRING_ID).in(departmentIdList);
             predicateList.add(inPredicate);
         }
         return predicateList;
