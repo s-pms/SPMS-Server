@@ -17,6 +17,10 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import static cn.hamm.airpower.annotation.ExcelColumn.Type.BOOLEAN;
+import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
+
 /**
  * <h1>实体</h1>
  *
@@ -33,10 +37,11 @@ import org.hibernate.annotations.DynamicUpdate;
 public class OpenAppEntity extends BaseEntity<OpenAppEntity> implements IOpenAppAction, IOpenApp, IOauthAction {
     @Description("应用Key")
     @Column(columnDefinition = "varchar(255) default '' comment 'AppKey'", unique = true)
+    @Search
     private String appKey;
 
     @Description("应用密钥")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = WRITE_ONLY)
     @Column(columnDefinition = "varchar(255) default '' comment 'AppSecret'")
     @Exclude(filters = {WhenGetDetail.class})
     private String appSecret;
@@ -44,12 +49,13 @@ public class OpenAppEntity extends BaseEntity<OpenAppEntity> implements IOpenApp
     @Description("应用名称")
     @Column(columnDefinition = "varchar(255) default '' comment '应用名称'")
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "应用名称不能为空")
+    @Search
     private String appName;
 
     @Description("加密算法")
     @Dictionary(value = OpenArithmeticType.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '加密算法'")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     private Integer arithmetic;
 
     @Description("IP白名单")
@@ -58,13 +64,13 @@ public class OpenAppEntity extends BaseEntity<OpenAppEntity> implements IOpenApp
 
     @Description("公钥")
     @ReadOnly
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = WRITE_ONLY)
     @Column(columnDefinition = "text comment '公钥'")
     private String publicKey;
 
     @Description("私钥")
     @ReadOnly
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = WRITE_ONLY)
     @Column(columnDefinition = "text comment '私钥'")
     private String privateKey;
 
@@ -74,8 +80,8 @@ public class OpenAppEntity extends BaseEntity<OpenAppEntity> implements IOpenApp
     private String url;
 
     @Description("是否内部应用")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否内部应用'")
-    @ExcelColumn(ExcelColumn.Type.BOOLEAN)
+    @ExcelColumn(BOOLEAN)
     private Boolean isInternal;
 }

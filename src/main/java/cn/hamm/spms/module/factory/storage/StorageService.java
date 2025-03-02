@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.factory.storage;
 
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.model.query.QueryListRequest;
 import cn.hamm.airpower.root.delegate.TreeServiceDelegate;
+import cn.hamm.airpower.util.TreeUtil;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class StorageService extends BaseService<StorageEntity, StorageRepository
     protected @NotNull QueryListRequest<StorageEntity> beforeGetList(@NotNull QueryListRequest<StorageEntity> sourceRequestData) {
         StorageEntity filter = sourceRequestData.getFilter();
         if (Objects.isNull(filter.getParentId())) {
-            filter.setParentId(Constant.ZERO_LONG);
+            filter.setParentId(TreeUtil.ROOT_ID);
         }
         sourceRequestData.setFilter(filter);
         return sourceRequestData;

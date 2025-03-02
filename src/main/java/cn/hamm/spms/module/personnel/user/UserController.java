@@ -5,7 +5,6 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Filter;
 import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.helper.CookieHelper;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.base.BaseController;
@@ -24,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DISABLED;
 
 
 /**
@@ -116,7 +117,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
     public Json logout(HttpServletResponse httpServletResponse) {
         Cookie cookie = cookieHelper.getAuthorizeCookie("");
         cookie.setHttpOnly(false);
-        cookie.setPath(Constant.SLASH);
+        cookie.setPath(Constant.STRING_SLASH);
         // 清除cookie
         cookie.setMaxAge(0);
         httpServletResponse.addCookie(cookie);
@@ -159,7 +160,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
             case VIA_ACCOUNT_PASSWORD -> service.login(login);
             case VIA_EMAIL_CODE -> service.loginViaEmail(login);
         };
-        ServiceError.FORBIDDEN_DISABLED.when(user.getIsDisabled(), "登录失败，你的账号已被禁用");
+        FORBIDDEN_DISABLED.when(user.getIsDisabled(), "登录失败，你的账号已被禁用");
 
         return Json.data(userService.loginWithCookieAndResponse(response, user), "登录成功");
     }

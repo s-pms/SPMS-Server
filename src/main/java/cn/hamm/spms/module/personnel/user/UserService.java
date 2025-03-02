@@ -1,18 +1,12 @@
 package cn.hamm.spms.module.personnel.user;
 
-import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.helper.CookieHelper;
 import cn.hamm.airpower.helper.EmailHelper;
 import cn.hamm.airpower.model.Sort;
-import cn.hamm.airpower.util.AccessTokenUtil;
-import cn.hamm.airpower.util.PasswordUtil;
-import cn.hamm.airpower.util.RandomUtil;
-import cn.hamm.airpower.util.TreeUtil;
+import cn.hamm.airpower.util.*;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConfig;
-import cn.hamm.spms.common.exception.CustomError;
 import cn.hamm.spms.module.personnel.user.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.user.department.DepartmentService;
 import cn.hamm.spms.module.system.config.ConfigEntity;
@@ -36,6 +30,10 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 
+import static cn.hamm.airpower.config.Constant.*;
+import static cn.hamm.airpower.exception.ServiceError.*;
+import static cn.hamm.spms.common.exception.CustomError.*;
+
 /**
  * <h1>Service</h1>
  *
@@ -52,7 +50,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * <h3>Code缓存秒数</h3>
      */
-    private static final int CACHE_CODE_EXPIRE_SECOND = Constant.SECOND_PER_MINUTE * 5;
+    private static final int CACHE_CODE_EXPIRE_SECOND = DateTimeUtil.SECOND_PER_MINUTE * 5;
 
     /**
      * <h2>缓存房间用户</h2>
@@ -171,7 +169,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
 
         // 判断原始密码
         String oldPassword = user.getOldPassword();
-        ServiceError.PARAM_INVALID.whenNotEqualsIgnoreCase(
+        PARAM_INVALID.whenNotEqualsIgnoreCase(
                 PasswordUtil.encode(oldPassword, existUser.getSalt()),
                 existUser.getPassword(),
                 "原密码输入错误，修改密码失败"
@@ -197,10 +195,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             existUser = repository.getByEmail(user.getEmail());
             code = getEmailCode(user.getEmail());
         } else {
-            ServiceError.PARAM_MISSING.show("请传入邮箱或手机号");
+            PARAM_MISSING.show("请传入邮箱或手机号");
         }
-        ServiceError.PARAM_INVALID.whenNotEqualsIgnoreCase(code, user.getCode(), "验证码不正确，请重新获取");
-        ServiceError.PARAM_INVALID.whenNull(existUser, "重置密码失败，用户信息异常");
+        PARAM_INVALID.whenNotEqualsIgnoreCase(code, user.getCode(), "验证码不正确，请重新获取");
+        PARAM_INVALID.whenNull(existUser, "重置密码失败，用户信息异常");
 
         // 验证通过 开始重置密码和盐
         String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
@@ -221,17 +219,17 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param email 邮箱
      */
     public void sendMail(String email) throws MessagingException {
-        CustomError.EMAIL_SEND_BUSY.when(redisHelper.hasKey(getEmailCacheKey(email)));
+        EMAIL_SEND_BUSY.when(redisHelper.hasKey(getEmailCacheKey(email)));
         String code = getNewSalt();
         redisHelper.set(getEmailCacheKey(email), code, CACHE_CODE_EXPIRE_SECOND);
-        emailHelper.sendCode(email, "你收到一个邮箱验证码", code, "DEMO");
+        emailHelper.sendCode(email, "你收到一个邮箱验证码", code, appConfig.getProjectName());
     }
 
     /**
      * <h3>发送短信验证码</h3>
      */
     public void sendSms(String phone) {
-        CustomError.SMS_SEND_BUSY.when(redisHelper.hasKey(getPhoneCodeCacheKey(phone)));
+        SMS_SEND_BUSY.when(redisHelper.hasKey(getPhoneCodeCacheKey(phone)));
         String code = getNewSalt();
         redisHelper.set(getPhoneCodeCacheKey(phone), code, CACHE_CODE_EXPIRE_SECOND);
         log.info("短信验证码：{}", code);
@@ -254,7 +252,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         saveCookie(user.getId(), cookieString);
         Cookie cookie = cookieHelper.getAuthorizeCookie(cookieString);
         cookie.setHttpOnly(false);
-        cookie.setPath(Constant.SLASH);
+        cookie.setPath(STRING_SLASH);
         response.addCookie(cookie);
         return accessToken;
     }
@@ -266,7 +264,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param cookie Cookie
      */
     public void saveCookie(Long userId, String cookie) {
-        redisHelper.set(getCookieCodeKey(cookie), userId, Constant.SECOND_PER_DAY);
+        redisHelper.set(getCookieCodeKey(cookie), userId, DateTimeUtil.SECOND_PER_DAY);
     }
 
     /**
@@ -298,12 +296,12 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             // 邮箱登录
             existUser = repository.getByEmail(user.getEmail());
         } else {
-            ServiceError.PARAM_INVALID.show("ID或邮箱不能为空，请确认是否传入");
+            PARAM_INVALID.show("ID或邮箱不能为空，请确认是否传入");
         }
-        CustomError.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNull(existUser);
+        USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNull(existUser);
         // 将用户传入的密码加密与数据库存储匹配
         String encodePassword = PasswordUtil.encode(user.getPassword(), existUser.getSalt());
-        CustomError.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNotEqualsIgnoreCase(encodePassword, existUser.getPassword());
+        USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNotEqualsIgnoreCase(encodePassword, existUser.getPassword());
         return existUser;
     }
 
@@ -315,7 +313,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public UserEntity loginViaEmail(@NotNull UserEntity user) {
         String code = getEmailCode(user.getEmail());
-        ServiceError.PARAM_INVALID.whenNotEquals(code, user.getCode(), "邮箱验证码不正确");
+        PARAM_INVALID.whenNotEquals(code, user.getCode(), "邮箱验证码不正确");
         UserEntity existUser = repository.getByEmail(user.getEmail());
         ConfigEntity configuration = configService.get(ConfigFlag.AUTO_REGISTER_EMAIL_LOGIN);
         if (configuration.booleanConfig()) {
@@ -323,7 +321,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             long userId = registerUserViaEmail(user.getEmail());
             existUser = get(userId);
         }
-        ServiceError.PARAM_INVALID.whenNull(existUser, "登录的邮箱账户不存在");
+        PARAM_INVALID.whenNull(existUser, "登录的邮箱账户不存在");
         return existUser;
     }
 
@@ -346,7 +344,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public long registerUserViaEmail(@NotNull String email, String password) {
         // 昵称默认为邮箱账号 @ 前面的
-        String nickname = email.split(Constant.AT)[0];
+        String nickname = email.split(STRING_AT)[0];
         String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
         UserEntity user = new UserEntity().setPassword(PasswordUtil.encode(password, salt))
                 .setSalt(salt)
@@ -372,7 +370,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     private String getEmailCode(String email) {
         Object code = redisHelper.get(getEmailCacheKey(email));
-        return Objects.isNull(code) ? Constant.EMPTY_STRING : code.toString();
+        return Objects.isNull(code) ? STRING_EMPTY : code.toString();
     }
 
     /**
@@ -383,19 +381,19 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     private String getSmsCode(String phone) {
         Object code = redisHelper.get(getPhoneCodeCacheKey(phone));
-        return Objects.isNull(code) ? Constant.EMPTY_STRING : code.toString();
+        return Objects.isNull(code) ? STRING_EMPTY : code.toString();
     }
 
     @Override
     protected void beforeDelete(long id) {
         UserEntity entity = get(id);
-        ServiceError.FORBIDDEN_DELETE.when(entity.isRootUser(), "系统内置用户无法被删除!");
+        FORBIDDEN_DELETE.when(entity.isRootUser(), "系统内置用户无法被删除!");
     }
 
     @Override
     protected @NotNull UserEntity beforeAdd(@NotNull UserEntity user) {
         UserEntity existUser = repository.getByEmail(user.getEmail());
-        ServiceError.FORBIDDEN_EXIST.whenNotNull(existUser, "邮箱已经存在，请勿重复添加用户");
+        FORBIDDEN_EXIST.whenNotNull(existUser, "邮箱已经存在，请勿重复添加用户");
         if (!StringUtils.hasLength(user.getPassword())) {
             // 创建时没有设置密码的话 随机一个密码
             String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
@@ -408,7 +406,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     @Override
     protected void beforeDisable(long id) {
         UserEntity existUser = get(id);
-        ServiceError.FORBIDDEN_DISABLED_NOT_ALLOWED.when(existUser.isRootUser(), "系统内置用户无法被禁用!");
+        FORBIDDEN_DISABLED_NOT_ALLOWED.when(existUser.isRootUser(), "系统内置用户无法被禁用!");
     }
 
     @Override
@@ -421,7 +419,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         Set<Long> departmentIdList = getDepartmentList(departmentId);
         if (!departmentIdList.isEmpty()) {
             Join<UserEntity, DepartmentEntity> departmentJoin = root.join("departmentList");
-            Predicate inPredicate = departmentJoin.get(Constant.ID).in(departmentIdList);
+            Predicate inPredicate = departmentJoin.get(STRING_ID).in(departmentIdList);
             predicateList.add(inPredicate);
         }
         return predicateList;
@@ -463,6 +461,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param roomId 房间ID
      */
     public void saveCurrentRoomId(long userId, long roomId) {
-        redisHelper.set(CACHE_ROOM_KEY + userId, roomId, Constant.SECOND_PER_DAY * 30);
+        redisHelper.set(CACHE_ROOM_KEY + userId, roomId, DateTimeUtil.SECOND_PER_DAY * 30);
     }
 }

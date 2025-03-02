@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.asset.device;
 
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
@@ -18,6 +17,9 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
+import static cn.hamm.spms.module.iot.report.ReportConstant.*;
 
 /**
  * <h1>Service</h1>
@@ -40,7 +42,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
      */
     public List<ReportPayload> getCurrentReport(long deviceId) {
         DeviceEntity device = get(deviceId);
-        Object data = redisTemplate.opsForValue().get(ReportConstant.CACHE_PREFIX + device.getUuid());
+        Object data = redisTemplate.opsForValue().get(ReportConstant.getDeviceReportCacheKey(device.getUuid()));
         if (Objects.isNull(data)) {
             return new ArrayList<>();
         }
@@ -65,7 +67,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
      */
     public List<ReportInfluxPayload> getDevicePayloadHistory(@NotNull ReportPayload reportPayload) {
         ParameterEntity parameter = Services.getParameterService().getByCode(reportPayload.getCode());
-        ServiceError.PARAM_INVALID.whenNull(parameter, "不支持的参数");
+        PARAM_INVALID.whenNull(parameter, "不支持的参数");
         ReportGranularity reportGranularity = DictionaryUtil.getDictionary(ReportGranularity.class, reportPayload.getReportGranularity());
         ReportDataType reportDataType = DictionaryUtil.getDictionary(ReportDataType.class, parameter.getDataType());
         return switch (reportDataType) {
@@ -91,9 +93,9 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
                     .filter(parameter -> !parameter.getIsSystem())
                     .collect(Collectors.toSet());
         }
-        parameters.add(parameterService.getByCode(ReportConstant.REPORT_KEY_OF_STATUS));
-        parameters.add(parameterService.getByCode(ReportConstant.REPORT_KEY_OF_ALARM));
-        parameters.add(parameterService.getByCode(ReportConstant.REPORT_KEY_OF_PART_COUNT));
+        parameters.add(parameterService.getByCode(REPORT_KEY_OF_STATUS));
+        parameters.add(parameterService.getByCode(REPORT_KEY_OF_ALARM));
+        parameters.add(parameterService.getByCode(REPORT_KEY_OF_PART_COUNT));
         device.setParameters(parameters);
         return device;
     }

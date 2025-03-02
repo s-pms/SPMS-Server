@@ -1,6 +1,5 @@
 package cn.hamm.spms.common.helper;
 
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.spms.common.config.InfluxConfig;
 import cn.hamm.spms.module.iot.report.*;
 import com.influxdb.LogLevel;
@@ -20,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static cn.hamm.airpower.config.Constant.*;
+
 /**
  * <h1>Influx助手类</h1>
  *
@@ -27,11 +28,10 @@ import java.util.Objects;
  */
 @Configuration
 public class InfluxHelper {
+    public static final String INFLUX_FIELD_VALUE = STRING_VALUE;
     private static final String INFLUX_TAG_UUID = "uuid";
     private static final String INFLUX_SQL_SPLIT = " |> ";
     private static final String INFLUX_RECORD_VALUE_KEY = "_value";
-    private static final String INFLUX_FIELD_VALUE = Constant.VALUE;
-
     @Autowired
     private InfluxConfig influxConfig;
 
@@ -39,56 +39,27 @@ public class InfluxHelper {
 
 
     /**
-     * <h3>保存数据</h3>
+     * <h2>保存数据</h2>
      *
      * @param code  参数名
-     * @param value 数据
      * @param uuid  设备ID
+     * @param value 数据
      */
-    public void save(String code, double value, String uuid) {
+    public void save(String code, String uuid, Object value) {
         WriteApiBlocking writeApi = getWriteApi();
         if (Objects.nonNull(writeApi)) {
-            writeApi.writePoint(influxConfig.getBucket(), influxConfig.getOrg(),
-                    new Point(ReportConstant.CACHE_PREFIX + code)
-                            .addField(INFLUX_FIELD_VALUE, value)
-                            .addTag(INFLUX_TAG_UUID, uuid)
-            );
-        }
-    }
-
-    /**
-     * <h3>保存数据</h3>
-     *
-     * @param code  参数名
-     * @param value 数据
-     * @param uuid  设备ID
-     */
-    public void save(String code, String value, String uuid) {
-        WriteApiBlocking writeApi = getWriteApi();
-        if (Objects.nonNull(writeApi)) {
-            writeApi.writePoint(influxConfig.getBucket(), influxConfig.getOrg(),
-                    new Point(ReportConstant.CACHE_PREFIX + code)
-                            .addField(INFLUX_FIELD_VALUE, value)
-                            .addTag(INFLUX_TAG_UUID, uuid)
-            );
-        }
-    }
-
-    /**
-     * <h3>保存数据</h3>
-     *
-     * @param code  参数名
-     * @param value 数据
-     * @param uuid  设备ID
-     */
-    public void save(String code, int value, String uuid) {
-        WriteApiBlocking writeApi = getWriteApi();
-        if (Objects.nonNull(writeApi)) {
-            writeApi.writePoint(influxConfig.getBucket(), influxConfig.getOrg(),
-                    new Point(ReportConstant.CACHE_PREFIX + code)
-                            .addField(INFLUX_FIELD_VALUE, value)
-                            .addTag(INFLUX_TAG_UUID, uuid)
-            );
+            Point point = new Point(ReportConstant.CACHE_PREFIX + code)
+                    .addTag(INFLUX_TAG_UUID, uuid);
+            if (value instanceof Number numberValue) {
+                point.addField(INFLUX_FIELD_VALUE, numberValue);
+            } else if (value instanceof Boolean booleanValue) {
+                point.addField(INFLUX_FIELD_VALUE, booleanValue);
+            } else if (value instanceof String stringValue) {
+                point.addField(INFLUX_FIELD_VALUE, stringValue);
+            } else {
+                throw new RuntimeException("不支持的数据类型");
+            }
+            writeApi.writePoint(influxConfig.getBucket(), influxConfig.getOrg(), point);
         }
     }
 
@@ -179,10 +150,10 @@ public class InfluxHelper {
                         payload.setValue(Objects.isNull(value) ? 0 : Double.parseDouble(value.toString()));
                         break;
                     case INFORMATION:
-                        payload.setStrValue(Objects.isNull(value) ? Constant.EMPTY_STRING : value.toString());
+                        payload.setStrValue(Objects.isNull(value) ? STRING_EMPTY : value.toString());
                         break;
                     case SWITCH:
-                        payload.setBoolValue(!Objects.isNull(value) && Constant.ONE_STRING.equals(value.toString()));
+                        payload.setBoolValue(!Objects.isNull(value) && STRING_ONE.equals(value.toString()));
                         break;
                     case STATUS:
                         payload.setIntValue(Objects.isNull(value) ? 0 : Integer.parseInt(value.toString()));

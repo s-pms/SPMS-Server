@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.wms.move;
 
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
@@ -25,6 +24,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.spms.module.system.config.ConfigFlag.MOVE_BILL_AUTO_AUDIT;
 
 /**
  * <h1>Service</h1>
@@ -58,7 +60,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
         sourceDetail = detailService.get(detailId);
         if (sourceDetail.getInventory().getQuantity() < sourceDetail.getQuantity()) {
             // 判断来源库存
-            ServiceError.FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
+            FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
         }
 
         // 扣除来源库存
@@ -121,6 +123,6 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
 
     @Override
     protected ConfigFlag getAutoAuditConfigFlag() {
-        return ConfigFlag.MOVE_BILL_AUTO_AUDIT;
+        return MOVE_BILL_AUTO_AUDIT;
     }
 }

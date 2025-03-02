@@ -6,15 +6,22 @@ import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
-import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import cn.hamm.spms.module.wms.move.detail.MoveDetailEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.airpower.annotation.Search.Mode.LIKE;
+import static cn.hamm.spms.module.system.coderule.CodeRuleField.MoveBillCode;
+import static jakarta.persistence.FetchType.EAGER;
 
 /**
  * <h1>移库单实体</h1>
@@ -32,18 +39,18 @@ import org.hibernate.annotations.DynamicUpdate;
 public class MoveEntity extends AbstractBaseBillEntity<MoveEntity, MoveDetailEntity> {
     @Description("移库单号")
     @Column(columnDefinition = "varchar(255) default '' comment '移库单号'", unique = true)
-    @AutoGenerateCode(CodeRuleField.MoveBillCode)
-    @Search(Search.Mode.LIKE)
+    @AutoGenerateCode(MoveBillCode)
+    @Search(LIKE)
     private String billCode;
 
     @Description("移库状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '移库状态'")
     @Dictionary(value = MoveStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     private Integer status;
 
     @Description("入库仓库")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "入库仓库")
     private StorageEntity storage;
 }

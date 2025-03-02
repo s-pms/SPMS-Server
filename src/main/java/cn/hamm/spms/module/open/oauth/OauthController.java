@@ -4,9 +4,7 @@ import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.DesensitizeExclude;
 import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.config.CookieConfig;
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.interfaces.IEntityAction;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.root.RootController;
@@ -41,9 +39,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static cn.hamm.airpower.config.Constant.*;
+import static cn.hamm.airpower.exception.ServiceError.*;
+import static cn.hamm.airpower.util.DateTimeUtil.*;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * <h1>Controller</h1>
@@ -53,11 +55,15 @@ import java.util.stream.Collectors;
 @ApiController("oauth2")
 @Slf4j
 public class OauthController extends RootController implements IOauthAction {
+    /**
+     * <h3>问号 {@code ?}</h3>
+     */
+    public final static String STRING_QUESTION = "?";
     private static final String USER_ID = "userId";
     private static final String APP_NOT_FOUND = "App(%s) not found!";
     private static final String REDIRECT_URI = "redirectUri";
     private static final String REDIRECT_URI_MISSING = "RedirectUri missing!";
-    private static final String INVALID_APP_KEY = "Invalid appKey!";
+    private static final String INVALID_APPKEY = "Invalid appKey!";
     private static final String APP_KEY = "appKey";
     private static final String SCOPE = "scope";
 
@@ -86,7 +92,7 @@ public class OauthController extends RootController implements IOauthAction {
     ) {
         String appKey = request.getParameter(APP_KEY);
         if (!StringUtils.hasText(appKey)) {
-            return showError(INVALID_APP_KEY);
+            return showError(INVALID_APPKEY);
         }
         OpenAppEntity openApp = openAppService.getByAppKey(appKey);
         if (Objects.isNull(openApp)) {
@@ -108,17 +114,17 @@ public class OauthController extends RootController implements IOauthAction {
         }
         // 外部应用需要用户确认授权
         String url = appConfig.getAuthorizeUrl() +
-                Constant.QUESTION +
+                STRING_QUESTION +
                 APP_KEY +
-                Constant.EQUAL +
+                STRING_EQUAL +
                 appKey +
-                Constant.AND +
+                STRING_AND +
                 REDIRECT_URI +
-                Constant.EQUAL +
-                URLEncoder.encode(redirectUri, StandardCharsets.UTF_8) +
-                Constant.AND +
+                STRING_EQUAL +
+                URLEncoder.encode(redirectUri, UTF_8) +
+                STRING_AND +
                 SCOPE +
-                Constant.EQUAL +
+                STRING_EQUAL +
                 scope;
 
         redirect(response, url);
@@ -133,7 +139,7 @@ public class OauthController extends RootController implements IOauthAction {
         Long userId = service.getOauthUserCache(request.getAppKey(), request.getCode());
         // 查询App信息
         OpenAppEntity existApp = openAppService.getByAppKey(request.getAppKey());
-        ServiceError.FORBIDDEN.whenNotEquals(existApp.getAppSecret(), request.getAppSecret(), "应用秘钥错误");
+        FORBIDDEN.whenNotEquals(existApp.getAppSecret(), request.getAppSecret(), "应用秘钥错误");
         // 移除缓存的用户
         service.removeOauthUserCache(existApp.getAppKey(), request.getCode());
         // 获取Scope
@@ -143,9 +149,9 @@ public class OauthController extends RootController implements IOauthAction {
         }
         service.removeOauthScopeCache(existApp.getAppKey(), request.getCode());
         // 生成 accessToken refreshToken
-        int expiresIn = Constant.MILLISECONDS_PER_SECOND * Constant.SECOND_PER_HOUR * 2;
+        int expiresIn = MILLISECONDS_PER_SECOND * SECOND_PER_HOUR * 2;
         String accessToken = buildToken(userId, scope, existApp.getAppKey(), expiresIn);
-        String refreshToken = buildToken(userId, scope, existApp.getAppKey(), (long) Constant.MILLISECONDS_PER_SECOND * Constant.SECOND_PER_DAY * 30);
+        String refreshToken = buildToken(userId, scope, existApp.getAppKey(), (long) MILLISECONDS_PER_SECOND * SECOND_PER_DAY * 30);
 
         OauthGetAccessTokenResponse response = new OauthGetAccessTokenResponse()
                 .setAccessToken(accessToken)
@@ -186,9 +192,9 @@ public class OauthController extends RootController implements IOauthAction {
         UserEntity user = userService.get(userId);
         String appKey = Objects.requireNonNull(verify.getPayload(APP_KEY), "无效的AppKey").toString();
         OpenAppEntity existApp = openAppService.getByAppKey(appKey);
-        ServiceError.FORBIDDEN.whenNull(existApp, "应用信息异常");
+        FORBIDDEN.whenNull(existApp, "应用信息异常");
         String scope = Objects.requireNonNull(verify.getPayload(SCOPE), "无效的Scope").toString();
-        List<String> scopeList = Arrays.stream(scope.split(Constant.COMMA)).toList();
+        List<String> scopeList = Arrays.stream(scope.split(STRING_COMMA)).toList();
         OauthScope[] oauthScopes = OauthScope.values();
         for (OauthScope oauthScope : oauthScopes) {
             if (scopeList.contains(oauthScope.name())) {
@@ -226,10 +232,10 @@ public class OauthController extends RootController implements IOauthAction {
     @PostMapping("createCode")
     public Json createCode(@RequestBody @Validated({WhenAppKeyRequired.class, OauthCreateCodeRequest.WhenCreateCode.class}) OauthCreateCodeRequest request) {
         OpenAppEntity openApp = openAppService.getByAppKey(request.getAppKey());
-        ServiceError.INVALID_APP_KEY.whenNull(openApp, "AppKey无效");
-        String[] scopes = request.getScope().split(Constant.COMMA);
+        INVALID_APP_KEY.whenNull(openApp, "AppKey无效");
+        String[] scopes = request.getScope().split(STRING_COMMA);
         List<String> scopeList = new ArrayList<>();
-        ServiceError.PARAM_INVALID.when(scopes.length == 0, "授权范围无效");
+        PARAM_INVALID.when(scopes.length == 0, "授权范围无效");
         OauthScope[] oauthScopes = OauthScope.values();
 
         for (OauthScope oauthScope : oauthScopes) {
@@ -239,7 +245,7 @@ public class OauthController extends RootController implements IOauthAction {
         }
         String code = RandomUtil.randomString();
         service.saveOauthUserCache(openApp.getAppKey(), code, getCurrentUserId());
-        service.saveOauthScopeCache(openApp.getAppKey(), code, String.join(Constant.COMMA, scopeList));
+        service.saveOauthScopeCache(openApp.getAppKey(), code, String.join(STRING_COMMA, scopeList));
         return Json.data(code);
     }
 
@@ -275,8 +281,8 @@ public class OauthController extends RootController implements IOauthAction {
                 "?appKey=" +
                 appKey +
                 "&redirectUri=" +
-                URLEncoder.encode(redirectUri, StandardCharsets.UTF_8)
-                + "&scope=" + URLEncoder.encode(scope, StandardCharsets.UTF_8);
+                URLEncoder.encode(redirectUri, UTF_8)
+                + "&scope=" + URLEncoder.encode(scope, UTF_8);
         redirect(response, url);
         return null;
     }
@@ -288,8 +294,8 @@ public class OauthController extends RootController implements IOauthAction {
      * @return 错误页面
      */
     private @NotNull ModelAndView showError(String error) {
-        ModelAndView view = new ModelAndView(Constant.ERROR);
-        view.getModel().put(Constant.ERROR, error);
+        ModelAndView view = new ModelAndView(STRING_ERROR);
+        view.getModel().put(STRING_ERROR, error);
         return view;
     }
 
@@ -345,7 +351,7 @@ public class OauthController extends RootController implements IOauthAction {
             scope = Arrays.stream(OauthScope.values())
                     .filter(OauthScope::getIsDefault)
                     .map(Enum::name)
-                    .collect(Collectors.joining(Constant.COMMA));
+                    .collect(Collectors.joining(STRING_COMMA));
         }
         return scope;
     }
@@ -363,7 +369,7 @@ public class OauthController extends RootController implements IOauthAction {
         String code = RandomUtil.randomString();
         service.saveOauthUserCache(appKey, code, userId);
         service.saveOauthScopeCache(appKey, code, scope);
-        String url = redirectUri + Constant.QUESTION + Constant.CODE + Constant.EQUAL + code;
+        String url = redirectUri + STRING_QUESTION + STRING_CODE + STRING_EQUAL + code;
         redirect(response, url);
     }
 }

@@ -1,6 +1,5 @@
 package cn.hamm.spms.base.bill;
 
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.helper.TransactionHelper;
 import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.airpower.root.RootEntity;
@@ -20,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Objects;
+
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 
 /**
  * <h1>单据Service基类</h1>
@@ -62,7 +63,7 @@ public abstract class AbstractBaseBillService<
     public final void setBillDetailsAllFinished(long billId) {
         log.info("标记明细已全部完成，单据ID:{}", billId);
         IDictionary status = getBillDetailsFinishStatus();
-        ServiceError.FORBIDDEN.whenNull(status, "没有找到明细完成状态");
+        FORBIDDEN.whenNull(status, "没有找到明细完成状态");
         E bill = get(billId);
         bill.setStatus(status.getKey());
         update(bill);
@@ -81,7 +82,7 @@ public abstract class AbstractBaseBillService<
     public final void setBillFinished(long billId) {
         log.info("标记单据已完成，单据ID:{}, 单据类型:{}", billId, this.getClass().getSimpleName());
         IDictionary status = getFinishedStatus();
-        ServiceError.FORBIDDEN.whenNull(status, "标记完成失败，没有找到完成状态");
+        FORBIDDEN.whenNull(status, "标记完成失败，没有找到完成状态");
         E bill = get(billId);
         beforeBillFinish(bill.copy());
         bill.setStatus(status.getKey());
@@ -108,7 +109,7 @@ public abstract class AbstractBaseBillService<
         transactionHelper.run(() -> {
             // 查保存的明细
             D savedDetail = detailService.get(sourceDetail.getId());
-            ServiceError.FORBIDDEN.when(savedDetail.getIsFinished(), "该明细已标记完成，无法再添加明细完成数量");
+            FORBIDDEN.when(savedDetail.getIsFinished(), "该明细已标记完成，无法再添加明细完成数量");
             // 更新保存明细完成数量 = 保存明细完成数量 + 提交完成数量
             double finishQuantity = NumberUtil.add(savedDetail.getFinishQuantity(), sourceDetail.getQuantity());
             // 如果完成数量 >= 数量 则标记明细完成
@@ -232,7 +233,7 @@ public abstract class AbstractBaseBillService<
      */
     protected final void audit(long billId) {
         E bill = get(billId);
-        ServiceError.FORBIDDEN.when(!canAudit(bill), "该单据状态无法审核");
+        FORBIDDEN.when(!canAudit(bill), "该单据状态无法审核");
         setAudited(bill);
         update(bill);
         TaskUtil.run(() -> afterBillAudited(bill.getId()));

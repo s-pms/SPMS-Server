@@ -1,11 +1,14 @@
 package cn.hamm.spms.module.system.config;
 
-import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+
+import static cn.hamm.airpower.config.Constant.STRING_ONE;
+import static cn.hamm.airpower.config.Constant.STRING_ZERO;
+import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
 
 /**
  * <h1>Service</h1>
@@ -32,14 +35,14 @@ public class ConfigService extends BaseService<ConfigEntity, ConfigRepository> {
      */
     public final ConfigEntity get(@NotNull String flag) {
         ConfigEntity configuration = repository.getByFlag(flag);
-        ServiceError.DATA_NOT_FOUND.whenNull(configuration, "查询配置失败");
+        DATA_NOT_FOUND.whenNull(configuration, "查询配置失败");
         return configuration;
     }
 
     @Override
     protected void beforeDelete(long id) {
         ConfigEntity config = get(id);
-        ServiceError.FORBIDDEN_DELETE.when(config.getIsSystem(), "系统内置配置无法被删除!");
+        FORBIDDEN_DELETE.when(config.getIsSystem(), "系统内置配置无法被删除!");
     }
 
     @Override
@@ -53,10 +56,9 @@ public class ConfigService extends BaseService<ConfigEntity, ConfigRepository> {
                 ConfigType type = DictionaryUtil.getDictionary(ConfigType.class, configuration.getType());
                 switch (type) {
                     case BOOLEAN:
-                        configuration.setConfig(
-                                Constant.ONE_STRING.equals(configuration.getConfig()) ?
-                                        Constant.ONE_STRING :
-                                        Constant.ZERO_STRING
+                        configuration.setConfig(STRING_ONE.equals(configuration.getConfig()) ?
+                                STRING_ONE :
+                                STRING_ZERO
                         );
                         break;
                     case NUMBER:

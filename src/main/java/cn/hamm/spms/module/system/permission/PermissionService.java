@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.system.permission;
 
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.root.delegate.TreeServiceDelegate;
 import cn.hamm.airpower.util.PermissionUtil;
@@ -12,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
 
 /**
  * <h1>Service</h1>
@@ -34,7 +35,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     @Override
     protected void beforeDelete(long id) {
         PermissionEntity permission = get(id);
-        ServiceError.FORBIDDEN_DELETE.when(permission.getIsSystem(), "系统内置权限无法被删除!");
+        FORBIDDEN_DELETE.when(permission.getIsSystem(), "系统内置权限无法被删除!");
         TreeServiceDelegate.ensureNoChildrenBeforeDelete(this, id);
     }
 

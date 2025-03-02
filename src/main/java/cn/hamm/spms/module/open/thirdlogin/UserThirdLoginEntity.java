@@ -14,6 +14,9 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.airpower.annotation.Search.Mode.JOIN;
+
 /**
  * <h1>实体</h1>
  *
@@ -42,16 +45,16 @@ public class UserThirdLoginEntity extends BaseEntity<UserThirdLoginEntity> {
 
     @Description("性别")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '性别'")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     private Integer gender;
 
     @Description("所属平台")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '所属平台'")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     private Integer platform;
 
     @Description("用户")
     @ManyToOne
-    @Search(Search.Mode.JOIN)
+    @Search(JOIN)
     private UserEntity user;
 }

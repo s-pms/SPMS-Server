@@ -5,13 +5,18 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import static jakarta.persistence.FetchType.EAGER;
 
 /**
  * <h1>出库明细实体</h1>
@@ -28,12 +33,12 @@ import org.hibernate.annotations.DynamicUpdate;
 @Description("出库明细")
 public class OutputDetailEntity extends BaseBillDetailEntity<OutputDetailEntity> {
     @Description("库存信息")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "库存信息")
     private InventoryEntity inventory;
 
     @Description("物料信息")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "物料信息")
     private MaterialEntity material;
 

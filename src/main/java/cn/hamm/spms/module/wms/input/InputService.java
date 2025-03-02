@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.wms.input;
 
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.airpower.util.NumberUtil;
@@ -18,6 +17,9 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.spms.module.system.config.ConfigFlag.INPUT_BILL_AUTO_AUDIT;
 
 /**
  * <h1>Service</h1>
@@ -63,7 +65,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
     @Override
     protected void afterDetailFinishAdded(long detailId, @NotNull InputDetailEntity sourceDetail) {
         if (Objects.isNull(sourceDetail.getStorage()) || Objects.isNull(sourceDetail.getStorage().getId())) {
-            ServiceError.FORBIDDEN.show("请传入入库仓库");
+            FORBIDDEN.show("请传入入库仓库");
             return;
         }
         InputDetailEntity existDetail = detailService.get(sourceDetail.getId());
@@ -85,6 +87,6 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
 
     @Override
     protected ConfigFlag getAutoAuditConfigFlag() {
-        return ConfigFlag.INPUT_BILL_AUTO_AUDIT;
+        return INPUT_BILL_AUTO_AUDIT;
     }
 }

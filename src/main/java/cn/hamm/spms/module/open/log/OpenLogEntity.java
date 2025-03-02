@@ -15,6 +15,8 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import static cn.hamm.airpower.annotation.Search.Mode.JOIN;
+
 /**
  * <h1>实体</h1>
  *
@@ -51,7 +53,7 @@ public class OpenLogEntity extends BaseEntity<OpenLogEntity> implements IOpenLog
 
     @Description("应用")
     @ManyToOne
-    @Search(Search.Mode.JOIN)
+    @Search(JOIN)
     @ReadOnly
     private OpenAppEntity openApp;
 }

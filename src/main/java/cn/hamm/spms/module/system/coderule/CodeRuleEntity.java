@@ -17,6 +17,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
+import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+
 /**
  * <h1>编码规则实体</h1>
  *
@@ -67,7 +69,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     private Integer currentSn;
 
     @Description("内置参数")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否内置参数'")
     private Boolean isSystem;

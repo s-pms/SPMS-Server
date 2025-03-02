@@ -5,7 +5,6 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Extends;
 import cn.hamm.airpower.annotation.Filter;
 import cn.hamm.airpower.enums.Api;
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.base.bill.BaseBillController;
 import cn.hamm.spms.common.Services;
@@ -18,6 +17,8 @@ import cn.hamm.spms.module.system.config.ConfigService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 
 /**
  * <h1>Controller</h1>
@@ -59,7 +60,7 @@ public class OrderController extends BaseBillController<OrderEntity, OrderServic
     public Json setFinishToInput(@RequestBody @Validated(WhenIdRequired.class) OrderEntity order) {
         ConfigService configService = Services.getConfigService();
         ConfigEntity config = configService.get(ConfigFlag.ORDER_MANUAL_FINISH);
-        ServiceError.FORBIDDEN.when(!config.booleanConfig(), "未开启手动标记订单生产完成");
+        FORBIDDEN.when(!config.booleanConfig(), "未开启手动标记订单生产完成");
         service.setBillDetailsAllFinished(order.getId());
         return Json.success("手动设置为生产完成待入库状态成功");
     }
