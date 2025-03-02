@@ -3,12 +3,10 @@ package cn.hamm.spms.module.asset.device;
 import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.report.IReportPayloadAction;
-import cn.hamm.spms.module.iot.report.ReportConstant;
 import cn.hamm.spms.module.iot.report.ReportPayload;
 import jakarta.annotation.Resource;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
+import static cn.hamm.spms.module.iot.report.ReportConstant.getDeviceReportCacheKey;
 
 /**
  * <h1>Controller</h1>
@@ -48,7 +49,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
     @Permission(login = false)
     public Json getDeviceConfig(@RequestBody @Validated(WhenGetDeviceConfig.class) DeviceEntity device) {
         device = service.getByUuid(device.getUuid());
-        ServiceError.DATA_NOT_FOUND.whenNull(device);
+        DATA_NOT_FOUND.whenNull(device);
         device.setPartCount(null)
                 .setAlarm(null)
                 .setStatus(null)
@@ -72,7 +73,7 @@ public class DeviceController extends BaseController<DeviceEntity, DeviceService
 
     @Override
     protected DeviceEntity beforeAppUpdate(@NotNull DeviceEntity device) {
-        redisTemplate.delete(ReportConstant.CACHE_PREFIX + device.getUuid());
+        redisTemplate.delete(getDeviceReportCacheKey(device.getUuid()));
         return service.getDeviceParameters(device);
     }
 

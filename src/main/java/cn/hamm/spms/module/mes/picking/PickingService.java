@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static cn.hamm.spms.module.system.config.ConfigFlag.PICKING_BILL_AUTO_AUDIT;
+
 /**
  * <h1>Service</h1>
  *
@@ -52,7 +54,7 @@ public class PickingService extends AbstractBaseBillService<PickingEntity, Picki
 
     @Override
     protected ConfigFlag getAutoAuditConfigFlag() {
-        return ConfigFlag.PICKING_BILL_AUTO_AUDIT;
+        return PICKING_BILL_AUTO_AUDIT;
     }
 
     @Override

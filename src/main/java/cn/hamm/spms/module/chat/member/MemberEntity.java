@@ -17,6 +17,9 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.airpower.annotation.Search.Mode.JOIN;
+
 /**
  * <h1>角色实体</h1>
  *
@@ -33,20 +36,20 @@ import org.hibernate.annotations.DynamicUpdate;
 public class MemberEntity extends BaseEntity<MemberEntity> implements IMemberAction {
     @Description("用户信息")
     @ManyToOne
-    @Search(Search.Mode.JOIN)
+    @Search(JOIN)
     @ReadOnly
     private UserEntity user;
 
     @Description("房间信息")
     @ManyToOne
-    @Search(Search.Mode.JOIN)
+    @Search(JOIN)
     @ReadOnly
     private RoomEntity room;
 
     @Description("成员角色")
     @Dictionary(value = MemberRole.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Column(columnDefinition = "tinyint UNSIGNED default 6 comment '类型'")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     private Integer role;
 
     @Override

@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.wms.output;
 
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.airpower.util.NumberUtil;
@@ -16,6 +15,9 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.spms.module.system.config.ConfigFlag.OUTPUT_BILL_AUTO_AUDIT;
 
 /**
  * <h1>Service</h1>
@@ -60,16 +62,16 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
     protected void afterDetailFinishAdded(long detailId, @NotNull OutputDetailEntity sourceDetail) {
         InventoryEntity inventory = sourceDetail.getInventory();
         if (Objects.isNull(inventory)) {
-            ServiceError.FORBIDDEN.show("请传入库存信息");
+            FORBIDDEN.show("请传入库存信息");
             return;
         }
         OutputDetailEntity existDetail = detailService.get(sourceDetail.getId());
         InventoryService inventoryService = Services.getInventoryService();
         inventory = inventoryService.get(inventory.getId());
-        ServiceError.FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), existDetail.getMaterial().getId(), "物料信息不匹配");
+        FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), existDetail.getMaterial().getId(), "物料信息不匹配");
         if (inventory.getQuantity() < sourceDetail.getQuantity()) {
             // 判断库存
-            ServiceError.FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
+            FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
         }
         inventory.setQuantity(NumberUtil.subtract(inventory.getQuantity(), sourceDetail.getQuantity()));
         inventoryService.update(inventory);
@@ -81,14 +83,14 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
                     bill.getSale().getId(),
                     sourceDetail.getQuantity(),
                     Services.getSaleService(),
-                    detail -> ServiceError.FORBIDDEN.whenNotEquals(
+                    detail -> FORBIDDEN.whenNotEquals(
                             detail.getMaterial().getId(),
                             existDetail.getMaterial().getId(),
                             "物料信息不匹配"));
             case PICKING -> Services.getPickingDetailService().updateDetailQuantity(
                     bill.getPicking().getId(),
                     sourceDetail.getQuantity(),
-                    Services.getPickingService(), detail -> ServiceError.FORBIDDEN.whenNotEquals(
+                    Services.getPickingService(), detail -> FORBIDDEN.whenNotEquals(
                             detail.getMaterial().getId(),
                             existDetail.getMaterial().getId(),
                             "物料信息不匹配"));
@@ -99,6 +101,6 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
 
     @Override
     protected ConfigFlag getAutoAuditConfigFlag() {
-        return ConfigFlag.OUTPUT_BILL_AUTO_AUDIT;
+        return OUTPUT_BILL_AUTO_AUDIT;
     }
 }

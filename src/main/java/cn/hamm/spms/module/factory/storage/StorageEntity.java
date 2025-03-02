@@ -5,7 +5,6 @@ import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.interfaces.ITree;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
-import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -19,6 +18,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
+
+import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.spms.module.system.coderule.CodeRuleField.StorageCode;
 
 /**
  * <h1>仓库实体</h1>
@@ -36,7 +38,7 @@ import java.util.List;
 public class StorageEntity extends BaseEntity<StorageEntity> implements ITree<StorageEntity> {
     @Description("仓库编码")
     @Column(columnDefinition = "varchar(255) default '' comment '仓库编码'", unique = true)
-    @AutoGenerateCode(CodeRuleField.StorageCode)
+    @AutoGenerateCode(StorageCode)
     private String code;
 
     @Description("名称")
@@ -48,7 +50,7 @@ public class StorageEntity extends BaseEntity<StorageEntity> implements ITree<St
 
     @Description("父级ID")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '父级ID'")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     private Long parentId;
 
     @Description("树子集节点数组")

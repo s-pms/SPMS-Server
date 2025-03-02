@@ -16,9 +16,9 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
-public class OauthAppKeyRequest extends RootModel<OauthAppKeyRequest> {
+public class OauthAppKeyRequest extends RootModel<OauthAppKeyRequest> implements IOauthAction {
     @Description("AppKey")
-    @NotBlank(groups = {IOauthAction.WhenAppKeyRequired.class}, message = "AppKey不能为空")
+    @NotBlank(groups = {WhenAppKeyRequired.class}, message = "AppKey不能为空")
     private String appKey;
 
 }

@@ -10,7 +10,6 @@ import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.mes.bom.BomEntity;
 import cn.hamm.spms.module.mes.routing.operation.RoutingOperationEntity;
-import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -21,6 +20,11 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static cn.hamm.airpower.annotation.ExcelColumn.Type.BOOLEAN;
+import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.spms.module.system.coderule.CodeRuleField.RoutingCode;
+import static jakarta.persistence.FetchType.EAGER;
 
 /**
  * <h1>实体</h1>
@@ -38,7 +42,7 @@ import java.util.List;
 public class RoutingEntity extends BaseEntity<RoutingEntity> {
     @Description("工艺编码")
     @Column(columnDefinition = "varchar(255) default '' comment '工艺编码'", unique = true)
-    @AutoGenerateCode(CodeRuleField.RoutingCode)
+    @AutoGenerateCode(RoutingCode)
     private String code;
 
     @Description("工艺名称")
@@ -47,25 +51,25 @@ public class RoutingEntity extends BaseEntity<RoutingEntity> {
     private String name;
 
     @Description("关联物料")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "关联物料")
     private MaterialEntity material;
 
     @Description("工艺状态")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     @Dictionary(value = RoutingStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '工艺状态'")
     private Integer status;
 
     @Description("BOM信息")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = EAGER)
     private BomEntity bom;
 
     @Description("使用工艺BOM")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '使用工艺BOM'")
-    @ExcelColumn(ExcelColumn.Type.BOOLEAN)
+    @ExcelColumn(BOOLEAN)
     private Boolean isRoutingBom;
 
     @Description("工序配置列表")

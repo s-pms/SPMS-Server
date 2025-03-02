@@ -16,7 +16,7 @@ public enum CodeRuleField implements IDictionary {
     /**
      * <h3>角色</h3>
      */
-    RoleCode(1, "角色编码", "RO", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
+    RoleCode(1, "角色编码", "RO", SerialNumberUpdate.NEVER, Constant.STRING_EMPTY),
 
     /**
      * <h3>供应商编码</h3>
@@ -26,12 +26,12 @@ public enum CodeRuleField implements IDictionary {
     /**
      * <h3>仓库编码</h3>
      */
-    StorageCode(3, "仓库编码", "SRG", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
+    StorageCode(3, "仓库编码", "SRG", SerialNumberUpdate.NEVER, Constant.STRING_EMPTY),
 
     /**
      * <h3>生产单元编码</h3>
      */
-    StructureCode(4, "生产单元编码", "ST", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
+    StructureCode(4, "生产单元编码", "ST", SerialNumberUpdate.NEVER, Constant.STRING_EMPTY),
 
     /**
      * <h3>客户编码</h3>
@@ -46,7 +46,7 @@ public enum CodeRuleField implements IDictionary {
     /**
      * <h3>单位编码</h3>
      */
-    UnitCode(7, "单位编码", "UT", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
+    UnitCode(7, "单位编码", "UT", SerialNumberUpdate.NEVER, Constant.STRING_EMPTY),
 
     /**
      * <h3>采购单号</h3>
@@ -106,17 +106,17 @@ public enum CodeRuleField implements IDictionary {
     /**
      * <h3>部门编码</h3>
      */
-    DepartmentCode(19, "部门编码", "DP", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
+    DepartmentCode(19, "部门编码", "DP", SerialNumberUpdate.NEVER, Constant.STRING_EMPTY),
 
     /**
      * <h3>BOM编码</h3>
      */
-    BomCode(20, "配方编码", "BOM", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
+    BomCode(20, "配方编码", "BOM", SerialNumberUpdate.NEVER, Constant.STRING_EMPTY),
 
     /**
      * <h3>工艺编码</h3>
      */
-    RoutingCode(21, "工艺编码", "RT", SerialNumberUpdate.NEVER, Constant.EMPTY_STRING),
+    RoutingCode(21, "工艺编码", "RT", SerialNumberUpdate.NEVER, Constant.STRING_EMPTY),
 
     ;
 

@@ -19,6 +19,6 @@ public class WechatController extends RootController {
     @RequestMapping(value = "init", produces = "text/plain")
     @ResponseBody
     public String init() {
-        return Constant.SUCCESS;
+        return Constant.STRING_SUCCESS;
     }
 }

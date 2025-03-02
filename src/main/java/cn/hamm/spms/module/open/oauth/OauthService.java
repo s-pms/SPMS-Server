@@ -1,8 +1,7 @@
 package cn.hamm.spms.module.open.oauth;
 
-import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.helper.RedisHelper;
+import cn.hamm.airpower.util.DateTimeUtil;
 import cn.hamm.spms.module.open.oauth.model.base.AbstractOauthCallback;
 import cn.hamm.spms.module.open.oauth.model.base.OauthUserInfo;
 import cn.hamm.spms.module.open.oauth.model.enums.OauthPlatform;
@@ -22,6 +21,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static cn.hamm.airpower.config.Constant.STRING_EMPTY;
+import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+
 /**
  * <h1>OauthService</h1>
  *
@@ -33,7 +36,7 @@ public class OauthService {
     /**
      * <h3>Code缓存秒数</h3>
      */
-    private static final int CACHE_CODE_EXPIRE_SECOND = Constant.SECOND_PER_MINUTE * 5;
+    private static final int CACHE_CODE_EXPIRE_SECOND = DateTimeUtil.SECOND_PER_MINUTE * 5;
 
     @Autowired
     private RedisHelper redisHelper;
@@ -68,7 +71,7 @@ public class OauthService {
     private static OauthPlatform getOauthPlatform(String platform) {
         OauthPlatform[] platforms = OauthPlatform.values();
         OauthPlatform oauthPlatform = Arrays.stream(platforms).filter(item -> item.getFlag().equals(platform)).findFirst().orElse(null);
-        ServiceError.DATA_NOT_FOUND.whenNull(oauthPlatform, "暂不支持的第三方平台");
+        DATA_NOT_FOUND.whenNull(oauthPlatform, "暂不支持的第三方平台");
         return oauthPlatform;
     }
 
@@ -101,7 +104,7 @@ public class OauthService {
      */
     public Long getOauthUserCache(String appKey, String code) {
         Object userId = redisHelper.get(getUserIdCacheKey(appKey, code));
-        ServiceError.FORBIDDEN.whenNull(userId, "你的AppKey或Code错误，请重新获取");
+        FORBIDDEN.whenNull(userId, "你的AppKey或Code错误，请重新获取");
         return Long.valueOf(userId.toString());
     }
 
@@ -146,7 +149,7 @@ public class OauthService {
     public String getOauthScopeCache(String appKey, String code) {
         Object object = redisHelper.get(getScopeCacheKey(appKey, code));
         if (Objects.isNull(object)) {
-            return Constant.EMPTY_STRING;
+            return STRING_EMPTY;
         }
         return object.toString();
     }
@@ -166,7 +169,7 @@ public class OauthService {
                 .setPlatform(oauthPlatform.getKey())
                 .setThirdUserId(userInfo.getUserId())
         );
-        ServiceError.FORBIDDEN.when(exists.isEmpty(), "该第三方账号暂未绑定，无法登录");
+        FORBIDDEN.when(exists.isEmpty(), "该第三方账号暂未绑定，无法登录");
         return exists.get(0).getUser();
     }
 

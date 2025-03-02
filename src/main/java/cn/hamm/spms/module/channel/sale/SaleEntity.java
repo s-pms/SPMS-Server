@@ -9,7 +9,10 @@ import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.channel.customer.CustomerEntity;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,6 +20,9 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
+
+import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static jakarta.persistence.FetchType.EAGER;
 
 /**
  * <h1>采购单实体</h1>
@@ -35,13 +41,13 @@ public class SaleEntity extends AbstractBaseBillEntity<SaleEntity, SaleDetailEnt
     @Description("销售单号")
     @Column(columnDefinition = "varchar(255) default '' comment '销售单号'", unique = true)
     @AutoGenerateCode(CodeRuleField.SaleBillCode)
-    @Search(Search.Mode.LIKE)
+    @Search
     private String billCode;
 
     @Description("销售说明")
     @Column(columnDefinition = "varchar(255) default '' comment '销售说明'")
     @Length(max = 80, message = "采购事由仅支持输入{min}个{max}个字符")
-    @Search(Search.Mode.LIKE)
+    @Search
     private String reason;
 
     @Description("总金额")
@@ -52,11 +58,11 @@ public class SaleEntity extends AbstractBaseBillEntity<SaleEntity, SaleDetailEnt
     @Description("销售状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '销售状态'")
     @Dictionary(value = SaleStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     private Integer status;
 
     @Description("客户信息")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "客户不能为空")
     private CustomerEntity customer;
 }

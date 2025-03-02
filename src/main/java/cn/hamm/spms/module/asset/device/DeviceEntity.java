@@ -10,8 +10,10 @@ import cn.hamm.spms.module.asset.device.enums.DeviceAlarm;
 import cn.hamm.spms.module.asset.device.enums.DeviceStatus;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.report.ReportConstant;
-import cn.hamm.spms.module.system.coderule.CodeRuleField;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,6 +24,10 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Set;
+
+import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.spms.module.system.coderule.CodeRuleField.DeviceCode;
+import static jakarta.persistence.FetchType.EAGER;
 
 /**
  * <h1>设备实体</h1>
@@ -45,7 +51,7 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAct
 
     @Description("设备编码")
     @Column(columnDefinition = "varchar(255) default '' comment '设备编码'", unique = true)
-    @AutoGenerateCode(CodeRuleField.DeviceCode)
+    @AutoGenerateCode(DeviceCode)
     private String code;
 
     @Description("设备UUID")
@@ -58,6 +64,7 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAct
     @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 4 comment '设备状态'")
     @Dictionary(value = DeviceStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
+    @Search(EQUALS)
     private Integer status;
 
     @Description("报警状态")
@@ -72,7 +79,7 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAct
     private Long partCount;
 
     @Description("开启采集")
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '开启采集'")
     private Boolean isReporting;
 
@@ -83,6 +90,6 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAct
     private Integer rate;
 
     @Description("参数列表")
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = EAGER)
     private Set<ParameterEntity> parameters;
 }

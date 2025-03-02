@@ -1,12 +1,14 @@
 package cn.hamm.spms.common.config;
 
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.spms.common.enums.UploadPlatform;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+
+import static cn.hamm.airpower.util.FileUtil.FILE_SCALE;
+import static cn.hamm.spms.common.enums.UploadPlatform.LOCAL;
 
 /**
  * <h1>应用配置文件</h1>
@@ -19,6 +21,11 @@ import org.springframework.stereotype.Component;
 @Configuration
 @ConfigurationProperties("app")
 public class AppConfig {
+    /**
+     * <h2>项目名称</h2>
+     */
+    private String projectName = "SPMS";
+
     /**
      * <h3>登录地址 用于 {@code OAuth2}</h3>
      */
@@ -42,7 +49,7 @@ public class AppConfig {
     /**
      * <h2>上传文件最大大小</h2>
      */
-    private long uploadMaxSize = Constant.FILE_SCALE * Constant.FILE_SCALE * 10;
+    private long uploadMaxSize = FILE_SCALE * FILE_SCALE * 10;
 
     /**
      * <h2>上传文件允许的扩展名</h2>
@@ -59,7 +66,7 @@ public class AppConfig {
     /**
      * <h2>上传平台</h2>
      */
-    private UploadPlatform uploadPlatform = UploadPlatform.LOCAL;
+    private UploadPlatform uploadPlatform = LOCAL;
 
     /**
      * <h3>Influx配置</h3>

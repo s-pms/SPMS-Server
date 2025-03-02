@@ -6,6 +6,8 @@ import com.influxdb.annotations.Measurement;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 /**
  * <h1>数据采集时序存储报告</h1>
  *
@@ -14,7 +16,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @Measurement(name = "report")
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(NON_NULL)
 public class ReportInfluxPayload {
     /**
      * <h3>属性值</h3>

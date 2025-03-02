@@ -1,8 +1,5 @@
 package cn.hamm.spms.module.system.file;
 
-import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.enums.DateTimeFormatter;
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.exception.ServiceException;
 import cn.hamm.airpower.util.DateTimeUtil;
 import cn.hamm.airpower.util.FileUtil;
@@ -23,6 +20,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
+
+import static cn.hamm.airpower.config.Constant.*;
+import static cn.hamm.airpower.enums.DateTimeFormatter.FULL_DATE;
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_UPLOAD_MAX_SIZE;
+import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
 
 /**
  * <h1>Service</h1>
@@ -87,12 +89,12 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
      */
     public FileEntity upload(@NotNull MultipartFile multipartFile, FileCategory category) {
         // 判断文件大小和类型
-        ServiceError.FORBIDDEN_UPLOAD_MAX_SIZE.when(multipartFile.getSize() > appConfig.getUploadMaxSize());
+        FORBIDDEN_UPLOAD_MAX_SIZE.when(multipartFile.getSize() > appConfig.getUploadMaxSize());
         String originalFilename = multipartFile.getOriginalFilename();
-        ServiceError.PARAM_INVALID.whenNull(originalFilename, "文件名不能为空");
+        PARAM_INVALID.whenNull(originalFilename, "文件名不能为空");
         String extension = FileUtil.getExtension(originalFilename);
-        ServiceError.PARAM_INVALID.whenEmpty(extension, "文件类型不能为空");
-        ServiceError.PARAM_INVALID.when(!Arrays.stream(appConfig.getUploadAllowExtensions()).toList().contains(extension), "文件类型不允许上传");
+        PARAM_INVALID.whenEmpty(extension, "文件类型不能为空");
+        PARAM_INVALID.when(!Arrays.stream(appConfig.getUploadAllowExtensions()).toList().contains(extension), "文件类型不允许上传");
 
         String uploadDirectory = appConfig.getUploadDirectory();
         if (!uploadDirectory.endsWith(File.separator)) {
@@ -104,7 +106,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
 
         // 追加今日文件夹 定时任务将按存储文件夹进行删除过时文件
         String todayDir = DateTimeUtil.format(milliSecond,
-                DateTimeFormatter.FULL_DATE.getValue().replaceAll(Constant.LINE, Constant.EMPTY_STRING)
+                FULL_DATE.getValue().replaceAll(STRING_LINE, STRING_EMPTY)
         );
         String absoluteDirectory = uploadDirectory + todayDir + File.separator;
 
@@ -117,7 +119,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
             }
 
             // 文件名
-            String fileName = hashMd5 + Constant.DOT + extension;
+            String fileName = hashMd5 + STRING_DOT + extension;
 
             // 保存的相对文件路径
             String savedFilePath = category.name().toLowerCase() + File.separator + todayDir + File.separator + fileName;
