@@ -21,8 +21,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DISABLED;
 
@@ -72,8 +72,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @PostMapping("getMyPermissionList")
     public Json getMyPermissionList() {
         List<PermissionEntity> permissionList = service.getPermissionListByUserId(getCurrentUserId());
-        List<String> permissions = new ArrayList<>();
-        permissionList.forEach(permission -> permissions.add(permission.getIdentity()));
+        List<String> permissions = permissionList.stream().map(PermissionEntity::getIdentity).collect(Collectors.toList());
         return Json.data(permissions);
     }
 
