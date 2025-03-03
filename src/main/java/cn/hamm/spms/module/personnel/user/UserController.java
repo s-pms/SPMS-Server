@@ -160,7 +160,6 @@ public class UserController extends BaseController<UserEntity, UserService, User
             case VIA_EMAIL_CODE -> service.loginViaEmail(login);
         };
         FORBIDDEN_DISABLED.when(user.getIsDisabled(), "登录失败，你的账号已被禁用");
-
         return Json.data(userService.loginWithCookieAndResponse(response, user), "登录成功");
     }
 }
