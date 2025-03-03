@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.personnel.user.department;
+package cn.hamm.spms.module.personnel.department;
 
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.model.query.QueryListRequest;

@@ -7,6 +7,7 @@ import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.mes.operation.OperationEntity;
+import cn.hamm.spms.module.personnel.department.DepartmentEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -67,4 +68,8 @@ public class StructureEntity extends BaseEntity<StructureEntity> implements ITre
     @Description("可执行工序")
     @ManyToMany(fetch = EAGER)
     private Set<OperationEntity> operationList;
+
+    @Description("所属部门列表")
+    @ManyToMany(fetch = EAGER)
+    private Set<DepartmentEntity> departmentList;
 }
