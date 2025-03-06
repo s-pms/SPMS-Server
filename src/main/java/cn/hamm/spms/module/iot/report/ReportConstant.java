@@ -52,7 +52,7 @@ public class ReportConstant {
     }
 
     /**
-     * <h2>获取设备指定参数的缓存Key</h2>
+     * <h3>获取设备指定参数的缓存Key</h3>
      *
      * @param code 参数编码
      * @param uuid 设备UUID

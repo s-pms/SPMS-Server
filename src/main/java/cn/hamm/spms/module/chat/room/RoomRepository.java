@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RoomRepository extends BaseRepository<RoomEntity> {
     /**
-     * <h2>根据房间代码获取房间信息</h2>
+     * <h3>根据房间代码获取房间信息</h3>
      *
      * @param code 房间代码
      * @return 房间信息

@@ -53,7 +53,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     private static final int CACHE_CODE_EXPIRE_SECOND = DateTimeUtil.SECOND_PER_MINUTE * 5;
 
     /**
-     * <h2>缓存房间用户</h2>
+     * <h3>缓存房间用户</h3>
      */
     private final String CACHE_ROOM_KEY = "ROOM_USER_";
 
@@ -441,7 +441,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>获取当前用户所在的房间ID</h2>
+     * <h3>获取当前用户所在的房间ID</h3>
      *
      * @param userId 用户ID
      * @return 房间ID
@@ -455,7 +455,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h2>保存当前用户所在的房间ID</h2>
+     * <h3>保存当前用户所在的房间ID</h3>
      *
      * @param userId 用户ID
      * @param roomId 房间ID

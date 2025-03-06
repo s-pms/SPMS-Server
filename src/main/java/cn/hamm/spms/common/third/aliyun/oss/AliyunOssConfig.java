@@ -16,14 +16,17 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("aliyun.oss")
 public class AliyunOssConfig {
     /**
-     * <h2>负载地址</h2>
+     * <h3>负载地址</h3>
      */
     private String endpoint;
 
     /**
-     * <h2>bucket名称</h2>
+     * <h3>bucket名称</h3>
      */
     private String bucketName;
 
+    /**
+     * <h3>区域</h3>
+     */
     private String region = "cn-chengdu";
 }

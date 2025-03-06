@@ -71,9 +71,9 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
         ReportGranularity reportGranularity = DictionaryUtil.getDictionary(ReportGranularity.class, reportPayload.getReportGranularity());
         ReportDataType reportDataType = DictionaryUtil.getDictionary(ReportDataType.class, parameter.getDataType());
         return switch (reportDataType) {
-            case QUANTITY -> influxHelper.queryQuantity(reportPayload, reportGranularity);
+            case NUMBER -> influxHelper.queryQuantity(reportPayload, reportGranularity);
             case STATUS -> influxHelper.queryStatus(reportPayload, reportGranularity);
-            case SWITCH -> influxHelper.querySwitch(reportPayload, reportGranularity);
+            case BOOLEAN -> influxHelper.querySwitch(reportPayload, reportGranularity);
             default -> influxHelper.queryInformation(reportPayload, reportGranularity);
         };
     }

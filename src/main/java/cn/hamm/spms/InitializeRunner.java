@@ -136,7 +136,7 @@ public class InitializeRunner implements CommandLineRunner {
             parameterService.add(new ParameterEntity()
                     .setCode(REPORT_KEY_OF_PART_COUNT)
                     .setLabel("实时产量")
-                    .setDataType(ReportDataType.QUANTITY.getKey())
+                    .setDataType(ReportDataType.NUMBER.getKey())
                     .setIsSystem(true)
             );
         }

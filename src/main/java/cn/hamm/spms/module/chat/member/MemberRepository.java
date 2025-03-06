@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemberRepository extends BaseRepository<MemberEntity> {
     /**
-     * <h2>根据用户和房间查询</h2>
+     * <h3>根据用户和房间查询</h3>
      *
      * @param user 用户
      * @param room 房间
