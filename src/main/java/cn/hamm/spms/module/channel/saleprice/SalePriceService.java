@@ -19,8 +19,8 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EXIST;
 @Service
 public class SalePriceService extends BaseService<SalePriceEntity, SalePriceRepository> {
     @Override
-    protected @NotNull SalePriceEntity beforeAdd(@NotNull SalePriceEntity source) {
-        SalePriceEntity exist = repository.getByCustomerAndMaterial(source.getCustomer(), source.getMaterial());
+    protected @NotNull SalePriceEntity beforeAdd(@NotNull SalePriceEntity salePrice) {
+        SalePriceEntity exist = repository.getByCustomerAndMaterial(salePrice.getCustomer(), salePrice.getMaterial());
         if (Objects.nonNull(exist)) {
             FORBIDDEN_EXIST.show(String.format(
                     "%s 在客户 %s 的销售价已经存在!",
@@ -28,16 +28,16 @@ public class SalePriceService extends BaseService<SalePriceEntity, SalePriceRepo
                     exist.getCustomer().getName()
             ));
         }
-        return source;
+        return salePrice;
     }
 
     @Override
-    protected @NotNull SalePriceEntity beforeUpdate(@NotNull SalePriceEntity source) {
-        return source.setMaterial(null).setCustomer(null);
+    protected @NotNull SalePriceEntity beforeUpdate(@NotNull SalePriceEntity salePrice) {
+        return salePrice.setMaterial(null).setCustomer(null);
     }
 
-    protected SalePriceEntity getByMaterialAndCustomer(MaterialEntity materialEntity, CustomerEntity customerEntity) {
-        SalePriceEntity exist = repository.getByCustomerAndMaterial(customerEntity, materialEntity);
+    protected SalePriceEntity getByMaterialAndCustomer(MaterialEntity material, CustomerEntity customer) {
+        SalePriceEntity exist = repository.getByCustomerAndMaterial(customer, material);
         DATA_NOT_FOUND.whenNull(exist, "没有查询到该物料在此客户下提供的销售价格，请参考物料标准销售价填写。");
         return exist;
     }

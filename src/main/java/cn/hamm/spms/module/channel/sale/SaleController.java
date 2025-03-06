@@ -29,13 +29,13 @@ public class SaleController extends BaseBillController<SaleEntity, SaleService, 
     private OutputService outputService;
 
     @Override
-    public void afterAudit(@NotNull SaleEntity bill) {
+    public void afterAudit(@NotNull SaleEntity sale) {
         // 销售单审核完毕后创建出库单
         OutputEntity outputBill = new OutputEntity()
                 .setStatus(OutputStatus.AUDITING.getKey())
-                .setSale(bill)
+                .setSale(sale)
                 .setType(OutputType.SALE.getKey());
-        List<SaleDetailEntity> details = detailService.getAllByBillId(bill.getId());
+        List<SaleDetailEntity> details = detailService.getAllByBillId(sale.getId());
         List<OutputDetailEntity> outputDetails = details.stream()
                 .map(detail -> new OutputDetailEntity()
                         .setMaterial(detail.getMaterial())

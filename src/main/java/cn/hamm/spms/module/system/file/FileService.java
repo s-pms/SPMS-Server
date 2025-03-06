@@ -84,10 +84,10 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
      * <h3>文件上传</h3>
      *
      * @param multipartFile 文件
-     * @param category      文件类别
+     * @param fileCategory  文件类别
      * @return 存储的文件信息
      */
-    public FileEntity upload(@NotNull MultipartFile multipartFile, FileCategory category) {
+    public FileEntity upload(@NotNull MultipartFile multipartFile, FileCategory fileCategory) {
         // 判断文件大小和类型
         FORBIDDEN_UPLOAD_MAX_SIZE.when(multipartFile.getSize() > appConfig.getUploadMaxSize());
         String originalFilename = multipartFile.getOriginalFilename();
@@ -100,7 +100,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
         if (!uploadDirectory.endsWith(File.separator)) {
             uploadDirectory += File.separator;
         }
-        uploadDirectory += category.name().toLowerCase() + File.separator;
+        uploadDirectory += fileCategory.name().toLowerCase() + File.separator;
 
         long milliSecond = System.currentTimeMillis();
 
@@ -113,7 +113,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
         try {
             // 获取文件的MD5
             String hashMd5 = DigestUtils.md5DigestAsHex(multipartFile.getBytes());
-            FileEntity file = repository.getByCategoryAndHashMd5(category.getKey(), hashMd5);
+            FileEntity file = repository.getByCategoryAndHashMd5(fileCategory.getKey(), hashMd5);
             if (Objects.nonNull(file)) {
                 return file;
             }
@@ -122,7 +122,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
             String fileName = hashMd5 + STRING_DOT + extension;
 
             // 保存的相对文件路径
-            String savedFilePath = category.name().toLowerCase() + File.separator + todayDir + File.separator + fileName;
+            String savedFilePath = fileCategory.name().toLowerCase() + File.separator + todayDir + File.separator + fileName;
 
             switch (appConfig.getUploadPlatform()) {
                 case LOCAL -> {
@@ -136,7 +136,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
             file = new FileEntity().setExtension(extension)
                     .setSize(multipartFile.getSize())
                     .setPlatform(appConfig.getUploadPlatform().getKey())
-                    .setCategory(category.getKey())
+                    .setCategory(fileCategory.getKey())
                     .setName(multipartFile.getOriginalFilename())
                     .setHashMd5(hashMd5)
                     .setUrl(savedFilePath);

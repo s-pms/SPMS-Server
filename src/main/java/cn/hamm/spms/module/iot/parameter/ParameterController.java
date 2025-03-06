@@ -16,9 +16,9 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
 @Description("采集参数")
 public class ParameterController extends BaseController<ParameterEntity, ParameterService, ParameterRepository> {
     @Override
-    protected ParameterEntity beforeAppUpdate(@NotNull ParameterEntity entity) {
-        FORBIDDEN_DELETE.when(entity.getIsSystem(), "系统内置参数不允许编辑!");
-        return entity;
+    protected ParameterEntity beforeAppUpdate(@NotNull ParameterEntity parameter) {
+        FORBIDDEN_DELETE.when(parameter.getIsSystem(), "系统内置参数不允许编辑!");
+        return parameter;
     }
 
     @Override

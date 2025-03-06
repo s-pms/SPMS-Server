@@ -28,7 +28,10 @@ import static cn.hamm.spms.module.system.config.ConfigFlag.PURCHASE_BILL_AUTO_AU
  */
 @Slf4j
 @Service
-public class PurchaseService extends AbstractBaseBillService<PurchaseEntity, PurchaseRepository, PurchaseDetailEntity, PurchaseDetailService, PurchaseDetailRepository> {
+public class PurchaseService extends AbstractBaseBillService<
+        PurchaseEntity, PurchaseRepository,
+        PurchaseDetailEntity, PurchaseDetailService, PurchaseDetailRepository
+        > {
 
     @Override
     public IDictionary getAuditingStatus() {

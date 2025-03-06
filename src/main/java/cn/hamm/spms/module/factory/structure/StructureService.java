@@ -28,12 +28,12 @@ public class StructureService extends BaseService<StructureEntity, StructureRepo
     }
 
     @Override
-    protected @NotNull QueryListRequest<StructureEntity> beforeGetList(@NotNull QueryListRequest<StructureEntity> sourceRequestData) {
-        StructureEntity filter = sourceRequestData.getFilter();
+    protected @NotNull QueryListRequest<StructureEntity> beforeGetList(@NotNull QueryListRequest<StructureEntity> queryListRequest) {
+        StructureEntity filter = queryListRequest.getFilter();
         if (Objects.isNull(filter.getParentId())) {
             filter.setParentId(TreeUtil.ROOT_ID);
         }
-        sourceRequestData.setFilter(filter);
-        return sourceRequestData;
+        queryListRequest.setFilter(filter);
+        return queryListRequest;
     }
 }

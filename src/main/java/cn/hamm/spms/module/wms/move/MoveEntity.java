@@ -19,7 +19,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.airpower.annotation.Search.Mode.LIKE;
 import static cn.hamm.spms.module.system.coderule.CodeRuleField.MoveBillCode;
 import static jakarta.persistence.FetchType.EAGER;
 
@@ -40,7 +39,7 @@ public class MoveEntity extends AbstractBaseBillEntity<MoveEntity, MoveDetailEnt
     @Description("移库单号")
     @Column(columnDefinition = "varchar(255) default '' comment '移库单号'", unique = true)
     @AutoGenerateCode(MoveBillCode)
-    @Search(LIKE)
+    @Search
     private String billCode;
 
     @Description("移库状态")

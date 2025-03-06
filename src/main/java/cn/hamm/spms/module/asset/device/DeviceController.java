@@ -28,7 +28,9 @@ import static cn.hamm.spms.module.iot.report.ReportConstant.getDeviceReportCache
  */
 @ApiController("device")
 @Description("设备")
-public class DeviceController extends BaseController<DeviceEntity, DeviceService, DeviceRepository> implements IDeviceAction, IReportPayloadAction {
+public class DeviceController extends BaseController<
+        DeviceEntity, DeviceService, DeviceRepository
+        > implements IDeviceAction, IReportPayloadAction {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 

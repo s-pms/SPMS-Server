@@ -16,9 +16,7 @@ public class OauthConfig {
     private static WecomConfig wecomConfig;
 
     @Autowired
-    OauthConfig(
-            WecomConfig wecomConfig
-    ) {
+    OauthConfig(WecomConfig wecomConfig) {
         OauthConfig.wecomConfig = wecomConfig;
     }
 }

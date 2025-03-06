@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
  */
 @ApiController("purchasePrice")
 @Description("采购价格")
-public class PurchasePriceController extends BaseController<PurchasePriceEntity, PurchasePriceService, PurchasePriceRepository> implements IPurchasePriceAction {
+public class PurchasePriceController extends BaseController<
+        PurchasePriceEntity, PurchasePriceService, PurchasePriceRepository
+        > implements IPurchasePriceAction {
     @Description("查询物料和供应商的价格")
     @PostMapping("getByMaterialAndSupplier")
     @Filter(WhenGetDetail.class)
-    public Json getByMaterialAndSupplier(@RequestBody @Validated(WhenGetByMaterialAndSupplier.class) PurchasePriceEntity entity) {
-        return Json.data(service.getByMaterialAndSupplier(entity.getMaterial(), entity.getSupplier()));
+    public Json getByMaterialAndSupplier(@RequestBody @Validated(WhenGetByMaterialAndSupplier.class) PurchasePriceEntity purchasePrice) {
+        return Json.data(service.getByMaterialAndSupplier(purchasePrice.getMaterial(), purchasePrice.getSupplier()));
     }
 }

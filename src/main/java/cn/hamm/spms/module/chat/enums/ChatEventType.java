@@ -81,14 +81,14 @@ public enum ChatEventType implements IDictionary {
      */
     public static ChatEventType getByStringKey(String key) {
         if (Objects.isNull(key)) {
-            return ChatEventType.UNKNOWN;
+            return UNKNOWN;
         }
         for (ChatEventType item : values()) {
             if (item.getKey() == Integer.parseInt(key)) {
                 return item;
             }
         }
-        return ChatEventType.UNKNOWN;
+        return UNKNOWN;
     }
 
     /**

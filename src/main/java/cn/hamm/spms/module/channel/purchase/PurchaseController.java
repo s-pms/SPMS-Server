@@ -14,6 +14,9 @@ import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailService;
  */
 @ApiController("purchase")
 @Description("采购单")
-public class PurchaseController extends BaseBillController<PurchaseEntity, PurchaseService, PurchaseRepository, PurchaseDetailEntity, PurchaseDetailService, PurchaseDetailRepository> {
+public class PurchaseController extends BaseBillController<
+        PurchaseEntity, PurchaseService, PurchaseRepository,
+        PurchaseDetailEntity, PurchaseDetailService, PurchaseDetailRepository
+        > {
 
 }
