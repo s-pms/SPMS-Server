@@ -11,6 +11,9 @@ import lombok.Getter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import static cn.hamm.airpower.annotation.ExcelColumn.Type.BOOLEAN;
+import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+
 /**
  * <h1>应用实体基类</h1>
  *
@@ -24,9 +27,9 @@ import org.hibernate.annotations.DynamicUpdate;
 public class BaseEntity<E extends BaseEntity<E>> extends RootEntity<E> {
     @Description("是否已发布")
     @ReadOnly
-    @Search(Search.Mode.EQUALS)
+    @Search(EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否已发布'")
-    @ExcelColumn(ExcelColumn.Type.BOOLEAN)
+    @ExcelColumn(BOOLEAN)
     private Boolean isPublished;
 
     /**
