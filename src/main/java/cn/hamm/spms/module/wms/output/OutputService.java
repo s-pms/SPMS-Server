@@ -14,8 +14,6 @@ import cn.hamm.spms.module.wms.output.detail.OutputDetailService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 import static cn.hamm.spms.module.system.config.ConfigFlag.OUTPUT_BILL_AUTO_AUDIT;
 
@@ -61,18 +59,12 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
     @Override
     protected void afterDetailFinishAdded(long detailId, @NotNull OutputDetailEntity outputDetail) {
         InventoryEntity inventory = outputDetail.getInventory();
-        if (Objects.isNull(inventory)) {
-            FORBIDDEN.show("请传入库存信息");
-            return;
-        }
+        FORBIDDEN.whenNull(inventory, "请传入库存信息");
         OutputDetailEntity existDetail = detailService.get(outputDetail.getId());
         InventoryService inventoryService = Services.getInventoryService();
         inventory = inventoryService.get(inventory.getId());
         FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), existDetail.getMaterial().getId(), "物料信息不匹配");
-        if (inventory.getQuantity() < outputDetail.getQuantity()) {
-            // 判断库存
-            FORBIDDEN.show("库存信息不足" + outputDetail.getQuantity());
-        }
+        FORBIDDEN.when(inventory.getQuantity() < outputDetail.getQuantity(), "库存信息不足" + outputDetail.getQuantity());
         inventory.setQuantity(NumberUtil.subtract(inventory.getQuantity(), outputDetail.getQuantity()));
         inventoryService.update(inventory);
 
