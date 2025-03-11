@@ -17,7 +17,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.airpower.annotation.Search.Mode.LIKE;
 
 /**
  * <h1>实体</h1>
@@ -54,7 +53,7 @@ public class NotifyEntity extends BaseEntity<NotifyEntity> {
     private String token;
 
     @Description("备注信息")
-    @Search(LIKE)
+    @Search
     @Column(columnDefinition = "text comment '备注信息'")
     @Length(max = 1000, message = "备注信息最多允许{max}个字符")
     private String remark;

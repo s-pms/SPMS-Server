@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.mes.routing.operation;
 
+import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.spms.base.BaseService;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +16,6 @@ public class RoutingOperationService extends BaseService<RoutingOperationEntity,
 
     public void deleteByRoutingId(long id) {
         List<RoutingOperationEntity> exists = filter(new RoutingOperationEntity().setRoutingId(id));
-        for (RoutingOperationEntity exist : exists) {
-            delete(exist.getId());
-        }
+        exists.stream().mapToLong(RootEntity::getId).forEach(this::delete);
     }
 }

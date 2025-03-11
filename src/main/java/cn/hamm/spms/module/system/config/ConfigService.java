@@ -46,24 +46,24 @@ public class ConfigService extends BaseService<ConfigEntity, ConfigRepository> {
     }
 
     @Override
-    protected ConfigEntity beforeAppSaveToDatabase(@NotNull ConfigEntity configuration) {
-        String key = configuration.getFlag();
-        configuration.setIsSystem(false);
+    protected ConfigEntity beforeAppSaveToDatabase(@NotNull ConfigEntity config) {
+        String key = config.getFlag();
+        config.setIsSystem(false);
         // 如果 Configuration枚举中包含这个标识 则设置为系统标识
         for (ConfigFlag configFlag : ConfigFlag.values()) {
             if (configFlag.name().equals(key)) {
-                configuration.setIsSystem(true);
-                ConfigType type = DictionaryUtil.getDictionary(ConfigType.class, configuration.getType());
+                config.setIsSystem(true);
+                ConfigType type = DictionaryUtil.getDictionary(ConfigType.class, config.getType());
                 switch (type) {
                     case BOOLEAN:
-                        configuration.setConfig(STRING_ONE.equals(configuration.getConfig()) ?
+                        config.setConfig(STRING_ONE.equals(config.getConfig()) ?
                                 STRING_ONE :
                                 STRING_ZERO
                         );
                         break;
                     case NUMBER:
-                        configuration.setConfig(
-                                Long.valueOf(configuration.getConfig()).toString()
+                        config.setConfig(
+                                Long.valueOf(config.getConfig()).toString()
                         );
                         break;
                     default:
@@ -71,6 +71,6 @@ public class ConfigService extends BaseService<ConfigEntity, ConfigRepository> {
                 break;
             }
         }
-        return configuration;
+        return config;
     }
 }

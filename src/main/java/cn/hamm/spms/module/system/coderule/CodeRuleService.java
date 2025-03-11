@@ -22,7 +22,14 @@ import static cn.hamm.spms.module.system.coderule.CodeRuleParam.*;
  */
 @Service
 public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleRepository> {
+    /**
+     * <h3>年份位数</h3>
+     */
     private static final int SHORT_YEAR_LENGTH = 2;
+
+    /**
+     * <h3>流水号位数</h3>
+     */
     private static final String CODE_RULE_FORMATTER = "%02d";
 
     /**

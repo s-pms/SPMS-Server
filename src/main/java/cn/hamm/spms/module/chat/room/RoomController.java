@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class RoomController extends BaseController<RoomEntity, RoomService, RoomRepository> implements IRoomAction {
     @Permission(authorize = false)
     @Override
-    public Json getDetail(@NotNull RoomEntity entity) {
-        return super.getDetail(entity);
+    public Json getDetail(@NotNull RoomEntity room) {
+        return super.getDetail(room);
     }
 
     @Description("创建房间")

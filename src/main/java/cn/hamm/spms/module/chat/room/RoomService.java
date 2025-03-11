@@ -25,7 +25,7 @@ import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
 @Service
 public class RoomService extends BaseService<RoomEntity, RoomRepository> {
     /**
-     * <h2>允许用户创建的最大房间数量</h2>
+     * <h3>允许用户创建的最大房间数量</h3>
      */
     private final static int MAX_ROOM_COUNT = 3;
 
@@ -40,7 +40,7 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
     }
 
     /**
-     * <h2>创建房间</h2>
+     * <h3>创建房间</h3>
      *
      * @param room   房间对象
      * @param userId 房主ID
@@ -66,7 +66,7 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
     }
 
     /**
-     * <h2>获取热门房间</h2>
+     * <h3>获取热门房间</h3>
      *
      * @return 房间列表
      */
@@ -76,7 +76,7 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
     }
 
     /**
-     * <h2>根据房间号获取房间</h2>
+     * <h3>根据房间号获取房间</h3>
      *
      * @param code 房间号
      * @return 房间
@@ -86,7 +86,7 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
     }
 
     /**
-     * <h2>检查是否需要密码</h2>
+     * <h3>检查是否需要密码</h3>
      *
      * @param member 成员
      * @return 是否需要密码

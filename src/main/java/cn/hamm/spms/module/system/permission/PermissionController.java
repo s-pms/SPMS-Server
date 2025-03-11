@@ -18,13 +18,13 @@ import java.util.List;
 public class PermissionController extends BaseController<PermissionEntity, PermissionService, PermissionRepository> {
 
     @Override
-    protected PermissionEntity beforeAdd(@NotNull PermissionEntity entity) {
-        return entity.setIsSystem(null);
+    protected PermissionEntity beforeAdd(@NotNull PermissionEntity permission) {
+        return permission.setIsSystem(null);
     }
 
     @Override
-    protected PermissionEntity beforeAppUpdate(@NotNull PermissionEntity entity) {
-        return entity.setIsSystem(null);
+    protected PermissionEntity beforeAppUpdate(@NotNull PermissionEntity permission) {
+        return permission.setIsSystem(null);
     }
 
     @Override

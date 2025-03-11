@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.personnel.user.department;
+package cn.hamm.spms.module.personnel.department;
 
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.model.query.QueryListRequest;
@@ -33,14 +33,14 @@ public class DepartmentService extends BaseService<DepartmentEntity, DepartmentR
     }
 
     @Override
-    protected @NotNull QueryListRequest<DepartmentEntity> beforeGetList(@NotNull QueryListRequest<DepartmentEntity> sourceRequestData) {
-        DepartmentEntity filter = sourceRequestData.getFilter();
-        sourceRequestData.setSort(Objects.requireNonNullElse(
-                sourceRequestData.getSort(),
+    protected @NotNull QueryListRequest<DepartmentEntity> beforeGetList(@NotNull QueryListRequest<DepartmentEntity> queryListRequest) {
+        DepartmentEntity filter = queryListRequest.getFilter();
+        queryListRequest.setSort(Objects.requireNonNullElse(
+                queryListRequest.getSort(),
                 new Sort().setField(ORDER_FIELD_NAME)
         ));
-        sourceRequestData.setFilter(filter);
-        return sourceRequestData;
+        queryListRequest.setFilter(filter);
+        return queryListRequest;
     }
 
     @Override

@@ -56,31 +56,31 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
     }
 
     @Override
-    protected void afterDetailFinishAdded(long detailId, MoveDetailEntity sourceDetail) {
-        sourceDetail = detailService.get(detailId);
-        if (sourceDetail.getInventory().getQuantity() < sourceDetail.getQuantity()) {
+    protected void afterDetailFinishAdded(long detailId, MoveDetailEntity moveDetail) {
+        moveDetail = detailService.get(detailId);
+        if (moveDetail.getInventory().getQuantity() < moveDetail.getQuantity()) {
             // 判断来源库存
-            FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
+            FORBIDDEN.show("库存信息不足" + moveDetail.getQuantity());
         }
 
         // 扣除来源库存
-        InventoryEntity from = sourceDetail.getInventory();
-        from.setQuantity(NumberUtil.subtract(from.getQuantity(), sourceDetail.getQuantity()));
+        InventoryEntity from = moveDetail.getInventory();
+        from.setQuantity(NumberUtil.subtract(from.getQuantity(), moveDetail.getQuantity()));
         InventoryService inventoryService = Services.getInventoryService();
         inventoryService.update(from);
 
         // 查询移库单
-        MoveEntity bill = get(sourceDetail.getBillId());
-        InventoryEntity to = inventoryService.getByMaterialIdAndStorageId(sourceDetail.getInventory().getMaterial().getId(), bill.getStorage().getId());
+        MoveEntity bill = get(moveDetail.getBillId());
+        InventoryEntity to = inventoryService.getByMaterialIdAndStorageId(moveDetail.getInventory().getMaterial().getId(), bill.getStorage().getId());
         if (Objects.nonNull(to)) {
             // 更新目标库存
-            to.setQuantity(NumberUtil.add(to.getQuantity(), sourceDetail.getQuantity()));
+            to.setQuantity(NumberUtil.add(to.getQuantity(), moveDetail.getQuantity()));
             inventoryService.update(to);
         } else {
             // 创建目标库存
             to = new InventoryEntity()
-                    .setQuantity(sourceDetail.getQuantity())
-                    .setMaterial(sourceDetail.getInventory().getMaterial())
+                    .setQuantity(moveDetail.getQuantity())
+                    .setMaterial(moveDetail.getInventory().getMaterial())
                     .setStorage(bill.getStorage())
                     .setType(InventoryType.STORAGE.getKey());
             inventoryService.add(to);

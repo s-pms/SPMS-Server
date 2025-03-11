@@ -49,8 +49,8 @@ public class OrderController extends BaseBillController<OrderEntity, OrderServic
     @Description("订单报工")
     @PostMapping("addOrderDetail")
     @Filter(WhenGetDetail.class)
-    public Json addOrderDetail(@RequestBody @Validated(WhenAddFinish.class) OrderDetailEntity detail) {
-        service.addOrderDetail(detail);
+    public Json addOrderDetail(@RequestBody @Validated(WhenAddFinish.class) OrderDetailEntity orderDetail) {
+        service.addOrderDetail(orderDetail);
         return Json.success("提交订单报工成功");
     }
 

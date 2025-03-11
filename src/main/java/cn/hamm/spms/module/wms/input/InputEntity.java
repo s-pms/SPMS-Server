@@ -21,7 +21,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.airpower.annotation.Search.Mode.LIKE;
 import static cn.hamm.spms.module.system.coderule.CodeRuleField.InputBillCode;
 import static jakarta.persistence.FetchType.EAGER;
 
@@ -42,7 +41,7 @@ public class InputEntity extends AbstractBaseBillEntity<InputEntity, InputDetail
     @Description("入库单号")
     @Column(columnDefinition = "varchar(255) default '' comment '入库单号'", unique = true)
     @AutoGenerateCode(InputBillCode)
-    @Search(LIKE)
+    @Search
     private String billCode;
 
     @Description("入库状态")

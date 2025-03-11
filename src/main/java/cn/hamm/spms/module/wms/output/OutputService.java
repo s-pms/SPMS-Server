@@ -14,8 +14,6 @@ import cn.hamm.spms.module.wms.output.detail.OutputDetailService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 import static cn.hamm.spms.module.system.config.ConfigFlag.OUTPUT_BILL_AUTO_AUDIT;
 
@@ -59,21 +57,15 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
     }
 
     @Override
-    protected void afterDetailFinishAdded(long detailId, @NotNull OutputDetailEntity sourceDetail) {
-        InventoryEntity inventory = sourceDetail.getInventory();
-        if (Objects.isNull(inventory)) {
-            FORBIDDEN.show("请传入库存信息");
-            return;
-        }
-        OutputDetailEntity existDetail = detailService.get(sourceDetail.getId());
+    protected void afterDetailFinishAdded(long detailId, @NotNull OutputDetailEntity outputDetail) {
+        InventoryEntity inventory = outputDetail.getInventory();
+        FORBIDDEN.whenNull(inventory, "请传入库存信息");
+        OutputDetailEntity existDetail = detailService.get(outputDetail.getId());
         InventoryService inventoryService = Services.getInventoryService();
         inventory = inventoryService.get(inventory.getId());
         FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), existDetail.getMaterial().getId(), "物料信息不匹配");
-        if (inventory.getQuantity() < sourceDetail.getQuantity()) {
-            // 判断库存
-            FORBIDDEN.show("库存信息不足" + sourceDetail.getQuantity());
-        }
-        inventory.setQuantity(NumberUtil.subtract(inventory.getQuantity(), sourceDetail.getQuantity()));
+        FORBIDDEN.when(inventory.getQuantity() < outputDetail.getQuantity(), "库存信息不足" + outputDetail.getQuantity());
+        inventory.setQuantity(NumberUtil.subtract(inventory.getQuantity(), outputDetail.getQuantity()));
         inventoryService.update(inventory);
 
         OutputEntity bill = get(existDetail.getBillId());
@@ -81,7 +73,7 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
         switch (outputType) {
             case SALE -> Services.getSaleDetailService().updateDetailQuantity(
                     bill.getSale().getId(),
-                    sourceDetail.getQuantity(),
+                    outputDetail.getQuantity(),
                     Services.getSaleService(),
                     detail -> FORBIDDEN.whenNotEquals(
                             detail.getMaterial().getId(),
@@ -89,7 +81,7 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
                             "物料信息不匹配"));
             case PICKING -> Services.getPickingDetailService().updateDetailQuantity(
                     bill.getPicking().getId(),
-                    sourceDetail.getQuantity(),
+                    outputDetail.getQuantity(),
                     Services.getPickingService(), detail -> FORBIDDEN.whenNotEquals(
                             detail.getMaterial().getId(),
                             existDetail.getMaterial().getId(),

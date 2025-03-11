@@ -20,7 +20,7 @@ public class SalePriceController extends BaseController<SalePriceEntity, SalePri
     @Description("查询物料和客户的价格")
     @PostMapping("getByMaterialAndCustomer")
     @Filter(WhenGetDetail.class)
-    public Json getByMaterialAndCustomer(@RequestBody @Validated(WhenGetByMaterialAndCustomer.class) SalePriceEntity entity) {
-        return Json.data(service.getByMaterialAndCustomer(entity.getMaterial(), entity.getCustomer()));
+    public Json getByMaterialAndCustomer(@RequestBody @Validated(WhenGetByMaterialAndCustomer.class) SalePriceEntity salePrice) {
+        return Json.data(service.getByMaterialAndCustomer(salePrice.getMaterial(), salePrice.getCustomer()));
     }
 }

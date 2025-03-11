@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class RoomMemberEvent extends ChatEvent {
     /**
-     * <h2>成员信息</h2>
+     * <h3>成员信息</h3>
      */
     private MemberEntity member;
 }

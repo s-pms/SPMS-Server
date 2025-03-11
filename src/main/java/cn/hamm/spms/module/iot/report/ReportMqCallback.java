@@ -109,7 +109,7 @@ public class ReportMqCallback implements MqttCallback {
     }
 
     /**
-     * <h2>保存数据</h2>
+     * <h3>保存数据</h3>
      *
      * @param device   设备
      * @param function 设置的函数
@@ -121,7 +121,7 @@ public class ReportMqCallback implements MqttCallback {
     }
 
     /**
-     * <h2>缓存设备指定参数的数据</h2>
+     * <h3>缓存设备指定参数的数据</h3>
      *
      * @param code        参数编码
      * @param uuid        设备的UUID
@@ -132,7 +132,7 @@ public class ReportMqCallback implements MqttCallback {
     }
 
     /**
-     * <h2>获取设备指定参数的缓存数据</h2>
+     * <h3>获取设备指定参数的缓存数据</h3>
      *
      * @param code 参数Key
      * @param uuid 设备的UUID

@@ -1,4 +1,4 @@
-package cn.hamm.spms.module.personnel.user.department;
+package cn.hamm.spms.module.personnel.department;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
@@ -19,7 +19,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.util.List;
 
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.airpower.annotation.Search.Mode.LIKE;
 import static cn.hamm.spms.module.system.coderule.CodeRuleField.DepartmentCode;
 
 /**
@@ -44,7 +43,7 @@ public class DepartmentEntity extends BaseEntity<DepartmentEntity> implements IT
     @Description("部门名称")
     @Column(columnDefinition = "varchar(255) default '' comment '部门名称'")
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "应用名称不能为空")
-    @Search(LIKE)
+    @Search
     private String name;
 
     @Description("父级ID")

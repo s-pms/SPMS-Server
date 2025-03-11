@@ -63,26 +63,26 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
     }
 
     @Override
-    protected void afterDetailFinishAdded(long detailId, @NotNull InputDetailEntity sourceDetail) {
-        if (Objects.isNull(sourceDetail.getStorage()) || Objects.isNull(sourceDetail.getStorage().getId())) {
+    protected void afterDetailFinishAdded(long detailId, @NotNull InputDetailEntity inputDetail) {
+        if (Objects.isNull(inputDetail.getStorage()) || Objects.isNull(inputDetail.getStorage().getId())) {
             FORBIDDEN.show("请传入入库仓库");
             return;
         }
-        InputDetailEntity existDetail = detailService.get(sourceDetail.getId());
+        InputDetailEntity existDetail = detailService.get(inputDetail.getId());
         InventoryService inventoryService = Services.getInventoryService();
-        InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(existDetail.getMaterial().getId(), sourceDetail.getStorage().getId());
+        InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(existDetail.getMaterial().getId(), inputDetail.getStorage().getId());
         if (Objects.nonNull(inventory)) {
-            inventory.setQuantity(NumberUtil.add(inventory.getQuantity(), sourceDetail.getQuantity()));
+            inventory.setQuantity(NumberUtil.add(inventory.getQuantity(), inputDetail.getQuantity()));
             inventoryService.update(inventory);
         } else {
             inventory = new InventoryEntity()
-                    .setQuantity(sourceDetail.getQuantity())
+                    .setQuantity(inputDetail.getQuantity())
                     .setMaterial(existDetail.getMaterial())
-                    .setStorage(sourceDetail.getStorage())
+                    .setStorage(inputDetail.getStorage())
                     .setType(InventoryType.STORAGE.getKey());
             inventoryService.add(inventory);
         }
-        log.info("入库单明细更新库存完毕，单据ID: {}", sourceDetail.getId());
+        log.info("入库单明细更新库存完毕，单据ID: {}", inputDetail.getId());
     }
 
     @Override

@@ -33,10 +33,10 @@ import cn.hamm.spms.module.mes.operation.OperationService;
 import cn.hamm.spms.module.mes.routing.RoutingEntity;
 import cn.hamm.spms.module.mes.routing.RoutingService;
 import cn.hamm.spms.module.mes.routing.operation.RoutingOperationEntity;
+import cn.hamm.spms.module.personnel.department.DepartmentEntity;
+import cn.hamm.spms.module.personnel.department.DepartmentService;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
-import cn.hamm.spms.module.personnel.user.department.DepartmentEntity;
-import cn.hamm.spms.module.personnel.user.department.DepartmentService;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
@@ -136,7 +136,7 @@ public class InitializeRunner implements CommandLineRunner {
             parameterService.add(new ParameterEntity()
                     .setCode(REPORT_KEY_OF_PART_COUNT)
                     .setLabel("实时产量")
-                    .setDataType(ReportDataType.QUANTITY.getKey())
+                    .setDataType(ReportDataType.NUMBER.getKey())
                     .setIsSystem(true)
             );
         }

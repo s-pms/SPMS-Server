@@ -15,7 +15,7 @@ public enum ReportDataType implements IDictionary {
     /**
      * <h3>数量</h3>
      */
-    QUANTITY(1, "数量"),
+    NUMBER(1, "数量"),
 
     /**
      * <h3>状态</h3>
@@ -25,12 +25,12 @@ public enum ReportDataType implements IDictionary {
     /**
      * <h3>开关</h3>
      */
-    SWITCH(3, "开关"),
+    BOOLEAN(3, "开关"),
 
     /**
      * <h3>信息</h3>
      */
-    INFORMATION(4, "信息"),
+    STRING(4, "信息"),
     ;
     private final int key;
     private final String label;

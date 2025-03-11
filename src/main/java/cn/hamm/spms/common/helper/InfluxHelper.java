@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static cn.hamm.airpower.config.Constant.*;
+import static cn.hamm.spms.module.iot.report.ReportDataType.*;
 
 /**
  * <h1>Influx助手类</h1>
@@ -39,7 +40,7 @@ public class InfluxHelper {
 
 
     /**
-     * <h2>保存数据</h2>
+     * <h3>保存数据</h3>
      *
      * @param code  参数名
      * @param uuid  设备ID
@@ -88,7 +89,7 @@ public class InfluxHelper {
      * @return 数据
      */
     public List<ReportInfluxPayload> queryQuantity(ReportPayload payload, ReportGranularity reportGranularity) {
-        return query(payload, ReportDataType.QUANTITY, reportGranularity);
+        return query(payload, NUMBER, reportGranularity);
     }
 
     /**
@@ -99,7 +100,7 @@ public class InfluxHelper {
      * @return 数据
      */
     public List<ReportInfluxPayload> querySwitch(ReportPayload payload, ReportGranularity reportGranularity) {
-        return query(payload, ReportDataType.SWITCH, reportGranularity);
+        return query(payload, BOOLEAN, reportGranularity);
     }
 
     /**
@@ -110,7 +111,7 @@ public class InfluxHelper {
      * @return 数据
      */
     public List<ReportInfluxPayload> queryInformation(ReportPayload payload, ReportGranularity reportGranularity) {
-        return query(payload, ReportDataType.INFORMATION, reportGranularity);
+        return query(payload, STRING, reportGranularity);
     }
 
     /**
@@ -121,7 +122,7 @@ public class InfluxHelper {
      * @return 数据
      */
     public List<ReportInfluxPayload> queryStatus(ReportPayload payload, ReportGranularity reportGranularity) {
-        return query(payload, ReportDataType.STATUS, reportGranularity);
+        return query(payload, STATUS, reportGranularity);
     }
 
     /**
@@ -146,13 +147,13 @@ public class InfluxHelper {
                 ReportInfluxPayload payload = new ReportInfluxPayload()
                         .setTimestamp(Objects.requireNonNull(record.getTime()).toEpochMilli());
                 switch (reportDataType) {
-                    case QUANTITY:
+                    case NUMBER:
                         payload.setValue(Objects.isNull(value) ? 0 : Double.parseDouble(value.toString()));
                         break;
-                    case INFORMATION:
+                    case STRING:
                         payload.setStrValue(Objects.isNull(value) ? STRING_EMPTY : value.toString());
                         break;
-                    case SWITCH:
+                    case BOOLEAN:
                         payload.setBoolValue(!Objects.isNull(value) && STRING_ONE.equals(value.toString()));
                         break;
                     case STATUS:
@@ -195,7 +196,7 @@ public class InfluxHelper {
         queryParams.add(String.format("range(start: %s, stop: %s)", Integer.parseInt(String.valueOf(reportPayload.getStartTime() / 1000)), Integer.parseInt(String.valueOf(reportPayload.getEndTime() / 1000))));
         queryParams.add(String.format("filter(fn: (r) => r._measurement == \"%s\" and r.uuid == \"%s\")", ReportConstant.CACHE_PREFIX + reportPayload.getCode(), reportPayload.getUuid()));
         queryParams.add("filter(fn: (r) => r._field == \"value\")");
-        if (Objects.requireNonNull(reportDataType) == ReportDataType.QUANTITY) {
+        if (Objects.requireNonNull(reportDataType) == NUMBER) {
             queryParams.add("aggregateWindow(every: " + reportGranularity.getMark() + ", fn: mean)");
             queryParams.add("fill(usePrevious: true)");
         } else {

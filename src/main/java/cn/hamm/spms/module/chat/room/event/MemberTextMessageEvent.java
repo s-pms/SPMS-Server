@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class MemberTextMessageEvent extends RoomMemberEvent {
     /**
-     * <h2>文本消息内容</h2>
+     * <h3>文本消息内容</h3>
      */
     private String text;
 }
