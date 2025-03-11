@@ -8,6 +8,8 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static cn.hamm.spms.module.iot.report.ReportConstant.IOT_REPORT_TOPIC_V1;
+
 /**
  * <h1>上报事件</h1>
  *
@@ -32,7 +34,7 @@ public class ReportEventListener {
     public void listen() throws MqttException {
         try (MqttClient mqttClient = mqttHelper.createClient()) {
             mqttClient.connect(mqttHelper.createOption());
-            mqttClient.subscribe(ReportConstant.IOT_REPORT_TOPIC_V1);
+            mqttClient.subscribe(IOT_REPORT_TOPIC_V1);
             mqttClient.setCallback(reportMqCallback);
         }
     }

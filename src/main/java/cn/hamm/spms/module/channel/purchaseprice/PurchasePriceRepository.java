@@ -15,9 +15,9 @@ public interface PurchasePriceRepository extends BaseRepository<PurchasePriceEnt
     /**
      * <h3>获取指定供应商和物料的采购价</h3>
      *
-     * @param supplierEntity 供应商
-     * @param materialEntity 物料
+     * @param supplier 供应商
+     * @param material 物料
      * @return 采购价实体
      */
-    PurchasePriceEntity getBySupplierAndMaterial(SupplierEntity supplierEntity, MaterialEntity materialEntity);
+    PurchasePriceEntity getBySupplierAndMaterial(SupplierEntity supplier, MaterialEntity material);
 }

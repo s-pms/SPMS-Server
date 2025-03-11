@@ -18,12 +18,12 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("aliyun")
 public class AliyunConfig {
     /**
-     * <h2>AK</h2>
+     * <h3>AK</h3>
      */
     private String accessKeyId;
 
     /**
-     * <h2>SK</h2>
+     * <h3>SK</h3>
      */
     private String accessKeySecret;
 }

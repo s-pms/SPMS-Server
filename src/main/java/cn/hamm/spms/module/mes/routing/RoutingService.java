@@ -63,7 +63,7 @@ public class RoutingService extends BaseService<RoutingEntity, RoutingRepository
     }
 
     @Override
-    protected void beforePublish(@NotNull RoutingEntity entity) {
-        FORBIDDEN_EDIT.when(CollectionUtils.isEmpty(entity.getDetails()), "发布失败，工艺没有任何工序流程");
+    protected void beforePublish(@NotNull RoutingEntity routing) {
+        FORBIDDEN_EDIT.when(CollectionUtils.isEmpty(routing.getDetails()), "发布失败，工艺没有任何工序流程");
     }
 }

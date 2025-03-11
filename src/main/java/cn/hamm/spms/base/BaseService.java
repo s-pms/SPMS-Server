@@ -55,7 +55,7 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
     }
 
     /**
-     * <h2>发布</h2>
+     * <h3>发布</h3>
      *
      * @param id ID
      */
@@ -67,7 +67,7 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
     }
 
     /**
-     * <h2>发布前</h2>
+     * <h3>发布前</h3>
      *
      * @param entity 实体
      */

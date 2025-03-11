@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class RoleController extends BaseController<RoleEntity, RoleService, RoleRepository> implements IRoleAction {
     @Description("授权菜单")
     @PostMapping("authorizeMenu")
-    public Json authorizeMenu(@RequestBody @Validated({WhenAuthorizePermission.class, WhenIdRequired.class}) RoleEntity entity) {
-        service.update(entity);
+    public Json authorizeMenu(@RequestBody @Validated({WhenAuthorizePermission.class, WhenIdRequired.class}) RoleEntity role) {
+        service.update(role);
         return Json.success("授权菜单成功");
     }
 
     @Description("授权权限")
     @PostMapping("authorizePermission")
-    public Json authorizePermission(@RequestBody @Validated({WhenAuthorizePermission.class, WhenIdRequired.class}) RoleEntity entity) {
-        service.update(entity);
+    public Json authorizePermission(@RequestBody @Validated({WhenAuthorizePermission.class, WhenIdRequired.class}) RoleEntity role) {
+        service.update(role);
         return Json.success("授权菜单成功");
     }
 

@@ -28,12 +28,12 @@ public class StorageService extends BaseService<StorageEntity, StorageRepository
     }
 
     @Override
-    protected @NotNull QueryListRequest<StorageEntity> beforeGetList(@NotNull QueryListRequest<StorageEntity> sourceRequestData) {
-        StorageEntity filter = sourceRequestData.getFilter();
+    protected @NotNull QueryListRequest<StorageEntity> beforeGetList(@NotNull QueryListRequest<StorageEntity> queryListRequest) {
+        StorageEntity filter = queryListRequest.getFilter();
         if (Objects.isNull(filter.getParentId())) {
             filter.setParentId(TreeUtil.ROOT_ID);
         }
-        sourceRequestData.setFilter(filter);
-        return sourceRequestData;
+        queryListRequest.setFilter(filter);
+        return queryListRequest;
     }
 }

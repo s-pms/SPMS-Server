@@ -43,19 +43,19 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     /**
      * <h3>发送通知</h3>
      *
-     * @param scene   通知场景
-     * @param data    通知数据
-     * @param content 通知文案
+     * @param notifyScene 通知场景
+     * @param data        通知数据
+     * @param content     通知文案
      */
-    public <T> void sendNotification(NotifyScene scene, T data, String content) {
+    public <T> void sendNotification(NotifyScene notifyScene, T data, String content) {
         try {
             EXECUTOR.submit(() -> {
                 // 查询指定场景的Hook列表
                 List<NotifyEntity> notifyList = Services.getNotifyService().filter(
                         new NotifyEntity()
-                                .setScene(scene.getKey())
+                                .setScene(notifyScene.getKey())
                 );
-                final String title = scene.getLabel();
+                final String title = notifyScene.getLabel();
                 notifyList.forEach(notify -> {
                     // 获取通知类型
                     NotifyChannel notifyChannel = DictionaryUtil.getDictionary(NotifyChannel.class, notify.getChannel());

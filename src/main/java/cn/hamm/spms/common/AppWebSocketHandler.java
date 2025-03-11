@@ -36,7 +36,7 @@ import static cn.hamm.spms.module.chat.enums.ChatEventType.*;
 @Component
 public class AppWebSocketHandler extends WebSocketHandler {
     /**
-     * <h2>订阅分组前缀</h2>
+     * <h3>订阅分组前缀</h3>
      */
     private static final String GROUP_PREFIX = "group_";
     /**
@@ -57,7 +57,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
     private RoomService roomService;
 
     /**
-     * <h2>房间事件</h2>
+     * <h3>房间事件</h3>
      *
      * @param userId 用户ID
      * @param roomId 房间ID
@@ -155,7 +155,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
     }
 
     /**
-     * <h2>离开房间</h2>
+     * <h3>离开房间</h3>
      *
      * @param session websocket会话
      * @param userId  用户ID
@@ -171,7 +171,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
     }
 
     /**
-     * <h2>发布消息到当前用户的房间</h2>
+     * <h3>发布消息到当前用户的房间</h3>
      *
      * @param userId 用户ID
      * @param type   世界事件类型
@@ -184,7 +184,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
     }
 
     /**
-     * <h2>获取当前用户的当前房间的成员信息</h2>
+     * <h3>获取当前用户的当前房间的成员信息</h3>
      *
      * @param userId 用户ID
      * @return 成员信息

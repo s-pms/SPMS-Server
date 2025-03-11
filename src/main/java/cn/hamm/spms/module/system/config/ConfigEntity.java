@@ -3,7 +3,6 @@ package cn.hamm.spms.module.system.config;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,6 +20,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.util.Objects;
 
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.airpower.config.Constant.STRING_ONE;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
@@ -80,7 +80,7 @@ public class ConfigEntity extends BaseEntity<ConfigEntity> {
         if (Objects.isNull(config)) {
             return false;
         }
-        return Constant.STRING_ONE.equals(config);
+        return STRING_ONE.equals(config);
     }
 
     @Transient

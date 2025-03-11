@@ -56,7 +56,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     /**
-     * <h2>添加订单明细</h2>
+     * <h3>添加订单明细</h3>
      *
      * @param orderDetail 订单明细
      */
@@ -114,22 +114,22 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     /**
-     * <h2>添加入库单</h2>
+     * <h3>添加入库单</h3>
      *
-     * @param orderBill 订单
+     * @param order 订单
      */
-    private void addInputBill(OrderEntity orderBill) {
+    private void addInputBill(OrderEntity order) {
         InputService inputService = Services.getInputService();
         InputEntity input = new InputEntity();
         input.setType(InputType.PRODUCTION.getKey());
-        input.setOrder(orderBill);
+        input.setOrder(order);
         long inputId = inputService.add(input);
 
         List<InputDetailEntity> details = new ArrayList<>();
         details.add(new InputDetailEntity()
-                .setQuantity(orderBill.getFinishQuantity())
+                .setQuantity(order.getFinishQuantity())
                 .setBillId(inputId)
-                .setMaterial(orderBill.getMaterial())
+                .setMaterial(order.getMaterial())
         );
         input = inputService.get(inputId);
         input.setDetails(details);

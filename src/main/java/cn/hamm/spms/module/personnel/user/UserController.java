@@ -21,8 +21,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DISABLED;
 
@@ -72,8 +72,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @PostMapping("getMyPermissionList")
     public Json getMyPermissionList() {
         List<PermissionEntity> permissionList = service.getPermissionListByUserId(getCurrentUserId());
-        List<String> permissions = new ArrayList<>();
-        permissionList.forEach(permission -> permissions.add(permission.getIdentity()));
+        List<String> permissions = permissionList.stream().map(PermissionEntity::getIdentity).collect(Collectors.toList());
         return Json.data(permissions);
     }
 
@@ -151,17 +150,16 @@ public class UserController extends BaseController<UserEntity, UserService, User
      * <h1>处理用户登录</h1>
      *
      * @param userLoginType 登录方式
-     * @param login         登录数据
+     * @param user          登录数据
      * @param response      响应的请求
      * @return JsonData
      */
-    private Json doLogin(@NotNull UserLoginType userLoginType, UserEntity login, HttpServletResponse response) {
-        UserEntity user = switch (userLoginType) {
-            case VIA_ACCOUNT_PASSWORD -> service.login(login);
-            case VIA_EMAIL_CODE -> service.loginViaEmail(login);
+    private Json doLogin(@NotNull UserLoginType userLoginType, UserEntity user, HttpServletResponse response) {
+        UserEntity exist = switch (userLoginType) {
+            case VIA_ACCOUNT_PASSWORD -> service.login(user);
+            case VIA_EMAIL_CODE -> service.loginViaEmail(user);
         };
-        FORBIDDEN_DISABLED.when(user.getIsDisabled(), "登录失败，你的账号已被禁用");
-
-        return Json.data(userService.loginWithCookieAndResponse(response, user), "登录成功");
+        FORBIDDEN_DISABLED.when(exist.getIsDisabled(), "登录失败，你的账号已被禁用");
+        return Json.data(userService.loginWithCookieAndResponse(response, exist), "登录成功");
     }
 }

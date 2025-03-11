@@ -1,9 +1,8 @@
 package cn.hamm.spms.module.wms.inventory;
 
-import cn.hamm.airpower.interfaces.ITree;
 import cn.hamm.airpower.model.query.QueryPageRequest;
+import cn.hamm.airpower.root.delegate.TreeServiceDelegate;
 import cn.hamm.airpower.util.DictionaryUtil;
-import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
@@ -18,8 +17,10 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * <h1>Service</h1>
@@ -64,20 +65,20 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
     }
 
     @Override
-    protected @NotNull QueryPageRequest<InventoryEntity> beforeGetPage(@NotNull QueryPageRequest<InventoryEntity> sourceRequestData) {
-        return super.beforeGetPage(sourceRequestData);
+    protected @NotNull QueryPageRequest<InventoryEntity> beforeGetPage(@NotNull QueryPageRequest<InventoryEntity> queryPageRequest) {
+        return super.beforeGetPage(queryPageRequest);
     }
 
     @Override
-    protected InventoryEntity beforeCreatePredicate(@NotNull InventoryEntity filter) {
+    protected InventoryEntity beforeCreatePredicate(@NotNull InventoryEntity inventory) {
         // 需要移除本身的查询条件
-        switch (DictionaryUtil.getDictionary(InventoryType.class, filter.getType())) {
-            case STORAGE -> filter.setStorage(null);
-            case STRUCTURE -> filter.setStructure(null);
+        switch (DictionaryUtil.getDictionary(InventoryType.class, inventory.getType())) {
+            case STORAGE -> inventory.setStorage(null);
+            case STRUCTURE -> inventory.setStructure(null);
             default -> {
             }
         }
-        return filter;
+        return inventory;
     }
 
     @Override
@@ -95,7 +96,7 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
                 if (Objects.isNull(search.getStorage())) {
                     return predicateList;
                 }
-                Set<Long> idList = getIdList(search.getStorage().getId(), storageService, StorageEntity.class);
+                Set<Long> idList = TreeServiceDelegate.getChildrenIdList(search.getStorage().getId(), storageService, StorageEntity.class);
                 if (!idList.isEmpty()) {
                     Join<InventoryEntity, StorageEntity> join = root.join("storage");
                     Predicate inPredicate = join.get(STRING_ID).in(idList);
@@ -106,7 +107,7 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
                 if (Objects.isNull(search.getStructure())) {
                     return predicateList;
                 }
-                Set<Long> idList = getIdList(search.getStructure().getId(), structureService, StructureEntity.class);
+                Set<Long> idList = TreeServiceDelegate.getChildrenIdList(search.getStructure().getId(), structureService, StructureEntity.class);
                 if (!idList.isEmpty()) {
                     Join<InventoryEntity, StructureEntity> join = root.join("structure");
                     Predicate inPredicate = join.get(STRING_ID).in(idList);
@@ -117,33 +118,5 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
             }
         }
         return predicateList;
-    }
-
-    private <T extends BaseEntity<T> & ITree<T>> @NotNull Set<Long> getIdList(
-            long parentId,
-            @NotNull BaseService<T, ?> service,
-            @NotNull Class<T> entityClass
-    ) {
-        Set<Long> list = new HashSet<>();
-        getIdList(parentId, service, entityClass, list);
-        return list;
-    }
-
-    private <T extends BaseEntity<T> & ITree<T>> void getIdList(
-            long parentId,
-            @NotNull BaseService<T, ?> service,
-            @NotNull Class<T> entityClass,
-            @NotNull Set<Long> list
-    ) {
-        T parent = service.get(parentId);
-        list.add(parent.getId());
-        List<T> children;
-        try {
-            children = service.filter(entityClass.getConstructor().newInstance().setParentId(parent.getId()));
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
-        children.forEach(child -> getIdList(child.getId(), service, entityClass, list));
     }
 }
