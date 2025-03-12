@@ -29,7 +29,6 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
      * @return 处理后的数据
      */
     protected E beforeAppSaveToDatabase(@NotNull E entity) {
-        log.info("保存数据到数据库，ID:{}", entity.getId());
         return entity;
     }
 
