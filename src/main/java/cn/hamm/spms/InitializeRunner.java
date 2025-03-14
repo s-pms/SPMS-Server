@@ -1,5 +1,6 @@
 package cn.hamm.spms;
 
+import cn.hamm.airpower.mcp.McpService;
 import cn.hamm.airpower.util.PasswordUtil;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.common.Services;
@@ -171,7 +172,7 @@ public class InitializeRunner implements CommandLineRunner {
         Set<DepartmentEntity> departmentList = new HashSet<>();
         departmentList.add(new DepartmentEntity().setId(departmentMaterial));
         userService.add(new UserEntity()
-                .setNickname("Hamm")
+                .setNickname("凌小云")
                 .setPhone("17666666666")
                 .setEmail("admin@hamm.cn")
                 .setPassword(PasswordUtil.encode("Aa123456", salt))
@@ -179,7 +180,7 @@ public class InitializeRunner implements CommandLineRunner {
                 .setDepartmentList(departmentList)
         );
         userService.add(new UserEntity()
-                .setNickname("Ghost")
+                .setNickname("张三")
                 .setPhone("13888888888")
                 .setEmail("hamm@hamm.cn")
                 .setPassword(PasswordUtil.encode("Aa123456", salt))
@@ -205,6 +206,7 @@ public class InitializeRunner implements CommandLineRunner {
     @Override
     public void run(String... args) {
         System.out.println("---------------------------------");
+        McpService.scanMcpMethods("cn.hamm.spms", "cn.hamm.airpower");
         initRootUser();
         initCodeRules();
         initConfigs();

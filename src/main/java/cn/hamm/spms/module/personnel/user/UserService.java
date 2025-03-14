@@ -1,7 +1,9 @@
 package cn.hamm.spms.module.personnel.user;
 
+import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.helper.CookieHelper;
 import cn.hamm.airpower.helper.EmailHelper;
+import cn.hamm.airpower.mcp.method.McpMethod;
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.util.*;
 import cn.hamm.spms.base.BaseService;
@@ -462,5 +464,21 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public void saveCurrentRoomId(long userId, long roomId) {
         redisHelper.set(CACHE_ROOM_KEY + userId, roomId, DateTimeUtil.SECOND_PER_DAY * 30);
+    }
+
+    @McpMethod("modifyEmailByName")
+    @Description("modify user new email by name")
+    public String modifyEmailByName(
+            @Description("the name of user, e.g. 凌小云")
+            String name,
+            @Description("the new email of user, e.g. example@domain.com")
+            String email
+    ) {
+        List<UserEntity> userList = filter(new UserEntity().setNickname(name));
+        DATA_NOT_FOUND.when(userList.isEmpty(), "没有叫 " + name + " 的用户");
+        userList.forEach(user -> {
+            updateToDatabase(get(user.getId()).setEmail(email));
+        });
+        return "已经将 " + userList.size() + " 个叫 " + name + " 的用户邮箱修改为 " + email;
     }
 }
