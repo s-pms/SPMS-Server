@@ -12,6 +12,7 @@ import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.root.RootController;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,12 +34,8 @@ import java.util.UUID;
 @ApiController("mcp")
 @Slf4j
 public class McpController extends RootController {
-    private final McpService mcpService;
-
-    public McpController(McpService mcpService) {
-        super();
-        this.mcpService = mcpService;
-    }
+    @Autowired
+    private McpService mcpService;
 
     @GetMapping(value = "sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter connect() throws IOException {
