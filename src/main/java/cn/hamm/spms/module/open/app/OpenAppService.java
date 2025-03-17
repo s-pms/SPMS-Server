@@ -1,6 +1,9 @@
 package cn.hamm.spms.module.open.app;
 
+import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.exception.ServiceException;
+import cn.hamm.airpower.mcp.method.McpMethod;
 import cn.hamm.airpower.open.IOpenAppService;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.airpower.util.RsaUtil;
@@ -12,6 +15,7 @@ import org.springframework.util.StringUtils;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -69,6 +73,17 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
         } catch (NoSuchAlgorithmException e) {
             throw new ServiceException(e);
         }
+    }
+
+    @McpMethod
+    @Description("disable the open app by app name")
+    public final void disableAppByName(@Description("the app name to disable") String appName) {
+        List<OpenAppEntity> openAppEntities = filter(new OpenAppEntity().setAppName(appName));
+        ServiceError.SERVICE_ERROR.when(openAppEntities.size() > 1, "应用名重复，我无法为你禁用");
+        ServiceError.SERVICE_ERROR.when(openAppEntities.isEmpty(), "应用不存在，我无法为你禁用");
+        OpenAppEntity openAppEntity = openAppEntities.get(0);
+        openAppEntity.setIsDisabled(true);
+        update(openAppEntity);
     }
 
     /**
