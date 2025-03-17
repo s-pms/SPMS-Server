@@ -232,6 +232,7 @@ public class InitializeRunner implements CommandLineRunner {
                     .setType(configFlag.getType().getKey())
                     .setName(configFlag.getLabel())
                     .setFlag(configFlag.name())
+                    .setDescription(configFlag.getDescription())
             );
         }
     }

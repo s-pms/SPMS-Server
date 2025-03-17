@@ -15,19 +15,17 @@ import static cn.hamm.spms.module.system.config.ConfigType.BOOLEAN;
 @Getter
 @AllArgsConstructor
 public enum ConfigFlag implements IDictionary {
-    AUTO_REGISTER_EMAIL_LOGIN(1, "邮箱登录时自动注册", BOOLEAN, "1"),
-    ORDER_AUTO_FINISH(11, "生产订单开启自动标记生产完成", BOOLEAN, "1"),
-    ORDER_MANUAL_FINISH(12, "生产订单允许手动标记生产完成", BOOLEAN, "1"),
-    INPUT_BILL_AUTO_AUDIT(13, "入库单开启自动审核", BOOLEAN, "0"),
-    OUTPUT_BILL_AUTO_AUDIT(14, "出库单开启自动审核", BOOLEAN, "0"),
-    MOVE_BILL_AUTO_AUDIT(15, "移库单开启自动审核", BOOLEAN, "0"),
-    PURCHASE_BILL_AUTO_AUDIT(16, "采购单开启自动审核", BOOLEAN, "0"),
-    SALE_BILL_AUTO_AUDIT(17, "销售单开启自动审核", BOOLEAN, "0"),
-    ORDER_ENABLE_SUBMIT_WORK(18, "订单报工模式", BOOLEAN, "1"),
-    BOM_AUTO_AUDIT(19, "生产配方自动审核", BOOLEAN, "0"),
-    PLAN_AUTO_FINISH(20, "生产计划开启自动完成", BOOLEAN, "1"),
-    ORDER_AUTO_START_AFTER_AUDIT(21, "订单审核后自动开始生产", BOOLEAN, "0"),
-    PICKING_BILL_AUTO_AUDIT(22, "领料单开启自动审核", BOOLEAN, "0"),
+    AUTO_REGISTER_EMAIL_LOGIN(1, "邮箱自动注册", BOOLEAN, "1", "邮箱验证码登录时，如果未注册则自动注册后登陆"),
+    ORDER_AUTO_FINISH(11, "订单自动标记完成", BOOLEAN, "1", "完成数量超过计划数量时，订单将自动被标记为完成"),
+    ORDER_MANUAL_FINISH(12, "订单手动标记完成", BOOLEAN, "1", "允许在任何情况下手动完成订单"),
+    INPUT_BILL_AUTO_AUDIT(13, "入库单自动审核", BOOLEAN, "0", "开启此项后，创建入库单则进入入库中状态"),
+    OUTPUT_BILL_AUTO_AUDIT(14, "出库单自动审核", BOOLEAN, "0", "开启此项后，创建出库单则进入出库中状态"),
+    MOVE_BILL_AUTO_AUDIT(15, "移库单自动审核", BOOLEAN, "0", "开启此项后，创建移库单则进入移库中状态"),
+    PURCHASE_BILL_AUTO_AUDIT(16, "采购单自动审核", BOOLEAN, "0", "开启此项后，创建采购单则进入采购中状态"),
+    SALE_BILL_AUTO_AUDIT(17, "销售单开启自动审核", BOOLEAN, "0", "开启此项后，创建销售单则进入销售中状态"),
+    ORDER_ENABLE_SUBMIT_WORK(18, "订单报工模式", BOOLEAN, "1", "开启订单报工模式后，工序将无法进行报工，此项开启则表示为粗放型报工管理模式"),
+    ORDER_AUTO_START_AFTER_AUDIT(19, "订单审核后自动开始", BOOLEAN, "0", "开启此项后，订单创建即开始进入生产环节"),
+    PICKING_BILL_AUTO_AUDIT(20, "领料单自动审核", BOOLEAN, "0", "开启此项后，创建领料单则进入领料中状态"),
 
     ;
 
@@ -35,4 +33,5 @@ public enum ConfigFlag implements IDictionary {
     private final String label;
     private final ConfigType type;
     private final String defaultValue;
+    private final String description;
 }

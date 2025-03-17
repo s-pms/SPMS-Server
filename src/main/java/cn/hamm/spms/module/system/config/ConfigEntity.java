@@ -47,6 +47,10 @@ public class ConfigEntity extends BaseEntity<ConfigEntity> {
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "配置名称不能为空")
     private String name;
 
+    @Description("配置描述")
+    @Column(columnDefinition = "varchar(255) default '' comment '配置描述'")
+    private String description;
+
     @Description("配置的值")
     @Column(columnDefinition = "varchar(255) default '' comment '字符串值'")
     private String config;
