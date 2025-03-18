@@ -25,6 +25,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
+import static cn.hamm.airpower.exception.ServiceError.PARAM_MISSING;
+
 /**
  * <h1>MCP</h1>
  *
@@ -44,7 +46,6 @@ public class McpController extends RootController {
         sseEmitter.send(SseEmitter.event()
                 .name("endpoint")
                 .data("/mcp/messages?sessionId=" + uuid)
-                .build()
         );
         return sseEmitter;
     }
@@ -52,9 +53,7 @@ public class McpController extends RootController {
     @PostMapping("messages")
     public Json messages(HttpServletRequest request, @RequestBody McpRequest mcpRequest) {
         String uuid = request.getParameter("sessionId");
-        if (Objects.isNull(uuid)) {
-            return Json.error("sessionId is required");
-        }
+        PARAM_MISSING.whenNull(uuid, "sessionId is required");
         String method = mcpRequest.getMethod();
         McpResponse mcpResponse;
         try {
