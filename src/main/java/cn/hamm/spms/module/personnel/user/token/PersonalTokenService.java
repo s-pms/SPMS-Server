@@ -2,6 +2,7 @@ package cn.hamm.spms.module.personnel.user.token;
 
 import cn.hamm.airpower.util.AccessTokenUtil;
 import cn.hamm.spms.base.BaseService;
+import cn.hamm.spms.module.personnel.user.UserTokenType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +50,10 @@ public class PersonalTokenService extends BaseService<PersonalTokenEntity, Perso
      * @return AppKey
      */
     public final String createToken(long userId) {
-        String token = AccessTokenUtil.create().setPayloadId(userId).addPayload(PERSONAL_TOKEN_NAME, Math.random()).build(serviceConfig.getAccessTokenSecret());
+        String token = AccessTokenUtil.create().setPayloadId(userId)
+                .addPayload(UserTokenType.USER_TOKEN_TYPE, UserTokenType.PERSONAL.getKey())
+                .addPayload(PERSONAL_TOKEN_NAME, Math.random())
+                .build(serviceConfig.getAccessTokenSecret());
         PersonalTokenEntity openApp = getByToken(token);
         FORBIDDEN_EXIST.whenNotNull(openApp, "创建失败，私人令牌重复！");
         return token;

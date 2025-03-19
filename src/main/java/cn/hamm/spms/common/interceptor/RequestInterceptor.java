@@ -1,13 +1,11 @@
 package cn.hamm.spms.common.interceptor;
 
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
-import cn.hamm.airpower.util.AccessTokenUtil;
-import cn.hamm.airpower.util.PermissionUtil;
-import cn.hamm.airpower.util.ReflectUtil;
-import cn.hamm.airpower.util.RequestUtil;
+import cn.hamm.airpower.util.*;
 import cn.hamm.spms.common.annotation.DisableLog;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
+import cn.hamm.spms.module.personnel.user.UserTokenType;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenEntity;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenService;
 import cn.hamm.spms.module.system.log.LogEntity;
@@ -81,10 +79,20 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     @Override
     public AccessTokenUtil.VerifiedToken getVerifiedToken(String accessToken) {
         AccessTokenUtil.VerifiedToken verifiedToken = super.getVerifiedToken(accessToken);
-        if (verifiedToken.getExpireTimestamps() == 0L) {
-            PersonalTokenEntity personalToken = personalTokenService.getByToken(accessToken);
-            UNAUTHORIZED.whenNull(personalToken, "无效的私人令牌");
-            FORBIDDEN.when(personalToken.getIsDisabled(), "私人令牌已被禁用");
+        Object tokenType = verifiedToken.getPayload(UserTokenType.USER_TOKEN_TYPE);
+        FORBIDDEN.whenNull(tokenType, "无效的令牌类型");
+        UserTokenType userTokenType = DictionaryUtil.getDictionary(UserTokenType.class, Integer.parseInt(tokenType.toString()));
+        switch (userTokenType) {
+            case NORMAL:
+                PersonalTokenEntity personalToken = personalTokenService.getByToken(accessToken);
+                UNAUTHORIZED.whenNull(personalToken, "无效的私人令牌");
+                FORBIDDEN.when(personalToken.getIsDisabled(), "私人令牌已被禁用");
+                break;
+            case OAUTH2:
+            case PERSONAL:
+                break;
+            default:
+                FORBIDDEN.show("不支持的令牌类型");
         }
         return verifiedToken;
     }
