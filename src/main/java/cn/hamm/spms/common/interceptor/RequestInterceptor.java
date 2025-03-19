@@ -46,6 +46,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
 
     @Autowired
     private LogService logService;
+
     @Autowired
     private PersonalTokenService personalTokenService;
 
