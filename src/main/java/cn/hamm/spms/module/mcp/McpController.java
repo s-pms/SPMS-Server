@@ -13,8 +13,6 @@ import cn.hamm.airpower.root.RootController;
 import cn.hamm.spms.common.interceptor.RequestInterceptor;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenEntity;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenService;
-import cn.hamm.spms.module.system.permission.PermissionEntity;
-import cn.hamm.spms.module.system.permission.PermissionService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,13 +41,14 @@ import static cn.hamm.airpower.exception.ServiceError.*;
 @ApiController("mcp")
 @Slf4j
 public class McpController extends RootController {
+    public static ConcurrentMap<String, String> sessionPersonalTokens = new ConcurrentHashMap<>();
+
     @Autowired
     private McpService mcpService;
-    public static ConcurrentMap<String, String> sessionPersonalTokens = new ConcurrentHashMap<>();
-    @Autowired
-    private PermissionService permissionService;
+
     @Autowired
     private RequestInterceptor requestInterceptor;
+
     @Autowired
     private PersonalTokenService personalTokenService;
 
@@ -100,18 +99,8 @@ public class McpController extends RootController {
                 return Json.error("Method not found");
             }
             mcpResponse = mcpService.run(uuid, mcpMethods, mcpRequest, mcpTool -> {
-                String permissionIdentity = McpService.getPermissionIdentity(mcpTool);
-                PermissionEntity permission = permissionService.getPermissionByIdentity(permissionIdentity);
-                if (Objects.isNull(permission)) {
-                    try {
-                        McpService.emitError(uuid, mcpRequest.getId(), "Permission not found");
-                    } catch (McpException e) {
-                        throw new RuntimeException(e);
-                    }
-                    return;
-                }
                 long userId = personalToken.getUser().getId();
-                requestInterceptor.checkUserPermission(userId, permissionIdentity, request);
+                requestInterceptor.checkUserPermission(userId, McpService.getPermissionIdentity(mcpTool), request);
             });
         } catch (McpException mcpException) {
             try {
