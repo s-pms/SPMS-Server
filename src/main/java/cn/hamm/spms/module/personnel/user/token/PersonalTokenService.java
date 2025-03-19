@@ -2,7 +2,6 @@ package cn.hamm.spms.module.personnel.user.token;
 
 import cn.hamm.airpower.util.AccessTokenUtil;
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.module.personnel.user.UserEntity;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,7 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EXIST;
 @Service
 public class PersonalTokenService extends BaseService<PersonalTokenEntity, PersonalTokenRepository> {
 
-    public static final String PERSONAL_TOKEN_NAME = "name";
+    public static final String PERSONAL_TOKEN_NAME = "personal";
 
     /**
      * <h3>根据令牌获取</h3>
@@ -32,7 +31,9 @@ public class PersonalTokenService extends BaseService<PersonalTokenEntity, Perso
 
     @Override
     protected @NotNull PersonalTokenEntity beforeAdd(@NotNull PersonalTokenEntity personalToken) {
-        personalToken.setToken(createToken(personalToken.getUser().getId(), personalToken.getName()));
+        List<PersonalTokenEntity> list = filter(new PersonalTokenEntity().setUser(personalToken.getUser()).setName(personalToken.getName()));
+        FORBIDDEN_EXIST.when(!list.isEmpty(), "创建失败，该用户存在相同名称的私人令牌！");
+        personalToken.setToken(createToken(personalToken.getUser().getId()));
         return personalToken;
     }
 
@@ -47,12 +48,10 @@ public class PersonalTokenService extends BaseService<PersonalTokenEntity, Perso
      *
      * @return AppKey
      */
-    public final String createToken(long userId, String name) {
-        String token = AccessTokenUtil.create().setPayloadId(userId).addPayload(PERSONAL_TOKEN_NAME, name).build(serviceConfig.getAccessTokenSecret());
+    public final String createToken(long userId) {
+        String token = AccessTokenUtil.create().setPayloadId(userId).addPayload(PERSONAL_TOKEN_NAME, Math.random()).build(serviceConfig.getAccessTokenSecret());
         PersonalTokenEntity openApp = getByToken(token);
-        FORBIDDEN_EXIST.whenNotNull(openApp, "创建失败，该用户存在相同名称的私人令牌！");
-        List<PersonalTokenEntity> list = filter(new PersonalTokenEntity().setUser(new UserEntity().setId(userId)).setName(name));
-        FORBIDDEN_EXIST.when(!list.isEmpty(), "创建失败，该用户存在相同名称的私人令牌！");
+        FORBIDDEN_EXIST.whenNotNull(openApp, "创建失败，私人令牌重复！");
         return token;
     }
 }
