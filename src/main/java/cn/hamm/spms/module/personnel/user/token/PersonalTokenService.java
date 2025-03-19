@@ -1,8 +1,7 @@
 package cn.hamm.spms.module.personnel.user.token;
 
-import cn.hamm.airpower.util.RandomUtil;
+import cn.hamm.airpower.util.AccessTokenUtil;
 import cn.hamm.spms.base.BaseService;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,7 @@ public class PersonalTokenService extends BaseService<PersonalTokenEntity, Perso
 
     @Override
     protected @NotNull PersonalTokenEntity beforeAdd(@NotNull PersonalTokenEntity personalToken) {
-        personalToken.setToken(createToken());
+        personalToken.setToken(createToken(personalToken.getUser().getId()));
         return personalToken;
     }
 
@@ -38,16 +37,16 @@ public class PersonalTokenService extends BaseService<PersonalTokenEntity, Perso
     }
 
     /**
-     * <h3>创建AppKey</h3>
+     * <h3>创建私人令牌</h3>
      *
      * @return AppKey
      */
-    public final String createToken() {
-        String appKey = DigestUtils.sha1Hex(RandomUtil.randomString());
-        PersonalTokenEntity openApp = getByToken(appKey);
+    public final String createToken(long userId) {
+        String token = AccessTokenUtil.create().setPayloadId(userId).build(serviceConfig.getAccessTokenSecret());
+        PersonalTokenEntity openApp = getByToken(token);
         if (Objects.isNull(openApp)) {
-            return appKey;
+            return token;
         }
-        return createToken();
+        return createToken(userId);
     }
 }

@@ -43,7 +43,7 @@ public class PersonalTokenEntity extends BaseEntity<PersonalTokenEntity> {
     @Description("令牌")
     @Column(columnDefinition = "varchar(255) default '' comment '令牌'", unique = true)
     @Exclude(filters = {WhenGetDetail.class})
-    @Desensitize(value = CUSTOM, tail = 6, head = 6)
+    @Desensitize(value = CUSTOM, tail = 2, head = 6, replace = true, symbol = "**********")
     private String token;
 
     @Description("所属用户")

@@ -10,9 +10,8 @@ import cn.hamm.airpower.mcp.model.McpRequest;
 import cn.hamm.airpower.mcp.model.McpResponse;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.root.RootController;
+import cn.hamm.airpower.util.AccessTokenUtil;
 import cn.hamm.spms.common.interceptor.RequestInterceptor;
-import cn.hamm.spms.module.personnel.user.token.PersonalTokenEntity;
-import cn.hamm.spms.module.personnel.user.token.PersonalTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import static cn.hamm.airpower.exception.ServiceError.*;
+import static cn.hamm.airpower.exception.ServiceError.PARAM_MISSING;
 
 /**
  * <h1>MCP</h1>
@@ -48,9 +47,6 @@ public class McpController extends RootController {
 
     @Autowired
     private RequestInterceptor requestInterceptor;
-
-    @Autowired
-    private PersonalTokenService personalTokenService;
 
     @GetMapping(value = "sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter connect() throws IOException, McpException {
@@ -75,13 +71,10 @@ public class McpController extends RootController {
         String uuid = request.getParameter("sessionId");
         PARAM_MISSING.whenNull(uuid, "sessionId is required");
 
-        String token = sessionPersonalTokens.get(uuid);
-        PARAM_MISSING.whenNull(token, "token is required");
+        String accessToken = sessionPersonalTokens.get(uuid);
+        PARAM_MISSING.whenNull(accessToken, "accessToken is required");
 
-        PersonalTokenEntity personalToken = personalTokenService.getByToken(token);
-        UNAUTHORIZED.whenNull(personalToken);
-
-        FORBIDDEN.when(personalToken.getIsDisabled(), "PersonalToken is disabled");
+        AccessTokenUtil.VerifiedToken verifiedToken = requestInterceptor.getVerifiedToken(accessToken);
 
         String method = mcpRequest.getMethod();
         McpResponse mcpResponse;
@@ -99,7 +92,7 @@ public class McpController extends RootController {
                 return Json.error("Method not found");
             }
             mcpResponse = mcpService.run(uuid, mcpMethods, mcpRequest, mcpTool -> {
-                long userId = personalToken.getUser().getId();
+                long userId = verifiedToken.getPayloadId();
                 requestInterceptor.checkUserPermission(userId, McpService.getPermissionIdentity(mcpTool), request);
             });
         } catch (McpException mcpException) {

@@ -8,6 +8,8 @@ import cn.hamm.airpower.util.RequestUtil;
 import cn.hamm.spms.common.annotation.DisableLog;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
+import cn.hamm.spms.module.personnel.user.token.PersonalTokenEntity;
+import cn.hamm.spms.module.personnel.user.token.PersonalTokenService;
 import cn.hamm.spms.module.system.log.LogEntity;
 import cn.hamm.spms.module.system.log.LogService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
@@ -22,6 +24,7 @@ import java.util.Objects;
 
 import static cn.hamm.airpower.config.Constant.STRING_EMPTY;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.exception.ServiceError.UNAUTHORIZED;
 import static cn.hamm.spms.common.config.AppConstant.APP_PLATFORM_HEADER;
 import static cn.hamm.spms.common.config.AppConstant.APP_VERSION_HEADER;
 
@@ -45,6 +48,8 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
 
     @Autowired
     private LogService logService;
+    @Autowired
+    private PersonalTokenService personalTokenService;
 
     /**
      * <h3>验证指定的用户是否有指定权限标识的权限</h3>
@@ -73,6 +78,17 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         ));
     }
 
+    @Override
+    public AccessTokenUtil.VerifiedToken getVerifiedToken(String accessToken) {
+        AccessTokenUtil.VerifiedToken verifiedToken = super.getVerifiedToken(accessToken);
+        if (verifiedToken.getExpireTimestamps() == 0L) {
+            PersonalTokenEntity personalToken = personalTokenService.getByToken(accessToken);
+            UNAUTHORIZED.whenNull(personalToken, "无效的私人令牌");
+            FORBIDDEN.when(personalToken.getIsDisabled(), "私人令牌已被禁用");
+        }
+        return verifiedToken;
+    }
+
     /**
      * <h3>拦截请求</h3>
      *
@@ -94,7 +110,8 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         String platform = STRING_EMPTY;
         String action = request.getRequestURI();
         try {
-            userId = AccessTokenUtil.create().getPayloadId(accessToken, serviceConfig.getAccessTokenSecret());
+            AccessTokenUtil.VerifiedToken verifiedToken = AccessTokenUtil.create().verify(accessToken, serviceConfig.getAccessTokenSecret());
+            userId = verifiedToken.getPayloadId();
             platform = request.getHeader(APP_PLATFORM_HEADER);
             String description = ReflectUtil.getDescription(method);
             if (!description.equals(method.getName())) {
