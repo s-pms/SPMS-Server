@@ -10,6 +10,11 @@ import cn.hamm.airpower.mcp.model.McpRequest;
 import cn.hamm.airpower.mcp.model.McpResponse;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.root.RootController;
+import cn.hamm.spms.common.interceptor.RequestInterceptor;
+import cn.hamm.spms.module.personnel.user.token.PersonalTokenEntity;
+import cn.hamm.spms.module.personnel.user.token.PersonalTokenService;
+import cn.hamm.spms.module.system.permission.PermissionEntity;
+import cn.hamm.spms.module.system.permission.PermissionService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +29,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
-import static cn.hamm.airpower.exception.ServiceError.PARAM_MISSING;
+import static cn.hamm.airpower.exception.ServiceError.*;
 
 /**
  * <h1>MCP</h1>
@@ -38,11 +45,25 @@ import static cn.hamm.airpower.exception.ServiceError.PARAM_MISSING;
 public class McpController extends RootController {
     @Autowired
     private McpService mcpService;
+    public static ConcurrentMap<String, String> sessionPersonalTokens = new ConcurrentHashMap<>();
+    @Autowired
+    private PermissionService permissionService;
+    @Autowired
+    private RequestInterceptor requestInterceptor;
+    @Autowired
+    private PersonalTokenService personalTokenService;
 
     @GetMapping(value = "sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter connect() throws IOException {
+    public SseEmitter connect() throws IOException, McpException {
         String uuid = UUID.randomUUID().toString();
         SseEmitter sseEmitter = McpService.getSseEmitter(uuid);
+
+        String token = request.getParameter("token");
+        if (Objects.isNull(token)) {
+            McpService.emitError(uuid, 0L, "Token is required");
+            return sseEmitter;
+        }
+        sessionPersonalTokens.put(uuid, token);
         sseEmitter.send(SseEmitter.event()
                 .name("endpoint")
                 .data("/mcp/messages?sessionId=" + uuid)
@@ -54,6 +75,15 @@ public class McpController extends RootController {
     public Json messages(HttpServletRequest request, @RequestBody McpRequest mcpRequest) {
         String uuid = request.getParameter("sessionId");
         PARAM_MISSING.whenNull(uuid, "sessionId is required");
+
+        String token = sessionPersonalTokens.get(uuid);
+        PARAM_MISSING.whenNull(token, "token is required");
+
+        PersonalTokenEntity personalToken = personalTokenService.getByToken(token);
+        UNAUTHORIZED.whenNull(personalToken);
+
+        FORBIDDEN.when(personalToken.getIsDisabled(), "PersonalToken is disabled");
+
         String method = mcpRequest.getMethod();
         McpResponse mcpResponse;
         try {
@@ -69,7 +99,20 @@ public class McpController extends RootController {
                 McpService.emitError(uuid, mcpRequest.getId(), McpErrorCode.MethodNotFound);
                 return Json.error("Method not found");
             }
-            mcpResponse = mcpService.run(uuid, mcpMethods, mcpRequest);
+            mcpResponse = mcpService.run(uuid, mcpMethods, mcpRequest, mcpTool -> {
+                String permissionIdentity = McpService.getPermissionIdentity(mcpTool);
+                PermissionEntity permission = permissionService.getPermissionByIdentity(permissionIdentity);
+                if (Objects.isNull(permission)) {
+                    try {
+                        McpService.emitError(uuid, mcpRequest.getId(), "Permission not found");
+                    } catch (McpException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return;
+                }
+                long userId = personalToken.getUser().getId();
+                requestInterceptor.checkUserPermission(userId, permissionIdentity, request);
+            });
         } catch (McpException mcpException) {
             try {
                 McpService.emitResult(uuid, mcpRequest.getId(), mcpException.getMessage());
