@@ -30,7 +30,7 @@ public enum UserTokenType implements IDictionary {
     /**
      * <h3>用户令牌类型</h3>
      */
-    public static final String USER_TOKEN_TYPE = "type";
+    public static final String TYPE = "type";
     private final int key;
     private final String label;
 }

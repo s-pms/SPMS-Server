@@ -79,7 +79,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     @Override
     public AccessTokenUtil.VerifiedToken getVerifiedToken(String accessToken) {
         AccessTokenUtil.VerifiedToken verifiedToken = super.getVerifiedToken(accessToken);
-        Object tokenType = verifiedToken.getPayload(UserTokenType.USER_TOKEN_TYPE);
+        Object tokenType = verifiedToken.getPayload(UserTokenType.TYPE);
         FORBIDDEN.whenNull(tokenType, "无效的令牌类型");
         UserTokenType userTokenType = DictionaryUtil.getDictionary(UserTokenType.class, Integer.parseInt(tokenType.toString()));
         switch (userTokenType) {

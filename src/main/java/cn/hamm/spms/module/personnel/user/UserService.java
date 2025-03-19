@@ -362,7 +362,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public String createAccessToken(long userId) {
         return AccessTokenUtil.create().setPayloadId(userId, serviceConfig.getAuthorizeExpireSecond())
-                .addPayload(UserTokenType.USER_TOKEN_TYPE, UserTokenType.NORMAL.getKey())
+                .addPayload(UserTokenType.TYPE, UserTokenType.NORMAL.getKey())
                 .build(serviceConfig.getAccessTokenSecret());
     }
 
@@ -478,9 +478,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     ) {
         List<UserEntity> userList = filter(new UserEntity().setNickname(name));
         DATA_NOT_FOUND.when(userList.isEmpty(), "没有叫 " + name + " 的用户");
-        userList.forEach(user -> {
-            updateToDatabase(get(user.getId()).setEmail(email));
-        });
+        userList.forEach(user -> updateToDatabase(get(user.getId()).setEmail(email)));
         return "已经将 " + userList.size() + " 个叫 " + name + " 的用户邮箱修改为 " + email;
     }
 }

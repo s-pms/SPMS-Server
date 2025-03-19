@@ -264,7 +264,7 @@ public class OauthController extends RootController implements IOauthAction {
                 .addPayload(USER_ID, userId)
                 .addPayload(SCOPE, scope)
                 .addPayload(APP_KEY, appKey)
-                .addPayload(UserTokenType.USER_TOKEN_TYPE, UserTokenType.OAUTH2.getKey())
+                .addPayload(UserTokenType.TYPE, UserTokenType.OAUTH2.getKey())
                 .setExpireMillisecond(expiresIn)
                 .build(serviceConfig.getAccessTokenSecret());
     }

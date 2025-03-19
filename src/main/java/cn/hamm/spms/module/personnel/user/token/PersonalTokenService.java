@@ -51,7 +51,7 @@ public class PersonalTokenService extends BaseService<PersonalTokenEntity, Perso
      */
     public final String createToken(long userId) {
         String token = AccessTokenUtil.create().setPayloadId(userId)
-                .addPayload(UserTokenType.USER_TOKEN_TYPE, UserTokenType.PERSONAL.getKey())
+                .addPayload(UserTokenType.TYPE, UserTokenType.PERSONAL.getKey())
                 .addPayload(PERSONAL_TOKEN_NAME, Math.random())
                 .build(serviceConfig.getAccessTokenSecret());
         PersonalTokenEntity openApp = getByToken(token);
