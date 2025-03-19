@@ -40,10 +40,13 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EDIT;
 public class UserController extends BaseController<UserEntity, UserService, UserRepository> implements IUserAction {
     @Autowired
     private CookieHelper cookieHelper;
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private UserThirdLoginService userThirdLoginService;
+
     @Autowired
     private PersonalTokenService personalTokenService;
 

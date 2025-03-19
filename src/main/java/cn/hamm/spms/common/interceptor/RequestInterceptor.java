@@ -84,13 +84,13 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         FORBIDDEN.whenNull(tokenType, "无效的令牌类型");
         UserTokenType userTokenType = DictionaryUtil.getDictionary(UserTokenType.class, Integer.parseInt(tokenType.toString()));
         switch (userTokenType) {
-            case NORMAL:
+            case PERSONAL:
                 PersonalTokenEntity personalToken = personalTokenService.getByToken(accessToken);
                 UNAUTHORIZED.whenNull(personalToken, "无效的私人令牌");
                 FORBIDDEN.when(personalToken.getIsDisabled(), "私人令牌已被禁用");
                 break;
             case OAUTH2:
-            case PERSONAL:
+            case NORMAL:
                 break;
             default:
                 FORBIDDEN.show("不支持的令牌类型");
