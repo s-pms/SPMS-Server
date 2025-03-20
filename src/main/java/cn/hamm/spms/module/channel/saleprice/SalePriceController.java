@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.channel.saleprice;
 
-import cn.hamm.airpower.annotation.ApiController;
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Filter;
-import cn.hamm.airpower.model.Json;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Filter;
+import cn.hamm.airpower.core.model.Json;
+import cn.hamm.airpower.web.annotation.ApiController;
 import cn.hamm.spms.base.BaseController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;

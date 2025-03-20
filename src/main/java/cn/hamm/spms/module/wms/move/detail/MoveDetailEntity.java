@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.wms.move.detail;
 
-import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
 import jakarta.persistence.Column;

@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.asset.device;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.validate.dictionary.Dictionary;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.dictionary.Dictionary;
+import cn.hamm.airpower.web.annotation.ReadOnly;
+import cn.hamm.airpower.web.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.device.enums.DeviceAlarm;
@@ -25,7 +25,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Set;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.airpower.web.annotation.Search.Mode.EQUALS;
 import static cn.hamm.spms.module.system.coderule.CodeRuleField.DeviceCode;
 import static jakarta.persistence.FetchType.EAGER;
 

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.config.Constant.*;
+import static cn.hamm.airpower.core.constant.Constant.*;
 import static cn.hamm.spms.module.iot.report.ReportDataType.*;
 
 /**

@@ -1,11 +1,15 @@
 package cn.hamm.spms.module.personnel.user;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.helper.CookieHelper;
-import cn.hamm.airpower.helper.EmailHelper;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.datetime.DateTimeUtil;
+import cn.hamm.airpower.core.helper.EmailHelper;
+import cn.hamm.airpower.core.model.tree.TreeUtil;
+import cn.hamm.airpower.core.security.AccessTokenUtil;
+import cn.hamm.airpower.core.security.PasswordUtil;
+import cn.hamm.airpower.core.util.RandomUtil;
 import cn.hamm.airpower.mcp.method.McpMethod;
-import cn.hamm.airpower.model.Sort;
-import cn.hamm.airpower.util.*;
+import cn.hamm.airpower.web.helper.CookieHelper;
+import cn.hamm.airpower.web.model.Sort;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConfig;
@@ -32,8 +36,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 
-import static cn.hamm.airpower.config.Constant.*;
-import static cn.hamm.airpower.exception.ServiceError.*;
+import static cn.hamm.airpower.core.constant.Constant.*;
+import static cn.hamm.airpower.core.exception.ServiceError.*;
 import static cn.hamm.spms.common.exception.CustomError.*;
 
 /**
@@ -361,9 +365,9 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return AccessToken
      */
     public String createAccessToken(long userId) {
-        return AccessTokenUtil.create().setPayloadId(userId, serviceConfig.getAuthorizeExpireSecond())
+        return AccessTokenUtil.create().setPayloadId(userId, webConfig.getAuthorizeExpireSecond())
                 .addPayload(UserTokenType.TYPE, UserTokenType.NORMAL.getKey())
-                .build(serviceConfig.getAccessTokenSecret());
+                .build(webConfig.getAccessTokenSecret());
     }
 
     /**

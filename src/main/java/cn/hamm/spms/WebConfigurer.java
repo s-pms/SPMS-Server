@@ -1,8 +1,6 @@
 package cn.hamm.spms;
 
-import cn.hamm.airpower.AbstractWebConfig;
-import cn.hamm.airpower.websocket.WebSocketHandler;
-import cn.hamm.spms.common.AppWebSocketHandler;
+import cn.hamm.airpower.web.AbstractWebConfigurer;
 import cn.hamm.spms.common.interceptor.RequestInterceptor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +13,9 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
  * @author Hamm.cn
  */
 @Configuration
-public class WebConfig extends AbstractWebConfig {
+public class WebConfigurer extends AbstractWebConfigurer {
     @Autowired
     private RequestInterceptor requestInterceptor;
-
-
-    @Autowired
-    private AppWebSocketHandler appWebSocketHandler;
-
-    @Override
-    public WebSocketHandler getWebsocketHandler() {
-        return appWebSocketHandler;
-    }
 
     @Override
     public void addInterceptors(@NotNull InterceptorRegistry registry) {

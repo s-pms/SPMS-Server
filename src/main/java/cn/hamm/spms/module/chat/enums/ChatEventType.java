@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.chat.enums;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.core.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.Contract;

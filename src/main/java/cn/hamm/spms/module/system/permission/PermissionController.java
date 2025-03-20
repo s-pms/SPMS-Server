@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.system.permission;
 
-import cn.hamm.airpower.annotation.ApiController;
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.util.TreeUtil;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.model.tree.TreeUtil;
+import cn.hamm.airpower.web.annotation.ApiController;
 import cn.hamm.spms.base.BaseController;
 import org.jetbrains.annotations.NotNull;
 

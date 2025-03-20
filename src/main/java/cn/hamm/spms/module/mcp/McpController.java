@@ -1,17 +1,17 @@
 package cn.hamm.spms.module.mcp;
 
-import cn.hamm.airpower.annotation.ApiController;
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Permission;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.model.Json;
+import cn.hamm.airpower.core.security.AccessTokenUtil;
 import cn.hamm.airpower.mcp.McpService;
 import cn.hamm.airpower.mcp.exception.McpErrorCode;
 import cn.hamm.airpower.mcp.exception.McpException;
 import cn.hamm.airpower.mcp.method.McpMethods;
 import cn.hamm.airpower.mcp.model.McpRequest;
 import cn.hamm.airpower.mcp.model.McpResponse;
-import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.root.RootController;
-import cn.hamm.airpower.util.AccessTokenUtil;
+import cn.hamm.airpower.web.annotation.ApiController;
+import cn.hamm.airpower.web.annotation.Permission;
+import cn.hamm.airpower.web.model.RootController;
 import cn.hamm.spms.common.interceptor.RequestInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import static cn.hamm.airpower.exception.ServiceError.PARAM_MISSING;
+import static cn.hamm.airpower.core.exception.ServiceError.PARAM_MISSING;
 
 /**
  * <h1>MCP</h1>

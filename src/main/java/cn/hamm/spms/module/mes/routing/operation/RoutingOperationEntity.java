@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.mes.routing.operation;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.annotation.Search;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.web.annotation.ReadOnly;
+import cn.hamm.airpower.web.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.mes.bom.BomEntity;
 import cn.hamm.spms.module.mes.operation.OperationEntity;
@@ -17,8 +17,8 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.airpower.annotation.Search.Mode.JOIN;
+import static cn.hamm.airpower.web.annotation.Search.Mode.EQUALS;
+import static cn.hamm.airpower.web.annotation.Search.Mode.JOIN;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**

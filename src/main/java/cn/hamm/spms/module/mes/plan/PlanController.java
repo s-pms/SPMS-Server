@@ -1,14 +1,14 @@
 package cn.hamm.spms.module.mes.plan;
 
-import cn.hamm.airpower.annotation.ApiController;
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Extends;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.web.annotation.ApiController;
+import cn.hamm.airpower.web.annotation.Extends;
 import cn.hamm.spms.base.bill.BaseBillController;
 import cn.hamm.spms.module.mes.plan.detail.PlanDetailEntity;
 import cn.hamm.spms.module.mes.plan.detail.PlanDetailRepository;
 import cn.hamm.spms.module.mes.plan.detail.PlanDetailService;
 
-import static cn.hamm.airpower.enums.Api.Delete;
+import static cn.hamm.airpower.web.enums.Api.Delete;
 
 /**
  * <h1>Controller</h1>

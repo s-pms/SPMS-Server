@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.iot.report;
 
-import cn.hamm.airpower.config.Constant;
+import cn.hamm.airpower.core.constant.Constant;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

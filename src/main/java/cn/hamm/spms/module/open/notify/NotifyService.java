@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.open.notify;
 
-import cn.hamm.airpower.helper.AirHelper;
-import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.util.DictionaryUtil;
-import cn.hamm.airpower.util.HttpUtil;
+import cn.hamm.airpower.core.dictionary.DictionaryUtil;
+import cn.hamm.airpower.core.model.Json;
+import cn.hamm.airpower.core.request.HttpUtil;
+import cn.hamm.airpower.web.helper.WebHelper;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.open.notify.enums.NotifyChannel;
@@ -90,7 +90,7 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
             // 如果是邮箱通知 直接发送邮件
             try {
                 NotifyScene scene = DictionaryUtil.getDictionary(NotifyScene.class, notify.getScene());
-                AirHelper.getEmailHelper().sendEmail(notify.getUrl(), scene.getLabel(), data.toString());
+                WebHelper.getEmailHelper().sendEmail(notify.getUrl(), scene.getLabel(), data.toString());
             } catch (MessagingException e) {
                 log.error(e.getMessage(), e);
             }

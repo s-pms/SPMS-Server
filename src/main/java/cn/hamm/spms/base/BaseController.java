@@ -1,12 +1,12 @@
 package cn.hamm.spms.base;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Filter;
-import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.model.query.QueryListRequest;
-import cn.hamm.airpower.model.query.QueryPageRequest;
-import cn.hamm.airpower.root.RootEntityController;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Filter;
+import cn.hamm.airpower.core.model.Json;
+import cn.hamm.airpower.web.annotation.Permission;
+import cn.hamm.airpower.web.model.RootEntityController;
+import cn.hamm.airpower.web.model.query.QueryListRequest;
+import cn.hamm.airpower.web.model.query.QueryPageRequest;
 import cn.hamm.spms.common.annotation.DisableLog;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EDIT;
+import static cn.hamm.airpower.core.exception.ServiceError.FORBIDDEN_EDIT;
 
 /**
  * <h1>实体控制器基类</h1>

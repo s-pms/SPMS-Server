@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.system.permission;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.interfaces.IPermission;
-import cn.hamm.airpower.validate.dictionary.Dictionary;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.dictionary.Dictionary;
+import cn.hamm.airpower.web.annotation.Search;
+import cn.hamm.airpower.web.interfaces.IPermission;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +19,7 @@ import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.airpower.web.annotation.Search.Mode.EQUALS;
 
 /**
  * <h1>权限实体</h1>

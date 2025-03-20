@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.system.config;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.validate.dictionary.Dictionary;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.dictionary.Dictionary;
+import cn.hamm.airpower.web.annotation.ReadOnly;
+import cn.hamm.airpower.web.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
@@ -19,8 +19,8 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Objects;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.airpower.config.Constant.STRING_ONE;
+import static cn.hamm.airpower.core.constant.Constant.STRING_ONE;
+import static cn.hamm.airpower.web.annotation.Search.Mode.EQUALS;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
@@ -34,7 +34,7 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 @Data
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "config")
+@Table(name = "constant")
 @Description("配置信息")
 public class ConfigEntity extends BaseEntity<ConfigEntity> {
     @Description("配置标识")

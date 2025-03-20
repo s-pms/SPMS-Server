@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.mes.plan.detail;
 
-import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import jakarta.persistence.Column;

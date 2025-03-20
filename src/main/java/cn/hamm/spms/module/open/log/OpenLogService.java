@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.open.log;
 
-import cn.hamm.airpower.open.IOpenApp;
-import cn.hamm.airpower.open.IOpenLogService;
+import cn.hamm.airpower.web.open.IOpenApp;
+import cn.hamm.airpower.web.open.IOpenLogService;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.open.app.OpenAppEntity;

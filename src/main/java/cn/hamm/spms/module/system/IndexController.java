@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.system;
 
-import cn.hamm.airpower.annotation.ApiController;
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.root.RootController;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.web.annotation.ApiController;
+import cn.hamm.airpower.web.model.RootController;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**

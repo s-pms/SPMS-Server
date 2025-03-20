@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.system.file;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Search;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.web.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.airpower.web.annotation.Search.Mode.EQUALS;
 
 /**
  * <h1>文件实体</h1>

@@ -1,10 +1,10 @@
 package cn.hamm.spms.base.bill;
 
-import cn.hamm.airpower.helper.TransactionHelper;
-import cn.hamm.airpower.interfaces.IDictionary;
-import cn.hamm.airpower.root.RootEntity;
-import cn.hamm.airpower.util.NumberUtil;
-import cn.hamm.airpower.util.TaskUtil;
+import cn.hamm.airpower.core.dictionary.IDictionary;
+import cn.hamm.airpower.core.util.NumberUtil;
+import cn.hamm.airpower.core.util.TaskUtil;
+import cn.hamm.airpower.web.helper.TransactionHelper;
+import cn.hamm.airpower.web.model.RootEntity;
 import cn.hamm.spms.base.BaseRepository;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.core.exception.ServiceError.FORBIDDEN;
 
 /**
  * <h1>单据Service基类</h1>

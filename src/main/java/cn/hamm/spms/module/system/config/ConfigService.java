@@ -1,14 +1,14 @@
 package cn.hamm.spms.module.system.config;
 
-import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.core.dictionary.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import static cn.hamm.airpower.config.Constant.STRING_ONE;
-import static cn.hamm.airpower.config.Constant.STRING_ZERO;
-import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
+import static cn.hamm.airpower.core.constant.Constant.STRING_ONE;
+import static cn.hamm.airpower.core.constant.Constant.STRING_ZERO;
+import static cn.hamm.airpower.core.exception.ServiceError.DATA_NOT_FOUND;
+import static cn.hamm.airpower.core.exception.ServiceError.FORBIDDEN_DELETE;
 
 /**
  * <h1>Service</h1>

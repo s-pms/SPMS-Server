@@ -1,7 +1,11 @@
 package cn.hamm.spms.common.interceptor;
 
-import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
-import cn.hamm.airpower.util.*;
+import cn.hamm.airpower.core.dictionary.DictionaryUtil;
+import cn.hamm.airpower.core.reflect.ReflectUtil;
+import cn.hamm.airpower.core.request.RequestUtil;
+import cn.hamm.airpower.core.security.AccessTokenUtil;
+import cn.hamm.airpower.web.interceptor.AbstractRequestInterceptor;
+import cn.hamm.airpower.web.util.PermissionUtil;
 import cn.hamm.spms.common.annotation.DisableLog;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
@@ -20,9 +24,9 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-import static cn.hamm.airpower.config.Constant.STRING_EMPTY;
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
-import static cn.hamm.airpower.exception.ServiceError.UNAUTHORIZED;
+import static cn.hamm.airpower.core.constant.Constant.STRING_EMPTY;
+import static cn.hamm.airpower.core.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.core.exception.ServiceError.UNAUTHORIZED;
 import static cn.hamm.spms.common.config.AppConstant.APP_PLATFORM_HEADER;
 import static cn.hamm.spms.common.config.AppConstant.APP_VERSION_HEADER;
 
@@ -113,13 +117,13 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         if (Objects.nonNull(disableLog)) {
             return;
         }
-        String accessToken = request.getHeader(serviceConfig.getAuthorizeHeader());
+        String accessToken = request.getHeader(webConfig.getAuthorizeHeader());
         Long userId = null;
         int appVersion = request.getIntHeader(APP_VERSION_HEADER);
         String platform = STRING_EMPTY;
         String action = request.getRequestURI();
         try {
-            AccessTokenUtil.VerifiedToken verifiedToken = AccessTokenUtil.create().verify(accessToken, serviceConfig.getAccessTokenSecret());
+            AccessTokenUtil.VerifiedToken verifiedToken = AccessTokenUtil.create().verify(accessToken, webConfig.getAccessTokenSecret());
             userId = verifiedToken.getPayloadId();
             platform = request.getHeader(APP_PLATFORM_HEADER);
             String description = ReflectUtil.getDescription(method);

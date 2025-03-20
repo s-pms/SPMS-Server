@@ -3,9 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>cn.hamm</groupId>
-        <artifactId>airpower</artifactId>
-        <version>3.2.3</version>
+        <groupId>cn.hamm.airpower</groupId>
+        <artifactId>airpower-parent</artifactId>
+        <version>0.0.1</version>
     </parent>
     <groupId>cn.hamm.spms</groupId>
     <artifactId>server</artifactId>
@@ -14,8 +14,18 @@
     <description>smart-production-manage-system</description>
     <dependencies>
         <dependency>
-            <groupId>cn.hamm</groupId>
-            <artifactId>airpower-core</artifactId>
+            <groupId>cn.hamm.airpower</groupId>
+            <artifactId>airpower-web</artifactId>
+            <version>${airpower.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hamm.airpower</groupId>
+            <artifactId>airpower-websocket</artifactId>
+            <version>${airpower.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hamm.airpower</groupId>
+            <artifactId>airpower-mcp</artifactId>
             <version>${airpower.version}</version>
         </dependency>
 

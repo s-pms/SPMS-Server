@@ -1,18 +1,18 @@
 package cn.hamm.spms.base;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.ExcelColumn;
-import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.root.RootEntity;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.web.annotation.ExcelColumn;
+import cn.hamm.airpower.web.annotation.ReadOnly;
+import cn.hamm.airpower.web.annotation.Search;
+import cn.hamm.airpower.web.model.RootEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.annotation.ExcelColumn.Type.BOOLEAN;
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.airpower.web.annotation.ExcelColumn.Type.BOOLEAN;
+import static cn.hamm.airpower.web.annotation.Search.Mode.EQUALS;
 
 /**
  * <h1>应用实体基类</h1>

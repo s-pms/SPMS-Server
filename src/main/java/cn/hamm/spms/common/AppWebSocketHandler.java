@@ -1,9 +1,10 @@
 package cn.hamm.spms.common;
 
-import cn.hamm.airpower.helper.WebsocketHelper;
-import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.websocket.WebSocketHandler;
+import cn.hamm.airpower.core.model.Json;
+import cn.hamm.airpower.web.config.WebConfig;
+import cn.hamm.airpower.websocket.AbstractWebSocketHandler;
 import cn.hamm.airpower.websocket.WebSocketPayload;
+import cn.hamm.airpower.websocket.WebsocketHelper;
 import cn.hamm.spms.module.chat.enums.ChatEventType;
 import cn.hamm.spms.module.chat.member.MemberEntity;
 import cn.hamm.spms.module.chat.member.MemberService;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
+import static cn.hamm.airpower.core.exception.ServiceError.PARAM_INVALID;
 import static cn.hamm.spms.module.chat.enums.ChatEventType.*;
 
 /**
@@ -34,7 +35,15 @@ import static cn.hamm.spms.module.chat.enums.ChatEventType.*;
  */
 @Slf4j
 @Component
-public class AppWebSocketHandler extends WebSocketHandler {
+public class AppWebSocketHandler extends AbstractWebSocketHandler {
+    @Autowired
+    private WebConfig webConfig;
+
+    @Override
+    protected String getAccessTokenSecret() {
+        return webConfig.getAccessTokenSecret();
+    }
+
     /**
      * <h3>订阅分组前缀</h3>
      */

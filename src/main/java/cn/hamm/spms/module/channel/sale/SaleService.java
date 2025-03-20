@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.channel.sale;
 
-import cn.hamm.airpower.interfaces.IDictionary;
-import cn.hamm.airpower.util.NumberUtil;
+import cn.hamm.airpower.core.dictionary.IDictionary;
+import cn.hamm.airpower.core.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailEntity;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailRepository;

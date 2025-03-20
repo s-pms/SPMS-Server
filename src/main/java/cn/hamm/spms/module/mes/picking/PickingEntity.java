@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.mes.picking;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.validate.dictionary.Dictionary;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.dictionary.Dictionary;
+import cn.hamm.airpower.web.annotation.ReadOnly;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.factory.structure.StructureEntity;

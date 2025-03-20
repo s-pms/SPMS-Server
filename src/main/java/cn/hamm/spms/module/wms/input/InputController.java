@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.wms.input;
 
-import cn.hamm.airpower.annotation.ApiController;
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Extends;
-import cn.hamm.airpower.enums.Api;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.web.annotation.ApiController;
+import cn.hamm.airpower.web.annotation.Extends;
+import cn.hamm.airpower.web.enums.Api;
 import cn.hamm.spms.base.bill.BaseBillController;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.input.detail.InputDetailRepository;

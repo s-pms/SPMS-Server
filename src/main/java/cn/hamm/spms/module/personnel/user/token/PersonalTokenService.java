@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.personnel.user.token;
 
-import cn.hamm.airpower.util.AccessTokenUtil;
+import cn.hamm.airpower.core.security.AccessTokenUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.personnel.user.UserTokenType;
 import org.jetbrains.annotations.NotNull;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EXIST;
+import static cn.hamm.airpower.core.exception.ServiceError.FORBIDDEN_EXIST;
 
 /**
  * <h1>Service</h1>
@@ -53,7 +53,7 @@ public class PersonalTokenService extends BaseService<PersonalTokenEntity, Perso
         String token = AccessTokenUtil.create().setPayloadId(userId)
                 .addPayload(UserTokenType.TYPE, UserTokenType.PERSONAL.getKey())
                 .addPayload(PERSONAL_TOKEN_NAME, Math.random())
-                .build(serviceConfig.getAccessTokenSecret());
+                .build(webConfig.getAccessTokenSecret());
         PersonalTokenEntity openApp = getByToken(token);
         FORBIDDEN_EXIST.whenNotNull(openApp, "创建失败，私人令牌重复！");
         return token;

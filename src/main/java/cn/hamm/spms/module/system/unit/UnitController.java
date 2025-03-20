@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.system.unit;
 
-import cn.hamm.airpower.annotation.ApiController;
-import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.web.annotation.ApiController;
 import cn.hamm.spms.base.BaseController;
 
 /**

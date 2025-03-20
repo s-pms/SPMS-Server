@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.open.oauth.model.platform;
 
-import cn.hamm.airpower.helper.AirHelper;
-import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.util.DateTimeUtil;
-import cn.hamm.airpower.util.HttpUtil;
+import cn.hamm.airpower.core.datetime.DateTimeUtil;
+import cn.hamm.airpower.core.model.Json;
+import cn.hamm.airpower.core.request.HttpUtil;
+import cn.hamm.airpower.web.helper.WebHelper;
 import cn.hamm.spms.module.open.oauth.OauthConfig;
 import cn.hamm.spms.module.open.oauth.model.base.AbstractOauthCallback;
 import cn.hamm.spms.module.open.oauth.model.base.OauthUserInfo;
@@ -15,7 +15,7 @@ import java.net.http.HttpResponse;
 import java.util.Map;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.core.exception.ServiceError.FORBIDDEN;
 
 /**
  * <h1>企业微信回调</h1>
@@ -41,7 +41,7 @@ public class WeComCallback extends AbstractOauthCallback {
 
     @Contract(pure = true)
     private String getAccessToken() {
-        Object object = AirHelper.getRedisHelper().get(ACCESS_TOKEN_CACHE_KEY);
+        Object object = WebHelper.getRedisHelper().get(ACCESS_TOKEN_CACHE_KEY);
         if (Objects.nonNull(object)) {
             return object.toString();
         }
@@ -50,7 +50,7 @@ public class WeComCallback extends AbstractOauthCallback {
         Map<String, Object> map = Json.parse2Map(httpResponse.body());
         Object accessToken = Objects.requireNonNull(map.get("access_token"), "AccessToken获取失败");
         FORBIDDEN.when(!StringUtils.hasText(accessToken.toString()), "AccessToken获取失败");
-        AirHelper.getRedisHelper().set(ACCESS_TOKEN_CACHE_KEY, accessToken.toString(), DateTimeUtil.SECOND_PER_HOUR);
+        WebHelper.getRedisHelper().set(ACCESS_TOKEN_CACHE_KEY, accessToken.toString(), DateTimeUtil.SECOND_PER_HOUR);
         log.info("企业微信获取AccessToken: {}", accessToken);
         return accessToken.toString();
     }

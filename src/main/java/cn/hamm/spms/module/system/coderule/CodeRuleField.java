@@ -1,10 +1,10 @@
 package cn.hamm.spms.module.system.coderule;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.core.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static cn.hamm.airpower.config.Constant.STRING_EMPTY;
+import static cn.hamm.airpower.core.constant.Constant.STRING_EMPTY;
 import static cn.hamm.spms.module.system.coderule.SerialNumberUpdate.*;
 
 /**

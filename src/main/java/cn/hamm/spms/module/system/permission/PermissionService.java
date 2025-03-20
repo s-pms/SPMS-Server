@@ -2,9 +2,9 @@ package cn.hamm.spms.module.system.permission;
 
 import cn.hamm.airpower.mcp.McpService;
 import cn.hamm.airpower.mcp.model.McpTool;
-import cn.hamm.airpower.root.RootEntity;
-import cn.hamm.airpower.root.delegate.TreeServiceDelegate;
-import cn.hamm.airpower.util.PermissionUtil;
+import cn.hamm.airpower.web.model.RootEntity;
+import cn.hamm.airpower.web.model.delegate.TreeServiceDelegate;
+import cn.hamm.airpower.web.util.PermissionUtil;
 import cn.hamm.spms.Application;
 import cn.hamm.spms.base.BaseService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
+import static cn.hamm.airpower.core.exception.ServiceError.FORBIDDEN_DELETE;
 
 /**
  * <h1>Service</h1>

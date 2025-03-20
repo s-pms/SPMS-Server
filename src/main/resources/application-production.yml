@@ -20,7 +20,7 @@ airpower:
 app:
   loginUrl: "https://demo.spms.work/login"
   influxdb:
-    url: http://localhost:8086
+    url: request://localhost:8086
     token: spms
     org: spms
     bucket: spms

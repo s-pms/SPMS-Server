@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.system.menu;
 
-import cn.hamm.airpower.model.Sort;
-import cn.hamm.airpower.model.query.QueryListRequest;
-import cn.hamm.airpower.root.RootEntity;
-import cn.hamm.airpower.root.delegate.TreeServiceDelegate;
+import cn.hamm.airpower.web.model.RootEntity;
+import cn.hamm.airpower.web.model.Sort;
+import cn.hamm.airpower.web.model.delegate.TreeServiceDelegate;
+import cn.hamm.airpower.web.model.query.QueryListRequest;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.util.TreeUtil.ROOT_ID;
+import static cn.hamm.airpower.core.model.tree.TreeUtil.ROOT_ID;
 
 /**
  * <h1>Service</h1>
@@ -149,7 +149,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         add(secondMenu);
         secondMenu = new MenuEntity().setName("菜单管理").setPath("/console/system/menu/list").setParentId(firstMenu.getId());
         add(secondMenu);
-        secondMenu = new MenuEntity().setName("系统配置").setPath("/console/system/config/list").setParentId(firstMenu.getId());
+        secondMenu = new MenuEntity().setName("系统配置").setPath("/console/system/constant/list").setParentId(firstMenu.getId());
         add(secondMenu);
         secondMenu = new MenuEntity().setName("应用管理").setPath("/console/open/app/list").setParentId(firstMenu.getId());
         add(secondMenu);

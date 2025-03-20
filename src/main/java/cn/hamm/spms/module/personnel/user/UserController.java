@@ -1,12 +1,12 @@
 package cn.hamm.spms.module.personnel.user;
 
-import cn.hamm.airpower.annotation.ApiController;
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Filter;
-import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.helper.CookieHelper;
-import cn.hamm.airpower.model.Json;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Filter;
+import cn.hamm.airpower.core.constant.Constant;
+import cn.hamm.airpower.core.model.Json;
+import cn.hamm.airpower.web.annotation.ApiController;
+import cn.hamm.airpower.web.annotation.Permission;
+import cn.hamm.airpower.web.helper.CookieHelper;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginEntity;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginService;
@@ -26,8 +26,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DISABLED;
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EDIT;
+import static cn.hamm.airpower.core.exception.ServiceError.FORBIDDEN_DISABLED;
+import static cn.hamm.airpower.core.exception.ServiceError.FORBIDDEN_EDIT;
 
 
 /**

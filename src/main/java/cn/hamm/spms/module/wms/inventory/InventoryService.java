@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.wms.inventory;
 
-import cn.hamm.airpower.model.query.QueryPageRequest;
-import cn.hamm.airpower.root.delegate.TreeServiceDelegate;
-import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.core.dictionary.DictionaryUtil;
+import cn.hamm.airpower.web.model.delegate.TreeServiceDelegate;
+import cn.hamm.airpower.web.model.query.QueryPageRequest;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.factory.storage.StorageEntity;

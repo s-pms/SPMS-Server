@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.factory.structure;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.core.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

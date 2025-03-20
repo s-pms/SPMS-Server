@@ -1,6 +1,6 @@
 package cn.hamm.spms.base;
 
-import cn.hamm.airpower.root.RootRepository;
+import cn.hamm.airpower.web.model.RootRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
 /**

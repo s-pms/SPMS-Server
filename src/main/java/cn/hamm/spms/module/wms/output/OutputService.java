@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.wms.output;
 
-import cn.hamm.airpower.interfaces.IDictionary;
-import cn.hamm.airpower.util.DictionaryUtil;
-import cn.hamm.airpower.util.NumberUtil;
+import cn.hamm.airpower.core.dictionary.DictionaryUtil;
+import cn.hamm.airpower.core.dictionary.IDictionary;
+import cn.hamm.airpower.core.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.system.config.ConfigFlag;
@@ -14,7 +14,7 @@ import cn.hamm.spms.module.wms.output.detail.OutputDetailService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.core.exception.ServiceError.FORBIDDEN;
 import static cn.hamm.spms.module.system.config.ConfigFlag.OUTPUT_BILL_AUTO_AUDIT;
 
 /**

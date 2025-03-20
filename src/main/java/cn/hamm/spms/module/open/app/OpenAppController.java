@@ -1,9 +1,13 @@
 package cn.hamm.spms.module.open.app;
 
-import cn.hamm.airpower.annotation.*;
-import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.root.RootEntity;
-import cn.hamm.airpower.util.RandomUtil;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Filter;
+import cn.hamm.airpower.core.model.Json;
+import cn.hamm.airpower.core.util.RandomUtil;
+import cn.hamm.airpower.web.annotation.ApiController;
+import cn.hamm.airpower.web.annotation.Extends;
+import cn.hamm.airpower.web.annotation.Permission;
+import cn.hamm.airpower.web.model.RootEntity;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.notify.NotifyService;
 import cn.hamm.spms.module.open.notify.enums.NotifyScene;
@@ -15,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Base64;
 
-import static cn.hamm.airpower.enums.Api.Export;
-import static cn.hamm.airpower.enums.Api.QueryExport;
-import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
+import static cn.hamm.airpower.core.exception.ServiceError.DATA_NOT_FOUND;
+import static cn.hamm.airpower.web.enums.Api.Export;
+import static cn.hamm.airpower.web.enums.Api.QueryExport;
 
 /**
  * <h1>Controller</h1>

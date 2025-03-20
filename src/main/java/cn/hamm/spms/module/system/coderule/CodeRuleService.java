@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.system.coderule;
 
-import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.core.dictionary.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -10,9 +10,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-import static cn.hamm.airpower.config.Constant.STRING_LABEL;
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
-import static cn.hamm.airpower.exception.ServiceError.SERVICE_ERROR;
+import static cn.hamm.airpower.core.constant.Constant.STRING_LABEL;
+import static cn.hamm.airpower.core.exception.ServiceError.FORBIDDEN_DELETE;
+import static cn.hamm.airpower.core.exception.ServiceError.SERVICE_ERROR;
 import static cn.hamm.spms.module.system.coderule.CodeRuleParam.*;
 
 /**

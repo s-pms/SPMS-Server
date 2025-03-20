@@ -1,15 +1,15 @@
 package cn.hamm.spms.module.open.oauth;
 
-import cn.hamm.airpower.annotation.ApiController;
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.DesensitizeExclude;
-import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.config.CookieConfig;
-import cn.hamm.airpower.interfaces.IEntityAction;
-import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.root.RootController;
-import cn.hamm.airpower.util.AccessTokenUtil;
-import cn.hamm.airpower.util.RandomUtil;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.DesensitizeExclude;
+import cn.hamm.airpower.core.model.Json;
+import cn.hamm.airpower.core.security.AccessTokenUtil;
+import cn.hamm.airpower.core.util.RandomUtil;
+import cn.hamm.airpower.web.annotation.ApiController;
+import cn.hamm.airpower.web.annotation.Permission;
+import cn.hamm.airpower.web.config.CookieConfig;
+import cn.hamm.airpower.web.interfaces.IEntityAction;
+import cn.hamm.airpower.web.model.RootController;
 import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.open.app.OpenAppEntity;
 import cn.hamm.spms.module.open.app.OpenAppService;
@@ -43,9 +43,9 @@ import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cn.hamm.airpower.config.Constant.*;
-import static cn.hamm.airpower.exception.ServiceError.*;
-import static cn.hamm.airpower.util.DateTimeUtil.*;
+import static cn.hamm.airpower.core.constant.Constant.*;
+import static cn.hamm.airpower.core.datetime.DateTimeUtil.*;
+import static cn.hamm.airpower.core.exception.ServiceError.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -188,7 +188,7 @@ public class OauthController extends RootController implements IOauthAction {
     @PostMapping("getUserInfo")
     @DesensitizeExclude
     public Json getUserInfo(@RequestBody @Validated(WhenAccessTokenRequired.class) OauthGetUserInfoRequest request) {
-        AccessTokenUtil.VerifiedToken verify = AccessTokenUtil.create().verify(request.getAccessToken(), serviceConfig.getAccessTokenSecret());
+        AccessTokenUtil.VerifiedToken verify = AccessTokenUtil.create().verify(request.getAccessToken(), webConfig.getAccessTokenSecret());
         long userId = Long.parseLong(Objects.requireNonNull(verify.getPayload(USER_ID), "无效的UserId").toString());
         UserEntity user = userService.get(userId);
         String appKey = Objects.requireNonNull(verify.getPayload(APP_KEY), "无效的AppKey").toString();
@@ -266,7 +266,7 @@ public class OauthController extends RootController implements IOauthAction {
                 .addPayload(APP_KEY, appKey)
                 .addPayload(UserTokenType.TYPE, UserTokenType.OAUTH2.getKey())
                 .setExpireMillisecond(expiresIn)
-                .build(serviceConfig.getAccessTokenSecret());
+                .build(webConfig.getAccessTokenSecret());
     }
 
     /**

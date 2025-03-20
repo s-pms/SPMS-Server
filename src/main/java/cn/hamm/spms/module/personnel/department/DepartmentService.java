@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.personnel.department;
 
-import cn.hamm.airpower.model.Sort;
-import cn.hamm.airpower.model.query.QueryListRequest;
-import cn.hamm.airpower.root.RootEntity;
-import cn.hamm.airpower.root.delegate.TreeServiceDelegate;
+import cn.hamm.airpower.web.model.RootEntity;
+import cn.hamm.airpower.web.model.Sort;
+import cn.hamm.airpower.web.model.delegate.TreeServiceDelegate;
+import cn.hamm.airpower.web.model.query.QueryListRequest;
 import cn.hamm.spms.base.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EXIST;
+import static cn.hamm.airpower.core.exception.ServiceError.FORBIDDEN_EXIST;
 
 /**
  * <h1>Service</h1>
