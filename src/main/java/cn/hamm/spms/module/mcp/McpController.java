@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.mcp;
 
 import cn.hamm.airpower.annotation.ApiController;
+import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.airpower.mcp.McpService;
 import cn.hamm.airpower.mcp.exception.McpErrorCode;
@@ -10,6 +11,8 @@ import cn.hamm.airpower.mcp.model.McpRequest;
 import cn.hamm.airpower.mcp.model.McpResponse;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.root.RootController;
+import cn.hamm.airpower.util.AccessTokenUtil;
+import cn.hamm.spms.common.interceptor.RequestInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+import static cn.hamm.airpower.exception.ServiceError.PARAM_MISSING;
 
 /**
  * <h1>MCP</h1>
@@ -34,17 +41,28 @@ import java.util.UUID;
 @ApiController("mcp")
 @Slf4j
 public class McpController extends RootController {
+    public static ConcurrentMap<String, String> sessionPersonalTokens = new ConcurrentHashMap<>();
+
     @Autowired
     private McpService mcpService;
 
+    @Autowired
+    private RequestInterceptor requestInterceptor;
+
     @GetMapping(value = "sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter connect() throws IOException {
+    public SseEmitter connect() throws IOException, McpException {
         String uuid = UUID.randomUUID().toString();
         SseEmitter sseEmitter = McpService.getSseEmitter(uuid);
+
+        String token = request.getParameter("token");
+        if (Objects.isNull(token)) {
+            McpService.emitError(uuid, 0L, "Token is required");
+            return sseEmitter;
+        }
+        sessionPersonalTokens.put(uuid, token);
         sseEmitter.send(SseEmitter.event()
                 .name("endpoint")
                 .data("/mcp/messages?sessionId=" + uuid)
-                .build()
         );
         return sseEmitter;
     }
@@ -52,9 +70,13 @@ public class McpController extends RootController {
     @PostMapping("messages")
     public Json messages(HttpServletRequest request, @RequestBody McpRequest mcpRequest) {
         String uuid = request.getParameter("sessionId");
-        if (Objects.isNull(uuid)) {
-            return Json.error("sessionId is required");
-        }
+        PARAM_MISSING.whenNull(uuid, "sessionId is required");
+
+        String accessToken = sessionPersonalTokens.get(uuid);
+        PARAM_MISSING.whenNull(accessToken, "accessToken is required");
+
+        AccessTokenUtil.VerifiedToken verifiedToken = requestInterceptor.getVerifiedToken(accessToken);
+
         String method = mcpRequest.getMethod();
         McpResponse mcpResponse;
         try {
@@ -70,7 +92,10 @@ public class McpController extends RootController {
                 McpService.emitError(uuid, mcpRequest.getId(), McpErrorCode.MethodNotFound);
                 return Json.error("Method not found");
             }
-            mcpResponse = mcpService.run(uuid, mcpMethods, mcpRequest);
+            mcpResponse = mcpService.run(uuid, mcpMethods, mcpRequest, mcpTool -> {
+                long userId = verifiedToken.getPayloadId();
+                requestInterceptor.checkUserPermission(userId, McpService.getPermissionIdentity(mcpTool), request);
+            });
         } catch (McpException mcpException) {
             try {
                 McpService.emitResult(uuid, mcpRequest.getId(), mcpException.getMessage());
@@ -81,5 +106,11 @@ public class McpController extends RootController {
         }
 
         return Json.data(mcpResponse, "success");
+    }
+
+    @PostMapping("getMcpTools")
+    @Description("获取MCP工具列表")
+    public Json messages() {
+        return Json.data(McpService.tools);
     }
 }

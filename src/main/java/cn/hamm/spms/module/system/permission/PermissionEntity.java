@@ -3,6 +3,7 @@ package cn.hamm.spms.module.system.permission;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.interfaces.IPermission;
+import cn.hamm.airpower.validate.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,6 +43,12 @@ public class PermissionEntity extends BaseEntity<PermissionEntity> implements IP
     @Description("系统权限")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '系统权限'")
     private Boolean isSystem;
+
+    @Description("权限类型")
+    @Search(EQUALS)
+    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '权限类型'")
+    @Dictionary(value = PermissionType.class, groups = {WhenAdd.class, WhenUpdate.class})
+    private Integer type;
 
     @Description("子菜单")
     @Transient

@@ -30,6 +30,6 @@ public class WebConfig extends AbstractWebConfig {
 
     @Override
     public void addInterceptors(@NotNull InterceptorRegistry registry) {
-        registry.addInterceptor(requestInterceptor).addPathPatterns("/*");
+        registry.addInterceptor(requestInterceptor).addPathPatterns("/**");
     }
 }

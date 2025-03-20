@@ -11,6 +11,8 @@ import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginEntity;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginService;
 import cn.hamm.spms.module.personnel.user.enums.UserLoginType;
+import cn.hamm.spms.module.personnel.user.token.PersonalTokenEntity;
+import cn.hamm.spms.module.personnel.user.token.PersonalTokenService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.Cookie;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DISABLED;
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EDIT;
 
 
 /**
@@ -37,10 +40,15 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DISABLED;
 public class UserController extends BaseController<UserEntity, UserService, UserRepository> implements IUserAction {
     @Autowired
     private CookieHelper cookieHelper;
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private UserThirdLoginService userThirdLoginService;
+
+    @Autowired
+    private PersonalTokenService personalTokenService;
 
     @Description("获取我的信息")
     @Permission(authorize = false)
@@ -58,6 +66,54 @@ public class UserController extends BaseController<UserEntity, UserService, User
         user.setRoleList(null).setPhone(null).setEmail(null).setRealName(null).setIdCard(null);
         service.update(user);
         return Json.success("资料修改成功");
+    }
+
+    @Description("获取我的私人令牌列表")
+    @Permission(authorize = false)
+    @PostMapping("getMyPersonalTokenList")
+    public Json getMyPersonalTokenList() {
+        UserEntity user = new UserEntity().setId(getCurrentUserId());
+        List<PersonalTokenEntity> list = personalTokenService.filter(new PersonalTokenEntity().setUser(user));
+        return Json.data(list);
+    }
+
+    @Description("禁用我的令牌")
+    @Permission(authorize = false)
+    @PostMapping("disableMyPersonalToken")
+    public Json disableMyPersonalToken(@RequestBody @Validated(WhenIdRequired.class) PersonalTokenEntity personalToken) {
+        PersonalTokenEntity exist = personalTokenService.get(personalToken.getId());
+        FORBIDDEN_EDIT.whenNotEquals(exist.getUser().getId(), getCurrentUserId(), "你没有权限禁用此令牌");
+        personalTokenService.disable(personalToken.getId());
+        return Json.success("禁用成功");
+    }
+
+    @Description("启用我的令牌")
+    @Permission(authorize = false)
+    @PostMapping("enableMyPersonalToken")
+    public Json enableMyPersonalToken(@RequestBody @Validated(WhenIdRequired.class) PersonalTokenEntity personalToken) {
+        PersonalTokenEntity exist = personalTokenService.get(personalToken.getId());
+        FORBIDDEN_EDIT.whenNotEquals(exist.getUser().getId(), getCurrentUserId(), "你没有权限启用此令牌");
+        personalTokenService.enable(personalToken.getId());
+        return Json.success("启用成功");
+    }
+
+    @Description("删除我的令牌")
+    @Permission(authorize = false)
+    @PostMapping("deleteMyPersonalToken")
+    public Json deleteMyPersonalToken(@RequestBody @Validated(WhenIdRequired.class) PersonalTokenEntity personal) {
+        PersonalTokenEntity exist = personalTokenService.get(personal.getId());
+        FORBIDDEN_EDIT.whenNotEquals(exist.getUser().getId(), getCurrentUserId(), "你没有权限删除此令牌");
+        personalTokenService.delete(personal.getId());
+        return Json.success("删除成功");
+    }
+
+    @Description("创建我的令牌")
+    @Permission(authorize = false)
+    @PostMapping("createMyPersonalToken")
+    public Json createMyPersonalToken(@RequestBody @Validated(WhenAdd.class) PersonalTokenEntity personal) {
+        long id = personalTokenService.add(personal.setUser(new UserEntity().setId(getCurrentUserId())));
+        String token = personalTokenService.get(id).getToken();
+        return Json.data(token, "创建成功");
     }
 
     @Description("获取我的菜单")

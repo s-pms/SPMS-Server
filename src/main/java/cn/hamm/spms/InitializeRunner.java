@@ -44,6 +44,7 @@ import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import cn.hamm.spms.module.system.config.ConfigEntity;
 import cn.hamm.spms.module.system.config.ConfigFlag;
 import cn.hamm.spms.module.system.config.ConfigService;
+import cn.hamm.spms.module.system.permission.PermissionService;
 import cn.hamm.spms.module.system.unit.UnitEntity;
 import cn.hamm.spms.module.system.unit.UnitService;
 import lombok.extern.slf4j.Slf4j;
@@ -98,18 +99,42 @@ public class InitializeRunner implements CommandLineRunner {
 
     @Autowired
     private StorageService storageService;
+
     @Autowired
     private DepartmentService departmentService;
+
     @Autowired
     private ConfigService configService;
+
     @Autowired
     private OperationService operationService;
+
     @Autowired
     private BomService bomService;
+
     @Autowired
     private RoutingService routingService;
+
     @Autowired
     private StructureService structureService;
+
+    @Autowired
+    private PermissionService permissionService;
+
+    @Override
+    public void run(String... args) {
+        System.out.println("---------------------------------");
+        McpService.scanMcpMethods("cn.hamm.spms", "cn.hamm.airpower");
+        permissionService.initMcpToolPermission(McpService.tools);
+        initRootUser();
+        initCodeRules();
+        initConfigs();
+        initParameters();
+        permissionService.loadPermission();
+        Services.getMenuService().initMenu();
+        initDevData();
+    }
+
 
     private void initParameters() {
         ParameterEntity parameter;
@@ -182,7 +207,7 @@ public class InitializeRunner implements CommandLineRunner {
         userService.add(new UserEntity()
                 .setNickname("张三")
                 .setPhone("13888888888")
-                .setEmail("hamm@hamm.cn")
+                .setEmail("admin@hamm.com")
                 .setPassword(PasswordUtil.encode("Aa123456", salt))
                 .setSalt(salt));
 
@@ -201,19 +226,6 @@ public class InitializeRunner implements CommandLineRunner {
                 .setCode(888)
                 .setIsHot(true).setOwner(user)
         );
-    }
-
-    @Override
-    public void run(String... args) {
-        System.out.println("---------------------------------");
-        McpService.scanMcpMethods("cn.hamm.spms", "cn.hamm.airpower");
-        initRootUser();
-        initCodeRules();
-        initConfigs();
-        initParameters();
-        Services.getPermissionService().loadPermission();
-        Services.getMenuService().initMenu();
-        initDevData();
     }
 
     private void initConfigs() {
