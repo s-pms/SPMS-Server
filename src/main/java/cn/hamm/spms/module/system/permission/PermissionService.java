@@ -1,5 +1,7 @@
 package cn.hamm.spms.module.system.permission;
 
+import cn.hamm.airpower.mcp.McpService;
+import cn.hamm.airpower.mcp.model.McpTool;
 import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.root.delegate.TreeServiceDelegate;
 import cn.hamm.airpower.util.PermissionUtil;
@@ -22,6 +24,7 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
 @Service
 @Slf4j
 public class PermissionService extends BaseService<PermissionEntity, PermissionRepository> {
+
     /**
      * <h3>通过标识获取一个权限</h3>
      *
@@ -43,6 +46,24 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     protected @NotNull List<PermissionEntity> afterGetList(@NotNull List<PermissionEntity> list) {
         list.forEach(RootEntity::excludeBaseData);
         return list;
+    }
+
+    public void initMcpToolPermission(@NotNull List<McpTool> list) {
+        PermissionEntity parent = new PermissionEntity()
+                .setName("MCP工具")
+                .setIdentity("mcp:tools")
+                .setType(PermissionType.MCP.getKey())
+                .setIsSystem(true);
+        long parentId = add(parent);
+        for (McpTool mcpTool : list) {
+            PermissionEntity permission = new PermissionEntity()
+                    .setName(mcpTool.getName())
+                    .setIdentity(McpService.getPermissionIdentity(mcpTool))
+                    .setType(PermissionType.MCP.getKey())
+                    .setIsSystem(true)
+                    .setParentId(parentId);
+            add(permission);
+        }
     }
 
     public void loadPermission() {

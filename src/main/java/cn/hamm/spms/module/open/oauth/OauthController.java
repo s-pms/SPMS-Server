@@ -23,6 +23,7 @@ import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginEntity;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginService;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
+import cn.hamm.spms.module.personnel.user.UserTokenType;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -263,6 +264,7 @@ public class OauthController extends RootController implements IOauthAction {
                 .addPayload(USER_ID, userId)
                 .addPayload(SCOPE, scope)
                 .addPayload(APP_KEY, appKey)
+                .addPayload(UserTokenType.TYPE, UserTokenType.OAUTH2.getKey())
                 .setExpireMillisecond(expiresIn)
                 .build(serviceConfig.getAccessTokenSecret());
     }
