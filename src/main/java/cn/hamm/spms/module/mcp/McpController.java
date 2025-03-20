@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.mcp;
 
 import cn.hamm.airpower.annotation.ApiController;
+import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Permission;
 import cn.hamm.airpower.mcp.McpService;
 import cn.hamm.airpower.mcp.exception.McpErrorCode;
@@ -105,5 +106,11 @@ public class McpController extends RootController {
         }
 
         return Json.data(mcpResponse, "success");
+    }
+
+    @PostMapping("getMcpTools")
+    @Description("获取MCP工具列表")
+    public Json messages() {
+        return Json.data(McpService.tools);
     }
 }

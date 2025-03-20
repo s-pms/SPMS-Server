@@ -155,5 +155,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         add(secondMenu);
         secondMenu = new MenuEntity().setName("通知管理").setPath("/console/open/notify/list").setParentId(firstMenu.getId());
         add(secondMenu);
+        secondMenu = new MenuEntity().setName("MCP工具").setPath("/console/system/mcp/tools").setParentId(firstMenu.getId());
+        add(secondMenu);
     }
 }
