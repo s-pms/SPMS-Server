@@ -85,9 +85,22 @@
   git clone https://gitee.com/s-pms/SPMS-Server.git
   ```
 
-### IDEA打开项目文件夹
+### 运行项目
 
-使用 IDEA 打开 `SPMS-Server` 目录，刷新项目的 `maven` 依赖，等待依赖安装完成即可。
+- 加载依赖
+
+  > 使用 IDEA 打开 `SPMS-Server` 目录，刷新项目的 `maven` 依赖，等待依赖安装完成即可。
+
+- 修改环境变量
+
+  > 复制 `resources/application-template.yml` 为你运行环境的配置文件，如 `application-local.yml`
+  ，然后使用这个配置文件启动即可。（IDEA编辑启动有效配置文件为对应的 `local`）
+
+- 无数据库脚本?
+
+  > 我们使用了 **JPA** 进行自动数据库操作，配置文件中的 `ddl-auto: create-drop`
+  即可自动完成。如果你测试完毕计划部署生产，可以将测试完毕之后的数据库导出，然后在配置文件中修改 `ddl-auto: validate`
+  ，再将导出的数据库文件重新导入数据库即可。
 
 ## 联系我们
 
