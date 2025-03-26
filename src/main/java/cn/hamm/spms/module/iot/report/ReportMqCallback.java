@@ -44,7 +44,6 @@ public class ReportMqCallback implements MqttCallback {
     public void connectionLost(Throwable throwable) {
     }
 
-    @SuppressWarnings("AlibabaMethodTooLong")
     @Override
     public void messageArrived(String topic, @NotNull MqttMessage mqttMessage) {
         String reportString = new String(mqttMessage.getPayload());

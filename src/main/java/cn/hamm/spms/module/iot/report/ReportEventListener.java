@@ -24,12 +24,10 @@ public class ReportEventListener {
     @Autowired
     private ReportMqCallback reportMqCallback;
 
-
     /**
      * <h3>开始监听MQTT</h3>
      *
      * @throws MqttException 异常
-     * @noinspection AlibabaMethodTooLong
      */
     public void listen() throws MqttException {
         try (MqttClient mqttClient = mqttHelper.createClient()) {
