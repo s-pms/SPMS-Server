@@ -41,7 +41,7 @@ import static cn.hamm.airpower.exception.ServiceError.PARAM_MISSING;
 @ApiController("mcp")
 @Slf4j
 public class McpController extends RootController {
-    public static ConcurrentMap<String, String> sessionPersonalTokens = new ConcurrentHashMap<>();
+    public static final ConcurrentMap<String, String> SESSION_PERSONAL_TOKENS = new ConcurrentHashMap<>();
 
     @Autowired
     private McpService mcpService;
@@ -59,7 +59,7 @@ public class McpController extends RootController {
             McpService.emitError(uuid, 0L, "Token is required");
             return sseEmitter;
         }
-        sessionPersonalTokens.put(uuid, token);
+        SESSION_PERSONAL_TOKENS.put(uuid, token);
         sseEmitter.send(SseEmitter.event()
                 .name("endpoint")
                 .data("/mcp/messages?sessionId=" + uuid)
@@ -72,7 +72,7 @@ public class McpController extends RootController {
         String uuid = request.getParameter("sessionId");
         PARAM_MISSING.whenNull(uuid, "sessionId is required");
 
-        String accessToken = sessionPersonalTokens.get(uuid);
+        String accessToken = SESSION_PERSONAL_TOKENS.get(uuid);
         PARAM_MISSING.whenNull(accessToken, "accessToken is required");
 
         AccessTokenUtil.VerifiedToken verifiedToken = requestInterceptor.getVerifiedToken(accessToken);
