@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.open.notify;
 
-import cn.hamm.airpower.helper.AirHelper;
+import cn.hamm.airpower.helper.EmailHelper;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.airpower.util.HttpUtil;
@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.threads.ThreadPoolExecutor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,6 +40,9 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<>()
     );
+
+    @Autowired
+    private EmailHelper emailHelper;
 
     /**
      * <h3>发送通知</h3>
@@ -90,7 +94,7 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
             // 如果是邮箱通知 直接发送邮件
             try {
                 NotifyScene scene = DictionaryUtil.getDictionary(NotifyScene.class, notify.getScene());
-                AirHelper.getEmailHelper().sendEmail(notify.getUrl(), scene.getLabel(), data.toString());
+                emailHelper.sendEmail(notify.getUrl(), scene.getLabel(), data.toString());
             } catch (MessagingException e) {
                 log.error(e.getMessage(), e);
             }
