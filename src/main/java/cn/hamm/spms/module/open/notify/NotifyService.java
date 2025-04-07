@@ -5,7 +5,6 @@ import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.util.DictionaryUtil;
 import cn.hamm.airpower.util.HttpUtil;
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.open.notify.enums.NotifyChannel;
 import cn.hamm.spms.module.open.notify.enums.NotifyScene;
 import jakarta.mail.MessagingException;
@@ -55,7 +54,7 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
         try {
             EXECUTOR.submit(() -> {
                 // 查询指定场景的Hook列表
-                List<NotifyEntity> notifyList = Services.getNotifyService().filter(
+                List<NotifyEntity> notifyList = filter(
                         new NotifyEntity()
                                 .setScene(notifyScene.getKey())
                 );

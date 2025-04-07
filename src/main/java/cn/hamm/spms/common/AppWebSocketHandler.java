@@ -39,6 +39,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
      * <h3>订阅分组前缀</h3>
      */
     private static final String GROUP_PREFIX = "group_";
+
     /**
      * <h3>房间在线用户列表</h3>
      */
