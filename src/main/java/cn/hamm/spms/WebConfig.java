@@ -19,7 +19,6 @@ public class WebConfig extends AbstractWebConfig {
     @Autowired
     private RequestInterceptor requestInterceptor;
 
-
     @Autowired
     private AppWebSocketHandler appWebSocketHandler;
 

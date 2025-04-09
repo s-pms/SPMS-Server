@@ -12,11 +12,11 @@ import cn.hamm.spms.module.personnel.user.enums.UserGender;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -44,6 +44,8 @@ public class OauthService {
 
     @Autowired
     private UserThirdLoginService userThirdLoginService;
+    @Autowired
+    private BeanFactory beanFactory;
 
     /**
      * <h3>用户ID的缓存Key</h3>
@@ -76,13 +78,8 @@ public class OauthService {
         return oauthPlatform;
     }
 
-    private static @NotNull AbstractOauthCallback getOauthCallbackInstance(@NotNull OauthPlatform oauthPlatform) {
-        try {
-            return oauthPlatform.getClazz().getDeclaredConstructor().newInstance();
-        } catch (InstantiationException | InvocationTargetException | IllegalAccessException |
-                 NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
+    private @NotNull AbstractOauthCallback getOauthCallbackInstance(@NotNull OauthPlatform oauthPlatform) {
+        return beanFactory.getBean(oauthPlatform.getClazz());
     }
 
     /**

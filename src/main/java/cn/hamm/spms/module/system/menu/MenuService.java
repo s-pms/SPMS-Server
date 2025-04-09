@@ -3,7 +3,7 @@ package cn.hamm.spms.module.system.menu;
 import cn.hamm.airpower.model.Sort;
 import cn.hamm.airpower.model.query.QueryListRequest;
 import cn.hamm.airpower.root.RootEntity;
-import cn.hamm.airpower.root.delegate.TreeServiceDelegate;
+import cn.hamm.airpower.util.TreeUtil;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
 
     @Override
     protected void beforeDelete(long id) {
-        TreeServiceDelegate.ensureNoChildrenBeforeDelete(this, id);
+        TreeUtil.ensureNoChildrenBeforeDelete(this, id);
     }
 
     @Override

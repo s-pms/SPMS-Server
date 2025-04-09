@@ -33,11 +33,11 @@ public class InfluxHelper {
     private static final String INFLUX_TAG_UUID = "uuid";
     private static final String INFLUX_SQL_SPLIT = " |> ";
     private static final String INFLUX_RECORD_VALUE_KEY = "_value";
+
     @Autowired
     private InfluxConfig influxConfig;
 
     private InfluxDBClient influxDbClient;
-
 
     /**
      * <h3>保存数据</h3>
