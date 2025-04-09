@@ -1,10 +1,9 @@
 package cn.hamm.spms;
 
-import cn.hamm.spms.module.iot.report.ReportEventListener;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
@@ -17,19 +16,22 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 @EnableWebSocket
 @EnableScheduling
 public class Application {
-    private static ReportEventListener reportEventListener;
+    /**
+     * <h2>服务器上下文对象/h2>
+     */
+    private static ServletWebServerApplicationContext serverApplicationContext;
 
-    public static void main(String[] args) throws MqttException {
+    public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
-        reportEventListener.listen();
-        System.out.println("---------------------------------");
-        System.out.println("   Hi Guy, Service is running!   ");
-        System.out.println("   URL:  http://127.0.0.1:8080   ");
-        System.out.println("---------------------------------");
+        int port = serverApplicationContext.getWebServer().getPort();
+        System.out.println("------------------------------------------");
+        System.out.println("   Hi Guy, Service is listen : [" + port + "] !");
+        System.out.println("------------------------------------------");
     }
 
     @Autowired
-    public void autorun(ReportEventListener reportEventListener) {
-        Application.reportEventListener = reportEventListener;
+    public void autorun(ServletWebServerApplicationContext serverApplicationContext) {
+        Application.serverApplicationContext = serverApplicationContext;
+        // ReportEventListener 注入后可开启MQTT监听
     }
 }
