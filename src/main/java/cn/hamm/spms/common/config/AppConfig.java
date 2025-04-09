@@ -45,12 +45,10 @@ public class AppConfig {
      * <h3>上传文件目录</h3>
      */
     private String uploadDirectory = "upload";
-
     /**
      * <h3>上传文件最大大小</h3>
      */
     private long uploadMaxSize = FILE_SCALE * FILE_SCALE * 10;
-
     /**
      * <h3>上传文件允许的扩展名</h3>
      */
@@ -62,14 +60,8 @@ public class AppConfig {
             "pdf", "doc", "docx", "xls", "xlsx",
             "markdown"
     };
-
     /**
      * <h3>上传平台</h3>
      */
     private UploadPlatform uploadPlatform = LOCAL;
-
-    /**
-     * <h3>Influx配置</h3>
-     */
-    private InfluxConfig influxdb = new InfluxConfig();
 }

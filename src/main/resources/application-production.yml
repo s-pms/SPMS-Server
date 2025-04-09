@@ -1,6 +1,6 @@
 spring:
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       # todo 请注意 生产环境一定要修改为none或者validate
       ddl-auto: create-drop

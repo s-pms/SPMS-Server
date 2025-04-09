@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.system.file;
 
 import cn.hamm.airpower.exception.ServiceException;
-import cn.hamm.airpower.util.DateTimeUtil;
 import cn.hamm.airpower.util.FileUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.config.AppConfig;
@@ -13,16 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static cn.hamm.airpower.config.Constant.*;
-import static cn.hamm.airpower.enums.DateTimeFormatter.FULL_DATE;
+import static cn.hamm.airpower.config.Constant.STRING_DOT;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_UPLOAD_MAX_SIZE;
 import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
 
@@ -52,42 +46,17 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
     }
 
     /**
-     * <h3>创建文件夹</h3>
-     *
-     * @param pathString 文件夹路径
-     */
-    private void createDirectory(String pathString) {
-        Path path = Paths.get(pathString);
-        if (!Files.exists(path)) {
-            try {
-                Files.createDirectories(path);
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-                throw new RuntimeException("自动创建文件夹失败，请确认权限是否正常");
-            }
-        }
-    }
-
-    /**
-     * <h3>保存到本地文件</h3>
-     *
-     * @param multipartFile 文件
-     * @param savedFilePath 文件路径
-     * @throws IOException 文件写入失败
-     */
-    private void saveToLocalFile(@NotNull MultipartFile multipartFile, @NotNull String savedFilePath) throws IOException {
-        Path path = Paths.get(savedFilePath);
-        Files.write(path, multipartFile.getBytes());
-    }
-
-    /**
      * <h3>文件上传</h3>
      *
      * @param multipartFile 文件
      * @param fileCategory  文件类别
      * @return 存储的文件信息
      */
-    public FileEntity upload(@NotNull MultipartFile multipartFile, FileCategory fileCategory) {
+    public FileEntity upload(@NotNull MultipartFile multipartFile, @NotNull FileCategory fileCategory) {
+        // 上传文件的绝对路径
+        final String absoluteDirectory = FileUtil.formatDirectory(
+                appConfig.getUploadDirectory()
+        );
         // 判断文件大小和类型
         FORBIDDEN_UPLOAD_MAX_SIZE.when(multipartFile.getSize() > appConfig.getUploadMaxSize());
         String originalFilename = multipartFile.getOriginalFilename();
@@ -96,19 +65,8 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
         PARAM_INVALID.whenEmpty(extension, "文件类型不能为空");
         PARAM_INVALID.when(!Arrays.stream(appConfig.getUploadAllowExtensions()).toList().contains(extension), "文件类型不允许上传");
 
-        String uploadDirectory = appConfig.getUploadDirectory();
-        if (!uploadDirectory.endsWith(File.separator)) {
-            uploadDirectory += File.separator;
-        }
-        uploadDirectory += fileCategory.name().toLowerCase() + File.separator;
-
-        long milliSecond = System.currentTimeMillis();
-
-        // 追加今日文件夹 定时任务将按存储文件夹进行删除过时文件
-        String todayDir = DateTimeUtil.format(milliSecond,
-                FULL_DATE.getValue().replaceAll(STRING_LINE, STRING_EMPTY)
-        );
-        String absoluteDirectory = uploadDirectory + todayDir + File.separator;
+        // 存储的相对路径目录
+        String relativeDirectory = FileUtil.getTodayDirectory(fileCategory.name().toLowerCase());
 
         try {
             // 获取文件的MD5
@@ -122,14 +80,14 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
             String fileName = hashMd5 + STRING_DOT + extension;
 
             // 保存的相对文件路径
-            String savedFilePath = fileCategory.name().toLowerCase() + File.separator + todayDir + File.separator + fileName;
+            String relativeFilePath = relativeDirectory + fileName;
 
             switch (appConfig.getUploadPlatform()) {
-                case LOCAL -> {
-                    createDirectory(absoluteDirectory);
-                    saveToLocalFile(multipartFile, absoluteDirectory + File.separator + fileName);
-                }
-                case ALIYUN_OSS -> saveToAliyunOss(multipartFile, savedFilePath);
+                case LOCAL -> FileUtil.saveFile(absoluteDirectory + relativeDirectory,
+                        fileName,
+                        multipartFile.getBytes()
+                );
+                case ALIYUN_OSS -> saveToAliyunOss(multipartFile, relativeFilePath);
                 default -> throw new ServiceException("暂不支持该平台");
             }
 
@@ -139,7 +97,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
                     .setCategory(fileCategory.getKey())
                     .setName(multipartFile.getOriginalFilename())
                     .setHashMd5(hashMd5)
-                    .setUrl(savedFilePath);
+                    .setUrl(relativeFilePath);
             long fileId = add(file);
             return get(fileId);
         } catch (Exception exception) {

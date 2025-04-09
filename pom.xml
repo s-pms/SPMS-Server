@@ -5,7 +5,7 @@
     <parent>
         <groupId>cn.hamm</groupId>
         <artifactId>airpower</artifactId>
-        <version>3.2.4</version>
+        <version>3.3.0</version>
     </parent>
     <groupId>cn.hamm.spms</groupId>
     <artifactId>server</artifactId>
@@ -16,7 +16,6 @@
         <dependency>
             <groupId>cn.hamm</groupId>
             <artifactId>airpower-core</artifactId>
-            <version>${airpower.version}</version>
         </dependency>
 
         <!-- 阿里云OSS开始 -->

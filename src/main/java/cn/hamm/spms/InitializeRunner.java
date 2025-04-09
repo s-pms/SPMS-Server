@@ -3,7 +3,6 @@ package cn.hamm.spms;
 import cn.hamm.airpower.mcp.McpService;
 import cn.hamm.airpower.util.PasswordUtil;
 import cn.hamm.airpower.util.RandomUtil;
-import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.asset.device.DeviceService;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
@@ -18,6 +17,7 @@ import cn.hamm.spms.module.channel.saleprice.SalePriceService;
 import cn.hamm.spms.module.channel.supplier.SupplierEntity;
 import cn.hamm.spms.module.channel.supplier.SupplierService;
 import cn.hamm.spms.module.chat.room.RoomEntity;
+import cn.hamm.spms.module.chat.room.RoomService;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
 import cn.hamm.spms.module.factory.storage.StorageService;
 import cn.hamm.spms.module.factory.structure.StructureEntity;
@@ -44,6 +44,7 @@ import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import cn.hamm.spms.module.system.config.ConfigEntity;
 import cn.hamm.spms.module.system.config.ConfigFlag;
 import cn.hamm.spms.module.system.config.ConfigService;
+import cn.hamm.spms.module.system.menu.MenuService;
 import cn.hamm.spms.module.system.permission.PermissionService;
 import cn.hamm.spms.module.system.unit.UnitEntity;
 import cn.hamm.spms.module.system.unit.UnitService;
@@ -64,7 +65,6 @@ import static cn.hamm.spms.module.iot.report.ReportConstant.*;
 @Component
 @Slf4j
 public class InitializeRunner implements CommandLineRunner {
-
     public static final int TWO = 2;
 
     @Autowired
@@ -121,6 +121,12 @@ public class InitializeRunner implements CommandLineRunner {
     @Autowired
     private PermissionService permissionService;
 
+    @Autowired
+    private MenuService menuService;
+
+    @Autowired
+    private RoomService roomService;
+
     @Override
     public void run(String... args) {
         System.out.println("---------------------------------");
@@ -131,7 +137,7 @@ public class InitializeRunner implements CommandLineRunner {
         initConfigs();
         initParameters();
         permissionService.loadPermission();
-        Services.getMenuService().initMenu();
+        menuService.initMenu();
         initDevData();
     }
 
@@ -214,14 +220,14 @@ public class InitializeRunner implements CommandLineRunner {
         System.out.println("---------------------------------");
         user = userService.getMaybeNull(1L);
 
-        Services.getRoomService().add(new RoomEntity()
+        roomService.add(new RoomEntity()
                 .setName("广场")
                 .setCode(666)
                 .setIsOfficial(true)
                 .setIsHot(true).setOwner(user)
         );
 
-        Services.getRoomService().add(new RoomEntity()
+        roomService.add(new RoomEntity()
                 .setName("测试")
                 .setCode(888)
                 .setIsHot(true).setOwner(user)

@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.open.oauth.model.platform;
 
-import cn.hamm.airpower.helper.AirHelper;
+import cn.hamm.airpower.helper.RedisHelper;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.airpower.util.DateTimeUtil;
 import cn.hamm.airpower.util.HttpUtil;
@@ -9,6 +9,8 @@ import cn.hamm.spms.module.open.oauth.model.base.AbstractOauthCallback;
 import cn.hamm.spms.module.open.oauth.model.base.OauthUserInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Contract;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.net.http.HttpResponse;
@@ -23,10 +25,13 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
  * @author Hamm.cn
  */
 @Slf4j
+@Component
 public class WeComCallback extends AbstractOauthCallback {
     private static final String ACCESS_TOKEN_CACHE_KEY = "wecom_token_";
     private static final String ACCESS_TOKEN_URL = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=%s&corpsecret=%s";
     private static final String USER_INFO_URL = "https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=%s&code=%s";
+    @Autowired
+    private RedisHelper redisHelper;
 
     @Override
     public OauthUserInfo getUserInfo(String code) {
@@ -41,7 +46,7 @@ public class WeComCallback extends AbstractOauthCallback {
 
     @Contract(pure = true)
     private String getAccessToken() {
-        Object object = AirHelper.getRedisHelper().get(ACCESS_TOKEN_CACHE_KEY);
+        Object object = redisHelper.get(ACCESS_TOKEN_CACHE_KEY);
         if (Objects.nonNull(object)) {
             return object.toString();
         }
@@ -50,7 +55,7 @@ public class WeComCallback extends AbstractOauthCallback {
         Map<String, Object> map = Json.parse2Map(httpResponse.body());
         Object accessToken = Objects.requireNonNull(map.get("access_token"), "AccessToken获取失败");
         FORBIDDEN.when(!StringUtils.hasText(accessToken.toString()), "AccessToken获取失败");
-        AirHelper.getRedisHelper().set(ACCESS_TOKEN_CACHE_KEY, accessToken.toString(), DateTimeUtil.SECOND_PER_HOUR);
+        redisHelper.set(ACCESS_TOKEN_CACHE_KEY, accessToken.toString(), DateTimeUtil.SECOND_PER_HOUR);
         log.info("企业微信获取AccessToken: {}", accessToken);
         return accessToken.toString();
     }
