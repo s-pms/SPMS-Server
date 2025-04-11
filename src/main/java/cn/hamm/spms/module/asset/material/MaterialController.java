@@ -12,4 +12,5 @@ import cn.hamm.spms.base.BaseController;
 @ApiController("material")
 @Description("物料")
 public class MaterialController extends BaseController<MaterialEntity, MaterialService, MaterialRepository> {
+
 }

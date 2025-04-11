@@ -7,7 +7,7 @@ import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.asset.device.DeviceService;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.asset.material.MaterialService;
-import cn.hamm.spms.module.asset.material.MaterialType;
+import cn.hamm.spms.module.asset.material.enums.MaterialType;
 import cn.hamm.spms.module.channel.customer.CustomerEntity;
 import cn.hamm.spms.module.channel.customer.CustomerService;
 import cn.hamm.spms.module.channel.purchaseprice.PurchasePriceEntity;
