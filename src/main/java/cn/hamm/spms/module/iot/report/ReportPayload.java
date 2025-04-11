@@ -3,7 +3,7 @@ package cn.hamm.spms.module.iot.report;
 import cn.hamm.airpower.interfaces.IAction;
 import cn.hamm.airpower.interfaces.IEntityAction;
 import cn.hamm.airpower.root.RootModel;
-import cn.hamm.airpower.validate.dictionary.Dictionary;
+import cn.hamm.airpower.validate.Dictionary;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

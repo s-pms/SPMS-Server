@@ -25,22 +25,22 @@ public class ParameterService extends BaseService<ParameterEntity, ParameterRepo
      * @return 参数
      */
     public ParameterEntity getByCode(String code) {
-        ParameterEntity parameterEntity = redisHelper.getEntity(PARAM_CODE_CACHE_PREFIX + code, new ParameterEntity());
-        if (Objects.nonNull(parameterEntity)) {
-            if (Objects.isNull(parameterEntity.getId())) {
+        ParameterEntity parameter = redisHelper.getEntity(PARAM_CODE_CACHE_PREFIX + code, ParameterEntity.class);
+        if (Objects.nonNull(parameter)) {
+            if (Objects.isNull(parameter.getId())) {
                 return null;
             }
-            return parameterEntity;
+            return parameter;
         }
-        parameterEntity = repository.getByCode(code);
-        if (Objects.isNull(parameterEntity)) {
-            parameterEntity = new ParameterEntity();
+        parameter = repository.getByCode(code);
+        if (Objects.isNull(parameter)) {
+            parameter = new ParameterEntity();
         }
-        redisHelper.saveEntity(PARAM_CODE_CACHE_PREFIX + code, parameterEntity);
-        if (Objects.isNull(parameterEntity.getId())) {
+        redisHelper.saveEntity(PARAM_CODE_CACHE_PREFIX + code, parameter);
+        if (Objects.isNull(parameter.getId())) {
             return null;
         }
-        return parameterEntity;
+        return parameter;
     }
 
     @Override
