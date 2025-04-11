@@ -5,6 +5,7 @@ import cn.hamm.airpower.helper.CookieHelper;
 import cn.hamm.airpower.helper.EmailHelper;
 import cn.hamm.airpower.mcp.method.McpMethod;
 import cn.hamm.airpower.model.Sort;
+import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.util.*;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
@@ -423,7 +424,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         Set<Long> departmentIdList = getDepartmentList(departmentId);
         if (!departmentIdList.isEmpty()) {
             Join<UserEntity, DepartmentEntity> departmentJoin = root.join("departmentList");
-            Predicate inPredicate = departmentJoin.get(STRING_ID).in(departmentIdList);
+            Predicate inPredicate = departmentJoin.get(RootEntity.STRING_ID).in(departmentIdList);
             predicateList.add(inPredicate);
         }
         return predicateList;

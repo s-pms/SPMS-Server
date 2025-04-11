@@ -3,7 +3,7 @@ package cn.hamm.spms.module.chat.member;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.validate.dictionary.Dictionary;
+import cn.hamm.airpower.validate.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.chat.room.RoomEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;

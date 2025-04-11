@@ -2,6 +2,7 @@ package cn.hamm.spms.module.asset.material;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.mcp.method.McpMethod;
+import cn.hamm.airpower.mcp.method.McpOptional;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.system.unit.UnitService;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +33,13 @@ public class MaterialService extends BaseService<MaterialEntity, MaterialReposit
 
     @McpMethod()
     @Description("add new material by name and spc")
-    public String addMaterial(@Description("material name/product name") String name, @Description("material spc, not required, set '我不知道' if blank") String spc) {
+    public String addMaterial(
+            @Description("material name/product name")
+            String name,
+
+            @McpOptional
+            @Description("material spc, not required, set '我不知道' if blank")
+            String spc) {
         MaterialEntity material = new MaterialEntity().setName(name).setSpc(spc).setMaterialType(MaterialType.PURCHASE.getKey()).setUnitInfo(unitService.get(1L)).setUseType(MaterialUseType.CONSUMABLE.getKey());
         add(material);
         return name + "已经成功添加到物料库";
