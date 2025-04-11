@@ -55,9 +55,9 @@ public class ParticipantEntity extends BaseEntity<ParticipantEntity> {
     @NotBlank(groups = {WhenAdd.class, WhenUpdate.class}, message = "证件号不能为空")
     private String identification;
 
-    @Description("参与方类型")
+    @Description("身份类型")
     @Search(EQUALS)
-    @Column(columnDefinition = "bigint UNSIGNED default 0 comment '参与方类型'")
+    @Column(columnDefinition = "bigint UNSIGNED default 0 comment '身份类型'")
     @Dictionary(value = IdentityType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 

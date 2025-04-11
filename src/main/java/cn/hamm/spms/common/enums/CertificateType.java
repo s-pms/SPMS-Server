@@ -13,6 +13,11 @@ import lombok.Getter;
 @Getter
 public enum CertificateType implements IDictionary {
     /**
+     * <h3>其他</h3>
+     */
+    OTHER(0, "其他", IdentityType.OTHER),
+
+    /**
      * <h3>中国身份证</h3>
      */
     CHINESE_ID_CARD(1, "中国身份证", IdentityType.PERSONAL),
@@ -37,10 +42,7 @@ public enum CertificateType implements IDictionary {
      */
     UNIFIED_CREDIT_CODE(5, "统一信用代码", IdentityType.COMPANY),
 
-    /**
-     * <h3>其他</h3>
-     */
-    OTHER(5, "其他", IdentityType.OTHER);
+    ;
 
     private final int key;
     private final String label;
