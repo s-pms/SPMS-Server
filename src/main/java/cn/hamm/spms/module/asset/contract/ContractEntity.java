@@ -11,10 +11,7 @@ import cn.hamm.spms.module.asset.contract.enums.ContractStatus;
 import cn.hamm.spms.module.asset.contract.enums.ContractType;
 import cn.hamm.spms.module.asset.contract.participant.ParticipantEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleField;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,7 +24,6 @@ import java.util.Set;
 import static cn.hamm.airpower.annotation.ExcelColumn.Type.BOOLEAN;
 import static cn.hamm.airpower.annotation.ExcelColumn.Type.DATETIME;
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static jakarta.persistence.FetchType.EAGER;
 
 /**
  * <h1>合同实体</h1>
@@ -88,10 +84,10 @@ public class ContractEntity extends BaseEntity<ContractEntity> {
     private Boolean isTemplate;
 
     @Description("附件列表")
-    @ManyToMany(fetch = EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<ContractDocumentEntity> documentList;
 
     @Description("参与方列表")
-    @ManyToMany(fetch = EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<ParticipantEntity> participantList;
 }

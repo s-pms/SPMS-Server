@@ -6,6 +6,7 @@ import cn.hamm.airpower.validate.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.enums.CertificateType;
 import cn.hamm.spms.common.enums.IdentityType;
+import cn.hamm.spms.module.asset.contract.enums.ParticipantRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -60,6 +61,12 @@ public class ParticipantEntity extends BaseEntity<ParticipantEntity> {
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '身份类型'")
     @Dictionary(value = IdentityType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
+
+    @Description("参与人角色")
+    @Search(EQUALS)
+    @Column(columnDefinition = "bigint UNSIGNED default 1 comment '参与人角色'")
+    @Dictionary(value = ParticipantRole.class, groups = {WhenAdd.class, WhenUpdate.class})
+    private Integer role;
 
     @Description("证件类型")
     @Search(EQUALS)

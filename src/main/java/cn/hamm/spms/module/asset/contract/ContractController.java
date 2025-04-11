@@ -25,7 +25,7 @@ public class ContractController extends BaseController<ContractEntity, ContractS
         return Json.success("生效合同成功");
     }
 
-    @Description("生效合同")
+    @Description("终止合同")
     @PostMapping("stop")
     @Filter(WhenGetDetail.class)
     public Json stop(@RequestBody @Validated(WhenIdRequired.class) ContractEntity contract) {
