@@ -3,7 +3,7 @@ package cn.hamm.spms.module.open.app;
 import cn.hamm.airpower.annotation.*;
 import cn.hamm.airpower.open.IOpenApp;
 import cn.hamm.airpower.open.OpenArithmeticType;
-import cn.hamm.airpower.validate.dictionary.Dictionary;
+import cn.hamm.airpower.validate.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.open.oauth.IOauthAction;
 import com.fasterxml.jackson.annotation.JsonProperty;
