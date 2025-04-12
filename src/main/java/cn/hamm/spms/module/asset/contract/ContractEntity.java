@@ -40,6 +40,7 @@ import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 @Description("合同")
 public class ContractEntity extends BaseEntity<ContractEntity> {
     @Description("合同编码")
+    @Search
     @Column(columnDefinition = "varchar(255) default '' comment '合同编码'", unique = true)
     @AutoGenerateCode(CodeRuleField.ContractCode)
     private String code;
