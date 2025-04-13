@@ -21,7 +21,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Set;
 
-import static cn.hamm.airpower.annotation.ExcelColumn.Type.BOOLEAN;
 import static cn.hamm.airpower.annotation.ExcelColumn.Type.DATETIME;
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 
@@ -77,12 +76,6 @@ public class ContractEntity extends BaseEntity<ContractEntity> {
     @Column(columnDefinition = "bigint UNSIGNED default 1 comment '合同状态'")
     @Dictionary(value = ContractStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer status;
-
-    @Description("是否模板")
-    @Search(EQUALS)
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否模板'")
-    @ExcelColumn(BOOLEAN)
-    private Boolean isTemplate;
 
     @Description("附件列表")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
