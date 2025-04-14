@@ -26,6 +26,11 @@ public enum FileCategory implements IDictionary {
      * <h3>头像</h3>
      */
     AVATAR(1001, "头像"),
+
+    /**
+     * <h3>合同附件</h3>
+     */
+    CONTRACT_ATTACHMENT(2001, "合同附件"),
     ;
 
     private final int key;

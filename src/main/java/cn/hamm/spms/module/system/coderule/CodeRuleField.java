@@ -120,6 +120,11 @@ public enum CodeRuleField implements IDictionary {
      */
     RoutingCode(21, "工艺编码", "RT", NEVER, STRING_EMPTY),
 
+    /**
+     * <h3>合同编码</h3>
+     */
+    ContractCode(22, "合同编码", "CON", YEAR, "yyyy"),
+
     ;
 
     private final int key;

@@ -4,8 +4,11 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.mcp.method.McpMethod;
 import cn.hamm.airpower.mcp.method.McpOptional;
 import cn.hamm.spms.base.BaseService;
+import cn.hamm.spms.module.asset.material.enums.MaterialType;
+import cn.hamm.spms.module.asset.material.enums.MaterialUseType;
 import cn.hamm.spms.module.system.unit.UnitService;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -17,12 +20,8 @@ import java.util.Objects;
  */
 @Service
 public class MaterialService extends BaseService<MaterialEntity, MaterialRepository> {
-    private final UnitService unitService;
-
-    public MaterialService(UnitService unitService) {
-        super();
-        this.unitService = unitService;
-    }
+    @Autowired
+    private UnitService unitService;
 
     @Override
     protected MaterialEntity beforeAppSaveToDatabase(@NotNull MaterialEntity material) {
