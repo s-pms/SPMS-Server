@@ -35,3 +35,4 @@ public class Application {
         // ReportEventListener 注入后可开启MQTT监听
     }
 }
+                
