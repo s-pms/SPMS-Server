@@ -17,7 +17,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 @EnableScheduling
 public class Application {
     /**
-     * <h2>服务器上下文对象/h2>
+     * <h2>服务器上下文对象</h2>
      */
     private static ServletWebServerApplicationContext serverApplicationContext;
 
