@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.iot.report;
 
-import cn.hamm.airpower.interfaces.IAction;
 import cn.hamm.airpower.interfaces.IEntityAction;
 import cn.hamm.airpower.root.RootModel;
 import cn.hamm.airpower.validate.Dictionary;
@@ -18,7 +17,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
-public class ReportPayload extends RootModel<ReportPayload> implements IReportPayloadAction, IEntityAction, IAction {
+public class ReportPayload extends RootModel<ReportPayload> implements IReportPayloadAction, IEntityAction {
     /**
      * <h3>属性名</h3>
      */
