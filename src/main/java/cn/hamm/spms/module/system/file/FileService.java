@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static cn.hamm.airpower.config.Constant.STRING_DOT;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_UPLOAD_MAX_SIZE;
 import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
 
@@ -77,7 +76,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
             }
 
             // 文件名
-            String fileName = hashMd5 + STRING_DOT + extension;
+            String fileName = hashMd5 + "." + extension;
 
             // 保存的相对文件路径
             String relativeFilePath = relativeDirectory + fileName;

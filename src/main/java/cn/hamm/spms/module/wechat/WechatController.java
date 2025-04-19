@@ -6,8 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import static cn.hamm.airpower.config.Constant.STRING_SUCCESS;
-
 /**
  * <h1>Wechat</h1>
  *
@@ -17,6 +15,11 @@ import static cn.hamm.airpower.config.Constant.STRING_SUCCESS;
 @Controller
 @RequestMapping("wechat")
 public class WechatController extends RootController {
+    /**
+     * <h3>{@code Success}</h3>
+     */
+    public static final String STRING_SUCCESS = "success";
+
     @RequestMapping(value = "init", produces = "text/plain")
     @ResponseBody
     public String init() {

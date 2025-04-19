@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.iot.report;
 
-import cn.hamm.airpower.config.Constant;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,6 +59,6 @@ public class ReportConstant {
      */
     @Contract(pure = true)
     static @NotNull String getDeviceReportParamCacheKey(String code, String uuid) {
-        return CACHE_PREFIX + code + Constant.STRING_UNDERLINE + uuid;
+        return CACHE_PREFIX + code + "_" + uuid;
     }
 }

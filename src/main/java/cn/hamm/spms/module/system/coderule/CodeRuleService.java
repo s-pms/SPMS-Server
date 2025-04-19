@@ -10,7 +10,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-import static cn.hamm.airpower.config.Constant.STRING_LABEL;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
 import static cn.hamm.airpower.exception.ServiceError.SERVICE_ERROR;
 import static cn.hamm.spms.module.system.coderule.CodeRuleParam.*;
@@ -22,6 +21,10 @@ import static cn.hamm.spms.module.system.coderule.CodeRuleParam.*;
  */
 @Service
 public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleRepository> {
+    /**
+     * <h3>{@code Label}</h3>
+     */
+    public static final String STRING_LABEL = "label";
     /**
      * <h3>年份位数</h3>
      */

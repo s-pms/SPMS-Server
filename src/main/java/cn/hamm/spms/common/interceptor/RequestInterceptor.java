@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-import static cn.hamm.airpower.config.Constant.STRING_EMPTY;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 import static cn.hamm.airpower.exception.ServiceError.UNAUTHORIZED;
 import static cn.hamm.spms.common.config.AppConstant.APP_PLATFORM_HEADER;
@@ -116,7 +115,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         String accessToken = request.getHeader(serviceConfig.getAuthorizeHeader());
         Long userId = null;
         int appVersion = request.getIntHeader(APP_VERSION_HEADER);
-        String platform = STRING_EMPTY;
+        String platform = "";
         String action = request.getRequestURI();
         try {
             AccessTokenUtil.VerifiedToken verifiedToken = AccessTokenUtil.create().verify(accessToken, serviceConfig.getAccessTokenSecret());

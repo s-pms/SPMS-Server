@@ -20,7 +20,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.util.Objects;
 
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.airpower.config.Constant.STRING_ONE;
+import static cn.hamm.spms.module.system.config.ConfigService.STRING_ONE;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**

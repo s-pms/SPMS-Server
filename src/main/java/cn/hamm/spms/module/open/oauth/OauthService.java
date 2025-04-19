@@ -21,8 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.config.Constant.STRING_EMPTY;
-import static cn.hamm.airpower.config.Constant.STRING_UNDERLINE;
 import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 
@@ -56,7 +54,7 @@ public class OauthService {
      */
     @Contract(pure = true)
     public static @NotNull String getUserIdCacheKey(String appKey, String code) {
-        return "oauth_user_" + appKey + STRING_UNDERLINE + code;
+        return "oauth_user_" + appKey + "_" + code;
     }
 
     /**
@@ -68,7 +66,7 @@ public class OauthService {
      */
     @Contract(pure = true)
     public static @NotNull String getScopeCacheKey(String appKey, String code) {
-        return "oauth_scope_" + appKey + STRING_UNDERLINE + code;
+        return "oauth_scope_" + appKey + "_" + code;
     }
 
     private static OauthPlatform getOauthPlatform(String platform) {
@@ -147,7 +145,7 @@ public class OauthService {
     public String getOauthScopeCache(String appKey, String code) {
         Object object = redisHelper.get(getScopeCacheKey(appKey, code));
         if (Objects.isNull(object)) {
-            return STRING_EMPTY;
+            return "";
         }
         return object.toString();
     }
@@ -193,8 +191,8 @@ public class OauthService {
         }
         userThirdLoginService.add(new UserThirdLoginEntity().setThirdUserId(userInfo.getUserId())
                 .setUser(user)
-                .setNickName(StringUtils.hasText(userInfo.getNickName()) ? userInfo.getNickName() : STRING_EMPTY)
-                .setAvatar(StringUtils.hasText(userInfo.getAvatar()) ? userInfo.getAvatar() : STRING_EMPTY)
+                .setNickName(StringUtils.hasText(userInfo.getNickName()) ? userInfo.getNickName() : "")
+                .setAvatar(StringUtils.hasText(userInfo.getAvatar()) ? userInfo.getAvatar() : "")
                 .setPlatform(oauthPlatform.getKey())
                 .setGender(gender)
         );

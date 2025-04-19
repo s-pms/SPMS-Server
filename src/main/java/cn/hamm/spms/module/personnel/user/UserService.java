@@ -33,7 +33,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 
-import static cn.hamm.airpower.config.Constant.*;
 import static cn.hamm.airpower.exception.ServiceError.*;
 import static cn.hamm.spms.common.exception.CustomError.*;
 
@@ -255,7 +254,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         saveCookie(user.getId(), cookieString);
         Cookie cookie = cookieHelper.getAuthorizeCookie(cookieString);
         cookie.setHttpOnly(false);
-        cookie.setPath(STRING_SLASH);
+        cookie.setPath(CookieHelper.DEFAULT_PATH);
         response.addCookie(cookie);
         return accessToken;
     }
@@ -347,7 +346,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public long registerUserViaEmail(@NotNull String email, String password) {
         // 昵称默认为邮箱账号 @ 前面的
-        String nickname = email.split(STRING_AT)[0];
+        String nickname = email.split("@")[0];
         String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
         UserEntity user = new UserEntity().setPassword(PasswordUtil.encode(password, salt))
                 .setSalt(salt)
@@ -375,7 +374,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     private String getEmailCode(String email) {
         Object code = redisHelper.get(getEmailCacheKey(email));
-        return Objects.isNull(code) ? STRING_EMPTY : code.toString();
+        return Objects.isNull(code) ? "" : code.toString();
     }
 
     /**
@@ -386,7 +385,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     private String getSmsCode(String phone) {
         Object code = redisHelper.get(getPhoneCodeCacheKey(phone));
-        return Objects.isNull(code) ? STRING_EMPTY : code.toString();
+        return Objects.isNull(code) ? "" : code.toString();
     }
 
     @Override

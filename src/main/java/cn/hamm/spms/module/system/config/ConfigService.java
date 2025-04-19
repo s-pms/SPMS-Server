@@ -5,8 +5,6 @@ import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import static cn.hamm.airpower.config.Constant.STRING_ONE;
-import static cn.hamm.airpower.config.Constant.STRING_ZERO;
 import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
 
@@ -17,6 +15,15 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
  */
 @Service
 public class ConfigService extends BaseService<ConfigEntity, ConfigRepository> {
+    /**
+     * <h3>String {@code "0"}</h3>
+     */
+    public static final String STRING_ZERO = "0";
+    /**
+     * <h3>String {@code "1"}</h3>
+     */
+    public static final String STRING_ONE = "1";
+
     /**
      * <h3>根据配置枚举获取配置信息</h3>
      *

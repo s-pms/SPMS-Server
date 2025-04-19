@@ -4,7 +4,6 @@ import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Filter;
 import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.config.Constant;
 import cn.hamm.airpower.helper.CookieHelper;
 import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.base.BaseController;
@@ -172,7 +171,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
     public Json logout(HttpServletResponse httpServletResponse) {
         Cookie cookie = cookieHelper.getAuthorizeCookie("");
         cookie.setHttpOnly(false);
-        cookie.setPath(Constant.STRING_SLASH);
+        cookie.setPath(CookieHelper.DEFAULT_PATH);
         // 清除cookie
         cookie.setMaxAge(0);
         httpServletResponse.addCookie(cookie);

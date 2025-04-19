@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.config.Constant.*;
 import static cn.hamm.spms.module.iot.report.ReportDataType.*;
+import static cn.hamm.spms.module.system.config.ConfigService.STRING_ONE;
 
 /**
  * <h1>Influx助手类</h1>
@@ -29,7 +29,7 @@ import static cn.hamm.spms.module.iot.report.ReportDataType.*;
  */
 @Configuration
 public class InfluxHelper {
-    public static final String INFLUX_FIELD_VALUE = STRING_VALUE;
+    public static final String INFLUX_FIELD_VALUE = "value";
     private static final String INFLUX_TAG_UUID = "uuid";
     private static final String INFLUX_SQL_SPLIT = " |> ";
     private static final String INFLUX_RECORD_VALUE_KEY = "_value";
@@ -151,7 +151,7 @@ public class InfluxHelper {
                         payload.setValue(Objects.isNull(value) ? 0 : Double.parseDouble(value.toString()));
                         break;
                     case STRING:
-                        payload.setStrValue(Objects.isNull(value) ? STRING_EMPTY : value.toString());
+                        payload.setStrValue(Objects.isNull(value) ? "" : value.toString());
                         break;
                     case BOOLEAN:
                         payload.setBoolValue(!Objects.isNull(value) && STRING_ONE.equals(value.toString()));

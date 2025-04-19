@@ -184,7 +184,7 @@ public class InitializeRunner implements CommandLineRunner {
                                 .setIsSystem(true)
                                 .setRuleField(codeRuleField.getKey())
                                 .setPrefix(codeRuleField.getDefaultPrefix())
-                                .setTemplate(codeRuleField.getDefaultTemplate())
+                                .setTemplate(codeRuleField.getDefaultSnType().getDefaultTemplate())
                                 .setSnType(codeRuleField.getDefaultSnType().getKey())
                 );
             }
