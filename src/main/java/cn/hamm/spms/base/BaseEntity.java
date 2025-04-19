@@ -38,6 +38,7 @@ public class BaseEntity<E extends BaseEntity<E>> extends RootEntity<E> {
      * @param isPublished 是否已发布
      * @return 实体
      */
+    @SuppressWarnings("UnusedReturnValue")
     public E setIsPublished(Boolean isPublished) {
         this.isPublished = isPublished;
         //noinspection unchecked

@@ -114,13 +114,13 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         add(secondMenu);
 
         // 物联网
-//        firstMenu = new MenuEntity().setName("设备物联").setOrderNo(44).setParentId(TreeUtil.ROOT_ID);
-//        firstMenu = get(add(firstMenu));
-//
-//        secondMenu = new MenuEntity().setName("设备概览").setPath("/console/iot/monitor/preview").setParentId(firstMenu.getId());
-//        add(secondMenu);
-//        secondMenu = new MenuEntity().setName("参数管理").setPath("/console/iot/parameter/list").setParentId(firstMenu.getId());
-//        add(secondMenu);
+        firstMenu = new MenuEntity().setName("设备物联").setOrderNo(44).setParentId(TreeUtil.ROOT_ID);
+        firstMenu = get(add(firstMenu));
+
+        secondMenu = new MenuEntity().setName("设备概览").setPath("/console/iot/monitor/preview").setParentId(firstMenu.getId());
+        add(secondMenu);
+        secondMenu = new MenuEntity().setName("参数管理").setPath("/console/iot/parameter/list").setParentId(firstMenu.getId());
+        add(secondMenu);
 
         // 系统管理
         firstMenu = new MenuEntity().setName("系统管理").setOrderNo(3).setParentId(ROOT_ID);
