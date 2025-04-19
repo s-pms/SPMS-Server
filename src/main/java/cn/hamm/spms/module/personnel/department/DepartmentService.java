@@ -23,7 +23,7 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EXIST;
 @Service
 public class DepartmentService extends BaseService<DepartmentEntity, DepartmentRepository> {
     /**
-     * <h3>排序字段</h3>
+     * 排序字段
      */
     private static final String ORDER_FIELD_NAME = "orderNo";
 

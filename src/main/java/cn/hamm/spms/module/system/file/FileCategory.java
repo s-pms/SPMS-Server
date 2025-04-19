@@ -13,22 +13,22 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum FileCategory implements IDictionary {
     /**
-     * <h3>临时文件</h3>
+     * 临时文件
      */
     TEMP(0, "临时文件"),
 
     /**
-     * <h3>普通文件</h3>
+     * 普通文件
      */
     NORMAL(1, "普通文件"),
 
     /**
-     * <h3>头像</h3>
+     * 头像
      */
     AVATAR(1001, "头像"),
 
     /**
-     * <h3>合同附件</h3>
+     * 合同附件
      */
     CONTRACT_ATTACHMENT(2001, "合同附件"),
     ;

@@ -33,7 +33,7 @@ public class BaseEntity<E extends BaseEntity<E>> extends RootEntity<E> {
     private Boolean isPublished;
 
     /**
-     * <h3>设置是否已发布</h3>
+     * 设置是否已发布
      *
      * @param isPublished 是否已发布
      * @return 实体

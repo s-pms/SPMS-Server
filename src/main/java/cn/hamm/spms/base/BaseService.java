@@ -23,7 +23,7 @@ import java.util.Objects;
 @Slf4j
 public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> extends RootService<E, R> {
     /**
-     * <h3>当前服务的数据库最后一次确认</h3>
+     * 当前服务的数据库最后一次确认
      *
      * @param entity 实体
      * @return 处理后的数据
@@ -54,7 +54,7 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
     }
 
     /**
-     * <h3>发布</h3>
+     * 发布
      *
      * @param id ID
      */
@@ -66,7 +66,7 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
     }
 
     /**
-     * <h3>发布前</h3>
+     * 发布前
      *
      * @param entity 实体
      */

@@ -141,7 +141,6 @@ public class InitializeRunner implements CommandLineRunner {
         initDevData();
     }
 
-
     private void initParameters() {
         ParameterEntity parameter;
 
@@ -349,7 +348,6 @@ public class InitializeRunner implements CommandLineRunner {
                         new RoutingOperationEntity().setOperation(operationService.get(operationIdSystem))
                 ))
         );
-
 
         StructureEntity structure = new StructureEntity().setName("笔记本电脑产线");
         structure = structureService.get(structureService.add(structure));

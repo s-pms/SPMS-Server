@@ -7,13 +7,13 @@ package cn.hamm.spms.module.personnel.role;
  */
 public interface IRoleAction {
     /**
-     * <h3>当授权菜单时</h3>
+     * 当授权菜单时
      */
     interface WhenAuthorizeMenu {
     }
 
     /**
-     * <h3>当授权权限时</h3>
+     * 当授权权限时
      */
     interface WhenAuthorizePermission {
     }

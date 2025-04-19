@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContractService extends BaseService<ContractEntity, ContractRepository> {
     /**
-     * <h3>生效合同</h3>
+     * 生效合同
      *
      * @param id 合同ID
      */
@@ -25,7 +25,7 @@ public class ContractService extends BaseService<ContractEntity, ContractReposit
     }
 
     /**
-     * <h3>终止合同</h3>
+     * 终止合同
      *
      * @param id 合同ID
      */

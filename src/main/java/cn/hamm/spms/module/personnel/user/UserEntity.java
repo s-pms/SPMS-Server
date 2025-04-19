@@ -121,7 +121,7 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     private Long departmentId;
 
     /**
-     * <h3>获取是否超级管理员</h3>
+     * 获取是否超级管理员
      *
      * @return 结果
      */

@@ -58,7 +58,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Slf4j
 public class OauthController extends RootController implements IOauthAction {
     /**
-     * <h3>{@code Error}</h3>
+     * {@code Error}
      */
     public static final String STRING_ERROR = "error";
 
@@ -242,7 +242,7 @@ public class OauthController extends RootController implements IOauthAction {
     }
 
     /**
-     * <h3>生成Token</h3>
+     * 生成Token
      *
      * @param userId    用户ID
      * @param scope     权限
@@ -261,7 +261,7 @@ public class OauthController extends RootController implements IOauthAction {
     }
 
     /**
-     * <h3>重定向到登录页面</h3>
+     * 重定向到登录页面
      *
      * @param response    响应对象
      * @param appKey      AppKey
@@ -281,7 +281,7 @@ public class OauthController extends RootController implements IOauthAction {
     }
 
     /**
-     * <h3>显示一个错误页面</h3>
+     * 显示一个错误页面
      *
      * @param error 错误信息
      * @return 错误页面
@@ -293,7 +293,7 @@ public class OauthController extends RootController implements IOauthAction {
     }
 
     /**
-     * <h3>重定向到指定的URL</h3>
+     * 重定向到指定的URL
      *
      * @param response 响应体
      * @param url      目标URL
@@ -307,7 +307,7 @@ public class OauthController extends RootController implements IOauthAction {
     }
 
     /**
-     * <h3>从Cookie获取用户ID</h3>
+     * 从Cookie获取用户ID
      *
      * @return Cookie字符串
      */
@@ -333,7 +333,7 @@ public class OauthController extends RootController implements IOauthAction {
     }
 
     /**
-     * <h3>获取scope</h3>
+     * 获取scope
      *
      * @param request 请求
      * @return scope字符串
@@ -350,7 +350,7 @@ public class OauthController extends RootController implements IOauthAction {
     }
 
     /**
-     * <h3>重定向回第三方页面</h3>
+     * 重定向回第三方页面
      *
      * @param response    响应
      * @param appKey      appKey

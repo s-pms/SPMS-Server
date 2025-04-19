@@ -30,7 +30,7 @@ public enum CustomError implements IException<CustomError>, IDictionary {
     }
 
     /**
-     * <h3>获取枚举的 {@code Key}</h3>
+     * 获取枚举的 {@code Key}
      *
      * @return {@code Key}
      */
@@ -41,7 +41,7 @@ public enum CustomError implements IException<CustomError>, IDictionary {
     }
 
     /**
-     * <h3>获取枚举的描述</h3>
+     * 获取枚举的描述
      *
      * @return 描述
      */

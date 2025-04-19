@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ParameterRepository extends BaseRepository<ParameterEntity> {
     /**
-     * <h3>根据参数编码查询</h3>
+     * 根据参数编码查询
      *
      * @param code 参数编码
      * @return 参数

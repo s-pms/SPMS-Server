@@ -13,17 +13,17 @@ import lombok.Getter;
 @Getter
 public enum IdentityType implements IDictionary {
     /**
-     * <h3>其他</h3>
+     * 其他
      */
     OTHER(0, "其他"),
 
     /**
-     * <h3>个人</h3>
+     * 个人
      */
     PERSONAL(1, "个人"),
 
     /**
-     * <h3>企业</h3>
+     * 企业
      */
     COMPANY(2, "企业"),
     ;

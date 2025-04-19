@@ -27,7 +27,7 @@ import java.util.Objects;
 @Service
 public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository> implements IOpenAppService {
     /**
-     * <h3>通过AppKey获取一个应用</h3>
+     * 通过AppKey获取一个应用
      *
      * @param appKey AppKey
      * @return 应用
@@ -52,7 +52,7 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
     }
 
     /**
-     * <h3>创建AppSecret</h3>
+     * 创建AppSecret
      *
      * @return AppSecret
      */
@@ -61,7 +61,7 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
     }
 
     /**
-     * <h3>重置密钥对</h3>
+     * 重置密钥对
      *
      * @param openApp 应用
      */
@@ -87,7 +87,7 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
     }
 
     /**
-     * <h3>创建AppKey</h3>
+     * 创建AppKey
      *
      * @return AppKey
      */

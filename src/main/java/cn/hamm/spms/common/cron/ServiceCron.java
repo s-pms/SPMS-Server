@@ -39,7 +39,7 @@ public class ServiceCron {
     }
 
     /**
-     * <h3>重置自定义编码规则序列号</h3>
+     * 重置自定义编码规则序列号
      *
      * @param codeRule 编码规则
      */

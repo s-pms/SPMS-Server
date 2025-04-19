@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.iot.report;
 
-
 import cn.hamm.airpower.helper.MqttHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -25,7 +24,7 @@ public class ReportEventListener {
     private ReportMqCallback reportMqCallback;
 
     /**
-     * <h3>开始监听MQTT</h3>
+     * 开始监听MQTT
      *
      * @throws MqttException 异常
      */

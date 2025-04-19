@@ -13,22 +13,22 @@ import lombok.Getter;
 @Getter
 public enum OutputType implements IDictionary {
     /**
-     * <h3>其他出库</h3>
+     * 其他出库
      */
     NORMAL(1, "普通出库"),
 
     /**
-     * <h3>转移出库</h3>
+     * 转移出库
      */
     MOVE(2, "转移出库"),
 
     /**
-     * <h3>销售出库</h3>
+     * 销售出库
      */
     SALE(3, "销售出库"),
 
     /**
-     * <h3>领料出库</h3>
+     * 领料出库
      */
     PICKING(4, "领料出库");
 

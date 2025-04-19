@@ -56,7 +56,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     /**
-     * <h3>添加订单明细</h3>
+     * 添加订单明细
      *
      * @param orderDetail 订单明细
      */
@@ -114,7 +114,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     /**
-     * <h3>添加入库单</h3>
+     * 添加入库单
      *
      * @param order 订单
      */
@@ -151,7 +151,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     /**
-     * <h3>开始生产</h3>
+     * 开始生产
      *
      * @param id 单据ID
      */
@@ -165,7 +165,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     /**
-     * <h3>暂停生产</h3>
+     * 暂停生产
      *
      * @param id 单据ID
      */

@@ -13,26 +13,25 @@ import lombok.Getter;
 @Getter
 public enum ParticipantRole implements IDictionary {
     /**
-     * <h3>甲方</h3>
+     * 甲方
      */
     A(1, "甲方"),
 
     /**
-     * <h3>乙方</h3>
+     * 乙方
      */
     B(2, "乙方"),
 
     /**
-     * <h3>丙方</h3>
+     * 丙方
      */
     C(3, "丙方"),
 
     /**
-     * <h3>丁方</h3>
+     * 丁方
      */
     D(4, "丁方"),
     ;
-
 
     private final int key;
     private final String label;

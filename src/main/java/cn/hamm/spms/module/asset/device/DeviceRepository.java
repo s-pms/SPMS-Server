@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DeviceRepository extends BaseRepository<DeviceEntity> {
     /**
-     * <h3>通过UUID查询设备</h3>
+     * 通过UUID查询设备
      *
      * @param uuid UUID
      * @return 设备

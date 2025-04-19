@@ -21,7 +21,7 @@ import static cn.hamm.airpower.util.TreeUtil.ROOT_ID;
 @Service
 public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     /**
-     * <h3>排序字段</h3>
+     * 排序字段
      */
     private static final String ORDER_FIELD_NAME = "orderNo";
 
@@ -83,7 +83,6 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         secondMenu = new MenuEntity().setName("销售管理").setPath("/console/channel/sale/list").setParentId(firstMenu.getId());
         add(secondMenu);
 
-
         // 仓储管理 - WMS
         firstMenu = new MenuEntity().setName("仓储管理").setOrderNo(66).setParentId(ROOT_ID);
         firstMenu = get(add(firstMenu));
@@ -113,7 +112,6 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         add(secondMenu);
         secondMenu = new MenuEntity().setName("生产配方").setPath("/console/mes/bom/list").setParentId(firstMenu.getId());
         add(secondMenu);
-
 
         // 物联网
 //        firstMenu = new MenuEntity().setName("设备物联").setOrderNo(44).setParentId(TreeUtil.ROOT_ID);

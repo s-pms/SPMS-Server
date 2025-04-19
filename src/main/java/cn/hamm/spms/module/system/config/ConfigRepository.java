@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ConfigRepository extends BaseRepository<ConfigEntity> {
     /**
-     * <h3>根据标识查询配置信息</h3>
+     * 根据标识查询配置信息
      *
      * @param flag 配置标识
      * @return 配置信息

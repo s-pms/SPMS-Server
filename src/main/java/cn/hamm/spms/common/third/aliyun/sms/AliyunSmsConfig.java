@@ -14,12 +14,12 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("aliyun.sms")
 public class AliyunSmsConfig {
     /**
-     * <h3>签名</h3>
+     * 签名
      */
     private String signName;
 
     /**
-     * <h3>登录模板</h3>
+     * 登录模板
      */
     private String loginTemplate = "SMS_464330180";
 }

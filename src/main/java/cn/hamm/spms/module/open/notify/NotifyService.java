@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     /**
-     * <h3>线程池</h3>
+     * 线程池
      */
     private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(
             5,
@@ -44,7 +44,7 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     private EmailHelper emailHelper;
 
     /**
-     * <h3>发送通知</h3>
+     * 发送通知
      *
      * @param notifyScene 通知场景
      * @param data        通知数据
@@ -82,7 +82,7 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     }
 
     /**
-     * <h3>请求</h3>
+     * 请求
      *
      * @param notify 通知
      * @param data   数据
@@ -105,7 +105,7 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     }
 
     /**
-     * <h3>获取企业微信MarkDown格式</h3>
+     * 获取企业微信MarkDown格式
      *
      * @param title   通知标题
      * @param content 通知内容
@@ -121,7 +121,7 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     }
 
     /**
-     * <h3>获取钉钉MarkDown格式</h3>
+     * 获取钉钉MarkDown格式
      *
      * @param title   通知标题
      * @param content 通知内容
@@ -138,7 +138,7 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     }
 
     /**
-     * <h3>获取飞书MarkDown格式</h3>
+     * 获取飞书MarkDown格式
      *
      * @param title   通知标题
      * @param content 通知内容
@@ -168,7 +168,7 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     }
 
     /**
-     * <h3>获取邮件内容</h3>
+     * 获取邮件内容
      *
      * @param content 通知内容
      * @return 邮件内容
@@ -179,7 +179,7 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     }
 
     /**
-     * <h3>获取通知WebHook包体</h3>
+     * 获取通知WebHook包体
      *
      * @param notify 通知
      * @return 通知包体

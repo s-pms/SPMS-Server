@@ -22,21 +22,21 @@ import static cn.hamm.spms.module.system.coderule.CodeRuleParam.*;
 @Service
 public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleRepository> {
     /**
-     * <h3>{@code Label}</h3>
+     * {@code Label}
      */
     public static final String STRING_LABEL = "label";
     /**
-     * <h3>年份位数</h3>
+     * 年份位数
      */
     private static final int SHORT_YEAR_LENGTH = 2;
 
     /**
-     * <h3>流水号位数</h3>
+     * 流水号位数
      */
     private static final String CODE_RULE_FORMATTER = "%02d";
 
     /**
-     * <h3>创建一个自定义编码</h3>
+     * 创建一个自定义编码
      *
      * @param codeRuleField 为哪个字段创建
      * @return 一个自定义编码
@@ -78,7 +78,7 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
     }
 
     /**
-     * <h3>根据规则字段获取自定义编码规则</h3>
+     * 根据规则字段获取自定义编码规则
      *
      * @param ruleField 规则字段
      * @return 自定义编码规则

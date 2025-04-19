@@ -13,17 +13,17 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ConfigType implements IDictionary {
     /**
-     * <h3>字符串类型</h3>
+     * 字符串类型
      */
     STRING(0, "字符串类型"),
 
     /**
-     * <h3>布尔类型</h3>
+     * 布尔类型
      */
     BOOLEAN(1, "布尔类型"),
 
     /**
-     * <h3>数字类型</h3>
+     * 数字类型
      */
     NUMBER(2, "数字类型"),
     ;

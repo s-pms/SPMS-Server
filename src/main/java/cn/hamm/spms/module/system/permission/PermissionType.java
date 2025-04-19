@@ -13,12 +13,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PermissionType implements IDictionary {
     /**
-     * <h3>API权限</h3>
+     * API权限
      */
     API(0, "API权限"),
 
     /**
-     * <h3>MCP权限</h3>
+     * MCP权限
      */
     MCP(1, "MCP权限");
 

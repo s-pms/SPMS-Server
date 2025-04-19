@@ -112,7 +112,6 @@ public class PurchaseService extends AbstractBaseBillService<
         return PURCHASE_BILL_AUTO_AUDIT;
     }
 
-
     @McpMethod
     @Description("create purchase bill, includes reason/name/count")
     public String createPurchaseBill(

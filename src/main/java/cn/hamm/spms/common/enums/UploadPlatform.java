@@ -13,7 +13,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum UploadPlatform implements IDictionary {
     /**
-     * <h3>本地上传</h3>
+     * 本地上传
      */
     LOCAL(0, "本地上传"),
 

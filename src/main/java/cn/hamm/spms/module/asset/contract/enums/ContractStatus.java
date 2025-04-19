@@ -13,17 +13,17 @@ import lombok.Getter;
 @Getter
 public enum ContractStatus implements IDictionary {
     /**
-     * <h3>未生效</h3>
+     * 未生效
      */
     INVALID(1, "未生效"),
 
     /**
-     * <h3>生效中</h3>
+     * 生效中
      */
     EFFECTIVE(2, "生效中"),
 
     /**
-     * <h3>已终止</h3>
+     * 已终止
      */
     TERMINATED(3, "已终止");
 

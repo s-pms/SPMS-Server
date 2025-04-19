@@ -13,12 +13,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum UserGender implements IDictionary {
     /**
-     * <h3>女</h3>
+     * 女
      */
     FEMALE(0, "女"),
 
     /**
-     * <h3>男</h3>
+     * 男
      */
     MALE(1, "男"),
 

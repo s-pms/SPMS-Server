@@ -15,7 +15,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum OauthPlatform implements IDictionary {
     /**
-     * <h3>企业微信</h3>
+     * 企业微信
      */
     WE_COM(1, "企业微信", "wecom", WeComCallback.class);
 

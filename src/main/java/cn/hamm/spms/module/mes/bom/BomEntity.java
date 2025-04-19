@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.mes.bom;
 
-
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;

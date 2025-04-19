@@ -13,22 +13,22 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum UserTokenType implements IDictionary {
     /**
-     * <h3>普通令牌</h3>
+     * 普通令牌
      */
     NORMAL(0, "普通令牌"),
 
     /**
-     * <h3>私人令牌</h3>
+     * 私人令牌
      */
     PERSONAL(1, "私人令牌"),
 
     /**
-     * <h3>第三方令牌</h3>
+     * 第三方令牌
      */
     OAUTH2(2, "第三方令牌"),
     ;
     /**
-     * <h3>用户令牌类型</h3>
+     * 用户令牌类型
      */
     public static final String TYPE = "type";
     private final int key;

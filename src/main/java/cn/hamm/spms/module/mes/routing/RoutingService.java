@@ -22,7 +22,7 @@ import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
 @Service
 public class RoutingService extends BaseService<RoutingEntity, RoutingRepository> {
     /**
-     * <h3>排序字段</h3>
+     * 排序字段
      */
     private static final String ORDER_FIELD_NAME = "orderNo";
 

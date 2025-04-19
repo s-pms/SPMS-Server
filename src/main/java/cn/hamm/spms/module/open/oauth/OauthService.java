@@ -33,7 +33,7 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 @Service
 public class OauthService {
     /**
-     * <h3>Code缓存秒数</h3>
+     * Code缓存秒数
      */
     private static final int CACHE_CODE_EXPIRE_SECOND = DateTimeUtil.SECOND_PER_MINUTE * 5;
 
@@ -46,7 +46,7 @@ public class OauthService {
     private BeanFactory beanFactory;
 
     /**
-     * <h3>用户ID的缓存Key</h3>
+     * 用户ID的缓存Key
      *
      * @param appKey 应用Key
      * @param code   Code
@@ -58,7 +58,7 @@ public class OauthService {
     }
 
     /**
-     * <h3>Scope的缓存Key</h3>
+     * Scope的缓存Key
      *
      * @param appKey 应用Key
      * @param code   Code
@@ -81,7 +81,7 @@ public class OauthService {
     }
 
     /**
-     * <h3>缓存用户ID</h3>
+     * 缓存用户ID
      *
      * @param appKey AppKey
      * @param code   Code
@@ -92,7 +92,7 @@ public class OauthService {
     }
 
     /**
-     * <h3>获取缓存的用户ID</h3>
+     * 获取缓存的用户ID
      *
      * @param appKey AppKey
      * @param code   Code
@@ -105,7 +105,7 @@ public class OauthService {
     }
 
     /**
-     * <h3>删除缓存的用户ID</h3>
+     * 删除缓存的用户ID
      *
      * @param appKey AppKey
      * @param code   Code
@@ -115,7 +115,7 @@ public class OauthService {
     }
 
     /**
-     * <h3>删除缓存的Scope</h3>
+     * 删除缓存的Scope
      *
      * @param appKey AppKey
      * @param code   Code
@@ -125,7 +125,7 @@ public class OauthService {
     }
 
     /**
-     * <h3>缓存Scope</h3>
+     * 缓存Scope
      *
      * @param appKey AppKey
      * @param code   Code
@@ -136,7 +136,7 @@ public class OauthService {
     }
 
     /**
-     * <h3>获取缓存的Scope</h3>
+     * 获取缓存的Scope
      *
      * @param appKey AppKey
      * @param code   Code
@@ -151,7 +151,7 @@ public class OauthService {
     }
 
     /**
-     * <h3>第三方登录</h3>
+     * 第三方登录
      *
      * @param platform 平台
      * @param code     Code
@@ -170,7 +170,7 @@ public class OauthService {
     }
 
     /**
-     * <h3>第三方绑定</h3>
+     * 第三方绑定
      *
      * @param platform 平台
      * @param code     Code

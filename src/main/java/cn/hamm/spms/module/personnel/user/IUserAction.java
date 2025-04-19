@@ -8,49 +8,49 @@ package cn.hamm.spms.module.personnel.user;
 public interface IUserAction {
 
     /**
-     * <h3>ID密码 密码登录</h3>
+     * ID密码 密码登录
      */
     interface WhenLogin {
     }
 
     /**
-     * <h3>邮箱验证码登录</h3>
+     * 邮箱验证码登录
      */
     interface WhenLoginViaEmail {
     }
 
     /**
-     * <h3>密码重置</h3>
+     * 密码重置
      */
     interface WhenResetMyPassword {
     }
 
     /**
-     * <h3>修改密码</h3>
+     * 修改密码
      */
     interface WhenUpdateMyPassword {
     }
 
     /**
-     * <h3>修改资料</h3>
+     * 修改资料
      */
     interface WhenUpdateMyInfo {
     }
 
     /**
-     * <h3>发送邮件</h3>
+     * 发送邮件
      */
     interface WhenSendEmail {
     }
 
     /**
-     * <h3>发送短信</h3>
+     * 发送短信
      */
     interface WhenSendSms {
     }
 
     /**
-     * <h3>获取我的信息</h3>
+     * 获取我的信息
      */
     interface WhenGetMyInfo {
     }

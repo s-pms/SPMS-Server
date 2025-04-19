@@ -15,22 +15,22 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class OauthGetAccessTokenResponse extends RootModel<OauthGetAccessTokenResponse> {
     /**
-     * <h3>AccessToken</h3>
+     * AccessToken
      */
     private String accessToken;
 
     /**
-     * <h3>过期时间</h3>
+     * 过期时间
      */
     private Long expiresIn;
 
     /**
-     * <h3>刷新Token</h3>
+     * 刷新Token
      */
     private String refreshToken;
 
     /**
-     * <h3>权限范围</h3>
+     * 权限范围
      */
     private String scope;
 }

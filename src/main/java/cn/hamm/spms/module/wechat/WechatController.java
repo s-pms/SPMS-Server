@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("wechat")
 public class WechatController extends RootController {
     /**
-     * <h3>{@code Success}</h3>
+     * {@code Success}
      */
     public static final String STRING_SUCCESS = "success";
 

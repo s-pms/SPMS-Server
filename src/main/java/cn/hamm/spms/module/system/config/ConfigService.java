@@ -16,16 +16,16 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
 @Service
 public class ConfigService extends BaseService<ConfigEntity, ConfigRepository> {
     /**
-     * <h3>String {@code "0"}</h3>
+     * String {@code "0"}
      */
     public static final String STRING_ZERO = "0";
     /**
-     * <h3>String {@code "1"}</h3>
+     * String {@code "1"}
      */
     public static final String STRING_ONE = "1";
 
     /**
-     * <h3>根据配置枚举获取配置信息</h3>
+     * 根据配置枚举获取配置信息
      *
      * @param configFlag 配置枚举
      * @return 配置信息
@@ -35,7 +35,7 @@ public class ConfigService extends BaseService<ConfigEntity, ConfigRepository> {
     }
 
     /**
-     * <h3>根据配置标识获取配置信息</h3>
+     * 根据配置标识获取配置信息
      *
      * @param flag 配置标识
      * @return 配置信息

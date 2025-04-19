@@ -40,7 +40,7 @@ public class InfluxHelper {
     private InfluxDBClient influxDbClient;
 
     /**
-     * <h3>保存数据</h3>
+     * 保存数据
      *
      * @param code  参数名
      * @param uuid  设备ID
@@ -65,7 +65,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h3>获取写入API</h3>
+     * 获取写入API
      *
      * @return 写入API
      */
@@ -82,7 +82,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h3>查询数量</h3>
+     * 查询数量
      *
      * @param payload           报告负载
      * @param reportGranularity 报告颗粒度
@@ -93,7 +93,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h3>查询是否开启</h3>
+     * 查询是否开启
      *
      * @param payload           报告负载
      * @param reportGranularity 报告颗粒度
@@ -104,7 +104,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h3>查询报告信息</h3>
+     * 查询报告信息
      *
      * @param payload           报告负载
      * @param reportGranularity 报告颗粒度
@@ -115,7 +115,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h3>查询报告状态</h3>
+     * 查询报告状态
      *
      * @param payload           报告负载
      * @param reportGranularity 报告颗粒度
@@ -126,7 +126,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h3>查询报告</h3>
+     * 查询报告
      *
      * @param reportPayload     报告负载
      * @param reportDataType    数据类型
@@ -169,7 +169,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h3>初始化InfluxDB</h3>
+     * 初始化InfluxDB
      */
     private void initInfluxDbClient() {
         if (Objects.isNull(influxDbClient)) {
@@ -183,7 +183,7 @@ public class InfluxHelper {
     }
 
     /**
-     * <h3>获取查询参数</h3>
+     * 获取查询参数
      *
      * @param reportPayload     数采报告
      * @param reportDataType    数据类型

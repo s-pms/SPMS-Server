@@ -68,7 +68,7 @@ public class ConfigEntity extends BaseEntity<ConfigEntity> {
     private Boolean isSystem;
 
     /**
-     * <h3>设置是系统内置配置</h3>
+     * 设置是系统内置配置
      *
      * @param isSystem 内置配置
      * @return 配置信息

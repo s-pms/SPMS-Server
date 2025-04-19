@@ -99,7 +99,7 @@ public class BaseBillController<
     }
 
     /**
-     * <h3>审核后置方法</h3>
+     * 审核后置方法
      *
      * @param bill 单据
      */

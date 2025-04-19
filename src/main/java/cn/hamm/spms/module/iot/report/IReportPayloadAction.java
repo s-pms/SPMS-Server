@@ -7,7 +7,7 @@ package cn.hamm.spms.module.iot.report;
  */
 public interface IReportPayloadAction {
     /**
-     * <h3>获取设备某个参数的历史</h3>
+     * 获取设备某个参数的历史
      */
     interface WhenGetDevicePayloadHistory {
     }

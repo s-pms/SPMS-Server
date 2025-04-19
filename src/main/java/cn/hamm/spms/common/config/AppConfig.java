@@ -22,35 +22,35 @@ import static cn.hamm.spms.common.enums.UploadPlatform.LOCAL;
 @ConfigurationProperties("app")
 public class AppConfig {
     /**
-     * <h3>项目名称</h3>
+     * 项目名称
      */
     private String projectName = "SPMS";
 
     /**
-     * <h3>登录地址 用于 {@code OAuth2}</h3>
+     * 登录地址 用于 {@code OAuth2}
      */
     private String loginUrl;
 
     /**
-     * <h3>授权地址 用于 {@code OAuth2}</h3>
+     * 授权地址 用于 {@code OAuth2}
      */
     private String authorizeUrl;
 
     /**
-     * <h3>默认房间ID {@code 不是房间号}</h3>
+     * 默认房间ID {@code 不是房间号}
      */
     private long defaultRoomId = 1L;
 
     /**
-     * <h3>上传文件目录</h3>
+     * 上传文件目录
      */
     private String uploadDirectory = "upload";
     /**
-     * <h3>上传文件最大大小</h3>
+     * 上传文件最大大小
      */
     private long uploadMaxSize = FILE_SCALE * FILE_SCALE * 10;
     /**
-     * <h3>上传文件允许的扩展名</h3>
+     * 上传文件允许的扩展名
      */
     private String[] uploadAllowExtensions = new String[]{
             "jpg", "jpeg", "png", "gif", "bmp",
@@ -61,7 +61,7 @@ public class AppConfig {
             "markdown"
     };
     /**
-     * <h3>上传平台</h3>
+     * 上传平台
      */
     private UploadPlatform uploadPlatform = LOCAL;
 }

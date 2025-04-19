@@ -7,7 +7,7 @@ package cn.hamm.spms.base.bill;
  */
 public interface IBaseBillAction {
     /**
-     * <h3>拒绝单据</h3>
+     * 拒绝单据
      */
     interface WhenReject {
     }

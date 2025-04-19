@@ -13,12 +13,12 @@ import lombok.Getter;
 @Getter
 public enum MaterialUseType implements IDictionary {
     /**
-     * <h3>工具类</h3>
+     * 工具类
      */
     TOOL(1, "工具类"),
 
     /**
-     * <h3>消耗品</h3>
+     * 消耗品
      */
     CONSUMABLE(2, "消耗品");
 

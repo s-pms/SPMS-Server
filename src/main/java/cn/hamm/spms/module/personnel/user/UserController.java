@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DISABLED;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EDIT;
 
-
 /**
  * <h1>Controller</h1>
  *
@@ -163,7 +162,6 @@ public class UserController extends BaseController<UserEntity, UserService, User
     public Json login(@RequestBody @Validated(WhenLogin.class) UserEntity user, HttpServletResponse httpServletResponse) {
         return doLogin(UserLoginType.VIA_ACCOUNT_PASSWORD, user, httpServletResponse);
     }
-
 
     @Description("退出登录")
     @Permission(login = false)

@@ -26,7 +26,7 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
 public class PermissionService extends BaseService<PermissionEntity, PermissionRepository> {
 
     /**
-     * <h3>通过标识获取一个权限</h3>
+     * 通过标识获取一个权限
      *
      * @param identity 权限标识
      * @return 权限

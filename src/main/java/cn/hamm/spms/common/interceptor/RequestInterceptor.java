@@ -33,7 +33,7 @@ import static cn.hamm.spms.common.config.AppConstant.APP_VERSION_HEADER;
 @Component
 public class RequestInterceptor extends AbstractRequestInterceptor {
     /**
-     * <h3>日志前缀</h3>
+     * 日志前缀
      */
     final static String LOG_REQUEST_KEY = "logId";
 
@@ -50,7 +50,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     private PersonalTokenService personalTokenService;
 
     /**
-     * <h3>验证指定的用户是否有指定权限标识的权限</h3>
+     * 验证指定的用户是否有指定权限标识的权限
      *
      * @param userId             用户ID
      * @param permissionIdentity 权限标识
@@ -98,7 +98,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     }
 
     /**
-     * <h3>拦截请求</h3>
+     * 拦截请求
      *
      * @param request  请求对象
      * @param response 响应对象

@@ -13,22 +13,22 @@ import lombok.Getter;
 @Getter
 public enum PickingStatus implements IDictionary {
     /**
-     * <h3>审核中</h3>
+     * 审核中
      */
     AUDITING(1, "审核中"),
 
     /**
-     * <h3>已驳回</h3>
+     * 已驳回
      */
     REJECTED(2, "已驳回"),
 
     /**
-     * <h3>出库中</h3>
+     * 出库中
      */
     OUTPUTTING(3, "出库中"),
 
     /**
-     * <h3>已完成</h3>
+     * 已完成
      */
     DONE(4, "已完成");
 

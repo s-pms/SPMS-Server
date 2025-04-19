@@ -15,12 +15,12 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class RoomJoinRequest extends RootModel<RoomJoinRequest> {
     /**
-     * <h3>房间号</h3>
+     * 房间号
      */
     private Integer roomCode;
 
     /**
-     * <h3>密码</h3>
+     * 密码
      */
     private String password;
 }

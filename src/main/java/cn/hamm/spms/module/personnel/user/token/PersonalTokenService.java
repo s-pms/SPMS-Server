@@ -21,7 +21,7 @@ public class PersonalTokenService extends BaseService<PersonalTokenEntity, Perso
     public static final String PERSONAL_TOKEN_NAME = "personal";
 
     /**
-     * <h3>根据令牌获取</h3>
+     * 根据令牌获取
      *
      * @param token 令牌
      * @return 令牌
@@ -45,7 +45,7 @@ public class PersonalTokenService extends BaseService<PersonalTokenEntity, Perso
     }
 
     /**
-     * <h3>创建私人令牌</h3>
+     * 创建私人令牌
      *
      * @return AppKey
      */
