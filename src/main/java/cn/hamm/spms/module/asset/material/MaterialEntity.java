@@ -70,7 +70,7 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
     @ManyToOne
     @Search(JOIN)
     @NotNull(groups = {WhenAdd.class, WhenUpdate.class}, message = "默认单位不能为空")
-    private UnitEntity unitInfo;
+    private UnitEntity unit;
 
     @Description("采购标准价")
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '采购标准价'")

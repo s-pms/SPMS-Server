@@ -269,7 +269,7 @@ public class InitializeRunner implements CommandLineRunner {
                 .setMaterialType(MaterialType.PURCHASE.getKey())
                 .setName("MacBook Pro M4 Max")
                 .setSpc("32G-1TB")
-                .setUnitInfo(unit)
+                .setUnit(unit)
                 .setPurchasePrice(28000D)
                 .setSalePrice(29999D);
         material = materialService.get(materialService.add(material));
@@ -314,8 +314,8 @@ public class InitializeRunner implements CommandLineRunner {
         long operationIdScreen = operationService.add(new OperationEntity().setName("屏幕贴膜"));
         long operationIdSystem = operationService.add(new OperationEntity().setName("系统安装"));
 
-        long materialIdKeyboard = materialService.add(new MaterialEntity().setName("键盘").setMaterialType(MaterialType.PURCHASE.getKey()).setUnitInfo(unit));
-        long materialIdScreen = materialService.add(new MaterialEntity().setName("屏幕").setMaterialType(MaterialType.PURCHASE.getKey()).setUnitInfo(unit));
+        long materialIdKeyboard = materialService.add(new MaterialEntity().setName("键盘").setMaterialType(MaterialType.PURCHASE.getKey()).setUnit(unit));
+        long materialIdScreen = materialService.add(new MaterialEntity().setName("屏幕").setMaterialType(MaterialType.PURCHASE.getKey()).setUnit(unit));
 
         long bomId = bomService.add(new BomEntity().setName("笔记本电脑清单").setType(BomType.NORMAL.getKey()).setDetails(
                 new HashSet<>(Arrays.asList(
