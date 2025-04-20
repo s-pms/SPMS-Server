@@ -1,17 +1,18 @@
 package cn.hamm.spms.module.open.oauth;
 
-import cn.hamm.airpower.annotation.ApiController;
+import cn.hamm.airpower.access.AccessConfig;
+import cn.hamm.airpower.access.AccessTokenUtil;
+import cn.hamm.airpower.access.Permission;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.DesensitizeExclude;
-import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.config.CookieConfig;
-import cn.hamm.airpower.interfaces.IEntityAction;
-import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.root.RootController;
-import cn.hamm.airpower.util.AccessTokenUtil;
-import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.ApiController;
+import cn.hamm.airpower.api.Json;
+import cn.hamm.airpower.cookie.CookieConfig;
+import cn.hamm.airpower.curd.ICurdAction;
+import cn.hamm.airpower.desensitize.DesensitizeExclude;
+import cn.hamm.airpower.dictionary.DictionaryUtil;
+import cn.hamm.airpower.request.RequestUtil;
 import cn.hamm.airpower.util.RandomUtil;
-import cn.hamm.airpower.util.RequestUtil;
 import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.open.app.OpenAppEntity;
 import cn.hamm.spms.module.open.app.OpenAppService;
@@ -45,8 +46,8 @@ import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static cn.hamm.airpower.datetime.DateTimeUtil.*;
 import static cn.hamm.airpower.exception.ServiceError.*;
-import static cn.hamm.airpower.util.DateTimeUtil.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -54,9 +55,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  *
  * @author Hamm.cn
  */
-@ApiController("oauth2")
+@Api("oauth2")
 @Slf4j
-public class OauthController extends RootController implements IOauthAction {
+public class OauthController extends ApiController implements IOauthAction {
     /**
      * {@code Error}
      */
@@ -88,6 +89,9 @@ public class OauthController extends RootController implements IOauthAction {
 
     @Autowired
     private UserThirdLoginService userThirdLoginService;
+
+    @Autowired
+    private AccessConfig accessConfig;
 
     @GetMapping("authorize")
     public ModelAndView index(
@@ -172,7 +176,7 @@ public class OauthController extends RootController implements IOauthAction {
     }
 
     @PostMapping("unBindThird")
-    public Json unBindThird(@RequestBody @Validated(IEntityAction.WhenIdRequired.class) UserThirdLoginEntity userThirdLogin) {
+    public Json unBindThird(@RequestBody @Validated(ICurdAction.WhenIdRequired.class) UserThirdLoginEntity userThirdLogin) {
         userThirdLoginService.delete(userThirdLogin.getId());
         return Json.success("解绑成功");
     }
@@ -182,7 +186,7 @@ public class OauthController extends RootController implements IOauthAction {
     @PostMapping("getUserInfo")
     @DesensitizeExclude
     public Json getUserInfo(@RequestBody @Validated(WhenAccessTokenRequired.class) OauthGetUserInfoRequest request) {
-        AccessTokenUtil.VerifiedToken verify = AccessTokenUtil.create().verify(request.getAccessToken(), serviceConfig.getAccessTokenSecret());
+        AccessTokenUtil.VerifiedToken verify = AccessTokenUtil.create().verify(request.getAccessToken(), accessConfig.getAccessTokenSecret());
         long userId = Long.parseLong(Objects.requireNonNull(verify.getPayload(USER_ID), "无效的UserId").toString());
         UserEntity user = userService.get(userId);
         String appKey = Objects.requireNonNull(verify.getPayload(APP_KEY), "无效的AppKey").toString();
@@ -257,7 +261,7 @@ public class OauthController extends RootController implements IOauthAction {
                 .addPayload(APP_KEY, appKey)
                 .addPayload(UserTokenType.TYPE, UserTokenType.OAUTH2.getKey())
                 .setExpireMillisecond(expiresIn)
-                .build(serviceConfig.getAccessTokenSecret());
+                .build(accessConfig.getAccessTokenSecret());
     }
 
     /**

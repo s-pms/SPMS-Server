@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.personnel.role;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.model.Json;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.Json;
 import cn.hamm.spms.base.BaseController;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  *
  * @author Hamm.cn
  */
-@ApiController("role")
+@Api("role")
 @Description("角色")
 public class RoleController extends BaseController<RoleEntity, RoleService, RoleRepository> implements IRoleAction {
     @Description("授权菜单")

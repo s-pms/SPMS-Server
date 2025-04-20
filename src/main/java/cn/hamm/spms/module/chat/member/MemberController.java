@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.chat.member;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.api.Api;
 import cn.hamm.spms.base.BaseController;
 
 /**
@@ -9,7 +9,7 @@ import cn.hamm.spms.base.BaseController;
  *
  * @author Hamm.cn
  */
-@ApiController("member")
+@Api("member")
 @Description("成员")
 public class MemberController extends BaseController<MemberEntity, MemberService, MemberRepository> implements IMemberAction {
 }

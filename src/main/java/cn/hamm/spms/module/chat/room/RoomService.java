@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.chat.room;
 
-import cn.hamm.airpower.model.Sort;
+import cn.hamm.airpower.curd.Sort;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;

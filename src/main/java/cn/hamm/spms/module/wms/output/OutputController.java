@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.wms.output;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Extends;
-import cn.hamm.airpower.enums.Api;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.Extends;
+import cn.hamm.airpower.curd.Curd;
 import cn.hamm.spms.base.bill.BaseBillController;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailRepository;
@@ -14,8 +14,8 @@ import cn.hamm.spms.module.wms.output.detail.OutputDetailService;
  *
  * @author Hamm.cn
  */
-@ApiController("output")
+@Api("output")
 @Description("出库")
-@Extends(exclude = Api.Delete)
+@Extends(exclude = Curd.Delete)
 public class OutputController extends BaseBillController<OutputEntity, OutputService, OutputRepository, OutputDetailEntity, OutputDetailService, OutputDetailRepository> {
 }

@@ -2,7 +2,7 @@ package cn.hamm.spms.module.asset.contract.participant;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.validate.Dictionary;
+import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.enums.CertificateType;
 import cn.hamm.spms.common.enums.IdentityType;

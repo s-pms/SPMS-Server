@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.system;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.root.RootController;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.ApiController;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
  *
  * @author Hamm.cn
  */
-@ApiController("/")
+@Api("/")
 @Description("首页")
-public class IndexController extends RootController {
+public class IndexController extends ApiController {
     @GetMapping("")
     public String index() {
         return "<h1>Server running!</h1>";

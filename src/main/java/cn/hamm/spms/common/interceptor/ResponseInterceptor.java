@@ -1,7 +1,7 @@
 package cn.hamm.spms.common.interceptor;
 
+import cn.hamm.airpower.api.Json;
 import cn.hamm.airpower.interceptor.ResponseBodyInterceptor;
-import cn.hamm.airpower.model.Json;
 import cn.hamm.spms.module.system.log.LogEntity;
 import cn.hamm.spms.module.system.log.LogService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.personnel.department;
 
-import cn.hamm.airpower.model.Sort;
-import cn.hamm.airpower.model.query.QueryListRequest;
-import cn.hamm.airpower.root.RootEntity;
-import cn.hamm.airpower.util.TreeUtil;
+import cn.hamm.airpower.curd.CurdEntity;
+import cn.hamm.airpower.curd.Sort;
+import cn.hamm.airpower.curd.query.QueryListRequest;
+import cn.hamm.airpower.tree.TreeUtil;
 import cn.hamm.spms.base.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +45,7 @@ public class DepartmentService extends BaseService<DepartmentEntity, DepartmentR
 
     @Override
     protected @NotNull List<DepartmentEntity> afterGetList(@NotNull List<DepartmentEntity> list) {
-        list.forEach(RootEntity::excludeBaseData);
+        list.forEach(CurdEntity::excludeBaseData);
         return list;
     }
 

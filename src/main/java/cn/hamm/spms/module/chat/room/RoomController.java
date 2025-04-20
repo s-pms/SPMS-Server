@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.chat.room;
 
-import cn.hamm.airpower.annotation.ApiController;
+import cn.hamm.airpower.access.Permission;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.model.Json;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.Json;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  *
  * @author Hamm.cn
  */
-@ApiController("room")
+@Api("room")
 @Description("房间")
 public class RoomController extends BaseController<RoomEntity, RoomService, RoomRepository> implements IRoomAction {
     @Permission(authorize = false)

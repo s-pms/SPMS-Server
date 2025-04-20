@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-import static cn.hamm.airpower.util.FileUtil.FILE_SCALE;
+import static cn.hamm.airpower.file.FileUtil.FILE_SCALE;
 import static cn.hamm.spms.common.enums.UploadPlatform.LOCAL;
 
 /**

@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.iot.parameter;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.api.Api;
 import cn.hamm.spms.base.BaseController;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +12,7 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
  *
  * @author Hamm.cn
  */
-@ApiController("parameter")
+@Api("parameter")
 @Description("采集参数")
 public class ParameterController extends BaseController<ParameterEntity, ParameterService, ParameterRepository> {
     @Override

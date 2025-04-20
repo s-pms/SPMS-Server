@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.asset.contract;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.ExcelColumn;
 import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.validate.Dictionary;
+import cn.hamm.airpower.curd.export.ExcelColumn;
+import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.contract.document.ContractDocumentEntity;
@@ -21,8 +21,8 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Set;
 
-import static cn.hamm.airpower.annotation.ExcelColumn.Type.DATETIME;
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.airpower.curd.export.ExportColumnType.DATETIME;
 
 /**
  * <h1>合同实体</h1>

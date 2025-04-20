@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.mes.bom;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.api.Api;
 import cn.hamm.spms.base.BaseController;
 
 /**
@@ -9,7 +9,7 @@ import cn.hamm.spms.base.BaseController;
  *
  * @author Hamm.cn
  */
-@ApiController("bom")
+@Api("bom")
 @Description("BOM")
 public class BomController extends BaseController<BomEntity, BomService, BomRepository> {
 }

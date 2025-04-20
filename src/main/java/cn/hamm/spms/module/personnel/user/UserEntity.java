@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.personnel.user;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Desensitize;
 import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.validate.Dictionary;
+import cn.hamm.airpower.desensitize.Desensitize;
+import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.airpower.validate.Phone;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.department.DepartmentEntity;
@@ -25,8 +25,8 @@ import org.hibernate.validator.constraints.Length;
 import java.util.Objects;
 import java.util.Set;
 
-import static cn.hamm.airpower.annotation.Desensitize.Type.CHINESE_NAME;
-import static cn.hamm.airpower.annotation.Desensitize.Type.ID_CARD;
+import static cn.hamm.airpower.desensitize.DesensitizeType.CHINESE_NAME;
+import static cn.hamm.airpower.desensitize.DesensitizeType.ID_CARD;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 import static jakarta.persistence.FetchType.EAGER;
 

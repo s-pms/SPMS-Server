@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.mes.order;
 
-import cn.hamm.airpower.interfaces.IDictionary;
-import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.dictionary.DictionaryUtil;
+import cn.hamm.airpower.dictionary.IDictionary;
 import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;

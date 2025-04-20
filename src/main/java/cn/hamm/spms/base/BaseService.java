@@ -1,7 +1,7 @@
 package cn.hamm.spms.base;
 
-import cn.hamm.airpower.root.RootService;
-import cn.hamm.airpower.util.ReflectUtil;
+import cn.hamm.airpower.curd.CurdService;
+import cn.hamm.airpower.reflect.ReflectUtil;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
@@ -21,7 +21,7 @@ import java.util.Objects;
  * @author Hamm.cn
  */
 @Slf4j
-public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> extends RootService<E, R> {
+public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> extends CurdService<E, R> {
     /**
      * 当前服务的数据库最后一次确认
      *

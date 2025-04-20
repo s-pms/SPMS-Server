@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.asset.device;
 
-import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.api.Json;
+import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.helper.InfluxHelper;

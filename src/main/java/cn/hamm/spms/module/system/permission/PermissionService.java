@@ -1,10 +1,10 @@
 package cn.hamm.spms.module.system.permission;
 
+import cn.hamm.airpower.access.PermissionUtil;
+import cn.hamm.airpower.curd.CurdEntity;
 import cn.hamm.airpower.mcp.McpService;
 import cn.hamm.airpower.mcp.model.McpTool;
-import cn.hamm.airpower.root.RootEntity;
-import cn.hamm.airpower.util.PermissionUtil;
-import cn.hamm.airpower.util.TreeUtil;
+import cn.hamm.airpower.tree.TreeUtil;
 import cn.hamm.spms.Application;
 import cn.hamm.spms.base.BaseService;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +44,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
 
     @Override
     protected @NotNull List<PermissionEntity> afterGetList(@NotNull List<PermissionEntity> list) {
-        list.forEach(RootEntity::excludeBaseData);
+        list.forEach(CurdEntity::excludeBaseData);
         return list;
     }
 

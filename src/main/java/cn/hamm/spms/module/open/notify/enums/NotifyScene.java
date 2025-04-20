@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.open.notify.enums;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

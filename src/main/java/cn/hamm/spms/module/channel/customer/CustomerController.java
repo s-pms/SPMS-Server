@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.channel.customer;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.api.Api;
 import cn.hamm.spms.base.BaseController;
 
 /**
@@ -9,7 +9,7 @@ import cn.hamm.spms.base.BaseController;
  *
  * @author Hamm.cn
  */
-@ApiController("customer")
+@Api("customer")
 @Description("客户")
 public class CustomerController extends BaseController<CustomerEntity, CustomerService, CustomerRepository> {
 }

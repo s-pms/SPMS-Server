@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.wms.inventory;
 
-import cn.hamm.airpower.model.query.QueryPageRequest;
-import cn.hamm.airpower.root.RootEntity;
-import cn.hamm.airpower.util.DictionaryUtil;
-import cn.hamm.airpower.util.TreeUtil;
+import cn.hamm.airpower.curd.CurdEntity;
+import cn.hamm.airpower.curd.query.QueryPageRequest;
+import cn.hamm.airpower.dictionary.DictionaryUtil;
+import cn.hamm.airpower.tree.TreeUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
@@ -100,7 +100,7 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
                 Set<Long> idList = TreeUtil.getChildrenIdList(search.getStorage().getId(), storageService, StorageEntity.class);
                 if (!idList.isEmpty()) {
                     Join<InventoryEntity, StorageEntity> join = root.join("storage");
-                    Predicate inPredicate = join.get(RootEntity.STRING_ID).in(idList);
+                    Predicate inPredicate = join.get(CurdEntity.STRING_ID).in(idList);
                     predicateList.add(inPredicate);
                 }
             }
@@ -111,7 +111,7 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
                 Set<Long> idList = TreeUtil.getChildrenIdList(search.getStructure().getId(), structureService, StructureEntity.class);
                 if (!idList.isEmpty()) {
                     Join<InventoryEntity, StructureEntity> join = root.join("structure");
-                    Predicate inPredicate = join.get(RootEntity.STRING_ID).in(idList);
+                    Predicate inPredicate = join.get(CurdEntity.STRING_ID).in(idList);
                     predicateList.add(inPredicate);
                 }
             }

@@ -1,15 +1,15 @@
 package cn.hamm.spms.module.mcp;
 
-import cn.hamm.airpower.annotation.ApiController;
+import cn.hamm.airpower.access.AccessTokenUtil;
+import cn.hamm.airpower.access.Permission;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Permission;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.ApiController;
+import cn.hamm.airpower.api.Json;
 import cn.hamm.airpower.exception.ServiceException;
 import cn.hamm.airpower.mcp.McpService;
 import cn.hamm.airpower.mcp.model.McpRequest;
 import cn.hamm.airpower.mcp.model.McpResponse;
-import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.root.RootController;
-import cn.hamm.airpower.util.AccessTokenUtil;
 import cn.hamm.spms.common.interceptor.RequestInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +25,9 @@ import static cn.hamm.airpower.exception.ServiceError.PARAM_MISSING;
  * @author Hamm.cn
  */
 @Permission(login = false)
-@ApiController("mcp")
+@Api("mcp")
 @Slf4j
-public class McpController extends RootController {
+public class McpController extends ApiController {
     @Autowired
     private McpService mcpService;
 

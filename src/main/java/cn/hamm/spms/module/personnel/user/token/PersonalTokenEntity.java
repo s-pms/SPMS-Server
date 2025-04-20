@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.personnel.user.token;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Desensitize;
-import cn.hamm.airpower.annotation.Exclude;
 import cn.hamm.airpower.annotation.Search;
+import cn.hamm.airpower.api.fiter.Exclude;
+import cn.hamm.airpower.desensitize.Desensitize;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import jakarta.persistence.Column;
@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.annotation.Desensitize.Type.CUSTOM;
+import static cn.hamm.airpower.desensitize.DesensitizeType.CUSTOM;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**

@@ -1,7 +1,11 @@
 package cn.hamm.spms.common.interceptor;
 
+import cn.hamm.airpower.access.AccessTokenUtil;
+import cn.hamm.airpower.access.PermissionUtil;
+import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
-import cn.hamm.airpower.util.*;
+import cn.hamm.airpower.reflect.ReflectUtil;
+import cn.hamm.airpower.request.RequestUtil;
 import cn.hamm.spms.common.annotation.DisableLog;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
@@ -112,13 +116,13 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         if (Objects.nonNull(disableLog)) {
             return;
         }
-        String accessToken = request.getHeader(serviceConfig.getAuthorizeHeader());
+        String accessToken = request.getHeader(accessConfig.getAuthorizeHeader());
         Long userId = null;
         int appVersion = request.getIntHeader(APP_VERSION_HEADER);
         String platform = "";
         String action = request.getRequestURI();
         try {
-            AccessTokenUtil.VerifiedToken verifiedToken = AccessTokenUtil.create().verify(accessToken, serviceConfig.getAccessTokenSecret());
+            AccessTokenUtil.VerifiedToken verifiedToken = AccessTokenUtil.create().verify(accessToken, accessConfig.getAccessTokenSecret());
             userId = verifiedToken.getPayloadId();
             platform = request.getHeader(APP_PLATFORM_HEADER);
             String description = ReflectUtil.getDescription(method);

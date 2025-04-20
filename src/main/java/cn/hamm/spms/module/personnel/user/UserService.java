@@ -1,12 +1,17 @@
 package cn.hamm.spms.module.personnel.user;
 
+import cn.hamm.airpower.access.AccessConfig;
+import cn.hamm.airpower.access.AccessTokenUtil;
+import cn.hamm.airpower.access.PasswordUtil;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.helper.CookieHelper;
+import cn.hamm.airpower.cookie.CookieHelper;
+import cn.hamm.airpower.curd.CurdEntity;
+import cn.hamm.airpower.curd.Sort;
+import cn.hamm.airpower.datetime.DateTimeUtil;
 import cn.hamm.airpower.helper.EmailHelper;
 import cn.hamm.airpower.mcp.method.McpMethod;
-import cn.hamm.airpower.model.Sort;
-import cn.hamm.airpower.root.RootEntity;
-import cn.hamm.airpower.util.*;
+import cn.hamm.airpower.tree.TreeUtil;
+import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConfig;
@@ -70,6 +75,9 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
 
     @Autowired
     private CookieHelper cookieHelper;
+
+    @Autowired
+    private AccessConfig accessConfig;
 
     /**
      * 获取新的密码盐
@@ -359,9 +367,9 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return AccessToken
      */
     public String createAccessToken(long userId) {
-        return AccessTokenUtil.create().setPayloadId(userId, serviceConfig.getAuthorizeExpireSecond())
+        return AccessTokenUtil.create().setPayloadId(userId, accessConfig.getAuthorizeExpireSecond())
                 .addPayload(UserTokenType.TYPE, UserTokenType.NORMAL.getKey())
-                .build(serviceConfig.getAccessTokenSecret());
+                .build(accessConfig.getAccessTokenSecret());
     }
 
     /**
@@ -421,7 +429,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         Set<Long> departmentIdList = getDepartmentList(departmentId);
         if (!departmentIdList.isEmpty()) {
             Join<UserEntity, DepartmentEntity> departmentJoin = root.join("departmentList");
-            Predicate inPredicate = departmentJoin.get(RootEntity.STRING_ID).in(departmentIdList);
+            Predicate inPredicate = departmentJoin.get(CurdEntity.STRING_ID).in(departmentIdList);
             predicateList.add(inPredicate);
         }
         return predicateList;

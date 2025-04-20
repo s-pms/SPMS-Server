@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.system.permission;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.util.TreeUtil;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.tree.TreeUtil;
 import cn.hamm.spms.base.BaseController;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author Hamm.cn
  */
-@ApiController("permission")
+@Api("permission")
 @Description("权限")
 public class PermissionController extends BaseController<PermissionEntity, PermissionService, PermissionRepository> {
 

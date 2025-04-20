@@ -1,10 +1,10 @@
 package cn.hamm.spms.module.system.coderule;
 
-import cn.hamm.airpower.annotation.ApiController;
+import cn.hamm.airpower.access.Permission;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.Json;
+import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.spms.base.BaseController;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  *
  * @author Hamm.cn
  */
-@ApiController("coderule")
+@Api("coderule")
 @Description("编码规则")
 public class CodeRuleController extends BaseController<CodeRuleEntity, CodeRuleService, CodeRuleRepository> {
     @Description("获取支持的表")

@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.mes.routing;
 
-import cn.hamm.airpower.model.Sort;
+import cn.hamm.airpower.curd.Sort;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.mes.routing.operation.RoutingOperationEntity;

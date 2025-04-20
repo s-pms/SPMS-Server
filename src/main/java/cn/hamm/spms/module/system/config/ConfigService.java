@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.system.config;
 
-import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;

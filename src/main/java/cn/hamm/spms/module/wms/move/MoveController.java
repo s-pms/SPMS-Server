@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.wms.move;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Extends;
-import cn.hamm.airpower.enums.Api;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.Extends;
+import cn.hamm.airpower.curd.Curd;
 import cn.hamm.spms.base.bill.BaseBillController;
 import cn.hamm.spms.module.wms.move.detail.MoveDetailEntity;
 import cn.hamm.spms.module.wms.move.detail.MoveDetailRepository;
@@ -14,8 +14,8 @@ import cn.hamm.spms.module.wms.move.detail.MoveDetailService;
  *
  * @author Hamm.cn
  */
-@ApiController("move")
+@Api("move")
 @Description("移库")
-@Extends(exclude = Api.Delete)
+@Extends(exclude = Curd.Delete)
 public class MoveController extends BaseBillController<MoveEntity, MoveService, MoveRepository, MoveDetailEntity, MoveDetailService, MoveDetailRepository> {
 }

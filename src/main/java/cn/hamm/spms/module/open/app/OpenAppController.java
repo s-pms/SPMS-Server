@@ -1,8 +1,12 @@
 package cn.hamm.spms.module.open.app;
 
-import cn.hamm.airpower.annotation.*;
-import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.root.RootEntity;
+import cn.hamm.airpower.access.Permission;
+import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.Extends;
+import cn.hamm.airpower.api.Json;
+import cn.hamm.airpower.api.fiter.Filter;
+import cn.hamm.airpower.curd.CurdEntity;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.notify.NotifyService;
@@ -15,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Base64;
 
-import static cn.hamm.airpower.enums.Api.Export;
-import static cn.hamm.airpower.enums.Api.QueryExport;
+import static cn.hamm.airpower.curd.Curd.Export;
+import static cn.hamm.airpower.curd.Curd.QueryExport;
 import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
 
 /**
@@ -24,7 +28,7 @@ import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
  *
  * @author Hamm.cn
  */
-@ApiController("openApp")
+@Api("openApp")
 @Description("开放应用")
 @Extends(exclude = {Export, QueryExport})
 public class OpenAppController extends BaseController<OpenAppEntity, OpenAppService, OpenAppRepository> implements IOpenAppAction {
@@ -34,7 +38,7 @@ public class OpenAppController extends BaseController<OpenAppEntity, OpenAppServ
     @Description("通过AppKey获取应用信息")
     @PostMapping("getByAppKey")
     @Permission(login = false)
-    @Filter(RootEntity.WhenGetDetail.class)
+    @Filter(CurdEntity.WhenGetDetail.class)
     public Json getByAppKey(@RequestBody @Validated(WhenGetByAppKey.class) OpenAppEntity openApp) {
         openApp = service.getByAppKey(openApp.getAppKey());
         DATA_NOT_FOUND.whenNull(openApp, "没有查到指定AppKey的应用");

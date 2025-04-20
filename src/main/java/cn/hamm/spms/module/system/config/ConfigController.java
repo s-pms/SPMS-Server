@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.system.config;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.api.Api;
 import cn.hamm.spms.base.BaseController;
 
 /**
@@ -9,7 +9,7 @@ import cn.hamm.spms.base.BaseController;
  *
  * @author Hamm.cn
  */
-@ApiController("config")
+@Api("config")
 @Description("系统配置")
 public class ConfigController extends BaseController<ConfigEntity, ConfigService, ConfigRepository> {
 }

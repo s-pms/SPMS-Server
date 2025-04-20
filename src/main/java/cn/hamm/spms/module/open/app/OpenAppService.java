@@ -1,12 +1,12 @@
 package cn.hamm.spms.module.open.app;
 
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.crypto.RsaUtil;
 import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.airpower.exception.ServiceException;
 import cn.hamm.airpower.mcp.method.McpMethod;
 import cn.hamm.airpower.open.IOpenAppService;
 import cn.hamm.airpower.util.RandomUtil;
-import cn.hamm.airpower.util.RsaUtil;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;

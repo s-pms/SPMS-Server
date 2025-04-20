@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.wms.input;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Extends;
-import cn.hamm.airpower.enums.Api;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.Extends;
+import cn.hamm.airpower.curd.Curd;
 import cn.hamm.spms.base.bill.BaseBillController;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.input.detail.InputDetailRepository;
@@ -14,8 +14,8 @@ import cn.hamm.spms.module.wms.input.detail.InputDetailService;
  *
  * @author Hamm.cn
  */
-@ApiController("input")
+@Api("input")
 @Description("入库")
-@Extends(exclude = Api.Delete)
+@Extends(exclude = Curd.Delete)
 public class InputController extends BaseBillController<InputEntity, InputService, InputRepository, InputDetailEntity, InputDetailService, InputDetailRepository> {
 }

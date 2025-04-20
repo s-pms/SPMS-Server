@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.system.menu;
 
-import cn.hamm.airpower.model.Sort;
-import cn.hamm.airpower.model.query.QueryListRequest;
-import cn.hamm.airpower.root.RootEntity;
-import cn.hamm.airpower.util.TreeUtil;
+import cn.hamm.airpower.curd.CurdEntity;
+import cn.hamm.airpower.curd.Sort;
+import cn.hamm.airpower.curd.query.QueryListRequest;
+import cn.hamm.airpower.tree.TreeUtil;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.util.TreeUtil.ROOT_ID;
+import static cn.hamm.airpower.tree.TreeUtil.ROOT_ID;
 
 /**
  * <h1>Service</h1>
@@ -43,7 +43,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
 
     @Override
     protected @NotNull List<MenuEntity> afterGetList(@NotNull List<MenuEntity> list) {
-        list.forEach(RootEntity::excludeBaseData);
+        list.forEach(CurdEntity::excludeBaseData);
         return list;
     }
 

@@ -1,8 +1,8 @@
 package cn.hamm.spms.base.bill;
 
+import cn.hamm.airpower.curd.CurdEntity;
+import cn.hamm.airpower.dictionary.IDictionary;
 import cn.hamm.airpower.helper.TransactionHelper;
-import cn.hamm.airpower.interfaces.IDictionary;
-import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.airpower.util.TaskUtil;
 import cn.hamm.spms.base.BaseRepository;
@@ -210,10 +210,10 @@ public abstract class AbstractBaseBillService<
     /**
      * 保存单据明细
      * <li>
-     * 请不要再重写后直接调用 {@link #update(RootEntity)} #{@link #updateWithNull(RootEntity)}，避免出现调用循环。
+     * 请不要再重写后直接调用 {@link #update(CurdEntity)} #{@link #updateWithNull(CurdEntity)}，避免出现调用循环。
      * </li>
      * <li>
-     * 如需再次保存，请调用 {@link #updateToDatabase(RootEntity)} }
+     * 如需再次保存，请调用 {@link #updateToDatabase(CurdEntity)} }
      * </li>
      *
      * @param billId  单据ID

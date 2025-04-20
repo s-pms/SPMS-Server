@@ -1,9 +1,13 @@
 package cn.hamm.spms.module.open.app;
 
-import cn.hamm.airpower.annotation.*;
+import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.annotation.ReadOnly;
+import cn.hamm.airpower.annotation.Search;
+import cn.hamm.airpower.api.fiter.Exclude;
+import cn.hamm.airpower.curd.export.ExcelColumn;
+import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.airpower.open.IOpenApp;
 import cn.hamm.airpower.open.OpenArithmeticType;
-import cn.hamm.airpower.validate.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.open.oauth.IOauthAction;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,8 +21,8 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.annotation.ExcelColumn.Type.BOOLEAN;
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.airpower.curd.export.ExportColumnType.BOOLEAN;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
