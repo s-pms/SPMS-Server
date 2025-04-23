@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.asset.device;
 
-import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.api.Json;
+import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.helper.InfluxHelper;
@@ -35,7 +35,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     private InfluxHelper influxHelper;
 
     /**
-     * <h3>查询指定设备uuid的当前报告</h3>
+     * 查询指定设备uuid的当前报告
      *
      * @param deviceId 设备ID
      * @return 报告列表
@@ -50,7 +50,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     }
 
     /**
-     * <h3>通过UUID查询设备</h3>
+     * 通过UUID查询设备
      *
      * @param uuid UUID
      * @return 设备
@@ -60,7 +60,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     }
 
     /**
-     * <h3>查询指定设备指定参数的历史记录</h3>
+     * 查询指定设备指定参数的历史记录
      *
      * @param reportPayload 传入参数
      * @return 查询历史
@@ -79,7 +79,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     }
 
     /**
-     * <h3>获取设备的参数列表</h3>
+     * 获取设备的参数列表
      *
      * @param device 设备
      * @return 设备

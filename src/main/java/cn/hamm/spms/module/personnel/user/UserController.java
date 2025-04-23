@@ -1,12 +1,11 @@
 package cn.hamm.spms.module.personnel.user;
 
-import cn.hamm.airpower.annotation.ApiController;
+import cn.hamm.airpower.access.Permission;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Filter;
-import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.config.Constant;
-import cn.hamm.airpower.helper.CookieHelper;
-import cn.hamm.airpower.model.Json;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.Json;
+import cn.hamm.airpower.api.fiter.Filter;
+import cn.hamm.airpower.cookie.CookieHelper;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginEntity;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginService;
@@ -29,13 +28,12 @@ import java.util.stream.Collectors;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DISABLED;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EDIT;
 
-
 /**
  * <h1>Controller</h1>
  *
  * @author Hamm.cn
  */
-@ApiController("user")
+@Api("user")
 @Description("用户")
 public class UserController extends BaseController<UserEntity, UserService, UserRepository> implements IUserAction {
     @Autowired
@@ -165,14 +163,13 @@ public class UserController extends BaseController<UserEntity, UserService, User
         return doLogin(UserLoginType.VIA_ACCOUNT_PASSWORD, user, httpServletResponse);
     }
 
-
     @Description("退出登录")
     @Permission(login = false)
     @PostMapping("logout")
     public Json logout(HttpServletResponse httpServletResponse) {
         Cookie cookie = cookieHelper.getAuthorizeCookie("");
         cookie.setHttpOnly(false);
-        cookie.setPath(Constant.STRING_SLASH);
+        cookie.setPath(CookieHelper.DEFAULT_PATH);
         // 清除cookie
         cookie.setMaxAge(0);
         httpServletResponse.addCookie(cookie);

@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.mes.routing.operation;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.api.Api;
 import cn.hamm.spms.base.BaseController;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @Description("工序配置")
-@ApiController("routingOperation")
+@Api("routingOperation")
 public class RoutingOperationController extends BaseController<RoutingOperationEntity, RoutingOperationService, RoutingOperationRepository> {
 }

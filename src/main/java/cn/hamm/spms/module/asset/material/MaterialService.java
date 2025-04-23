@@ -39,7 +39,7 @@ public class MaterialService extends BaseService<MaterialEntity, MaterialReposit
             @McpOptional
             @Description("material spc, not required, set '我不知道' if blank")
             String spc) {
-        MaterialEntity material = new MaterialEntity().setName(name).setSpc(spc).setMaterialType(MaterialType.PURCHASE.getKey()).setUnitInfo(unitService.get(1L)).setUseType(MaterialUseType.CONSUMABLE.getKey());
+        MaterialEntity material = new MaterialEntity().setName(name).setSpc(spc).setMaterialType(MaterialType.PURCHASE.getKey()).setUnit(unitService.get(1L)).setUseType(MaterialUseType.CONSUMABLE.getKey());
         add(material);
         return name + "已经成功添加到物料库";
     }

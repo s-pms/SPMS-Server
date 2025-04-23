@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.system.file;
 
 import cn.hamm.airpower.exception.ServiceException;
-import cn.hamm.airpower.util.FileUtil;
+import cn.hamm.airpower.file.FileUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.common.third.aliyun.oss.AliyunOssUtil;
@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static cn.hamm.airpower.config.Constant.STRING_DOT;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_UPLOAD_MAX_SIZE;
 import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
 
@@ -35,7 +34,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
     private AliyunOssUtil aliyunOssUtil;
 
     /**
-     * <h3>上传到阿里云OSS</h3>
+     * 上传到阿里云OSS
      *
      * @param multipartFile 文件
      * @param savedFilePath 文件路径
@@ -46,7 +45,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
     }
 
     /**
-     * <h3>文件上传</h3>
+     * 文件上传
      *
      * @param multipartFile 文件
      * @param fileCategory  文件类别
@@ -77,7 +76,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
             }
 
             // 文件名
-            String fileName = hashMd5 + STRING_DOT + extension;
+            String fileName = hashMd5 + "." + extension;
 
             // 保存的相对文件路径
             String relativeFilePath = relativeDirectory + fileName;

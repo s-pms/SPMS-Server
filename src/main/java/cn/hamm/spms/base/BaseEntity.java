@@ -1,18 +1,18 @@
 package cn.hamm.spms.base;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.ExcelColumn;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.root.RootEntity;
+import cn.hamm.airpower.curd.CurdEntity;
+import cn.hamm.airpower.curd.export.ExcelColumn;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.annotation.ExcelColumn.Type.BOOLEAN;
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.airpower.curd.export.ExportColumnType.BOOLEAN;
 
 /**
  * <h1>应用实体基类</h1>
@@ -24,7 +24,7 @@ import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 @DynamicInsert
 @DynamicUpdate
 @Description("")
-public class BaseEntity<E extends BaseEntity<E>> extends RootEntity<E> {
+public class BaseEntity<E extends BaseEntity<E>> extends CurdEntity<E> {
     @Description("是否已发布")
     @ReadOnly
     @Search(EQUALS)
@@ -33,11 +33,12 @@ public class BaseEntity<E extends BaseEntity<E>> extends RootEntity<E> {
     private Boolean isPublished;
 
     /**
-     * <h3>设置是否已发布</h3>
+     * 设置是否已发布
      *
      * @param isPublished 是否已发布
      * @return 实体
      */
+    @SuppressWarnings("UnusedReturnValue")
     public E setIsPublished(Boolean isPublished) {
         this.isPublished = isPublished;
         //noinspection unchecked

@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.open.notify.enums;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,27 +15,27 @@ import lombok.Getter;
 @Description("通知渠道")
 public enum NotifyChannel implements IDictionary {
     /**
-     * <h3>企业微信</h3>
+     * 企业微信
      */
     WORK_WECHAT(1, "企业微信"),
 
     /**
-     * <h3>飞书</h3>
+     * 飞书
      */
     FEI_SHU(2, "飞书"),
 
     /**
-     * <h3>钉钉</h3>
+     * 钉钉
      */
     DING_TALK(3, "钉钉"),
 
     /**
-     * <h3>邮件</h3>
+     * 邮件
      */
     EMAIL(4, "邮件"),
 
     /**
-     * <h3>WebHook</h3>
+     * WebHook
      */
     WEB_HOOK(5, "WebHook");
 

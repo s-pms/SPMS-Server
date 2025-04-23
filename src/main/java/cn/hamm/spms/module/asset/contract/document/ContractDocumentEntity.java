@@ -2,7 +2,7 @@ package cn.hamm.spms.module.asset.contract.document;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.interfaces.IFile;
+import cn.hamm.airpower.file.IFile;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

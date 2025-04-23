@@ -1,11 +1,11 @@
 package cn.hamm.spms.module.mes.order;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Extends;
-import cn.hamm.airpower.annotation.Filter;
-import cn.hamm.airpower.enums.Api;
-import cn.hamm.airpower.model.Json;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.Extends;
+import cn.hamm.airpower.api.Json;
+import cn.hamm.airpower.api.fiter.Filter;
+import cn.hamm.airpower.curd.Curd;
 import cn.hamm.spms.base.bill.BaseBillController;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailEntity;
@@ -25,9 +25,9 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
  *
  * @author Hamm.cn
  */
-@ApiController("order")
+@Api("order")
 @Description("生产订单")
-@Extends(exclude = Api.Delete)
+@Extends(exclude = Curd.Delete)
 public class OrderController extends BaseBillController<OrderEntity, OrderService, OrderRepository, OrderDetailEntity, OrderDetailService, OrderDetailRepository> {
 
     @Description("开始生产")

@@ -1,10 +1,10 @@
 package cn.hamm.spms.module.system.file;
 
-import cn.hamm.airpower.annotation.ApiController;
+import cn.hamm.airpower.access.Permission;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.Json;
+import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.spms.base.BaseController;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +18,7 @@ import java.util.Objects;
  *
  * @author Hamm.cn
  */
-@ApiController("file")
+@Api("file")
 @Description("文件")
 public class FileController extends BaseController<FileEntity, FileService, FileRepository> {
     @PostMapping("upload")

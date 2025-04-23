@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.mes.routing;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,17 +13,17 @@ import lombok.Getter;
 @Getter
 public enum RoutingStatus implements IDictionary {
     /**
-     * <h3>审核中</h3>
+     * 审核中
      */
     AUDITING(1, "审核中"),
 
     /**
-     * <h3>已驳回</h3>
+     * 已驳回
      */
     REJECTED(2, "已驳回"),
 
     /**
-     * <h3>已发布</h3>
+     * 已发布
      */
     PUBLISHED(3, "已发布");
 

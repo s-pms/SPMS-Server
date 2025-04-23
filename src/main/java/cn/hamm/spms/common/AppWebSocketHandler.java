@@ -1,9 +1,9 @@
 package cn.hamm.spms.common;
 
-import cn.hamm.airpower.helper.WebsocketHelper;
-import cn.hamm.airpower.model.Json;
+import cn.hamm.airpower.api.Json;
 import cn.hamm.airpower.websocket.WebSocketHandler;
 import cn.hamm.airpower.websocket.WebSocketPayload;
+import cn.hamm.airpower.websocket.WebsocketHelper;
 import cn.hamm.spms.module.chat.enums.ChatEventType;
 import cn.hamm.spms.module.chat.member.MemberEntity;
 import cn.hamm.spms.module.chat.member.MemberService;
@@ -36,12 +36,12 @@ import static cn.hamm.spms.module.chat.enums.ChatEventType.*;
 @Component
 public class AppWebSocketHandler extends WebSocketHandler {
     /**
-     * <h3>订阅分组前缀</h3>
+     * 订阅分组前缀
      */
     private static final String GROUP_PREFIX = "group_";
 
     /**
-     * <h3>房间在线用户列表</h3>
+     * 房间在线用户列表
      */
     protected final ConcurrentHashMap<String, List<Long>> roomOnlineUserList = new ConcurrentHashMap<>();
 
@@ -58,7 +58,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
     private RoomService roomService;
 
     /**
-     * <h3>房间事件</h3>
+     * 房间事件
      *
      * @param userId 用户ID
      * @param roomId 房间ID
@@ -156,7 +156,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
     }
 
     /**
-     * <h3>离开房间</h3>
+     * 离开房间
      *
      * @param session websocket会话
      * @param userId  用户ID
@@ -172,7 +172,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
     }
 
     /**
-     * <h3>发布消息到当前用户的房间</h3>
+     * 发布消息到当前用户的房间
      *
      * @param userId 用户ID
      * @param type   世界事件类型
@@ -185,7 +185,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
     }
 
     /**
-     * <h3>获取当前用户的当前房间的成员信息</h3>
+     * 获取当前用户的当前房间的成员信息
      *
      * @param userId 用户ID
      * @return 成员信息

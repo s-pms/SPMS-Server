@@ -3,7 +3,7 @@ package cn.hamm.spms.module.iot.parameter;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.validate.Dictionary;
+import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.iot.report.ReportDataType;
 import jakarta.persistence.Column;
@@ -57,7 +57,7 @@ public class ParameterEntity extends BaseEntity<ParameterEntity> {
     private Integer dataType;
 
     /**
-     * <h3>设置是系统内置参数</h3>
+     * 设置是系统内置参数
      *
      * @param isSystem 内置参数
      * @return 实体

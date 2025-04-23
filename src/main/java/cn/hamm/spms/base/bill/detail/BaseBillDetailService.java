@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends BaseBillDetailRepository<E>> extends BaseService<E, R> {
 
     /**
-     * <h3>根据单据ID删除所有明细</h3>
+     * 根据单据ID删除所有明细
      *
      * @param billId 单据ID
      */
@@ -30,7 +30,7 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
     }
 
     /**
-     * <h3>查询指定单据的所有明细</h3>
+     * 查询指定单据的所有明细
      *
      * @param billId 单据ID
      * @return 明细
@@ -40,7 +40,7 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
     }
 
     /**
-     * <h3>保存指定单据的明细</h3>
+     * 保存指定单据的明细
      *
      * @param billId  单据ID
      * @param details 明细
@@ -58,7 +58,7 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
     }
 
     /**
-     * <h3>更新明细的数量</h3>
+     * 更新明细的数量
      *
      * @param billId      单据ID
      * @param quantity    本次更新数量

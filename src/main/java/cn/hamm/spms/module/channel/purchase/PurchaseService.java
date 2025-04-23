@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.channel.purchase;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import cn.hamm.airpower.mcp.method.McpMethod;
 import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
@@ -111,7 +111,6 @@ public class PurchaseService extends AbstractBaseBillService<
     protected ConfigFlag getAutoAuditConfigFlag() {
         return PURCHASE_BILL_AUTO_AUDIT;
     }
-
 
     @McpMethod
     @Description("create purchase bill, includes reason/name/count")

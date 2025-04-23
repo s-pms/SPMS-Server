@@ -1,10 +1,10 @@
 package cn.hamm.spms.module.mes.routing;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.ExcelColumn;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.validate.Dictionary;
+import cn.hamm.airpower.curd.export.ExcelColumn;
+import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
@@ -21,8 +21,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cn.hamm.airpower.annotation.ExcelColumn.Type.BOOLEAN;
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
+import static cn.hamm.airpower.curd.export.ExportColumnType.BOOLEAN;
 import static cn.hamm.spms.module.system.coderule.CodeRuleField.RoutingCode;
 import static jakarta.persistence.FetchType.EAGER;
 

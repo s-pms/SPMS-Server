@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.asset.material.enums;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,12 +13,12 @@ import lombok.Getter;
 @Getter
 public enum MaterialType implements IDictionary {
     /**
-     * <h3>自产品</h3>
+     * 自产品
      */
     PRODUCT(1, "自产品"),
 
     /**
-     * <h3>外购品</h3>
+     * 外购品
      */
     PURCHASE(2, "外购品");
 

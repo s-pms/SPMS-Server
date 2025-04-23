@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PersonalTokenRepository extends BaseRepository<PersonalTokenEntity> {
     /**
-     * <h3>通过令牌查询</h3>
+     * 通过令牌查询
      *
      * @param token 令牌
      * @return 应用

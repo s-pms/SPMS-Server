@@ -1,7 +1,7 @@
 package cn.hamm.spms.common.exception;
 
+import cn.hamm.airpower.dictionary.IDictionary;
 import cn.hamm.airpower.exception.IException;
-import cn.hamm.airpower.interfaces.IDictionary;
 import cn.hamm.spms.common.config.AppConstant;
 import lombok.Getter;
 import org.jetbrains.annotations.Contract;
@@ -30,7 +30,7 @@ public enum CustomError implements IException<CustomError>, IDictionary {
     }
 
     /**
-     * <h3>获取枚举的 {@code Key}</h3>
+     * 获取枚举的 {@code Key}
      *
      * @return {@code Key}
      */
@@ -41,7 +41,7 @@ public enum CustomError implements IException<CustomError>, IDictionary {
     }
 
     /**
-     * <h3>获取枚举的描述</h3>
+     * 获取枚举的描述
      *
      * @return 描述
      */

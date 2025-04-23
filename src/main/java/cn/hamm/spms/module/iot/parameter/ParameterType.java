@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.iot.parameter;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,17 +13,17 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ParameterType implements IDictionary {
     /**
-     * <h3>数字</h3>
+     * 数字
      */
     NUMBER(1, "数字"),
 
     /**
-     * <h3>布尔</h3>
+     * 布尔
      */
     BOOLEAN(2, "布尔"),
 
     /**
-     * <h3>字符串</h3>
+     * 字符串
      */
     STRING(3, "字符串"),
 

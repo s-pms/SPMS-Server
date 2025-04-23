@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.iot.report;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,22 +13,22 @@ import lombok.Getter;
 @Getter
 public enum ReportDataType implements IDictionary {
     /**
-     * <h3>数量</h3>
+     * 数量
      */
     NUMBER(1, "数量"),
 
     /**
-     * <h3>状态</h3>
+     * 状态
      */
     STATUS(2, "状态"),
 
     /**
-     * <h3>开关</h3>
+     * 开关
      */
     BOOLEAN(3, "开关"),
 
     /**
-     * <h3>信息</h3>
+     * 信息
      */
     STRING(4, "信息"),
     ;

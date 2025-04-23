@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.mes.bom;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,12 +13,12 @@ import lombok.Getter;
 @Getter
 public enum BomType implements IDictionary {
     /**
-     * <h3>普通配方</h3>
+     * 普通配方
      */
     NORMAL(1, "普通配方"),
 
     /**
-     * <h3>工序配方</h3>
+     * 工序配方
      */
     OPERATION(2, "工序配方"),
     ;

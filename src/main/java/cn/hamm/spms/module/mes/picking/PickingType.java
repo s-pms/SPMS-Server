@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.mes.picking;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,12 +13,12 @@ import lombok.Getter;
 @Getter
 public enum PickingType implements IDictionary {
     /**
-     * <h3>生产领料</h3>
+     * 生产领料
      */
     PRODUCE(1, "生产领料"),
 
     /**
-     * <h3>其他领料</h3>
+     * 其他领料
      */
     OTHER(2, "其他领料");
 

@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.mes.order;
 
-import cn.hamm.airpower.interfaces.IDictionary;
-import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.dictionary.DictionaryUtil;
+import cn.hamm.airpower.dictionary.IDictionary;
 import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
@@ -56,7 +56,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     /**
-     * <h3>添加订单明细</h3>
+     * 添加订单明细
      *
      * @param orderDetail 订单明细
      */
@@ -114,7 +114,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     /**
-     * <h3>添加入库单</h3>
+     * 添加入库单
      *
      * @param order 订单
      */
@@ -151,7 +151,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     /**
-     * <h3>开始生产</h3>
+     * 开始生产
      *
      * @param id 单据ID
      */
@@ -165,7 +165,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     /**
-     * <h3>暂停生产</h3>
+     * 暂停生产
      *
      * @param id 单据ID
      */

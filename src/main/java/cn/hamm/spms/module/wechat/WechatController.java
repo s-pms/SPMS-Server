@@ -1,12 +1,10 @@
 package cn.hamm.spms.module.wechat;
 
-import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.root.RootController;
+import cn.hamm.airpower.access.Permission;
+import cn.hamm.airpower.api.ApiController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import static cn.hamm.airpower.config.Constant.STRING_SUCCESS;
 
 /**
  * <h1>Wechat</h1>
@@ -16,7 +14,12 @@ import static cn.hamm.airpower.config.Constant.STRING_SUCCESS;
 @Permission(login = false)
 @Controller
 @RequestMapping("wechat")
-public class WechatController extends RootController {
+public class WechatController extends ApiController {
+    /**
+     * {@code Success}
+     */
+    public static final String STRING_SUCCESS = "success";
+
     @RequestMapping(value = "init", produces = "text/plain")
     @ResponseBody
     public String init() {

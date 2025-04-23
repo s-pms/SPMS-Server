@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FileRepository extends BaseRepository<FileEntity> {
     /**
-     * <h3>根据文件类别和MD5查询文件</h3>
+     * 根据文件类别和MD5查询文件
      *
      * @param category 文件类别
      * @param hashMd5  MD5

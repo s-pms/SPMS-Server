@@ -1,7 +1,11 @@
 package cn.hamm.spms.common.interceptor;
 
+import cn.hamm.airpower.access.AccessTokenUtil;
+import cn.hamm.airpower.access.PermissionUtil;
+import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
-import cn.hamm.airpower.util.*;
+import cn.hamm.airpower.reflect.ReflectUtil;
+import cn.hamm.airpower.request.RequestUtil;
 import cn.hamm.spms.common.annotation.DisableLog;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
@@ -20,7 +24,6 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-import static cn.hamm.airpower.config.Constant.STRING_EMPTY;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 import static cn.hamm.airpower.exception.ServiceError.UNAUTHORIZED;
 import static cn.hamm.spms.common.config.AppConstant.APP_PLATFORM_HEADER;
@@ -34,7 +37,7 @@ import static cn.hamm.spms.common.config.AppConstant.APP_VERSION_HEADER;
 @Component
 public class RequestInterceptor extends AbstractRequestInterceptor {
     /**
-     * <h3>日志前缀</h3>
+     * 日志前缀
      */
     final static String LOG_REQUEST_KEY = "logId";
 
@@ -51,7 +54,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     private PersonalTokenService personalTokenService;
 
     /**
-     * <h3>验证指定的用户是否有指定权限标识的权限</h3>
+     * 验证指定的用户是否有指定权限标识的权限
      *
      * @param userId             用户ID
      * @param permissionIdentity 权限标识
@@ -99,7 +102,7 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     }
 
     /**
-     * <h3>拦截请求</h3>
+     * 拦截请求
      *
      * @param request  请求对象
      * @param response 响应对象
@@ -113,13 +116,13 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         if (Objects.nonNull(disableLog)) {
             return;
         }
-        String accessToken = request.getHeader(serviceConfig.getAuthorizeHeader());
+        String accessToken = request.getHeader(accessConfig.getAuthorizeHeader());
         Long userId = null;
         int appVersion = request.getIntHeader(APP_VERSION_HEADER);
-        String platform = STRING_EMPTY;
+        String platform = "";
         String action = request.getRequestURI();
         try {
-            AccessTokenUtil.VerifiedToken verifiedToken = AccessTokenUtil.create().verify(accessToken, serviceConfig.getAccessTokenSecret());
+            AccessTokenUtil.VerifiedToken verifiedToken = AccessTokenUtil.create().verify(accessToken, accessConfig.getAccessTokenSecret());
             userId = verifiedToken.getPayloadId();
             platform = request.getHeader(APP_PLATFORM_HEADER);
             String description = ReflectUtil.getDescription(method);

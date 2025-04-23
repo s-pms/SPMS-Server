@@ -3,7 +3,7 @@ package cn.hamm.spms.module.system.coderule;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.validate.Dictionary;
+import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -75,7 +75,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     private Boolean isSystem;
 
     /**
-     * <h3>设置是系统内置规则</h3>
+     * 设置是系统内置规则
      *
      * @param isSystem 内置规则
      * @return 编码规则

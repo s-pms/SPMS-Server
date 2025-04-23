@@ -17,7 +17,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import static jakarta.persistence.FetchType.EAGER;
 
-
 /**
  * <h1>采购价格实体</h1>
  *

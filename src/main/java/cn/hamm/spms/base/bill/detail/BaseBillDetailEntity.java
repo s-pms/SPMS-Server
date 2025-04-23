@@ -32,7 +32,7 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
     private Boolean isFinished;
 
     /**
-     * <h3>设置是否已完成</h3>
+     * 设置是否已完成
      *
      * @param isFinished 是否已完成
      * @return 单据明细
@@ -43,7 +43,7 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
     }
 
     /**
-     * <h3>设置单据ID</h3>
+     * 设置单据ID
      *
      * @param billId 单据ID
      * @return 明细实体
@@ -54,14 +54,14 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
     }
 
     /**
-     * <h3>获取数量</h3>
+     * 获取数量
      *
      * @return 数量
      */
     public abstract Double getQuantity();
 
     /**
-     * <h3>设置数量</h3>
+     * 设置数量
      *
      * @param quantity 数量
      * @return 明细实体
@@ -69,14 +69,14 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
     public abstract E setQuantity(Double quantity);
 
     /**
-     * <h3>获取已完成数量</h3>
+     * 获取已完成数量
      *
      * @return 数量
      */
     public abstract Double getFinishQuantity();
 
     /**
-     * <h3>设置已完成数量</h3>
+     * 设置已完成数量
      *
      * @param finishQuantity 已完成数量
      * @return 明细实体

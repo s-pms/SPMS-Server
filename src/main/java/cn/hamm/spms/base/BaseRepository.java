@@ -1,6 +1,6 @@
 package cn.hamm.spms.base;
 
-import cn.hamm.airpower.root.RootRepository;
+import cn.hamm.airpower.curd.ICurdRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
 /**
@@ -10,5 +10,5 @@ import org.springframework.data.repository.NoRepositoryBean;
  * @author Hamm.cn
  */
 @NoRepositoryBean
-public interface BaseRepository<E extends BaseEntity<E>> extends RootRepository<E> {
+public interface BaseRepository<E extends BaseEntity<E>> extends ICurdRepository<E> {
 }

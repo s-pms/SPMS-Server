@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.factory.storage;
 
-import cn.hamm.airpower.model.query.QueryListRequest;
-import cn.hamm.airpower.util.TreeUtil;
+import cn.hamm.airpower.curd.query.QueryListRequest;
+import cn.hamm.airpower.tree.TreeUtil;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;

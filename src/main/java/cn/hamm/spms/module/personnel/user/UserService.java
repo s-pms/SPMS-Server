@@ -1,12 +1,17 @@
 package cn.hamm.spms.module.personnel.user;
 
+import cn.hamm.airpower.access.AccessConfig;
+import cn.hamm.airpower.access.AccessTokenUtil;
+import cn.hamm.airpower.access.PasswordUtil;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.helper.CookieHelper;
+import cn.hamm.airpower.cookie.CookieHelper;
+import cn.hamm.airpower.curd.CurdEntity;
+import cn.hamm.airpower.curd.Sort;
+import cn.hamm.airpower.datetime.DateTimeUtil;
 import cn.hamm.airpower.helper.EmailHelper;
 import cn.hamm.airpower.mcp.method.McpMethod;
-import cn.hamm.airpower.model.Sort;
-import cn.hamm.airpower.root.RootEntity;
-import cn.hamm.airpower.util.*;
+import cn.hamm.airpower.tree.TreeUtil;
+import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConfig;
@@ -33,7 +38,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 
-import static cn.hamm.airpower.config.Constant.*;
 import static cn.hamm.airpower.exception.ServiceError.*;
 import static cn.hamm.spms.common.exception.CustomError.*;
 
@@ -46,20 +50,19 @@ import static cn.hamm.spms.common.exception.CustomError.*;
 @Slf4j
 public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
-     * <h3>密码盐的长度</h3>
+     * 密码盐的长度
      */
     public static final int PASSWORD_SALT_LENGTH = 4;
 
     /**
-     * <h3>Code缓存秒数</h3>
+     * Code缓存秒数
      */
     private static final int CACHE_CODE_EXPIRE_SECOND = DateTimeUtil.SECOND_PER_MINUTE * 5;
 
     /**
-     * <h3>缓存房间用户</h3>
+     * 缓存房间用户
      */
     private final String CACHE_ROOM_KEY = "ROOM_USER_";
-
 
     @Autowired
     private AppConfig appConfig;
@@ -67,15 +70,17 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     @Autowired
     private ConfigService configService;
 
-
     @Autowired
     private EmailHelper emailHelper;
 
     @Autowired
     private CookieHelper cookieHelper;
 
+    @Autowired
+    private AccessConfig accessConfig;
+
     /**
-     * <h3>获取新的密码盐</h3>
+     * 获取新的密码盐
      *
      * @return 密码盐
      */
@@ -84,7 +89,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>获取短信验证码的缓存key</h3>
+     * 获取短信验证码的缓存key
      *
      * @param phone 手机号
      * @return 缓存Key
@@ -95,7 +100,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>获取邮箱验证码的缓存key</h3>
+     * 获取邮箱验证码的缓存key
      *
      * @param email 邮箱
      * @return 缓存Key
@@ -106,7 +111,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>获取Cookie的缓存key</h3>
+     * 获取Cookie的缓存key
      *
      * @param cookie Cookie
      * @return 缓存Key
@@ -117,7 +122,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>获取登录用户的菜单列表</h3>
+     * 获取登录用户的菜单列表
      *
      * @param userId 用户id
      * @return 菜单树列表
@@ -141,7 +146,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>获取登录用户的权限列表</h3>
+     * 获取登录用户的权限列表
      *
      * @param userId 用户ID
      * @return 权限列表
@@ -163,7 +168,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>修改密码</h3>
+     * 修改密码
      *
      * @param user 用户信息
      */
@@ -184,7 +189,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>重置密码</h3>
+     * 重置密码
      *
      * @param user 用户实体
      */
@@ -217,7 +222,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>发送邮箱验证码</h3>
+     * 发送邮箱验证码
      *
      * @param email 邮箱
      */
@@ -229,7 +234,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>发送短信验证码</h3>
+     * 发送短信验证码
      */
     public void sendSms(String phone) {
         SMS_SEND_BUSY.when(redisHelper.hasKey(getPhoneCodeCacheKey(phone)));
@@ -240,7 +245,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>登录并设置Cookie</h3>
+     * 登录并设置Cookie
      *
      * @param response 响应
      * @param user     用户
@@ -255,13 +260,13 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         saveCookie(user.getId(), cookieString);
         Cookie cookie = cookieHelper.getAuthorizeCookie(cookieString);
         cookie.setHttpOnly(false);
-        cookie.setPath(STRING_SLASH);
+        cookie.setPath(CookieHelper.DEFAULT_PATH);
         response.addCookie(cookie);
         return accessToken;
     }
 
     /**
-     * <h3>存储Cookie</h3>
+     * 存储Cookie
      *
      * @param userId UserId
      * @param cookie Cookie
@@ -271,7 +276,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>通过Cookie获取一个用户</h3>
+     * 通过Cookie获取一个用户
      *
      * @param cookie Cookie
      * @return UserId
@@ -285,7 +290,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>ID+密码 账号+密码</h3>
+     * ID+密码 账号+密码
      *
      * @param user 用户实体
      * @return 登录成功的用户
@@ -309,7 +314,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>邮箱验证码登录</h3>
+     * 邮箱验证码登录
      *
      * @param user 用户实体
      * @return 登录成功的用户
@@ -329,7 +334,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>邮箱注册</h3>
+     * 邮箱注册
      *
      * @param email 邮箱
      * @return 注册的用户ID
@@ -339,7 +344,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>邮箱注册</h3>
+     * 邮箱注册
      *
      * @param email    邮箱
      * @param password 密码
@@ -347,7 +352,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public long registerUserViaEmail(@NotNull String email, String password) {
         // 昵称默认为邮箱账号 @ 前面的
-        String nickname = email.split(STRING_AT)[0];
+        String nickname = email.split("@")[0];
         String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
         UserEntity user = new UserEntity().setPassword(PasswordUtil.encode(password, salt))
                 .setSalt(salt)
@@ -356,37 +361,37 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>创建AccessToken</h3>
+     * 创建AccessToken
      *
      * @param userId 用户ID
      * @return AccessToken
      */
     public String createAccessToken(long userId) {
-        return AccessTokenUtil.create().setPayloadId(userId, serviceConfig.getAuthorizeExpireSecond())
+        return AccessTokenUtil.create().setPayloadId(userId, accessConfig.getAuthorizeExpireSecond())
                 .addPayload(UserTokenType.TYPE, UserTokenType.NORMAL.getKey())
-                .build(serviceConfig.getAccessTokenSecret());
+                .build(accessConfig.getAccessTokenSecret());
     }
 
     /**
-     * <h3>获取指定邮箱缓存的验证码</h3>
+     * 获取指定邮箱缓存的验证码
      *
      * @param email 邮箱
      * @return 验证码
      */
     private String getEmailCode(String email) {
         Object code = redisHelper.get(getEmailCacheKey(email));
-        return Objects.isNull(code) ? STRING_EMPTY : code.toString();
+        return Objects.isNull(code) ? "" : code.toString();
     }
 
     /**
-     * <h3>获取指定手机缓存的验证码</h3>
+     * 获取指定手机缓存的验证码
      *
      * @param phone 手机
      * @return 验证码
      */
     private String getSmsCode(String phone) {
         Object code = redisHelper.get(getPhoneCodeCacheKey(phone));
-        return Objects.isNull(code) ? STRING_EMPTY : code.toString();
+        return Objects.isNull(code) ? "" : code.toString();
     }
 
     @Override
@@ -424,7 +429,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         Set<Long> departmentIdList = getDepartmentList(departmentId);
         if (!departmentIdList.isEmpty()) {
             Join<UserEntity, DepartmentEntity> departmentJoin = root.join("departmentList");
-            Predicate inPredicate = departmentJoin.get(RootEntity.STRING_ID).in(departmentIdList);
+            Predicate inPredicate = departmentJoin.get(CurdEntity.STRING_ID).in(departmentIdList);
             predicateList.add(inPredicate);
         }
         return predicateList;
@@ -446,7 +451,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>获取当前用户所在的房间ID</h3>
+     * 获取当前用户所在的房间ID
      *
      * @param userId 用户ID
      * @return 房间ID
@@ -460,7 +465,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * <h3>保存当前用户所在的房间ID</h3>
+     * 保存当前用户所在的房间ID
      *
      * @param userId 用户ID
      * @param roomId 房间ID

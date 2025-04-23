@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.personnel.user.enums;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,12 +13,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum UserGender implements IDictionary {
     /**
-     * <h3>女</h3>
+     * 女
      */
     FEMALE(0, "女"),
 
     /**
-     * <h3>男</h3>
+     * 男
      */
     MALE(1, "男"),
 

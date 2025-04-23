@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.factory.structure;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,25 +13,24 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum StructureType implements IDictionary {
     /**
-     * <h3>单人工位</h3>
+     * 单人工位
      */
     SINGLE_STATION(1, "单人工位"),
 
     /**
-     * <h3>公共工区</h3>
+     * 公共工区
      */
     COMMON_WORK_AREA(2, "公共工区"),
 
     /**
-     * <h3>多人工区</h3>
+     * 多人工区
      */
     MULTI_STATION(3, "多人工区"),
 
     /**
-     * <h3>轮用工区</h3>
+     * 轮用工区
      */
     ROUND_WORK_AREA(4, "轮用工区");
-
 
     private final int key;
     private final String label;

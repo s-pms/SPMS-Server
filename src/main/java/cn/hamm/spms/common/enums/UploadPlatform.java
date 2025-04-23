@@ -1,6 +1,6 @@
 package cn.hamm.spms.common.enums;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,7 +13,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum UploadPlatform implements IDictionary {
     /**
-     * <h3>本地上传</h3>
+     * 本地上传
      */
     LOCAL(0, "本地上传"),
 

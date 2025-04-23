@@ -1,12 +1,12 @@
 package cn.hamm.spms.base;
 
+import cn.hamm.airpower.access.Permission;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Filter;
-import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.model.Json;
-import cn.hamm.airpower.model.query.QueryListRequest;
-import cn.hamm.airpower.model.query.QueryPageRequest;
-import cn.hamm.airpower.root.RootEntityController;
+import cn.hamm.airpower.api.Json;
+import cn.hamm.airpower.api.fiter.Filter;
+import cn.hamm.airpower.curd.CurdController;
+import cn.hamm.airpower.curd.query.QueryListRequest;
+import cn.hamm.airpower.curd.query.QueryPageRequest;
 import cn.hamm.spms.common.annotation.DisableLog;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +26,7 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EDIT;
  */
 @Slf4j
 @Permission
-public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>, R extends BaseRepository<E>> extends RootEntityController<E, S, R> {
+public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>, R extends BaseRepository<E>> extends CurdController<E, S, R> {
     @DisableLog
     @Override
     public Json getList(@RequestBody QueryListRequest<E> queryRequest) {

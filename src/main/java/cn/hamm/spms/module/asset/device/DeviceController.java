@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.asset.device;
 
-import cn.hamm.airpower.annotation.ApiController;
+import cn.hamm.airpower.access.Permission;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Permission;
-import cn.hamm.airpower.model.Json;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.Json;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.report.IReportPayloadAction;
@@ -26,7 +26,7 @@ import static cn.hamm.spms.module.iot.report.ReportConstant.getDeviceReportCache
  *
  * @author zfy
  */
-@ApiController("device")
+@Api("device")
 @Description("设备")
 public class DeviceController extends BaseController<
         DeviceEntity, DeviceService, DeviceRepository

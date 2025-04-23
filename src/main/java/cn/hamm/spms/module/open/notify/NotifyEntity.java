@@ -2,7 +2,7 @@ package cn.hamm.spms.module.open.notify;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.validate.Dictionary;
+import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.open.notify.enums.NotifyChannel;
 import cn.hamm.spms.module.open.notify.enums.NotifyScene;

@@ -1,6 +1,6 @@
 package cn.hamm.spms.common.cron;
 
-import cn.hamm.airpower.config.ServiceConfig;
+import cn.hamm.airpower.ServiceConfig;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +39,7 @@ public class ServiceCron {
     }
 
     /**
-     * <h3>重置自定义编码规则序列号</h3>
+     * 重置自定义编码规则序列号
      *
      * @param codeRule 编码规则
      */

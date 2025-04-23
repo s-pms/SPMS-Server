@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.system.permission;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,12 +13,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PermissionType implements IDictionary {
     /**
-     * <h3>API权限</h3>
+     * API权限
      */
     API(0, "API权限"),
 
     /**
-     * <h3>MCP权限</h3>
+     * MCP权限
      */
     MCP(1, "MCP权限");
 

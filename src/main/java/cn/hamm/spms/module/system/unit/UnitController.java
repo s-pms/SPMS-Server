@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.system.unit;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.api.Api;
 import cn.hamm.spms.base.BaseController;
 
 /**
@@ -9,7 +9,7 @@ import cn.hamm.spms.base.BaseController;
  *
  * @author Hamm.cn
  */
-@ApiController("unit")
+@Api("unit")
 @Description("单位")
 public class UnitController extends BaseController<UnitEntity, UnitService, UnitRepository> {
 }

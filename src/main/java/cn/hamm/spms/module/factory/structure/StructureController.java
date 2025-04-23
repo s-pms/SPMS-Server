@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.factory.structure;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.api.Api;
 import cn.hamm.spms.base.BaseController;
 
 /**
@@ -9,7 +9,7 @@ import cn.hamm.spms.base.BaseController;
  *
  * @author Hamm.cn
  */
-@ApiController("structure")
+@Api("structure")
 @Description("生产单元")
 public class StructureController extends BaseController<StructureEntity, StructureService, StructureRepository> {
 }

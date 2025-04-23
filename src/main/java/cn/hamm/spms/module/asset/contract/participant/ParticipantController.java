@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.asset.contract.participant;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.api.Api;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.asset.contract.ContractEntity;
 
@@ -10,7 +10,7 @@ import cn.hamm.spms.module.asset.contract.ContractEntity;
  *
  * @author Hamm.cn
  */
-@ApiController("participant")
+@Api("participant")
 @Description("参与方")
 public class ParticipantController extends BaseController<ContractEntity, ParticipantService, ParticipantRepository> {
 }

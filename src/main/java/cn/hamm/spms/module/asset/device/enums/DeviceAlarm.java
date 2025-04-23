@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.asset.device.enums;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,22 +13,22 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum DeviceAlarm implements IDictionary {
     /**
-     * <h3>正常</h3>
+     * 正常
      */
     NONE(0, "正常"),
 
     /**
-     * <h3>系统报警</h3>
+     * 系统报警
      */
     SYSTEM(1, "系统报警"),
 
     /**
-     * <h3>手动报警</h3>
+     * 手动报警
      */
     MANUAL(2, "手动报警"),
 
     /**
-     * <h3>规则报警</h3>
+     * 规则报警
      */
     RULE(3, "规则报警"),
     ;

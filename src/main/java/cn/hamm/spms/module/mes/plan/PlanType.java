@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.mes.plan;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,12 +13,12 @@ import lombok.Getter;
 @Getter
 public enum PlanType implements IDictionary {
     /**
-     * <h3>内部计划</h3>
+     * 内部计划
      */
     INNER(1, "内部计划"),
 
     /**
-     * <h3>外销计划</h3>
+     * 外销计划
      */
     SALE(2, "外销计划");
 

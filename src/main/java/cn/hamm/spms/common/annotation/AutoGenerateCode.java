@@ -18,7 +18,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface AutoGenerateCode {
     /**
-     * <h3>使用的自定义编码规则枚举项</h3>
+     * 使用的自定义编码规则枚举项
      */
     CodeRuleField value();
 }

@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.asset.contract.enums;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,22 +13,22 @@ import lombok.Getter;
 @Getter
 public enum ContractType implements IDictionary {
     /**
-     * <h3>其他合同</h3>
+     * 其他合同
      */
     OTHER(0, "其他合同"),
 
     /**
-     * <h3>销售合同</h3>
+     * 销售合同
      */
     SALE(1, "销售合同"),
 
     /**
-     * <h3>采购合同</h3>
+     * 采购合同
      */
     PURCHASE(2, "采购合同"),
 
     /**
-     * <h3>劳动合同</h3>
+     * 劳动合同
      */
     LABOR(3, "劳动合同");
 

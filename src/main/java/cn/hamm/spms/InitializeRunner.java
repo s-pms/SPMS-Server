@@ -1,7 +1,7 @@
 package cn.hamm.spms;
 
+import cn.hamm.airpower.access.PasswordUtil;
 import cn.hamm.airpower.mcp.McpService;
-import cn.hamm.airpower.util.PasswordUtil;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.asset.device.DeviceService;
@@ -141,7 +141,6 @@ public class InitializeRunner implements CommandLineRunner {
         initDevData();
     }
 
-
     private void initParameters() {
         ParameterEntity parameter;
 
@@ -184,7 +183,7 @@ public class InitializeRunner implements CommandLineRunner {
                                 .setIsSystem(true)
                                 .setRuleField(codeRuleField.getKey())
                                 .setPrefix(codeRuleField.getDefaultPrefix())
-                                .setTemplate(codeRuleField.getDefaultTemplate())
+                                .setTemplate(codeRuleField.getDefaultSnType().getDefaultTemplate())
                                 .setSnType(codeRuleField.getDefaultSnType().getKey())
                 );
             }
@@ -270,7 +269,7 @@ public class InitializeRunner implements CommandLineRunner {
                 .setMaterialType(MaterialType.PURCHASE.getKey())
                 .setName("MacBook Pro M4 Max")
                 .setSpc("32G-1TB")
-                .setUnitInfo(unit)
+                .setUnit(unit)
                 .setPurchasePrice(28000D)
                 .setSalePrice(29999D);
         material = materialService.get(materialService.add(material));
@@ -315,8 +314,8 @@ public class InitializeRunner implements CommandLineRunner {
         long operationIdScreen = operationService.add(new OperationEntity().setName("屏幕贴膜"));
         long operationIdSystem = operationService.add(new OperationEntity().setName("系统安装"));
 
-        long materialIdKeyboard = materialService.add(new MaterialEntity().setName("键盘").setMaterialType(MaterialType.PURCHASE.getKey()).setUnitInfo(unit));
-        long materialIdScreen = materialService.add(new MaterialEntity().setName("屏幕").setMaterialType(MaterialType.PURCHASE.getKey()).setUnitInfo(unit));
+        long materialIdKeyboard = materialService.add(new MaterialEntity().setName("键盘").setMaterialType(MaterialType.PURCHASE.getKey()).setUnit(unit));
+        long materialIdScreen = materialService.add(new MaterialEntity().setName("屏幕").setMaterialType(MaterialType.PURCHASE.getKey()).setUnit(unit));
 
         long bomId = bomService.add(new BomEntity().setName("笔记本电脑清单").setType(BomType.NORMAL.getKey()).setDetails(
                 new HashSet<>(Arrays.asList(
@@ -349,7 +348,6 @@ public class InitializeRunner implements CommandLineRunner {
                         new RoutingOperationEntity().setOperation(operationService.get(operationIdSystem))
                 ))
         );
-
 
         StructureEntity structure = new StructureEntity().setName("笔记本电脑产线");
         structure = structureService.get(structureService.add(structure));

@@ -3,7 +3,7 @@ package cn.hamm.spms.module.system.config;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.validate.Dictionary;
+import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
@@ -20,7 +20,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.util.Objects;
 
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.airpower.config.Constant.STRING_ONE;
+import static cn.hamm.spms.module.system.config.ConfigService.STRING_ONE;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
@@ -68,7 +68,7 @@ public class ConfigEntity extends BaseEntity<ConfigEntity> {
     private Boolean isSystem;
 
     /**
-     * <h3>设置是系统内置配置</h3>
+     * 设置是系统内置配置
      *
      * @param isSystem 内置配置
      * @return 配置信息

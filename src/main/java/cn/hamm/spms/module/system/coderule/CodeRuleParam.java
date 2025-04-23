@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.system.coderule;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,27 +14,27 @@ import lombok.Getter;
 public enum CodeRuleParam implements IDictionary {
 
     /**
-     * <h3>完整年份</h3>
+     * 完整年份
      */
     FULL_YEAR(1, "yyyy", "完整年份", "2023"),
 
     /**
-     * <h3>年份</h3>
+     * 年份
      */
     YEAR(2, "yy", "年份", "23"),
 
     /**
-     * <h3>月份</h3>
+     * 月份
      */
     MONTH(3, "mm", "月份", "12"),
 
     /**
-     * <h3>日期</h3>
+     * 日期
      */
     DATE(4, "dd", "日期", "31"),
 
     /**
-     * <h3>小时</h3>
+     * 小时
      */
     HOUR(5, "hh", "小时", "20"),
     ;
@@ -43,12 +43,12 @@ public enum CodeRuleParam implements IDictionary {
     private final String label;
 
     /**
-     * <h3>描述</h3>
+     * 描述
      */
     private final String desc;
 
     /**
-     * <h3>示例</h3>
+     * 示例
      */
     private final String demo;
 }

@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.system.menu;
 
-import cn.hamm.airpower.model.Sort;
-import cn.hamm.airpower.model.query.QueryListRequest;
-import cn.hamm.airpower.root.RootEntity;
-import cn.hamm.airpower.util.TreeUtil;
+import cn.hamm.airpower.curd.CurdEntity;
+import cn.hamm.airpower.curd.Sort;
+import cn.hamm.airpower.curd.query.QueryListRequest;
+import cn.hamm.airpower.tree.TreeUtil;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.util.TreeUtil.ROOT_ID;
+import static cn.hamm.airpower.tree.TreeUtil.ROOT_ID;
 
 /**
  * <h1>Service</h1>
@@ -21,7 +21,7 @@ import static cn.hamm.airpower.util.TreeUtil.ROOT_ID;
 @Service
 public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     /**
-     * <h3>排序字段</h3>
+     * 排序字段
      */
     private static final String ORDER_FIELD_NAME = "orderNo";
 
@@ -43,7 +43,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
 
     @Override
     protected @NotNull List<MenuEntity> afterGetList(@NotNull List<MenuEntity> list) {
-        list.forEach(RootEntity::excludeBaseData);
+        list.forEach(CurdEntity::excludeBaseData);
         return list;
     }
 
@@ -83,7 +83,6 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         secondMenu = new MenuEntity().setName("销售管理").setPath("/console/channel/sale/list").setParentId(firstMenu.getId());
         add(secondMenu);
 
-
         // 仓储管理 - WMS
         firstMenu = new MenuEntity().setName("仓储管理").setOrderNo(66).setParentId(ROOT_ID);
         firstMenu = get(add(firstMenu));
@@ -114,15 +113,14 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         secondMenu = new MenuEntity().setName("生产配方").setPath("/console/mes/bom/list").setParentId(firstMenu.getId());
         add(secondMenu);
 
-
         // 物联网
-//        firstMenu = new MenuEntity().setName("设备物联").setOrderNo(44).setParentId(TreeUtil.ROOT_ID);
-//        firstMenu = get(add(firstMenu));
-//
-//        secondMenu = new MenuEntity().setName("设备概览").setPath("/console/iot/monitor/preview").setParentId(firstMenu.getId());
-//        add(secondMenu);
-//        secondMenu = new MenuEntity().setName("参数管理").setPath("/console/iot/parameter/list").setParentId(firstMenu.getId());
-//        add(secondMenu);
+        firstMenu = new MenuEntity().setName("设备物联").setOrderNo(44).setParentId(TreeUtil.ROOT_ID);
+        firstMenu = get(add(firstMenu));
+
+        secondMenu = new MenuEntity().setName("设备概览").setPath("/console/iot/monitor/preview").setParentId(firstMenu.getId());
+        add(secondMenu);
+        secondMenu = new MenuEntity().setName("参数管理").setPath("/console/iot/parameter/list").setParentId(firstMenu.getId());
+        add(secondMenu);
 
         // 系统管理
         firstMenu = new MenuEntity().setName("系统管理").setOrderNo(3).setParentId(ROOT_ID);

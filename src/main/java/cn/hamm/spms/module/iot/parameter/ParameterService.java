@@ -14,12 +14,12 @@ import java.util.Objects;
 @Service
 public class ParameterService extends BaseService<ParameterEntity, ParameterRepository> {
     /**
-     * <h3>缓存的Key前缀</h3>
+     * 缓存的Key前缀
      */
     private final String PARAM_CODE_CACHE_PREFIX = "parameter_code_";
 
     /**
-     * <h3>通过参数编码查询</h3>
+     * 通过参数编码查询
      *
      * @param code 参数编码
      * @return 参数

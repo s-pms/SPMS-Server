@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.system.coderule;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,26 +14,27 @@ import lombok.Getter;
 public enum SerialNumberUpdate implements IDictionary {
 
     /**
-     * <h3>按日更新</h3>
+     * 按日更新
      */
-    DAY(1, "按日更新"),
+    DAY(1, "按日更新", "yyyymmdd"),
 
     /**
-     * <h3>按月更新</h3>
+     * 按月更新
      */
-    MONTH(2, "按月更新"),
+    MONTH(2, "按月更新", "yyyymm"),
 
     /**
-     * <h3>按年更新</h3>
+     * 按年更新
      */
-    YEAR(3, "按年更新"),
+    YEAR(3, "按年更新", "yyyy"),
 
     /**
-     * <h3>不更新</h3>
+     * 不更新
      */
-    NEVER(4, "不更新"),
+    NEVER(4, "不更新", ""),
     ;
 
     private final int key;
     private final String label;
+    private final String defaultTemplate;
 }

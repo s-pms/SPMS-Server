@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.asset.material;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.api.Api;
 import cn.hamm.spms.base.BaseController;
 
 /**
@@ -9,7 +9,7 @@ import cn.hamm.spms.base.BaseController;
  *
  * @author Hamm.cn
  */
-@ApiController("material")
+@Api("material")
 @Description("物料")
 public class MaterialController extends BaseController<MaterialEntity, MaterialService, MaterialRepository> {
 

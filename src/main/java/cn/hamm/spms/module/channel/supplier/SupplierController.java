@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.channel.supplier;
 
-import cn.hamm.airpower.annotation.ApiController;
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Extends;
-import cn.hamm.airpower.enums.Api;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.Extends;
+import cn.hamm.airpower.curd.Curd;
 import cn.hamm.spms.base.BaseController;
 
 /**
@@ -11,9 +11,9 @@ import cn.hamm.spms.base.BaseController;
  *
  * @author Hamm.cn
  */
-@ApiController("supplier")
+@Api("supplier")
 @Description("供应商")
-@Extends(exclude = Api.Delete)
+@Extends(exclude = Curd.Delete)
 public class SupplierController extends BaseController<SupplierEntity, SupplierService, SupplierRepository> {
 
 }

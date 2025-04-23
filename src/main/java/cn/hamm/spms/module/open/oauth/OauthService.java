@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.open.oauth;
 
-import cn.hamm.airpower.helper.RedisHelper;
-import cn.hamm.airpower.util.DateTimeUtil;
+import cn.hamm.airpower.datetime.DateTimeUtil;
+import cn.hamm.airpower.redis.RedisHelper;
 import cn.hamm.spms.module.open.oauth.model.base.AbstractOauthCallback;
 import cn.hamm.spms.module.open.oauth.model.base.OauthUserInfo;
 import cn.hamm.spms.module.open.oauth.model.enums.OauthPlatform;
@@ -21,8 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.config.Constant.STRING_EMPTY;
-import static cn.hamm.airpower.config.Constant.STRING_UNDERLINE;
 import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 
@@ -35,7 +33,7 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 @Service
 public class OauthService {
     /**
-     * <h3>Code缓存秒数</h3>
+     * Code缓存秒数
      */
     private static final int CACHE_CODE_EXPIRE_SECOND = DateTimeUtil.SECOND_PER_MINUTE * 5;
 
@@ -48,7 +46,7 @@ public class OauthService {
     private BeanFactory beanFactory;
 
     /**
-     * <h3>用户ID的缓存Key</h3>
+     * 用户ID的缓存Key
      *
      * @param appKey 应用Key
      * @param code   Code
@@ -56,11 +54,11 @@ public class OauthService {
      */
     @Contract(pure = true)
     public static @NotNull String getUserIdCacheKey(String appKey, String code) {
-        return "oauth_user_" + appKey + STRING_UNDERLINE + code;
+        return "oauth_user_" + appKey + "_" + code;
     }
 
     /**
-     * <h3>Scope的缓存Key</h3>
+     * Scope的缓存Key
      *
      * @param appKey 应用Key
      * @param code   Code
@@ -68,7 +66,7 @@ public class OauthService {
      */
     @Contract(pure = true)
     public static @NotNull String getScopeCacheKey(String appKey, String code) {
-        return "oauth_scope_" + appKey + STRING_UNDERLINE + code;
+        return "oauth_scope_" + appKey + "_" + code;
     }
 
     private static OauthPlatform getOauthPlatform(String platform) {
@@ -83,7 +81,7 @@ public class OauthService {
     }
 
     /**
-     * <h3>缓存用户ID</h3>
+     * 缓存用户ID
      *
      * @param appKey AppKey
      * @param code   Code
@@ -94,7 +92,7 @@ public class OauthService {
     }
 
     /**
-     * <h3>获取缓存的用户ID</h3>
+     * 获取缓存的用户ID
      *
      * @param appKey AppKey
      * @param code   Code
@@ -107,7 +105,7 @@ public class OauthService {
     }
 
     /**
-     * <h3>删除缓存的用户ID</h3>
+     * 删除缓存的用户ID
      *
      * @param appKey AppKey
      * @param code   Code
@@ -117,7 +115,7 @@ public class OauthService {
     }
 
     /**
-     * <h3>删除缓存的Scope</h3>
+     * 删除缓存的Scope
      *
      * @param appKey AppKey
      * @param code   Code
@@ -127,7 +125,7 @@ public class OauthService {
     }
 
     /**
-     * <h3>缓存Scope</h3>
+     * 缓存Scope
      *
      * @param appKey AppKey
      * @param code   Code
@@ -138,7 +136,7 @@ public class OauthService {
     }
 
     /**
-     * <h3>获取缓存的Scope</h3>
+     * 获取缓存的Scope
      *
      * @param appKey AppKey
      * @param code   Code
@@ -147,13 +145,13 @@ public class OauthService {
     public String getOauthScopeCache(String appKey, String code) {
         Object object = redisHelper.get(getScopeCacheKey(appKey, code));
         if (Objects.isNull(object)) {
-            return STRING_EMPTY;
+            return "";
         }
         return object.toString();
     }
 
     /**
-     * <h3>第三方登录</h3>
+     * 第三方登录
      *
      * @param platform 平台
      * @param code     Code
@@ -172,7 +170,7 @@ public class OauthService {
     }
 
     /**
-     * <h3>第三方绑定</h3>
+     * 第三方绑定
      *
      * @param platform 平台
      * @param code     Code
@@ -193,8 +191,8 @@ public class OauthService {
         }
         userThirdLoginService.add(new UserThirdLoginEntity().setThirdUserId(userInfo.getUserId())
                 .setUser(user)
-                .setNickName(StringUtils.hasText(userInfo.getNickName()) ? userInfo.getNickName() : STRING_EMPTY)
-                .setAvatar(StringUtils.hasText(userInfo.getAvatar()) ? userInfo.getAvatar() : STRING_EMPTY)
+                .setNickName(StringUtils.hasText(userInfo.getNickName()) ? userInfo.getNickName() : "")
+                .setAvatar(StringUtils.hasText(userInfo.getAvatar()) ? userInfo.getAvatar() : "")
                 .setPlatform(oauthPlatform.getKey())
                 .setGender(gender)
         );

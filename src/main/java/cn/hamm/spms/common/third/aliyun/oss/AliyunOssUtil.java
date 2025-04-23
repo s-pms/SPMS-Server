@@ -26,7 +26,7 @@ public class AliyunOssUtil {
     private AliyunOssConfig aliyunOssConfig;
 
     /**
-     * <h3>从阿里云OSS获取文件流</h3>
+     * 从阿里云OSS获取文件流
      *
      * @param path 路径
      * @return 文件流
@@ -44,9 +44,8 @@ public class AliyunOssUtil {
         return null;
     }
 
-
     /**
-     * <h3>上传到阿里云OSS</h3>
+     * 上传到阿里云OSS
      *
      * @param fileName 保存对象名称
      * @param bytes    文件
@@ -58,7 +57,7 @@ public class AliyunOssUtil {
     }
 
     /**
-     * <h3>获取客户端</h3>
+     * 获取客户端
      *
      * @return 客户端
      */

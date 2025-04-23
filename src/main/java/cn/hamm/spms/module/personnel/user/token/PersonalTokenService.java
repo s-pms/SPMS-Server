@@ -1,9 +1,11 @@
 package cn.hamm.spms.module.personnel.user.token;
 
-import cn.hamm.airpower.util.AccessTokenUtil;
+import cn.hamm.airpower.access.AccessConfig;
+import cn.hamm.airpower.access.AccessTokenUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.personnel.user.UserTokenType;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +22,11 @@ public class PersonalTokenService extends BaseService<PersonalTokenEntity, Perso
 
     public static final String PERSONAL_TOKEN_NAME = "personal";
 
+    @Autowired
+    private AccessConfig accessConfig;
+
     /**
-     * <h3>根据令牌获取</h3>
+     * 根据令牌获取
      *
      * @param token 令牌
      * @return 令牌
@@ -45,7 +50,7 @@ public class PersonalTokenService extends BaseService<PersonalTokenEntity, Perso
     }
 
     /**
-     * <h3>创建私人令牌</h3>
+     * 创建私人令牌
      *
      * @return AppKey
      */
@@ -53,7 +58,7 @@ public class PersonalTokenService extends BaseService<PersonalTokenEntity, Perso
         String token = AccessTokenUtil.create().setPayloadId(userId)
                 .addPayload(UserTokenType.TYPE, UserTokenType.PERSONAL.getKey())
                 .addPayload(PERSONAL_TOKEN_NAME, Math.random())
-                .build(serviceConfig.getAccessTokenSecret());
+                .build(accessConfig.getAccessTokenSecret());
         PersonalTokenEntity openApp = getByToken(token);
         FORBIDDEN_EXIST.whenNotNull(openApp, "创建失败，私人令牌重复！");
         return token;

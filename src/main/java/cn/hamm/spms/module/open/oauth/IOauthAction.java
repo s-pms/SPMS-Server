@@ -7,13 +7,13 @@ package cn.hamm.spms.module.open.oauth;
  */
 public interface IOauthAction {
     /**
-     * <h3>{@code AccessToken} 必须</h3>
+     * {@code AccessToken} 必须
      */
     interface WhenAccessTokenRequired {
     }
 
     /**
-     * <h3>{@code AppKey} 必须</h3>
+     * {@code AppKey} 必须
      */
     interface WhenAppKeyRequired {
     }

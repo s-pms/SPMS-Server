@@ -17,7 +17,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 @EnableScheduling
 public class Application {
     /**
-     * <h2>服务器上下文对象/h2>
+     * 服务器上下文对象
      */
     private static ServletWebServerApplicationContext serverApplicationContext;
 
@@ -35,3 +35,4 @@ public class Application {
         // ReportEventListener 注入后可开启MQTT监听
     }
 }
+                

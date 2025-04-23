@@ -1,8 +1,8 @@
 package cn.hamm.spms.base.bill;
 
+import cn.hamm.airpower.curd.CurdEntity;
+import cn.hamm.airpower.dictionary.IDictionary;
 import cn.hamm.airpower.helper.TransactionHelper;
-import cn.hamm.airpower.interfaces.IDictionary;
-import cn.hamm.airpower.root.RootEntity;
 import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.airpower.util.TaskUtil;
 import cn.hamm.spms.base.BaseRepository;
@@ -46,7 +46,7 @@ public abstract class AbstractBaseBillService<
     protected TransactionHelper transactionHelper;
 
     /**
-     * <h3>获取自动审核配置</h3>
+     * 获取自动审核配置
      *
      * @return 配置标识
      */
@@ -56,7 +56,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>设置单据所有明细都已完成</h3>
+     * 设置单据所有明细都已完成
      *
      * @param billId 单据ID
      */
@@ -75,7 +75,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>设置单据已完成</h3>
+     * 设置单据已完成
      *
      * @param billId 单据ID
      */
@@ -91,7 +91,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>单据完成前置方法</h3>
+     * 单据完成前置方法
      *
      * @param bill 单据
      */
@@ -100,7 +100,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>添加明细完成数量</h3>
+     * 添加明细完成数量
      *
      * @param sourceDetail 提交明细
      */
@@ -134,7 +134,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>添加完成数量成功后置</h3>
+     * 添加完成数量成功后置
      *
      * @param detailId     明细ID
      * @param sourceDetail 提交明细
@@ -144,7 +144,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>单据完成的后置方法</h3>
+     * 单据完成的后置方法
      *
      * @param billId 单据ID
      * @apiNote 一般用于在当前单据完成后同步标记关联的其他单据为完成状态
@@ -155,7 +155,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>单据所有明细完成的后置方法</h3>
+     * 单据所有明细完成的后置方法
      *
      * @param billId 单据ID
      * @apiNote 一般用于当前单据的所有明细都已完成，可能会创建其他的单据，也可能去修改其他单据的明细
@@ -166,7 +166,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>单据明细保存后置方法</h3>
+     * 单据明细保存后置方法
      *
      * @param bill 单据
      */
@@ -194,7 +194,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>单据添加后置</h3>
+     * 单据添加后置
      *
      * @param id 单据ID
      */
@@ -208,12 +208,12 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>保存单据明细</h3>
+     * 保存单据明细
      * <li>
-     * 请不要再重写后直接调用 {@link #update(RootEntity)} #{@link #updateWithNull(RootEntity)}，避免出现调用循环。
+     * 请不要再重写后直接调用 {@link #update(CurdEntity)} #{@link #updateWithNull(CurdEntity)}，避免出现调用循环。
      * </li>
      * <li>
-     * 如需再次保存，请调用 {@link #updateToDatabase(RootEntity)} }
+     * 如需再次保存，请调用 {@link #updateToDatabase(CurdEntity)} }
      * </li>
      *
      * @param billId  单据ID
@@ -227,7 +227,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>单据审核</h3>
+     * 单据审核
      *
      * @param billId 单据ID
      */
@@ -240,7 +240,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>单据审核的后置方法</h3>
+     * 单据审核的后置方法
      *
      * @param billId 单据ID
      * @apiNote 可以添加一些审核后的业务逻辑
@@ -250,7 +250,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>设置为已审核状态</h3>
+     * 设置为已审核状态
      *
      * @param bill 单据
      */
@@ -259,7 +259,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>设置为审核中状态</h3>
+     * 设置为审核中状态
      *
      * @param bill 单据
      */
@@ -268,7 +268,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>单据是否可审核</h3>
+     * 单据是否可审核
      *
      * @param bill 单据
      * @return 是否审核
@@ -278,7 +278,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>单据是否可驳回</h3>
+     * 单据是否可驳回
      *
      * @param bill 单据
      * @return 是否可驳回
@@ -288,7 +288,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>设置单据为驳回状态</h3>
+     * 设置单据为驳回状态
      *
      * @param bill 单据
      */
@@ -297,7 +297,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>单据是否可编辑</h3>
+     * 单据是否可编辑
      *
      * @param bill 单据
      * @return 是否可编辑
@@ -307,28 +307,28 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * <h3>获取审核中状态</h3>
+     * 获取审核中状态
      *
      * @return 审核中状态
      */
     protected abstract IDictionary getAuditingStatus();
 
     /**
-     * <h3>获取已审核状态</h3>
+     * 获取已审核状态
      *
      * @return 已审核状态
      */
     protected abstract IDictionary getAuditedStatus();
 
     /**
-     * <h3>获取驳回状态</h3>
+     * 获取驳回状态
      *
      * @return 驳回状态
      */
     protected abstract IDictionary getRejectedStatus();
 
     /**
-     * <h3>获取所有明细均已完成的单据状态</h3>
+     * 获取所有明细均已完成的单据状态
      *
      * @return 所有明细均已完成的单据状态
      * @apiNote 可单独配置 {@link #getFinishedStatus()}
@@ -336,7 +336,7 @@ public abstract class AbstractBaseBillService<
     public abstract IDictionary getBillDetailsFinishStatus();
 
     /**
-     * <h3>获取单据已完成状态</h3>
+     * 获取单据已完成状态
      *
      * @return 单据已完成状态
      * @apiNote 默认为 {@link #getBillDetailsFinishStatus()}

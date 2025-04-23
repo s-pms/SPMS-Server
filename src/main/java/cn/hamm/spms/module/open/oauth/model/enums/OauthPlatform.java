@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.open.oauth.model.enums;
 
-import cn.hamm.airpower.interfaces.IDictionary;
+import cn.hamm.airpower.dictionary.IDictionary;
 import cn.hamm.spms.module.open.oauth.model.base.AbstractOauthCallback;
 import cn.hamm.spms.module.open.oauth.model.platform.WeComCallback;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum OauthPlatform implements IDictionary {
     /**
-     * <h3>企业微信</h3>
+     * 企业微信
      */
     WE_COM(1, "企业微信", "wecom", WeComCallback.class);
 
