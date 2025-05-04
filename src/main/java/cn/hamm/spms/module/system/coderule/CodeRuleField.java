@@ -123,7 +123,7 @@ public enum CodeRuleField implements IDictionary {
     /**
      * 合同编码
      */
-    ContractCode(22, "合同编码", "CON", YEAR),
+    ContractCode(22, "合同编码", "CON", MONTH),
 
     ;
 
