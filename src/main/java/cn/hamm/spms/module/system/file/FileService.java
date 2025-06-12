@@ -62,7 +62,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
         PARAM_INVALID.whenNull(originalFilename, "文件名不能为空");
         String extension = FileUtil.getExtension(originalFilename);
         PARAM_INVALID.whenEmpty(extension, "文件类型不能为空");
-        PARAM_INVALID.when(!Arrays.stream(appConfig.getUploadAllowExtensions()).toList().contains(extension), "文件类型不允许上传");
+        PARAM_INVALID.when(!Arrays.stream(fileCategory.getExtensions()).toList().contains(extension), "文件类型不允许上传");
 
         // 存储的相对路径目录
         String relativeDirectory = FileUtil.getTodayDirectory(fileCategory.name().toLowerCase());
