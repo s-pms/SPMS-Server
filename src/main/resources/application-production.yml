@@ -13,14 +13,8 @@ spring:
       host: localhost
       port: 6379
       database: 5
-airpower:
-  mqtt:
-    host: localhost
-    port: 1883
 app:
   loginUrl: "https://demo.spms.work/login"
-  influxdb:
-    url: http://localhost:8086
-    token: spms
-    org: spms
-    bucket: spms
+  authorize-url: "https://demo.spms.work/authorize"
+  upload-platform: local
+  upload-directory: /home/upload

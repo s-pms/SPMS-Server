@@ -50,17 +50,6 @@ public class AppConfig {
      */
     private long uploadMaxSize = FILE_SCALE * FILE_SCALE * 10;
     /**
-     * 上传文件允许的扩展名
-     */
-    private String[] uploadAllowExtensions = new String[]{
-            "jpg", "jpeg", "png", "gif", "bmp",
-            "mp4",
-            "mp3", "wav", "wma",
-            "zip", "rar", "7z", "tar", "gz",
-            "pdf", "doc", "docx", "xls", "xlsx",
-            "markdown"
-    };
-    /**
      * 上传平台
      */
     private UploadPlatform uploadPlatform = LOCAL;
