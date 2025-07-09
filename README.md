@@ -79,6 +79,10 @@ Server后端项目仓库，你可以查看 [开发者指南@Github](https://gith
 （[Github](https://github.com/AirPowerTeam/AirPower4J)/[Gitee](https://gitee.com/air-power/AirPower4J)），欢迎关注并给我们一个大大的
 **🌟🌟🌟Star**
 
+### 技能前提要求
+
+本项目依赖 **Java17** **SpringBoot3** **IDEA** **MySQL** **Redis** 等技术和工具，请先确认是否了解和熟悉前序要求的技能。
+
 ### 创建项目文件夹
 
 创建项目文件夹， 如 `SPMS`，然后使用 **Git** 将源代码 clone 至此目录。
