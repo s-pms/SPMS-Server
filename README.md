@@ -74,10 +74,10 @@ Server后端项目仓库，你可以查看 [开发者指南@Github](https://gith
 
 ## 快速入门
 
-这是
+本项目依赖了我们另一个基础核心包：
 **`AirPower4J`**
-（[Github](https://github.com/AirPowerTeam/AirPower4J)/[Gitee](https://gitee.com/air-power/AirPower4J)）
-的宿主项目，你可以使用下面的方式进行使用：
+（[Github](https://github.com/AirPowerTeam/AirPower4J)/[Gitee](https://gitee.com/air-power/AirPower4J)），欢迎关注并给我们一个大大的
+**🌟🌟🌟Star**
 
 ### 创建项目文件夹
 
