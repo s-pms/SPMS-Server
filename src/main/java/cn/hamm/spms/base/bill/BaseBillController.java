@@ -49,21 +49,21 @@ public class BaseBillController<
         return Json.success("审核成功");
     }
 
-    @Description("设置所有明细已完成")
-    @PostMapping("setBillDetailsAllFinished")
-    @Filter(WhenGetDetail.class)
-    public Json setBillDetailsAllFinished(@RequestBody @Validated(WhenIdRequired.class) E bill) {
-        service.setBillDetailsAllFinished(bill.getId());
-        return Json.success("设置所有明细已完成成功");
-    }
+//    @Description("设置所有明细已完成")
+//    @PostMapping("setBillDetailsAllFinished")
+//    @Filter(WhenGetDetail.class)
+//    public Json setBillDetailsAllFinished(@RequestBody @Validated(WhenIdRequired.class) E bill) {
+//        service.setBillDetailsAllFinished(bill.getId());
+//        return Json.success("设置所有明细已完成成功");
+//    }
 
-    @Description("设置单据已完成")
-    @PostMapping("setBillFinished")
-    @Filter(WhenGetDetail.class)
-    public Json setBillFinished(@RequestBody @Validated(WhenIdRequired.class) E bill) {
-        service.setBillFinished(bill.getId());
-        return Json.success("设置单据已完成成功");
-    }
+//    @Description("设置单据已完成")
+//    @PostMapping("setBillFinished")
+//    @Filter(WhenGetDetail.class)
+//    public Json setBillFinished(@RequestBody @Validated(WhenIdRequired.class) E bill) {
+//        service.setBillFinished(bill.getId());
+//        return Json.success("设置单据已完成成功");
+//    }
 
     @Description("驳回")
     @PostMapping("reject")
