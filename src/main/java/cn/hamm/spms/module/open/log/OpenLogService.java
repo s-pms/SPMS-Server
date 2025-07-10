@@ -32,7 +32,11 @@ public class OpenLogService extends BaseService<OpenLogEntity, OpenLogRepository
         if (Objects.isNull(existOpenApp)) {
             return null;
         }
-        return add(new OpenLogEntity().setRequest(requestBody).setUrl(url).setOpenApp(existOpenApp));
+        return add(new OpenLogEntity()
+                .setRequest(requestBody)
+                .setUrl(url)
+                .setOpenApp(existOpenApp)
+        );
     }
 
     /**

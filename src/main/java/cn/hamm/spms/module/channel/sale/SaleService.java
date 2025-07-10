@@ -46,7 +46,9 @@ public class SaleService extends AbstractBaseBillService<SaleEntity, SaleReposit
         // 计算总金额
         List<SaleDetailEntity> details = sale.getDetails();
         double totalPrice = details.stream()
-                .mapToDouble(detail -> NumberUtil.multiply(detail.getQuantity(), detail.getPrice()))
+                .mapToDouble(detail -> NumberUtil.multiply(
+                        detail.getQuantity(), detail.getPrice())
+                )
                 .sum();
         sale.setTotalPrice(totalPrice);
         updateToDatabase(sale);

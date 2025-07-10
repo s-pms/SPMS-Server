@@ -4,6 +4,7 @@ import cn.hamm.airpower.curd.Sort;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.mes.routing.operation.RoutingOperationEntity;
+import cn.hamm.spms.module.mes.routing.operation.RoutingOperationService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -35,16 +36,20 @@ public class RoutingService extends BaseService<RoutingEntity, RoutingRepository
     @Override
     protected void afterAdd(long id, @NotNull RoutingEntity routing) {
         List<RoutingOperationEntity> routingOperationList = routing.getDetails();
+        RoutingOperationService routingOperationService = Services.getRoutingOperationService();
         for (RoutingOperationEntity routingOperation : routingOperationList) {
             routingOperation.setRoutingId(id);
-            Services.getRoutingOperationService().add(routingOperation);
+            routingOperationService.add(routingOperation);
         }
     }
 
     @Override
     protected RoutingEntity afterGet(@NotNull RoutingEntity routing) {
         RoutingOperationEntity filter = new RoutingOperationEntity().setRoutingId(routing.getId());
-        List<RoutingOperationEntity> details = Services.getRoutingOperationService().filter(filter, new Sort().setField(ORDER_FIELD_NAME).setDirection(Sort.ASC));
+        List<RoutingOperationEntity> details = Services.getRoutingOperationService().filter(filter, new Sort()
+                .setField(ORDER_FIELD_NAME)
+                .setDirection(Sort.ASC)
+        );
         routing.setDetails(details);
         return routing;
     }

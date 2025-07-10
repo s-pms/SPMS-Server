@@ -15,8 +15,23 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class OauthUserInfo extends RootModel<OauthUserInfo> {
+    /**
+     * 用户ID
+     */
     private String userId;
+
+    /**
+     * 头像
+     */
     private String avatar;
+
+    /**
+     * 昵称
+     */
     private String nickName;
+
+    /**
+     * 性别
+     */
     private UserGender gender;
 }

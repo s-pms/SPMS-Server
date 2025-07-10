@@ -1,9 +1,10 @@
 package cn.hamm.spms.module.asset.contract;
 
-import cn.hamm.airpower.exception.ServiceError;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.asset.contract.enums.ContractStatus;
 import org.springframework.stereotype.Service;
+
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 
 /**
  * <h1>Service</h1>
@@ -19,7 +20,7 @@ public class ContractService extends BaseService<ContractEntity, ContractReposit
      */
     public void enforce(long id) {
         ContractEntity exist = get(id);
-        ServiceError.FORBIDDEN.when(ContractStatus.INVALID.notEqualsKey(exist.getStatus()), "该合同状态无法生效");
+        FORBIDDEN.when(ContractStatus.INVALID.notEqualsKey(exist.getStatus()), "该合同状态无法生效");
         exist.setStatus(ContractStatus.EFFECTIVE.getKey());
         update(exist);
     }
@@ -31,7 +32,7 @@ public class ContractService extends BaseService<ContractEntity, ContractReposit
      */
     public void stop(long id) {
         ContractEntity exist = get(id);
-        ServiceError.FORBIDDEN.when(ContractStatus.EFFECTIVE.notEqualsKey(exist.getStatus()), "该合同状态无法终止");
+        FORBIDDEN.when(ContractStatus.EFFECTIVE.notEqualsKey(exist.getStatus()), "该合同状态无法终止");
         exist.setStatus(ContractStatus.TERMINATED.getKey());
         update(exist);
     }

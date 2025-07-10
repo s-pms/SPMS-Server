@@ -20,7 +20,10 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EXIST;
 public class PurchasePriceService extends BaseService<PurchasePriceEntity, PurchasePriceRepository> {
     @Override
     protected @NotNull PurchasePriceEntity beforeAdd(@NotNull PurchasePriceEntity purchasePrice) {
-        PurchasePriceEntity exist = repository.getBySupplierAndMaterial(purchasePrice.getSupplier(), purchasePrice.getMaterial());
+        PurchasePriceEntity exist = repository.getBySupplierAndMaterial(
+                purchasePrice.getSupplier(),
+                purchasePrice.getMaterial()
+        );
         if (Objects.nonNull(exist)) {
             FORBIDDEN_EXIST.show(String.format(
                     "物料 %s 在供应商 %s 下的采购价已存在!",
