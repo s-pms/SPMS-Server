@@ -125,11 +125,17 @@ public class PurchaseService extends AbstractBaseBillService<
         if (materials.isEmpty()) {
             return "未找到该物料";
         } else if (materials.size() > 1) {
-            return "找到多个该物料，" + materials.stream().map(MaterialEntity::getName).collect(Collectors.joining("/")) + "选哪一个采购？";
+            return "找到多个该物料，" + materials.stream()
+                    .map(MaterialEntity::getName)
+                    .collect(Collectors.joining("/")) + "选哪一个采购？";
         }
         MaterialEntity material = materials.get(0);
         List<PurchaseDetailEntity> details = new ArrayList<>();
-        details.add(new PurchaseDetailEntity().setMaterial(material).setQuantity(Double.valueOf(count)).setPrice(material.getPurchasePrice()));
+        details.add(new PurchaseDetailEntity()
+                .setMaterial(material)
+                .setQuantity(Double.valueOf(count))
+                .setPrice(material.getPurchasePrice())
+        );
         PurchaseEntity purchaseBill = new PurchaseEntity()
                 .setReason(reason)
                 .setDetails(details)

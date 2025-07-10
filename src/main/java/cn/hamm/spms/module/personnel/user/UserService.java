@@ -135,13 +135,15 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             );
         }
         List<MenuEntity> menuList = new ArrayList<>();
-        user.getRoleList().forEach(role -> role.getMenuList().forEach(menu -> {
-            boolean isExist = menuList.stream()
-                    .anyMatch(existMenu -> Objects.equals(menu.getId(), existMenu.getId()));
-            if (!isExist) {
-                menuList.add(menu);
-            }
-        }));
+        user.getRoleList().forEach(role -> role.getMenuList()
+                .forEach(menu -> {
+                    boolean isExist = menuList.stream()
+                            .anyMatch(existMenu -> Objects.equals(menu.getId(), existMenu.getId()));
+                    if (!isExist) {
+                        menuList.add(menu);
+                    }
+                })
+        );
         return TreeUtil.buildTreeList(menuList);
     }
 
@@ -157,13 +159,15 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             return Services.getPermissionService().getList(null);
         }
         List<PermissionEntity> permissionList = new ArrayList<>();
-        user.getRoleList().forEach(roleEntity -> roleEntity.getPermissionList().forEach(permission -> {
-            boolean isExist = permissionList.stream()
-                    .anyMatch(existPermission -> Objects.equals(permission.getId(), existPermission.getId()));
-            if (!isExist) {
-                permissionList.add(permission);
-            }
-        }));
+        user.getRoleList().forEach(roleEntity -> roleEntity.getPermissionList()
+                .forEach(permission -> {
+                    boolean isExist = permissionList.stream()
+                            .anyMatch(existPermission -> Objects.equals(permission.getId(), existPermission.getId()));
+                    if (!isExist) {
+                        permissionList.add(permission);
+                    }
+                })
+        );
         return permissionList;
     }
 

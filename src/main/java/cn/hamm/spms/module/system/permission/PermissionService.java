@@ -56,13 +56,12 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                 .setIsSystem(true);
         long parentId = add(parent);
         for (McpTool mcpTool : list) {
-            PermissionEntity permission = new PermissionEntity()
+            add(new PermissionEntity()
                     .setName(mcpTool.getName())
                     .setIdentity(McpService.getPermissionIdentity(mcpTool))
                     .setType(PermissionType.MCP.getKey())
                     .setIsSystem(true)
-                    .setParentId(parentId);
-            add(permission);
+                    .setParentId(parentId));
         }
     }
 

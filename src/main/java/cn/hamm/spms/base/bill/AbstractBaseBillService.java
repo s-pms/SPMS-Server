@@ -63,7 +63,7 @@ public abstract class AbstractBaseBillService<
     public final void setBillDetailsAllFinished(long billId) {
         log.info("标记明细已全部完成，单据ID:{}", billId);
         IDictionary status = getBillDetailsFinishStatus();
-        FORBIDDEN.whenNull(status, "没有找到明细完成状态");
+        FORBIDDEN.whenNull(status, "没有找到单据的所有明细完成状态");
         E bill = get(billId);
         bill.setStatus(status.getKey());
         update(bill);

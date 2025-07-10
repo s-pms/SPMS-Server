@@ -23,6 +23,11 @@ public class PurchasePriceController extends BaseController<
     @PostMapping("getByMaterialAndSupplier")
     @Filter(WhenGetDetail.class)
     public Json getByMaterialAndSupplier(@RequestBody @Validated(WhenGetByMaterialAndSupplier.class) PurchasePriceEntity purchasePrice) {
-        return Json.data(service.getByMaterialAndSupplier(purchasePrice.getMaterial(), purchasePrice.getSupplier()));
+        return Json.data(
+                service.getByMaterialAndSupplier(
+                        purchasePrice.getMaterial(),
+                        purchasePrice.getSupplier()
+                )
+        );
     }
 }

@@ -20,7 +20,10 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EXIST;
 public class SalePriceService extends BaseService<SalePriceEntity, SalePriceRepository> {
     @Override
     protected @NotNull SalePriceEntity beforeAdd(@NotNull SalePriceEntity salePrice) {
-        SalePriceEntity exist = repository.getByCustomerAndMaterial(salePrice.getCustomer(), salePrice.getMaterial());
+        SalePriceEntity exist = repository.getByCustomerAndMaterial(
+                salePrice.getCustomer(),
+                salePrice.getMaterial()
+        );
         if (Objects.nonNull(exist)) {
             FORBIDDEN_EXIST.show(String.format(
                     "%s 在客户 %s 的销售价已经存在!",

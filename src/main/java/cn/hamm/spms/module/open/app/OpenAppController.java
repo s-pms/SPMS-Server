@@ -50,7 +50,7 @@ public class OpenAppController extends BaseController<OpenAppEntity, OpenAppServ
         openApp.setAppKey(service.createAppKey())
                 .setAppSecret(service.createAppSecret())
         ;
-        service.resetKeyPare(openApp);
+        service.resetKeyPair(openApp);
         openApp = service.get(service.add(openApp));
         return Json.data(String.format("应用名称: %s\n\nAppKey:\n%s\n\nAppSecret:\n%s\n\n公钥:\n%s", openApp.getAppName(), openApp.getAppKey(), openApp.getAppSecret(), openApp.getPublicKey()));
     }
@@ -72,7 +72,7 @@ public class OpenAppController extends BaseController<OpenAppEntity, OpenAppServ
     @PostMapping("resetKeyPair")
     public Json resetKeyPair(@RequestBody @Validated(WhenIdRequired.class) OpenAppEntity openApp) {
         OpenAppEntity exist = service.get(openApp.getId());
-        service.resetKeyPare(exist);
+        service.resetKeyPair(exist);
         service.update(exist);
         return Json.data(exist.getPublicKey());
     }

@@ -126,7 +126,9 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @PostMapping("getMyPermissionList")
     public Json getMyPermissionList() {
         List<PermissionEntity> permissionList = service.getPermissionListByUserId(getCurrentUserId());
-        List<String> permissions = permissionList.stream().map(PermissionEntity::getIdentity).collect(Collectors.toList());
+        List<String> permissions = permissionList.stream()
+                .map(PermissionEntity::getIdentity)
+                .collect(Collectors.toList());
         return Json.data(permissions);
     }
 
@@ -136,7 +138,9 @@ public class UserController extends BaseController<UserEntity, UserService, User
     public Json getMyThirdList() {
         UserEntity user = service.get(getCurrentUserId());
         List<UserThirdLoginEntity> list = userThirdLoginService.filter(new UserThirdLoginEntity().setUser(user));
-        return Json.data(list.stream().map(item -> item.setUser(null)));
+        return Json.data(list.stream()
+                .map(item -> item.setUser(null))
+        );
     }
 
     @Description("修改我的密码")

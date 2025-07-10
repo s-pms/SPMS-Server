@@ -10,6 +10,7 @@ import cn.hamm.spms.module.mes.order.detail.OrderDetailRepository;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailService;
 import cn.hamm.spms.module.system.config.ConfigEntity;
 import cn.hamm.spms.module.system.config.ConfigFlag;
+import cn.hamm.spms.module.system.config.ConfigService;
 import cn.hamm.spms.module.wms.input.InputEntity;
 import cn.hamm.spms.module.wms.input.InputService;
 import cn.hamm.spms.module.wms.input.InputType;
@@ -61,15 +62,17 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
      * @param orderDetail 订单明细
      */
     public void addOrderDetail(@NotNull OrderDetailEntity orderDetail) {
-        ConfigEntity config = Services.getConfigService().get(ConfigFlag.ORDER_ENABLE_SUBMIT_WORK);
+        ConfigService configService = Services.getConfigService();
+        ConfigEntity config = configService.get(ConfigFlag.ORDER_ENABLE_SUBMIT_WORK);
         FORBIDDEN.when(!config.booleanConfig(), "未开启订单报工模式");
         // 更新明细数量和状态
         orderDetail.setQuantity(orderDetail.getFinishQuantity()).setIsFinished(true);
-        Services.getOrderDetailService().add(orderDetail);
+        OrderDetailService orderDetailService = Services.getOrderDetailService();
+        orderDetailService.add(orderDetail);
 
         // 更新订单数量
         OrderEntity order = get(orderDetail.getBillId());
-        List<OrderDetailEntity> details = Services.getOrderDetailService().getAllByBillId(order.getId());
+        List<OrderDetailEntity> details = orderDetailService.getAllByBillId(order.getId());
         double finishQuantity = 0D;
         double ngQuantity = 0D;
         for (OrderDetailEntity detail : details) {
@@ -81,7 +84,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         ;
         update(order);
 
-        config = Services.getConfigService().get(ConfigFlag.ORDER_AUTO_FINISH);
+        config = configService.get(ConfigFlag.ORDER_AUTO_FINISH);
         if (config.booleanConfig() && order.getFinishQuantity() >= order.getQuantity()) {
             setBillDetailsAllFinished(order.getId());
         }
@@ -92,7 +95,8 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         OrderEntity orderBill = get(billId);
         if (orderBill.getFinishQuantity() == 0) {
             // 直接完成 无需入库
-            orderBill.setStatus(OrderStatus.DONE.getKey()).setFinishTime(System.currentTimeMillis());
+            orderBill.setStatus(OrderStatus.DONE.getKey())
+                    .setFinishTime(System.currentTimeMillis());
             update(orderBill);
             return;
         }
@@ -171,9 +175,9 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
      */
     public final void pause(long id) {
         OrderEntity order = get(id);
-        OrderStatus[] canStartStatusList = {OrderStatus.PRODUCING};
+        OrderStatus[] canPauseStatusList = {OrderStatus.PRODUCING};
         OrderStatus currentStatus = DictionaryUtil.getDictionary(OrderStatus.class, order.getStatus());
-        FORBIDDEN.when(!Arrays.asList(canStartStatusList).contains(currentStatus), "该单据状态无法暂停生产");
+        FORBIDDEN.when(!Arrays.asList(canPauseStatusList).contains(currentStatus), "该单据状态无法暂停生产");
         order.setStatus(OrderStatus.PAUSED.getKey());
         update(order);
     }
