@@ -51,6 +51,7 @@ import cn.hamm.spms.module.system.unit.UnitService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -66,79 +67,66 @@ import static cn.hamm.spms.module.iot.report.ReportConstant.*;
 @Slf4j
 public class InitializeRunner implements CommandLineRunner {
     public static final int TWO = 2;
-
+    private static final String CREATE_DROP = "create-drop";
     @Autowired
     private ParameterService parameterService;
-
     @Autowired
     private CodeRuleService codeRuleService;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private DeviceService deviceService;
-
     @Autowired
     private UnitService unitService;
-
     @Autowired
     private MaterialService materialService;
-
     @Autowired
     private CustomerService customerService;
-
     @Autowired
     private SupplierService supplierService;
-
     @Autowired
     private SalePriceService salePriceService;
-
     @Autowired
     private PurchasePriceService purchasePriceService;
-
     @Autowired
     private StorageService storageService;
-
     @Autowired
     private DepartmentService departmentService;
-
     @Autowired
     private ConfigService configService;
-
     @Autowired
     private OperationService operationService;
-
     @Autowired
     private BomService bomService;
-
     @Autowired
     private RoutingService routingService;
-
     @Autowired
     private StructureService structureService;
-
     @Autowired
     private PermissionService permissionService;
-
     @Autowired
     private MenuService menuService;
-
     @Autowired
     private RoomService roomService;
+    @Autowired
+    private Environment environment;
 
     @Override
     public void run(String... args) {
         System.out.println("---------------------------------");
         McpService.scanMcpMethods("cn.hamm.spms", "cn.hamm.airpower");
-        permissionService.initMcpToolPermission(McpService.tools);
-        initRootUser();
-        initCodeRules();
-        initConfigs();
-        initParameters();
-        permissionService.loadPermission();
-        menuService.initMenu();
-        initDevData();
+        // 获取环境变量的 JPA ddl-auto
+        String ddlAuto = environment.getProperty("spring.jpa.hibernate.ddl-auto");
+        if (CREATE_DROP.equals(ddlAuto)) {
+            permissionService.initMcpToolPermission(McpService.tools);
+            initRootUser();
+            initCodeRules();
+            initConfigs();
+            initParameters();
+            permissionService.loadPermission();
+            menuService.initMenu();
+            initDevData();
+        }
     }
 
     private void initParameters() {
