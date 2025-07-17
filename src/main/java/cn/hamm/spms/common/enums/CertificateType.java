@@ -46,5 +46,5 @@ public enum CertificateType implements IDictionary {
 
     private final int key;
     private final String label;
-    private final IdentityType participantType;
+    private final IdentityType identityType;
 }
