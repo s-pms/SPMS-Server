@@ -10,6 +10,7 @@ import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailService;
 import cn.hamm.spms.base.bill.detail.IBaseBillDetailAction;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -77,18 +78,28 @@ public class BaseBillController<
         return Json.success("添加完成数量成功");
     }
 
+    @Contract("_ -> param1")
     @Override
     protected final @NotNull E beforeAppUpdate(@NotNull E bill) {
         E exist = service.get(bill.getId());
         FORBIDDEN.when(!service.canEdit(exist), "该单据状态下无法编辑");
-        service.setAuditing(exist.setStatus(null));
-        exist.setDetails(bill.getDetails());
-        return exist;
+        service.setAuditing(bill);
+        return bill;
     }
 
     @Override
     protected final E beforeAdd(@NotNull E bill) {
-        return super.beforeAdd(bill.setStatus(null));
+        return beforeAppAdd(bill);
+    }
+
+    /**
+     * 添加前置方法
+     *
+     * @param bill 单据
+     * @return 单据
+     */
+    protected E beforeAppAdd(@NotNull E bill) {
+        return bill;
     }
 
     /**
