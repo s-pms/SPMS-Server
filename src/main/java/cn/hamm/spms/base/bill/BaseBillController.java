@@ -82,6 +82,7 @@ public class BaseBillController<
         E exist = service.get(bill.getId());
         FORBIDDEN.when(!service.canEdit(exist), "该单据状态下无法编辑");
         service.setAuditing(exist.setStatus(null));
+        exist.setDetails(bill.getDetails());
         return exist;
     }
 
