@@ -1,4 +1,4 @@
-package cn.hamm.spms.common.third.aliyun.sms;
+package cn.hamm.spms.common.aliyun.sms;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -1,8 +1,9 @@
-package cn.hamm.spms.common.third.aliyun.oss;
+package cn.hamm.spms.common.aliyun;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,20 +14,16 @@ import org.springframework.stereotype.Component;
 @Component
 @Data
 @Accessors(chain = true)
-@ConfigurationProperties("aliyun.oss")
-public class AliyunOssConfig {
+@Configuration
+@ConfigurationProperties("aliyun")
+public class AliyunConfig {
     /**
-     * 负载地址
+     * AK
      */
-    private String endpoint;
+    private String accessKeyId;
 
     /**
-     * bucket名称
+     * SK
      */
-    private String bucketName;
-
-    /**
-     * 区域
-     */
-    private String region = "cn-chengdu";
+    private String accessKeySecret;
 }

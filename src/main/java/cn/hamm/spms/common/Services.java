@@ -27,7 +27,6 @@ import cn.hamm.spms.module.personnel.department.DepartmentService;
 import cn.hamm.spms.module.personnel.user.UserService;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import cn.hamm.spms.module.system.config.ConfigService;
-import cn.hamm.spms.module.system.log.LogService;
 import cn.hamm.spms.module.system.menu.MenuService;
 import cn.hamm.spms.module.system.permission.PermissionService;
 import cn.hamm.spms.module.system.unit.UnitService;
@@ -107,9 +106,6 @@ public class Services {
     private static InventoryService inventoryService;
 
     @Getter
-    private static LogService logService;
-
-    @Getter
     private static OpenAppService openAppService;
 
     @Getter
@@ -172,7 +168,6 @@ public class Services {
             StorageService storageService,
             StructureService structureService,
             InventoryService inventoryService,
-            LogService logService,
             AppConfig appConfig,
             OpenAppService openAppService,
             NotifyService notifyService,
@@ -208,7 +203,6 @@ public class Services {
         Services.storageService = storageService;
         Services.structureService = structureService;
         Services.inventoryService = inventoryService;
-        Services.logService = logService;
         Services.appConfig = appConfig;
         Services.openAppService = openAppService;
         Services.notifyService = notifyService;

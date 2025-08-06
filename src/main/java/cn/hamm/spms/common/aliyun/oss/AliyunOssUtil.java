@@ -1,6 +1,6 @@
-package cn.hamm.spms.common.third.aliyun.oss;
+package cn.hamm.spms.common.aliyun.oss;
 
-import cn.hamm.spms.common.third.aliyun.AliyunConfig;
+import cn.hamm.spms.common.aliyun.AliyunConfig;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.auth.CredentialsProvider;

@@ -1,33 +1,21 @@
 package cn.hamm.spms.common.interceptor;
 
 import cn.hamm.airpower.access.AccessTokenUtil;
-import cn.hamm.airpower.access.PermissionUtil;
 import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
-import cn.hamm.airpower.reflect.ReflectUtil;
-import cn.hamm.airpower.request.RequestUtil;
-import cn.hamm.spms.common.annotation.DisableLog;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
 import cn.hamm.spms.module.personnel.user.UserTokenType;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenEntity;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenService;
-import cn.hamm.spms.module.system.log.LogEntity;
-import cn.hamm.spms.module.system.log.LogService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import cn.hamm.spms.module.system.permission.PermissionService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Method;
-import java.util.Objects;
-
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 import static cn.hamm.airpower.exception.ServiceError.UNAUTHORIZED;
-import static cn.hamm.spms.common.config.AppConstant.APP_PLATFORM_HEADER;
-import static cn.hamm.spms.common.config.AppConstant.APP_VERSION_HEADER;
 
 /**
  * <h1>请求拦截器</h1>
@@ -36,19 +24,12 @@ import static cn.hamm.spms.common.config.AppConstant.APP_VERSION_HEADER;
  */
 @Component
 public class RequestInterceptor extends AbstractRequestInterceptor {
-    /**
-     * 日志前缀
-     */
-    final static String LOG_REQUEST_KEY = "logId";
 
     @Autowired
     private PermissionService permissionService;
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private LogService logService;
 
     @Autowired
     private PersonalTokenService personalTokenService;
@@ -99,51 +80,5 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
                 FORBIDDEN.show("不支持的令牌类型");
         }
         return verifiedToken;
-    }
-
-    /**
-     * 拦截请求
-     *
-     * @param request  请求对象
-     * @param response 响应对象
-     * @param clazz    控制器类
-     * @param method   执行方法
-     * @apiNote 抛出异常则为拦截
-     */
-    @Override
-    protected void interceptRequest(HttpServletRequest request, HttpServletResponse response, Class<?> clazz, Method method) {
-        DisableLog disableLog = ReflectUtil.getAnnotation(DisableLog.class, method);
-        if (Objects.nonNull(disableLog)) {
-            return;
-        }
-        String accessToken = request.getHeader(accessConfig.getAuthorizeHeader());
-        Long userId = null;
-        int appVersion = request.getIntHeader(APP_VERSION_HEADER);
-        String platform = "";
-        String action = request.getRequestURI();
-        try {
-            AccessTokenUtil.VerifiedToken verifiedToken = AccessTokenUtil.create().verify(accessToken, accessConfig.getAccessTokenSecret());
-            userId = verifiedToken.getPayloadId();
-            platform = request.getHeader(APP_PLATFORM_HEADER);
-            String description = ReflectUtil.getDescription(method);
-            if (!description.equals(method.getName())) {
-                action = description;
-            }
-        } catch (Exception ignored) {
-        }
-        String identity = PermissionUtil.getPermissionIdentity(clazz, method);
-        PermissionEntity permissionEntity = permissionService.getPermissionByIdentity(identity);
-        if (Objects.nonNull(permissionEntity)) {
-            action = permissionEntity.getName();
-        }
-        long logId = logService.add(new LogEntity()
-                .setIp(RequestUtil.getIpAddress(request))
-                .setAction(action)
-                .setPlatform(platform)
-                .setRequest(getRequestBody(request))
-                .setVersion(Math.max(1, appVersion))
-                .setUserId(userId)
-        );
-        setShareData(RequestInterceptor.LOG_REQUEST_KEY, logId);
     }
 }
