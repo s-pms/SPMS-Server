@@ -45,10 +45,12 @@ public class AppConfig {
      * 上传文件目录
      */
     private String uploadDirectory = "upload";
+
     /**
      * 上传文件最大大小
      */
     private long uploadMaxSize = FILE_SCALE * FILE_SCALE * 10;
+
     /**
      * 上传平台
      */
