@@ -7,6 +7,7 @@ import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
 import cn.hamm.spms.module.wms.move.detail.MoveDetailEntity;
+import cn.hamm.spms.module.wms.move.enums.MoveStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -19,7 +20,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.spms.module.system.coderule.CodeRuleField.MoveBillCode;
+import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.MoveBillCode;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**

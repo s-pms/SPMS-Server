@@ -2,6 +2,8 @@ package cn.hamm.spms.module.system.coderule;
 
 import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
+import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
+import cn.hamm.spms.module.system.coderule.enums.CodeRuleParam;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,7 @@ import java.util.Map;
 
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
 import static cn.hamm.airpower.exception.ServiceError.SERVICE_ERROR;
-import static cn.hamm.spms.module.system.coderule.CodeRuleParam.*;
+import static cn.hamm.spms.module.system.coderule.enums.CodeRuleParam.*;
 
 /**
  * <h1>Service</h1>

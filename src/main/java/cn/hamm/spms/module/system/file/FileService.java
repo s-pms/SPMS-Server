@@ -5,6 +5,7 @@ import cn.hamm.airpower.file.FileUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.aliyun.oss.AliyunOssUtil;
 import cn.hamm.spms.common.config.AppConfig;
+import cn.hamm.spms.module.system.file.enums.FileCategory;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -7,13 +7,14 @@ import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.mes.picking.detail.PickingDetailEntity;
 import cn.hamm.spms.module.mes.picking.detail.PickingDetailRepository;
 import cn.hamm.spms.module.mes.picking.detail.PickingDetailService;
-import cn.hamm.spms.module.system.config.ConfigFlag;
+import cn.hamm.spms.module.mes.picking.enums.PickingStatus;
+import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryService;
-import cn.hamm.spms.module.wms.inventory.InventoryType;
+import cn.hamm.spms.module.wms.inventory.enums.InventoryType;
 import cn.hamm.spms.module.wms.output.OutputEntity;
-import cn.hamm.spms.module.wms.output.OutputType;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
+import cn.hamm.spms.module.wms.output.enums.OutputType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.spms.module.system.config.ConfigFlag.PICKING_BILL_AUTO_AUDIT;
+import static cn.hamm.spms.module.system.config.enums.ConfigFlag.PICKING_BILL_AUTO_AUDIT;
 
 /**
  * <h1>Service</h1>

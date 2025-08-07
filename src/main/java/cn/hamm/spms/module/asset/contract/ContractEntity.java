@@ -10,7 +10,7 @@ import cn.hamm.spms.module.asset.contract.document.ContractDocumentEntity;
 import cn.hamm.spms.module.asset.contract.enums.ContractStatus;
 import cn.hamm.spms.module.asset.contract.enums.ContractType;
 import cn.hamm.spms.module.asset.contract.participant.ParticipantEntity;
-import cn.hamm.spms.module.system.coderule.CodeRuleField;
+import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

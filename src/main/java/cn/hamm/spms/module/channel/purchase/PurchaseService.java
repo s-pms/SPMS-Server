@@ -11,11 +11,12 @@ import cn.hamm.spms.module.asset.material.MaterialService;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailEntity;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailRepository;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailService;
-import cn.hamm.spms.module.system.config.ConfigFlag;
+import cn.hamm.spms.module.channel.purchase.enums.PurchaseStatus;
+import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import cn.hamm.spms.module.wms.input.InputEntity;
-import cn.hamm.spms.module.wms.input.InputStatus;
-import cn.hamm.spms.module.wms.input.InputType;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
+import cn.hamm.spms.module.wms.input.enums.InputStatus;
+import cn.hamm.spms.module.wms.input.enums.InputType;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static cn.hamm.spms.module.system.config.ConfigFlag.PURCHASE_BILL_AUTO_AUDIT;
+import static cn.hamm.spms.module.system.config.enums.ConfigFlag.PURCHASE_BILL_AUTO_AUDIT;
 
 /**
  * <h1>Service</h1>

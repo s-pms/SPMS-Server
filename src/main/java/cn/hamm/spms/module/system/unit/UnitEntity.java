@@ -14,7 +14,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.spms.module.system.coderule.CodeRuleField.UnitCode;
+import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.UnitCode;
 
 /**
  * <h1>单位实体</h1>

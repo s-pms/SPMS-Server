@@ -19,7 +19,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.util.List;
 
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.spms.module.system.coderule.CodeRuleField.DepartmentCode;
+import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.DepartmentCode;
 
 /**
  * <h1>实体</h1>

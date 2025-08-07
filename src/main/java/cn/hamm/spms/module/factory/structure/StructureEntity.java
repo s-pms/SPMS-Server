@@ -6,6 +6,7 @@ import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.airpower.tree.ITree;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
+import cn.hamm.spms.module.factory.structure.enums.StructureType;
 import cn.hamm.spms.module.mes.operation.OperationEntity;
 import cn.hamm.spms.module.personnel.department.DepartmentEntity;
 import jakarta.persistence.*;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.spms.module.system.coderule.CodeRuleField.StructureCode;
+import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.StructureCode;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**

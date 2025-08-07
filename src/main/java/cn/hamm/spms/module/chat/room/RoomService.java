@@ -5,7 +5,7 @@ import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.chat.member.MemberEntity;
-import cn.hamm.spms.module.chat.member.MemberRole;
+import cn.hamm.spms.module.chat.member.enums.MemberRole;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import io.micrometer.common.util.StringUtils;
 import org.jetbrains.annotations.NotNull;

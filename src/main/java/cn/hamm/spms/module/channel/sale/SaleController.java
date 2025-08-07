@@ -8,9 +8,9 @@ import cn.hamm.spms.module.channel.sale.detail.SaleDetailRepository;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailService;
 import cn.hamm.spms.module.wms.output.OutputEntity;
 import cn.hamm.spms.module.wms.output.OutputService;
-import cn.hamm.spms.module.wms.output.OutputStatus;
-import cn.hamm.spms.module.wms.output.OutputType;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
+import cn.hamm.spms.module.wms.output.enums.OutputStatus;
+import cn.hamm.spms.module.wms.output.enums.OutputType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 

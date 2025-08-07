@@ -6,6 +6,9 @@ import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.api.Json;
 import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.spms.base.BaseController;
+import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
+import cn.hamm.spms.module.system.coderule.enums.CodeRuleParam;
+import cn.hamm.spms.module.system.coderule.enums.SerialNumberUpdate;
 import org.springframework.web.bind.annotation.PostMapping;
 
 /**

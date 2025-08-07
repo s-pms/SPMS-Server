@@ -5,7 +5,7 @@ import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
-import cn.hamm.spms.module.personnel.user.UserTokenType;
+import cn.hamm.spms.module.personnel.user.enums.UserTokenType;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenEntity;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;

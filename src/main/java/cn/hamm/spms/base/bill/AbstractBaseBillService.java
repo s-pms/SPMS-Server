@@ -12,7 +12,7 @@ import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.system.config.ConfigEntity;
-import cn.hamm.spms.module.system.config.ConfigFlag;
+import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;

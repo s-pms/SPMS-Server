@@ -7,7 +7,7 @@ import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.material.enums.MaterialType;
 import cn.hamm.spms.module.asset.material.enums.MaterialUseType;
-import cn.hamm.spms.module.system.coderule.CodeRuleField;
+import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
 import cn.hamm.spms.module.system.unit.UnitEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

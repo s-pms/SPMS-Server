@@ -7,6 +7,7 @@ import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
 import cn.hamm.spms.module.factory.structure.StructureEntity;
+import cn.hamm.spms.module.wms.inventory.enums.InventoryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;

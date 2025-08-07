@@ -5,6 +5,8 @@ import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
+import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
+import cn.hamm.spms.module.system.coderule.enums.SerialNumberUpdate;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

@@ -5,9 +5,6 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.api.Json;
 import cn.hamm.airpower.api.fiter.Filter;
 import cn.hamm.airpower.curd.CurdController;
-import cn.hamm.airpower.curd.query.QueryListRequest;
-import cn.hamm.airpower.curd.query.QueryPageRequest;
-import cn.hamm.spms.common.annotation.DisableLog;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
@@ -27,24 +24,6 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EDIT;
 @Slf4j
 @Permission
 public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>, R extends BaseRepository<E>> extends CurdController<E, S, R> {
-    @DisableLog
-    @Override
-    public Json getList(@RequestBody QueryListRequest<E> queryRequest) {
-        return super.getList(queryRequest);
-    }
-
-    @DisableLog
-    @Override
-    public Json getPage(@RequestBody QueryPageRequest<E> queryPageRequest) {
-        return super.getPage(queryPageRequest);
-    }
-
-    @DisableLog
-    @Override
-    public Json getDetail(@RequestBody @Validated(WhenIdRequired.class) @NotNull E entity) {
-        return super.getDetail(entity);
-    }
-
     @Override
     protected final E beforeUpdate(@NotNull E entity) {
         E exist = service.get(entity.getId());

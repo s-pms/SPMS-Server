@@ -1,7 +1,11 @@
 package cn.hamm.spms.common.helper;
 
 import cn.hamm.spms.common.config.InfluxConfig;
-import cn.hamm.spms.module.iot.report.*;
+import cn.hamm.spms.module.iot.report.ReportConstant;
+import cn.hamm.spms.module.iot.report.ReportInfluxPayload;
+import cn.hamm.spms.module.iot.report.ReportPayload;
+import cn.hamm.spms.module.iot.report.enums.ReportDataType;
+import cn.hamm.spms.module.iot.report.enums.ReportGranularity;
 import com.influxdb.LogLevel;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
@@ -19,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.spms.module.iot.report.ReportDataType.*;
+import static cn.hamm.spms.module.iot.report.enums.ReportDataType.*;
 import static cn.hamm.spms.module.system.config.ConfigService.STRING_ONE;
 
 /**

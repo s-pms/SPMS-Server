@@ -9,6 +9,8 @@ import cn.hamm.spms.module.channel.sale.SaleEntity;
 import cn.hamm.spms.module.mes.picking.PickingEntity;
 import cn.hamm.spms.module.wms.move.MoveEntity;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
+import cn.hamm.spms.module.wms.output.enums.OutputStatus;
+import cn.hamm.spms.module.wms.output.enums.OutputType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -20,7 +22,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.spms.module.system.coderule.CodeRuleField.OutputBillCode;
+import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.OutputBillCode;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**

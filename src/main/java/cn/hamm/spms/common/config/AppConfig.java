@@ -1,6 +1,6 @@
 package cn.hamm.spms.common.config;
 
-import cn.hamm.spms.common.enums.UploadPlatform;
+import cn.hamm.spms.module.system.file.enums.FileUploadPlatform;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import static cn.hamm.airpower.file.FileUtil.FILE_SCALE;
-import static cn.hamm.spms.common.enums.UploadPlatform.LOCAL;
+import static cn.hamm.spms.module.system.file.enums.FileUploadPlatform.LOCAL;
 
 /**
  * <h1>应用配置文件</h1>
@@ -52,5 +52,5 @@ public class AppConfig {
     /**
      * 上传平台
      */
-    private UploadPlatform uploadPlatform = LOCAL;
+    private FileUploadPlatform uploadPlatform = LOCAL;
 }

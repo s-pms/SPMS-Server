@@ -9,6 +9,8 @@ import cn.hamm.spms.module.channel.purchase.PurchaseEntity;
 import cn.hamm.spms.module.factory.structure.StructureEntity;
 import cn.hamm.spms.module.mes.order.OrderEntity;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
+import cn.hamm.spms.module.wms.input.enums.InputStatus;
+import cn.hamm.spms.module.wms.input.enums.InputType;
 import cn.hamm.spms.module.wms.move.MoveEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +23,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.spms.module.system.coderule.CodeRuleField.InputBillCode;
+import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.InputBillCode;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**

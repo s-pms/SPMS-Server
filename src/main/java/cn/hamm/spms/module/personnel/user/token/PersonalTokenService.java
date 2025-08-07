@@ -3,7 +3,7 @@ package cn.hamm.spms.module.personnel.user.token;
 import cn.hamm.airpower.access.AccessConfig;
 import cn.hamm.airpower.access.AccessTokenUtil;
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.module.personnel.user.UserTokenType;
+import cn.hamm.spms.module.personnel.user.enums.UserTokenType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

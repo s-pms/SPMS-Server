@@ -7,6 +7,7 @@ import cn.hamm.airpower.mcp.model.McpTool;
 import cn.hamm.airpower.tree.TreeUtil;
 import cn.hamm.spms.Application;
 import cn.hamm.spms.base.BaseService;
+import cn.hamm.spms.module.system.permission.enums.PermissionType;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;

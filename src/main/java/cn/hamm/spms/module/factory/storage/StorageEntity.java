@@ -20,7 +20,7 @@ import org.hibernate.validator.constraints.Length;
 import java.util.List;
 
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.spms.module.system.coderule.CodeRuleField.StorageCode;
+import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.StorageCode;
 
 /**
  * <h1>仓库实体</h1>

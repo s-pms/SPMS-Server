@@ -8,6 +8,8 @@ import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.factory.structure.StructureEntity;
 import cn.hamm.spms.module.mes.order.OrderEntity;
 import cn.hamm.spms.module.mes.picking.detail.PickingDetailEntity;
+import cn.hamm.spms.module.mes.picking.enums.PickingStatus;
+import cn.hamm.spms.module.mes.picking.enums.PickingType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -19,7 +21,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.spms.module.system.coderule.CodeRuleField.PickingBillCode;
+import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.PickingBillCode;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**

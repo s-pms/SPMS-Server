@@ -5,6 +5,7 @@ import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
+import cn.hamm.spms.module.chat.member.enums.MemberRole;
 import cn.hamm.spms.module.chat.room.RoomEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import jakarta.persistence.Column;

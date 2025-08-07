@@ -2,6 +2,7 @@ package cn.hamm.spms.module.chat.member;
 
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
+import cn.hamm.spms.module.chat.member.enums.MemberRole;
 import cn.hamm.spms.module.chat.room.RoomEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import org.springframework.stereotype.Service;

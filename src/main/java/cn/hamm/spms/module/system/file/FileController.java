@@ -6,6 +6,7 @@ import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.api.Json;
 import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.spms.base.BaseController;
+import cn.hamm.spms.module.system.file.enums.FileCategory;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

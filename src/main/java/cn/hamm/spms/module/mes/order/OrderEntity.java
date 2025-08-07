@@ -9,6 +9,8 @@ import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.channel.customer.CustomerEntity;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailEntity;
+import cn.hamm.spms.module.mes.order.enums.OrderStatus;
+import cn.hamm.spms.module.mes.order.enums.OrderType;
 import cn.hamm.spms.module.mes.plan.PlanEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,7 +24,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.spms.module.system.coderule.CodeRuleField.OrderBillCode;
+import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.OrderBillCode;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**

@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.spms.module.system.coderule.CodeRuleField.CustomerCode;
+import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.CustomerCode;
 
 /**
  * <h1>供应商实体</h1>

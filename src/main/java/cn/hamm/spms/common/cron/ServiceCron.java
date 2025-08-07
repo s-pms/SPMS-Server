@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Calendar;
 import java.util.List;
 
-import static cn.hamm.spms.module.system.coderule.SerialNumberUpdate.*;
+import static cn.hamm.spms.module.system.coderule.enums.SerialNumberUpdate.*;
 
 /**
  * <h1>系统定时任务</h1>

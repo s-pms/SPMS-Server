@@ -26,7 +26,7 @@ import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginEntity;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginService;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
-import cn.hamm.spms.module.personnel.user.UserTokenType;
+import cn.hamm.spms.module.personnel.user.enums.UserTokenType;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

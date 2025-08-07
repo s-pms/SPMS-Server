@@ -1,6 +1,6 @@
 package cn.hamm.spms.common.annotation;
 
-import cn.hamm.spms.module.system.coderule.CodeRuleField;
+import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

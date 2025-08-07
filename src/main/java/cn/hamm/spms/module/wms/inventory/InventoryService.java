@@ -10,6 +10,7 @@ import cn.hamm.spms.module.factory.storage.StorageEntity;
 import cn.hamm.spms.module.factory.storage.StorageService;
 import cn.hamm.spms.module.factory.structure.StructureEntity;
 import cn.hamm.spms.module.factory.structure.StructureService;
+import cn.hamm.spms.module.wms.inventory.enums.InventoryType;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;

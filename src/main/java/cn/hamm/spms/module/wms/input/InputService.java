@@ -5,13 +5,15 @@ import cn.hamm.airpower.dictionary.IDictionary;
 import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
-import cn.hamm.spms.module.system.config.ConfigFlag;
+import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.input.detail.InputDetailRepository;
 import cn.hamm.spms.module.wms.input.detail.InputDetailService;
+import cn.hamm.spms.module.wms.input.enums.InputStatus;
+import cn.hamm.spms.module.wms.input.enums.InputType;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryService;
-import cn.hamm.spms.module.wms.inventory.InventoryType;
+import cn.hamm.spms.module.wms.inventory.enums.InventoryType;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
-import static cn.hamm.spms.module.system.config.ConfigFlag.INPUT_BILL_AUTO_AUDIT;
+import static cn.hamm.spms.module.system.config.enums.ConfigFlag.INPUT_BILL_AUTO_AUDIT;
 
 /**
  * <h1>Service</h1>

@@ -5,7 +5,7 @@ import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
-import cn.hamm.spms.module.iot.report.ReportDataType;
+import cn.hamm.spms.module.iot.report.enums.ReportDataType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

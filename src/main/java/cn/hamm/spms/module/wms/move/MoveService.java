@@ -4,21 +4,22 @@ import cn.hamm.airpower.dictionary.IDictionary;
 import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
-import cn.hamm.spms.module.system.config.ConfigFlag;
+import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import cn.hamm.spms.module.wms.input.InputEntity;
-import cn.hamm.spms.module.wms.input.InputStatus;
-import cn.hamm.spms.module.wms.input.InputType;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
+import cn.hamm.spms.module.wms.input.enums.InputStatus;
+import cn.hamm.spms.module.wms.input.enums.InputType;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryService;
-import cn.hamm.spms.module.wms.inventory.InventoryType;
+import cn.hamm.spms.module.wms.inventory.enums.InventoryType;
 import cn.hamm.spms.module.wms.move.detail.MoveDetailEntity;
 import cn.hamm.spms.module.wms.move.detail.MoveDetailRepository;
 import cn.hamm.spms.module.wms.move.detail.MoveDetailService;
+import cn.hamm.spms.module.wms.move.enums.MoveStatus;
 import cn.hamm.spms.module.wms.output.OutputEntity;
-import cn.hamm.spms.module.wms.output.OutputStatus;
-import cn.hamm.spms.module.wms.output.OutputType;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
+import cn.hamm.spms.module.wms.output.enums.OutputStatus;
+import cn.hamm.spms.module.wms.output.enums.OutputType;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
-import static cn.hamm.spms.module.system.config.ConfigFlag.MOVE_BILL_AUTO_AUDIT;
+import static cn.hamm.spms.module.system.config.enums.ConfigFlag.MOVE_BILL_AUTO_AUDIT;
 
 /**
  * <h1>Service</h1>

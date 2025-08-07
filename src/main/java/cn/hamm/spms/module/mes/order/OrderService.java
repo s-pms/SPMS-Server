@@ -8,13 +8,15 @@ import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailEntity;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailRepository;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailService;
+import cn.hamm.spms.module.mes.order.enums.OrderStatus;
+import cn.hamm.spms.module.mes.order.enums.OrderType;
 import cn.hamm.spms.module.system.config.ConfigEntity;
-import cn.hamm.spms.module.system.config.ConfigFlag;
 import cn.hamm.spms.module.system.config.ConfigService;
+import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import cn.hamm.spms.module.wms.input.InputEntity;
 import cn.hamm.spms.module.wms.input.InputService;
-import cn.hamm.spms.module.wms.input.InputType;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
+import cn.hamm.spms.module.wms.input.enums.InputType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 

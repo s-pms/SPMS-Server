@@ -5,17 +5,19 @@ import cn.hamm.airpower.dictionary.IDictionary;
 import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
-import cn.hamm.spms.module.system.config.ConfigFlag;
+import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryService;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailRepository;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailService;
+import cn.hamm.spms.module.wms.output.enums.OutputStatus;
+import cn.hamm.spms.module.wms.output.enums.OutputType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
-import static cn.hamm.spms.module.system.config.ConfigFlag.OUTPUT_BILL_AUTO_AUDIT;
+import static cn.hamm.spms.module.system.config.enums.ConfigFlag.OUTPUT_BILL_AUTO_AUDIT;
 
 /**
  * <h1>Service</h1>

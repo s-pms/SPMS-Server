@@ -6,13 +6,14 @@ import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailEntity;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailRepository;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailService;
-import cn.hamm.spms.module.system.config.ConfigFlag;
+import cn.hamm.spms.module.channel.sale.enums.SaleStatus;
+import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static cn.hamm.spms.module.system.config.ConfigFlag.SALE_BILL_AUTO_AUDIT;
+import static cn.hamm.spms.module.system.config.enums.ConfigFlag.SALE_BILL_AUTO_AUDIT;
 
 /**
  * <h1>Service</h1>

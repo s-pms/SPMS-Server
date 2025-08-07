@@ -9,6 +9,7 @@ import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.mes.bom.BomEntity;
+import cn.hamm.spms.module.mes.routing.enums.RoutingStatus;
 import cn.hamm.spms.module.mes.routing.operation.RoutingOperationEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +24,7 @@ import java.util.List;
 
 import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 import static cn.hamm.airpower.curd.export.ExportColumnType.BOOLEAN;
-import static cn.hamm.spms.module.system.coderule.CodeRuleField.RoutingCode;
+import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.RoutingCode;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**

@@ -16,7 +16,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Set;
 
-import static cn.hamm.spms.module.system.coderule.CodeRuleField.RoleCode;
+import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.RoleCode;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**

@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.spms.module.system.coderule.CodeRuleField.OperationCode;
+import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.OperationCode;
 
 /**
  * <h1>实体</h1>
