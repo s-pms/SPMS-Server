@@ -46,7 +46,8 @@ import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cn.hamm.airpower.datetime.DateTimeUtil.*;
+import static cn.hamm.airpower.datetime.DateTimeUtil.SECOND_PER_DAY;
+import static cn.hamm.airpower.datetime.DateTimeUtil.SECOND_PER_HOUR;
 import static cn.hamm.airpower.exception.ServiceError.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -148,9 +149,9 @@ public class OauthController extends ApiController implements IOauthAction {
         }
         service.removeOauthScopeCache(existApp.getAppKey(), request.getCode());
         // 生成 accessToken refreshToken
-        int expiresIn = MILLISECONDS_PER_SECOND * SECOND_PER_HOUR * 2;
+        int expiresIn = SECOND_PER_HOUR * 2;
         String accessToken = buildToken(userId, scope, existApp.getAppKey(), expiresIn);
-        String refreshToken = buildToken(userId, scope, existApp.getAppKey(), (long) MILLISECONDS_PER_SECOND * SECOND_PER_DAY * 30);
+        String refreshToken = buildToken(userId, scope, existApp.getAppKey(), (long) SECOND_PER_DAY * 30);
 
         OauthGetAccessTokenResponse response = new OauthGetAccessTokenResponse()
                 .setAccessToken(accessToken)
@@ -251,7 +252,7 @@ public class OauthController extends ApiController implements IOauthAction {
      * @param userId    用户ID
      * @param scope     权限
      * @param appKey    App Key
-     * @param expiresIn 过期时间
+     * @param expiresIn 过期时间(秒)
      * @return Token
      */
     private String buildToken(long userId, String scope, String appKey, long expiresIn) {
@@ -260,7 +261,7 @@ public class OauthController extends ApiController implements IOauthAction {
                 .addPayload(SCOPE, scope)
                 .addPayload(APP_KEY, appKey)
                 .addPayload(UserTokenType.TYPE, UserTokenType.OAUTH2.getKey())
-                .setExpireMillisecond(expiresIn)
+                .setExpireSecond(expiresIn)
                 .build(accessConfig.getAccessTokenSecret());
     }
 

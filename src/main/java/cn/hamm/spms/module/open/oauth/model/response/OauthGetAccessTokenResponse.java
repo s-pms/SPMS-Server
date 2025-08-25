@@ -20,7 +20,7 @@ public class OauthGetAccessTokenResponse extends RootModel<OauthGetAccessTokenRe
     private String accessToken;
 
     /**
-     * 过期时间
+     * 过期时间(秒)
      */
     private Long expiresIn;
 

@@ -372,7 +372,8 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return AccessToken
      */
     public String createAccessToken(long userId) {
-        return AccessTokenUtil.create().setPayloadId(userId, accessConfig.getAuthorizeExpireSecond())
+        return AccessTokenUtil.create().setPayloadId(userId)
+                .setExpireSecond(accessConfig.getAuthorizeExpireSecond())
                 .addPayload(UserTokenType.TYPE, UserTokenType.NORMAL.getKey())
                 .build(accessConfig.getAccessTokenSecret());
     }
