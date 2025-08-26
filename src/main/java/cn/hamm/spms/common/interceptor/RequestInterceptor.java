@@ -11,6 +11,7 @@ import cn.hamm.spms.module.personnel.user.token.PersonalTokenService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import cn.hamm.spms.module.system.permission.PermissionService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,13 +38,14 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     /**
      * 验证指定的用户是否有指定权限标识的权限
      *
-     * @param userId             用户ID
+     * @param verifiedToken      合法令牌
      * @param permissionIdentity 权限标识
      * @param request            请求对象
      * @apiNote 抛出异常则为拦截
      */
     @Override
-    public void checkUserPermission(long userId, String permissionIdentity, HttpServletRequest request) {
+    public void checkUserPermission(AccessTokenUtil.@NotNull VerifiedToken verifiedToken, String permissionIdentity, HttpServletRequest request) {
+        long userId = verifiedToken.getPayloadId();
         UserEntity existUser = userService.get(userId);
         if (existUser.isRootUser()) {
             return;

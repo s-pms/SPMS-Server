@@ -40,10 +40,9 @@ public class McpController extends ApiController {
             String accessToken = request.getParameter("token");
             PARAM_MISSING.whenNull(accessToken, "accessToken is required");
             AccessTokenUtil.VerifiedToken verifiedToken = requestInterceptor.getVerifiedToken(accessToken);
-            return mcpService.run(mcpRequest, (mcpTool -> {
-                long userId = verifiedToken.getPayloadId();
-                requestInterceptor.checkUserPermission(userId, McpService.getPermissionIdentity(mcpTool), request);
-            }));
+            return mcpService.run(mcpRequest, (mcpTool -> requestInterceptor.checkUserPermission(
+                    verifiedToken, McpService.getPermissionIdentity(mcpTool), request
+            )));
         } catch (ServiceException e) {
             McpResponse response = new McpResponse().setError(new McpResponse.McpError(e));
             response.setId(mcpRequest.getId());
