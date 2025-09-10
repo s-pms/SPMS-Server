@@ -9,7 +9,7 @@ import cn.hamm.airpower.api.ApiController;
 import cn.hamm.airpower.api.Json;
 import cn.hamm.airpower.cookie.CookieConfig;
 import cn.hamm.airpower.curd.ICurdAction;
-import cn.hamm.airpower.desensitize.DesensitizeExclude;
+import cn.hamm.airpower.desensitize.DesensitizeIgnore;
 import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.airpower.request.RequestUtil;
 import cn.hamm.airpower.util.RandomUtil;
@@ -185,7 +185,7 @@ public class OauthController extends ApiController implements IOauthAction {
     @Description("获取当前用户的信息")
     @Permission(login = false)
     @PostMapping("getUserInfo")
-    @DesensitizeExclude
+    @DesensitizeIgnore
     public Json getUserInfo(@RequestBody @Validated(WhenAccessTokenRequired.class) OauthGetUserInfoRequest request) {
         AccessTokenUtil.VerifiedToken verify = AccessTokenUtil.create().verify(request.getAccessToken(), accessConfig.getAccessTokenSecret());
         long userId = Long.parseLong(Objects.requireNonNull(verify.getPayload(USER_ID), "无效的UserId").toString());

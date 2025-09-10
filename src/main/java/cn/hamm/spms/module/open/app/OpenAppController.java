@@ -5,8 +5,6 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.api.Extends;
 import cn.hamm.airpower.api.Json;
-import cn.hamm.airpower.api.fiter.Filter;
-import cn.hamm.airpower.curd.CurdEntity;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.notify.NotifyService;
@@ -38,7 +36,6 @@ public class OpenAppController extends BaseController<OpenAppEntity, OpenAppServ
     @Description("通过AppKey获取应用信息")
     @PostMapping("getByAppKey")
     @Permission(login = false)
-    @Filter(CurdEntity.WhenGetDetail.class)
     public Json getByAppKey(@RequestBody @Validated(WhenGetByAppKey.class) OpenAppEntity openApp) {
         openApp = service.getByAppKey(openApp.getAppKey());
         DATA_NOT_FOUND.whenNull(openApp, "没有查到指定AppKey的应用");

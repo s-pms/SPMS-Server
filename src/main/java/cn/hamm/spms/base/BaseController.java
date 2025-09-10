@@ -3,7 +3,6 @@ package cn.hamm.spms.base;
 import cn.hamm.airpower.access.Permission;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.api.Json;
-import cn.hamm.airpower.api.fiter.Filter;
 import cn.hamm.airpower.curd.CurdController;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +49,6 @@ public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>
 
     @Description("发布")
     @PostMapping("publish")
-    @Filter(WhenGetDetail.class)
     public Json publish(@RequestBody @Validated(WhenIdRequired.class) E entity) {
         service.publish(entity.getId());
         return Json.success("发布成功");

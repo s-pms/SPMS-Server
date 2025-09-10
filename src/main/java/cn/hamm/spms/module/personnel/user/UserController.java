@@ -4,7 +4,6 @@ import cn.hamm.airpower.access.Permission;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.api.Json;
-import cn.hamm.airpower.api.fiter.Filter;
 import cn.hamm.airpower.cookie.CookieHelper;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginEntity;
@@ -51,7 +50,6 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Description("获取我的信息")
     @Permission(authorize = false)
     @PostMapping("getMyInfo")
-    @Filter(WhenGetMyInfo.class)
     public Json getMyInfo() {
         return Json.data(service.get(getCurrentUserId()));
     }

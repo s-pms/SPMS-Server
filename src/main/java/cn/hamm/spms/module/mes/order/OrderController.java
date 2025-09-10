@@ -4,7 +4,6 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.api.Extends;
 import cn.hamm.airpower.api.Json;
-import cn.hamm.airpower.api.fiter.Filter;
 import cn.hamm.airpower.curd.Curd;
 import cn.hamm.spms.base.bill.BaseBillController;
 import cn.hamm.spms.common.Services;
@@ -32,7 +31,6 @@ public class OrderController extends BaseBillController<OrderEntity, OrderServic
 
     @Description("开始生产")
     @PostMapping("start")
-    @Filter(WhenGetDetail.class)
     public Json start(@RequestBody @Validated(WhenIdRequired.class) OrderEntity order) {
         service.start(order.getId());
         return Json.success("开始生产成功");
@@ -40,7 +38,6 @@ public class OrderController extends BaseBillController<OrderEntity, OrderServic
 
     @Description("暂停生产")
     @PostMapping("pause")
-    @Filter(WhenGetDetail.class)
     public Json pause(@RequestBody @Validated(WhenIdRequired.class) OrderEntity order) {
         service.pause(order.getId());
         return Json.success("暂停生产成功");
@@ -48,7 +45,6 @@ public class OrderController extends BaseBillController<OrderEntity, OrderServic
 
     @Description("订单报工")
     @PostMapping("addOrderDetail")
-    @Filter(WhenGetDetail.class)
     public Json addOrderDetail(@RequestBody @Validated(WhenAddFinish.class) OrderDetailEntity orderDetail) {
         service.addOrderDetail(orderDetail);
         return Json.success("提交订单报工成功");
@@ -56,7 +52,6 @@ public class OrderController extends BaseBillController<OrderEntity, OrderServic
 
     @Description("手动设置为生产完成待入库状态")
     @PostMapping("setBillDetailsAllFinished")
-    @Filter(WhenGetDetail.class)
     public Json setBillDetailsAllFinished(@RequestBody @Validated(WhenIdRequired.class) OrderEntity order) {
         ConfigService configService = Services.getConfigService();
         ConfigEntity config = configService.get(ConfigFlag.ORDER_MANUAL_FINISH);

@@ -3,7 +3,6 @@ package cn.hamm.spms.base.bill;
 import cn.hamm.airpower.access.Permission;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.api.Json;
-import cn.hamm.airpower.api.fiter.Filter;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
@@ -42,7 +41,6 @@ public class BaseBillController<
 
     @Description("审核")
     @PostMapping("audit")
-    @Filter(WhenGetDetail.class)
     public Json audit(@RequestBody @Validated(WhenIdRequired.class) E bill) {
         service.audit(bill.getId());
         E savedBill = service.get(bill.getId());
@@ -52,7 +50,6 @@ public class BaseBillController<
 
     @Description("驳回")
     @PostMapping("reject")
-    @Filter(WhenGetDetail.class)
     public Json reject(@RequestBody @Validated(WhenReject.class) E bill) {
         E savedBill = service.get(bill.getId());
         FORBIDDEN.when(!service.canReject(savedBill), "该单据状态无法驳回");
@@ -64,7 +61,6 @@ public class BaseBillController<
 
     @Description("添加明细的完成数量")
     @PostMapping("addFinish")
-    @Filter(WhenGetDetail.class)
     public Json addFinish(@RequestBody @Validated(WhenAddFinish.class) D detail) {
         service.addDetailFinishQuantity(detail);
         return Json.success("添加完成数量成功");

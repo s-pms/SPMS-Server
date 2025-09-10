@@ -3,7 +3,6 @@ package cn.hamm.spms.module.open.app;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.api.fiter.Exclude;
 import cn.hamm.airpower.curd.export.ExcelColumn;
 import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.airpower.open.IOpenApp;
@@ -47,7 +46,6 @@ public class OpenAppEntity extends BaseEntity<OpenAppEntity> implements IOpenApp
     @Description("应用密钥")
     @JsonProperty(access = WRITE_ONLY)
     @Column(columnDefinition = "varchar(255) default '' comment 'AppSecret'")
-    @Exclude(filters = {WhenGetDetail.class})
     private String appSecret;
 
     @Description("应用名称")
