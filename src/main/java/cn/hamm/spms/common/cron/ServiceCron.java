@@ -1,6 +1,5 @@
 package cn.hamm.spms.common.cron;
 
-import cn.hamm.airpower.ServiceConfig;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import org.jetbrains.annotations.NotNull;
@@ -20,22 +19,18 @@ import static cn.hamm.spms.module.system.coderule.enums.SerialNumberUpdate.*;
  */
 @Component
 public class ServiceCron {
-    @Autowired
-    private ServiceConfig serviceConfig;
 
     @Autowired
     private CodeRuleService codeRuleService;
 
     @Scheduled(cron = "59 59 23 * * *")
     void softShutdownService() {
-        serviceConfig.setServiceRunning(false);
     }
 
     @Scheduled(cron = "0 0 0 * * *")
     void resetCodeRuleBaseNumber() {
         List<CodeRuleEntity> codeRules = codeRuleService.filter(null);
         codeRules.forEach(this::resetSn);
-        serviceConfig.setServiceRunning(true);
     }
 
     /**
