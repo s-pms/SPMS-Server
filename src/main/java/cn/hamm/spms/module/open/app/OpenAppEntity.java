@@ -20,7 +20,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 import static cn.hamm.airpower.curd.export.ExportColumnType.BOOLEAN;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
@@ -57,7 +56,6 @@ public class OpenAppEntity extends BaseEntity<OpenAppEntity> implements IOpenApp
     @Description("加密算法")
     @Dictionary(value = OpenArithmeticType.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '加密算法'")
-    @Search(EQUALS)
     private Integer arithmetic;
 
     @Description("IP白名单")
@@ -82,7 +80,6 @@ public class OpenAppEntity extends BaseEntity<OpenAppEntity> implements IOpenApp
     private String url;
 
     @Description("是否内部应用")
-    @Search(EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否内部应用'")
     @ExcelColumn(BOOLEAN)
     private Boolean isInternal;

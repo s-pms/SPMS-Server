@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.open.thirdlogin;
 
 import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import jakarta.persistence.Column;
@@ -13,9 +12,6 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.airpower.annotation.Search.Mode.JOIN;
 
 /**
  * <h1>实体</h1>
@@ -45,16 +41,13 @@ public class UserThirdLoginEntity extends BaseEntity<UserThirdLoginEntity> {
 
     @Description("性别")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '性别'")
-    @Search(EQUALS)
     private Integer gender;
 
     @Description("所属平台")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '所属平台'")
-    @Search(EQUALS)
     private Integer platform;
 
     @Description("用户")
     @ManyToOne
-    @Search(JOIN)
     private UserEntity user;
 }

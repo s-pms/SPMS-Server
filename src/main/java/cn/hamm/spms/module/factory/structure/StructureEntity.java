@@ -21,7 +21,6 @@ import org.hibernate.validator.constraints.Length;
 import java.util.List;
 import java.util.Set;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.StructureCode;
 import static jakarta.persistence.FetchType.EAGER;
 
@@ -52,14 +51,12 @@ public class StructureEntity extends BaseEntity<StructureEntity> implements ITre
     private String name;
 
     @Description("生产单元类型")
-    @Search(EQUALS)
     @Column(columnDefinition = "bigint UNSIGNED default 1 comment '生产单元类型'")
     @Dictionary(value = StructureType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 
     @Description("父级ID")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '父级ID'")
-    @Search(EQUALS)
     private Long parentId;
 
     @Description("树子集节点数组")

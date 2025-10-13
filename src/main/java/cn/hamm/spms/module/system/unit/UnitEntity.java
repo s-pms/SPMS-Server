@@ -13,7 +13,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.UnitCode;
 
 /**
@@ -31,8 +30,8 @@ import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.UnitCode;
 @Description("单位")
 public class UnitEntity extends BaseEntity<UnitEntity> {
     @Description("单位名称")
-    @Search(EQUALS)
     @Column(columnDefinition = "varchar(255) default '' comment '单位名称'", unique = true)
+    @Search
     private String name;
 
     @Description("单位编码")

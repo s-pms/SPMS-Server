@@ -22,7 +22,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.InputBillCode;
 import static jakarta.persistence.FetchType.EAGER;
 
@@ -49,13 +48,11 @@ public class InputEntity extends AbstractBaseBillEntity<InputEntity, InputDetail
     @Description("入库状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '入库状态'")
     @Dictionary(value = InputStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Search(EQUALS)
     private Integer status;
 
     @Description("入库类型")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '入库类型'")
     @Dictionary(value = InputType.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Search(EQUALS)
     private Integer type;
 
     @Description("采购信息")

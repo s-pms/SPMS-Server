@@ -19,7 +19,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.MoveBillCode;
 import static jakarta.persistence.FetchType.EAGER;
 
@@ -46,7 +45,6 @@ public class MoveEntity extends AbstractBaseBillEntity<MoveEntity, MoveDetailEnt
     @Description("移库状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '移库状态'")
     @Dictionary(value = MoveStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Search(EQUALS)
     private Integer status;
 
     @Description("入库仓库")

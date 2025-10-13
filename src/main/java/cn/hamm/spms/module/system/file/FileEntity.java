@@ -12,8 +12,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-
 /**
  * <h1>文件实体</h1>
  *
@@ -45,12 +43,10 @@ public class FileEntity extends BaseEntity<FileEntity> {
 
     @Description("存储平台")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '存储平台'")
-    @Search(EQUALS)
     private Integer platform;
 
     @Description("文件类别")
     @Column(columnDefinition = "int UNSIGNED default 1 comment '文件类别'")
-    @Search(EQUALS)
     private Integer category;
 
     @Description("MD5")

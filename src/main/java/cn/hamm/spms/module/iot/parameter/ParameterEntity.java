@@ -2,7 +2,6 @@ package cn.hamm.spms.module.iot.parameter;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.iot.report.enums.ReportDataType;
@@ -16,8 +15,6 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 
 /**
  * <h1>负载数据实体</h1>
@@ -44,13 +41,11 @@ public class ParameterEntity extends BaseEntity<ParameterEntity> {
     private String label;
 
     @Description("内置参数")
-    @Search(EQUALS)
     @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否内置参数'")
     private Boolean isSystem;
 
     @Description("数据类型")
-    @Search(EQUALS)
     @Dictionary(value = ReportDataType.class, groups = {WhenAdd.class, WhenUpdate.class})
     @NotNull(groups = {WhenAdd.class, WhenUpdate.class}, message = "数据类型不允许为空")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '数据类型'")

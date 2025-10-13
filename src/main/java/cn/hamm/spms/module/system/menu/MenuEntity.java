@@ -18,8 +18,6 @@ import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-
 /**
  * <h1>权限实体</h1>
  *
@@ -43,7 +41,6 @@ public class MenuEntity extends BaseEntity<MenuEntity> implements ITree<MenuEnti
 
     @Description("父级ID")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '父级ID'")
-    @Search(EQUALS)
     private Long parentId;
 
     @Description("菜单路径")

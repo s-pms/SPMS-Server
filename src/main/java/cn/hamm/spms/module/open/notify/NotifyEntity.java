@@ -16,8 +16,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-
 /**
  * <h1>实体</h1>
  *
@@ -35,13 +33,11 @@ public class NotifyEntity extends BaseEntity<NotifyEntity> {
     @Description("通知渠道")
     @Dictionary(value = NotifyChannel.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '通知渠道'")
-    @Search(EQUALS)
     private Integer channel;
 
     @Description("通知场景")
     @Dictionary(value = NotifyScene.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '通知场景'")
-    @Search(EQUALS)
     private Integer scene;
 
     @Description("通知地址")

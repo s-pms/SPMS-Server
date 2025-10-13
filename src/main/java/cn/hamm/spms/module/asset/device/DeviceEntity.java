@@ -25,7 +25,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Set;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.DeviceCode;
 import static jakarta.persistence.FetchType.EAGER;
 
@@ -64,7 +63,6 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAct
     @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 4 comment '设备状态'")
     @Dictionary(value = DeviceStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Search(EQUALS)
     private Integer status;
 
     @Description("报警状态")
@@ -79,7 +77,6 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAct
     private Long partCount;
 
     @Description("开启采集")
-    @Search(EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '开启采集'")
     private Boolean isReporting;
 

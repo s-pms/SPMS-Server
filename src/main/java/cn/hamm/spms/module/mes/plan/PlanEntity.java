@@ -20,7 +20,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.PlanBillCode;
 import static jakarta.persistence.FetchType.EAGER;
 
@@ -47,13 +46,11 @@ public class PlanEntity extends AbstractBaseBillEntity<PlanEntity, PlanDetailEnt
     @Description("计划状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '计划状态'")
     @Dictionary(value = PlanStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Search(EQUALS)
     private Integer status;
 
     @Description("计划类型")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '计划类型'")
     @Dictionary(value = PlanType.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Search(EQUALS)
     private Integer type;
 
     @Description("交付时间")

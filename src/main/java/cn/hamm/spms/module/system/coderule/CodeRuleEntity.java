@@ -2,7 +2,6 @@ package cn.hamm.spms.module.system.coderule;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
@@ -18,8 +17,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
-
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 
 /**
  * <h1>编码规则实体</h1>
@@ -71,7 +68,6 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     private Integer currentSn;
 
     @Description("内置参数")
-    @Search(EQUALS)
     @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否内置参数'")
     private Boolean isSystem;

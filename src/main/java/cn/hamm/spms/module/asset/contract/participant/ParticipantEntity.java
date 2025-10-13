@@ -17,8 +17,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-
 /**
  * <h1>合同参与方实体</h1>
  *
@@ -57,19 +55,16 @@ public class ParticipantEntity extends BaseEntity<ParticipantEntity> {
     private String identification;
 
     @Description("身份类型")
-    @Search(EQUALS)
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '身份类型'")
     @Dictionary(value = IdentityType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 
     @Description("参与人角色")
-    @Search(EQUALS)
     @Column(columnDefinition = "bigint UNSIGNED default 1 comment '参与人角色'")
     @Dictionary(value = ParticipantRole.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer role;
 
     @Description("证件类型")
-    @Search(EQUALS)
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '证件类型'")
     @Dictionary(value = CertificateType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer certificateType;

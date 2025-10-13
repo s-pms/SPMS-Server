@@ -21,9 +21,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.airpower.annotation.Search.Mode.JOIN;
-
 /**
  * <h1>物料实体</h1>
  *
@@ -46,6 +43,7 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
 
     @Description("物料编码")
     @Column(columnDefinition = "varchar(255) default '' comment '物料编码'", unique = true)
+    @Search
     @AutoGenerateCode(CodeRuleField.MaterialCode)
     private String code;
 
@@ -55,20 +53,17 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
     private String spc;
 
     @Description("物料类型")
-    @Search(EQUALS)
     @Column(columnDefinition = "bigint UNSIGNED default 1 comment '物料类型'")
     @Dictionary(value = MaterialType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer materialType;
 
     @Description("使用方式")
-    @Search(EQUALS)
     @Column(columnDefinition = "bigint UNSIGNED default 1 comment '使用方式'")
     @Dictionary(value = MaterialUseType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer useType;
 
     @Description("默认单位")
     @ManyToOne
-    @Search(JOIN)
     @NotNull(groups = {WhenAdd.class, WhenUpdate.class}, message = "默认单位不能为空")
     private UnitEntity unit;
 

@@ -2,13 +2,10 @@ package cn.hamm.spms.base.bill.detail;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
-
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 
 /**
  * <h1>单据明细基类</h1>
@@ -26,7 +23,6 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
     private Long billId;
 
     @Description("是否已完成")
-    @Search(EQUALS)
     @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否已完成'")
     private Boolean isFinished;

@@ -68,19 +68,18 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @Column(columnDefinition = "varchar(255) default '' comment '邮箱'", unique = true)
     @NotBlank(groups = {WhenSendEmail.class}, message = "邮箱不能为空")
     @Email(groups = {WhenResetMyPassword.class, WhenSendEmail.class}, message = "邮箱格式不正确")
-    @Search()
+    @Search
     private String email;
 
     @Description("手机号")
     @Column(columnDefinition = "varchar(255) default '' comment '手机号'", unique = true)
     @Phone(groups = {WhenResetMyPassword.class, WhenSendSms.class}, message = "手机格式不正确")
-    @Search()
+    @Search
     private String phone;
 
     @Description("性别")
     @Dictionary(value = UserGender.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '性别'")
-    @Search(Search.Mode.EQUALS)
     private Integer gender;
 
     @JsonProperty(access = WRITE_ONLY)

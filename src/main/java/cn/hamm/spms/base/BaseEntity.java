@@ -2,7 +2,6 @@ package cn.hamm.spms.base;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.curd.CurdEntity;
 import cn.hamm.airpower.curd.export.ExcelColumn;
 import jakarta.persistence.Column;
@@ -11,7 +10,6 @@ import lombok.Getter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 import static cn.hamm.airpower.curd.export.ExportColumnType.BOOLEAN;
 
 /**
@@ -27,7 +25,6 @@ import static cn.hamm.airpower.curd.export.ExportColumnType.BOOLEAN;
 public class BaseEntity<E extends BaseEntity<E>> extends CurdEntity<E> {
     @Description("是否已发布")
     @ReadOnly
-    @Search(EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否已发布'")
     @ExcelColumn(BOOLEAN)
     private Boolean isPublished;

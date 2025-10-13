@@ -21,7 +21,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.SaleBillCode;
 import static jakarta.persistence.FetchType.EAGER;
 
@@ -59,7 +58,6 @@ public class SaleEntity extends AbstractBaseBillEntity<SaleEntity, SaleDetailEnt
     @Description("销售状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '销售状态'")
     @Dictionary(value = SaleStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Search(EQUALS)
     private Integer status;
 
     @Description("客户信息")

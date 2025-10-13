@@ -18,7 +18,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.List;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.DepartmentCode;
 
 /**
@@ -48,7 +47,6 @@ public class DepartmentEntity extends BaseEntity<DepartmentEntity> implements IT
 
     @Description("父级ID")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '父级ID'")
-    @Search(EQUALS)
     private Long parentId;
 
     @Description("排序号")

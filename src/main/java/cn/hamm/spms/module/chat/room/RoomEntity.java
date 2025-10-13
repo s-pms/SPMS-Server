@@ -2,7 +2,6 @@ package cn.hamm.spms.module.chat.room;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.curd.export.ExcelColumn;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
@@ -20,8 +19,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-import static cn.hamm.airpower.annotation.Search.Mode.JOIN;
 import static cn.hamm.airpower.curd.export.ExportColumnType.BOOLEAN;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
@@ -42,7 +39,6 @@ public class RoomEntity extends BaseEntity<RoomEntity> implements IRoomAction {
     @Description("房间号")
     @Column(nullable = false, columnDefinition = "int UNSIGNED comment '房间号'", unique = true)
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "房间号不能为空")
-    @Search(EQUALS)
     private Integer code;
 
     @Description("房间名称")
@@ -60,19 +56,16 @@ public class RoomEntity extends BaseEntity<RoomEntity> implements IRoomAction {
     private Integer orderNumber;
 
     @Description("是否热门")
-    @Search(EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否热门'")
     @ExcelColumn(BOOLEAN)
     private Boolean isHot;
 
     @Description("是否官方")
-    @Search(EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否官方'")
     @ExcelColumn(BOOLEAN)
     private Boolean isOfficial;
 
     @Description("是否私有房间")
-    @Search(EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否私有房间'")
     @ExcelColumn(BOOLEAN)
     private Boolean isPrivate;
@@ -84,7 +77,6 @@ public class RoomEntity extends BaseEntity<RoomEntity> implements IRoomAction {
 
     @Description("房主信息")
     @ManyToOne
-    @Search(JOIN)
     @ReadOnly
     private UserEntity owner;
 

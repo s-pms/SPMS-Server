@@ -19,7 +19,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.PurchaseBillCode;
 
 /**
@@ -62,6 +61,5 @@ public class PurchaseEntity extends AbstractBaseBillEntity<PurchaseEntity, Purch
     @Description("采购状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '采购状态'")
     @Dictionary(value = PurchaseStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Search(EQUALS)
     private Integer status;
 }

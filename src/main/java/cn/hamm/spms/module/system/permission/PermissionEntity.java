@@ -20,8 +20,6 @@ import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
-
 /**
  * <h1>权限实体</h1>
  *
@@ -46,7 +44,6 @@ public class PermissionEntity extends BaseEntity<PermissionEntity> implements IP
     private Boolean isSystem;
 
     @Description("权限类型")
-    @Search(EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '权限类型'")
     @Dictionary(value = PermissionType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
@@ -64,6 +61,5 @@ public class PermissionEntity extends BaseEntity<PermissionEntity> implements IP
 
     @Description("父级ID")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '父级ID'")
-    @Search(EQUALS)
     private Long parentId;
 }

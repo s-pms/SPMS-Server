@@ -21,7 +21,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Set;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 import static cn.hamm.airpower.curd.export.ExportColumnType.DATETIME;
 
 /**
@@ -66,13 +65,11 @@ public class ContractEntity extends BaseEntity<ContractEntity> {
     private Long endTime;
 
     @Description("合同类型")
-    @Search(EQUALS)
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '合同类型'")
     @Dictionary(value = ContractType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 
     @Description("合同状态")
-    @Search(EQUALS)
     @Column(columnDefinition = "bigint UNSIGNED default 1 comment '合同状态'")
     @Dictionary(value = ContractStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer status;

@@ -23,7 +23,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Set;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.BomCode;
 import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.FetchType.EAGER;
@@ -57,14 +56,12 @@ public class BomEntity extends BaseEntity<BomEntity> {
     @Description("配方状态")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '配方状态'")
     @Dictionary(value = BomStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Search(EQUALS)
     @ReadOnly
     private Integer status;
 
     @Description("配方类型")
     @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '配方类型'")
     @Dictionary(value = BomType.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Search(EQUALS)
     private Integer type;
 
     @Description("配方明细")

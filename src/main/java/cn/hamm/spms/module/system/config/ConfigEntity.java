@@ -2,7 +2,6 @@ package cn.hamm.spms.module.system.config;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.system.config.enums.ConfigType;
@@ -20,7 +19,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Objects;
 
-import static cn.hamm.airpower.annotation.Search.Mode.EQUALS;
 import static cn.hamm.spms.module.system.config.ConfigService.STRING_ONE;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
@@ -57,13 +55,11 @@ public class ConfigEntity extends BaseEntity<ConfigEntity> {
     private String config;
 
     @Description("配置类型")
-    @Search(EQUALS)
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '配置类型'")
     @Dictionary(value = ConfigType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 
     @Description("内置配置")
-    @Search(EQUALS)
     @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '内置配置'")
     private Boolean isSystem;
