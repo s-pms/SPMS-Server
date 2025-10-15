@@ -2,7 +2,6 @@ package cn.hamm.spms.module.chat.room;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.curd.export.ExcelColumn;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,7 +18,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.curd.export.ExportColumnType.BOOLEAN;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
@@ -57,17 +55,14 @@ public class RoomEntity extends BaseEntity<RoomEntity> implements IRoomAction {
 
     @Description("是否热门")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否热门'")
-    @ExcelColumn(BOOLEAN)
     private Boolean isHot;
 
     @Description("是否官方")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否官方'")
-    @ExcelColumn(BOOLEAN)
     private Boolean isOfficial;
 
     @Description("是否私有房间")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否私有房间'")
-    @ExcelColumn(BOOLEAN)
     private Boolean isPrivate;
 
     @Description("房间密码")

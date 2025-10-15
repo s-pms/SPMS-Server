@@ -2,7 +2,6 @@ package cn.hamm.spms.module.mes.routing;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.curd.export.ExcelColumn;
 import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
@@ -21,7 +20,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cn.hamm.airpower.curd.export.ExportColumnType.BOOLEAN;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.RoutingCode;
 import static jakarta.persistence.FetchType.EAGER;
 
@@ -66,7 +64,6 @@ public class RoutingEntity extends BaseEntity<RoutingEntity> {
 
     @Description("使用工艺BOM")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '使用工艺BOM'")
-    @ExcelColumn(BOOLEAN)
     private Boolean isRoutingBom;
 
     @Description("工序配置列表")

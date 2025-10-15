@@ -2,7 +2,6 @@ package cn.hamm.spms.module.asset.contract;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.curd.export.ExcelColumn;
 import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
@@ -20,8 +19,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Set;
-
-import static cn.hamm.airpower.curd.export.ExportColumnType.DATETIME;
 
 /**
  * <h1>合同实体</h1>
@@ -56,12 +53,10 @@ public class ContractEntity extends BaseEntity<ContractEntity> {
 
     @Description("开始时间")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '开始时间'")
-    @ExcelColumn(DATETIME)
     private Long startTime;
 
     @Description("结束时间")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '结束时间'")
-    @ExcelColumn(DATETIME)
     private Long endTime;
 
     @Description("合同类型")

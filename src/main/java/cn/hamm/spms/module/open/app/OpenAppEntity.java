@@ -3,7 +3,6 @@ package cn.hamm.spms.module.open.app;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.curd.export.ExcelColumn;
 import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.airpower.open.IOpenApp;
 import cn.hamm.airpower.open.OpenArithmeticType;
@@ -20,7 +19,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.curd.export.ExportColumnType.BOOLEAN;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
@@ -81,6 +79,5 @@ public class OpenAppEntity extends BaseEntity<OpenAppEntity> implements IOpenApp
 
     @Description("是否内部应用")
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否内部应用'")
-    @ExcelColumn(BOOLEAN)
     private Boolean isInternal;
 }

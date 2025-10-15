@@ -3,14 +3,14 @@ package cn.hamm.spms.base;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.curd.CurdEntity;
-import cn.hamm.airpower.curd.export.ExcelColumn;
+import cn.hamm.airpower.export.Export;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import static cn.hamm.airpower.curd.export.ExportColumnType.BOOLEAN;
+import static cn.hamm.airpower.export.Export.Type.BOOLEAN;
 
 /**
  * <h1>应用实体基类</h1>
@@ -26,7 +26,7 @@ public class BaseEntity<E extends BaseEntity<E>> extends CurdEntity<E> {
     @Description("是否已发布")
     @ReadOnly
     @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否已发布'")
-    @ExcelColumn(BOOLEAN)
+    @Export(BOOLEAN)
     private Boolean isPublished;
 
     /**
