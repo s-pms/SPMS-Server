@@ -2,7 +2,6 @@ package cn.hamm.spms.module.asset.contract.document;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.file.IFile;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,7 +26,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(name = "contract_document")
 @Description("合同附件")
-public class ContractDocumentEntity extends BaseEntity<ContractDocumentEntity> implements IFile<ContractDocumentEntity> {
+public class ContractDocumentEntity extends BaseEntity<ContractDocumentEntity> {
     @Description("附件地址")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '附件地址'")
