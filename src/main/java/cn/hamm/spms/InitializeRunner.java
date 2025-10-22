@@ -3,6 +3,7 @@ package cn.hamm.spms;
 import cn.hamm.airpower.access.PasswordUtil;
 import cn.hamm.airpower.mcp.McpService;
 import cn.hamm.airpower.util.RandomUtil;
+import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.asset.device.DeviceService;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
@@ -111,10 +112,17 @@ public class InitializeRunner implements CommandLineRunner {
     @Autowired
     private Environment environment;
 
+    @Autowired
+    private AppConfig appConfig;
+
     @Override
     public void run(String... args) {
+        System.out.println(appConfig.getProjectName());
         System.out.println("---------------------------------");
         McpService.scanMcpMethods("cn.hamm.spms", "cn.hamm.airpower");
+        if (!appConfig.getIsDevMode()) {
+            return;
+        }
         // 获取环境变量的 JPA ddl-auto
         String ddlAuto = environment.getProperty("spring.jpa.hibernate.ddl-auto");
         if (CREATE_DROP.equals(ddlAuto)) {

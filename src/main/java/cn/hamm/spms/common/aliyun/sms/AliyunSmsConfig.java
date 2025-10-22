@@ -2,7 +2,7 @@ package cn.hamm.spms.common.aliyun.sms;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * <h1>阿里云短信配置</h1>
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @author zhoul
  **/
 @Data
-@Component
+@Configuration
 @ConfigurationProperties("aliyun.sms")
 public class AliyunSmsConfig {
     /**
