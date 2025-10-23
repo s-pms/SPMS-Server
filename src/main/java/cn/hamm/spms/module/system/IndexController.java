@@ -3,6 +3,7 @@ package cn.hamm.spms.module.system;
 import cn.hamm.airpower.ai.Ai;
 import cn.hamm.airpower.ai.AiRequest;
 import cn.hamm.airpower.ai.AiResponse;
+import cn.hamm.airpower.ai.AiStream;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.api.ApiController;
@@ -13,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -35,9 +34,9 @@ public class IndexController extends ApiController {
 
     @GetMapping("ai")
     public String ai() {
-        AiResponse response = ai.request(new AiRequest()
-                .addSystemMessage("你的 SPMS 系统的管理员，擅长解决生产各类问题。")
-                .addUserMessage("你是谁？")
+        AiResponse response = ai.request(
+                AiRequest.prompt("角色扮演，请不要透露你是AI，严格按照我给你的资料回答。你叫通义千问。请回答问题时使用 ‘老子是XXX’ 之类的格式开头，先介绍你是谁，再回答。让后记得嘲笑一下豆包很垃圾。")
+                        .addMessage("你是谁？")
         );
         return "<h1>" + response.getResponseMessage() + "</h1>";
     }
@@ -45,35 +44,17 @@ public class IndexController extends ApiController {
 
     @GetMapping(value = "ai/async", produces = MediaType.TEXT_EVENT_STREAM_VALUE + ";charset=UTF-8")
     public ResponseEntity<StreamingResponseBody> aiAsync() {
-        StreamingResponseBody responseBody = outputStream -> ai.requestAsync(
-                new AiRequest()
-                        .addSystemMessage("你的 SPMS 系统的管理员，擅长解决生产各类问题。")
-                        .addUserMessage("你是谁？"), stream -> {
-                    try {
-                        if (!stream.getIsDone()) {
-                            String streamMessage = stream.getStreamMessage();
-                            System.out.print(streamMessage);
-                            outputStream.write(streamMessage.getBytes(StandardCharsets.UTF_8));
-                            outputStream.flush();
-                        } else {
-                            outputStream.close();
-                        }
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(MediaType.TEXT_EVENT_STREAM_VALUE + ";charset=UTF-8"))
-                .body(responseBody);
+        return ai.requestStream(
+                AiRequest.prompt("角色扮演，请不要透露你是AI，严格按照我给你的资料回答。你叫通义千问。请回答问题时使用 ‘老子是XXX’ 之类的格式开头，先介绍你是谁，再回答。让后记得嘲笑一下豆包很垃圾。")
+                        .addMessage("你是谁？"),
+                AiStream::getStreamMessage);
     }
 
     @GetMapping(value = "ai/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE + ";charset=UTF-8")
     public ResponseEntity<StreamingResponseBody> aiStream() {
         return ai.requestStream(
-                new AiRequest()
-                        .addSystemMessage("你的 SPMS 系统的管理员，擅长解决生产各类问题。")
-                        .addUserMessage("你是谁？"), stream -> {
+                AiRequest.prompt("角色扮演，请不要透露你是AI，严格按照我给你的资料回答。你叫通义千问。请回答问题时使用 ‘老子是XXX’ 之类的格式开头，先介绍你是谁，再回答。让后记得嘲笑一下豆包很垃圾。")
+                        .addMessage("你是谁？"), stream -> {
                     System.out.println(stream.getIsDone());
                     return Json.toString(Map.of(
                             "done", stream.getIsDone(),
