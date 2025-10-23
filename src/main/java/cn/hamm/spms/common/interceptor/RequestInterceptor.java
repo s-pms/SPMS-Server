@@ -46,11 +46,10 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     @Override
     public void checkUserPermission(AccessTokenUtil.@NotNull VerifiedToken verifiedToken, String permissionIdentity, HttpServletRequest request) {
         long userId = verifiedToken.getPayloadId();
-        UserEntity existUser = userService.get(userId);
+        UserEntity existUser = userService.getWithEnable(userId);
         if (existUser.isRootUser()) {
             return;
         }
-        FORBIDDEN.when(existUser.getIsDisabled(), "用户已被禁用");
         PermissionEntity needPermission = permissionService.getPermissionByIdentity(permissionIdentity);
         if (existUser.getRoleList().stream()
                 .flatMap(role -> role.getPermissionList().stream())
