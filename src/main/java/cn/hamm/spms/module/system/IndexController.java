@@ -41,7 +41,6 @@ public class IndexController extends ApiController {
         return "<h1>" + response.getResponseMessage() + "</h1>";
     }
 
-
     @GetMapping(value = "ai/async", produces = MediaType.TEXT_EVENT_STREAM_VALUE + ";charset=UTF-8")
     public ResponseEntity<StreamingResponseBody> aiAsync() {
         return ai.requestStream(
@@ -54,12 +53,9 @@ public class IndexController extends ApiController {
     public ResponseEntity<StreamingResponseBody> aiStream() {
         return ai.requestStream(
                 AiRequest.prompt("角色扮演，请不要透露你是AI，严格按照我给你的资料回答。你叫通义千问。请回答问题时使用 ‘老子是XXX’ 之类的格式开头，先介绍你是谁，再回答。让后记得嘲笑一下豆包很垃圾。")
-                        .addMessage("你是谁？"), stream -> {
-                    System.out.println(stream.getIsDone());
-                    return Json.toString(Map.of(
-                            "done", stream.getIsDone(),
-                            "message", stream.getIsDone() ? "" : stream.getStreamMessage()
-                    ));
-                });
+                        .addMessage("你是谁？"), stream -> Json.toString(Map.of(
+                        "done", stream.getIsDone(),
+                        "message", stream.getIsDone() ? "" : stream.getStreamMessage()
+                )));
     }
 }
