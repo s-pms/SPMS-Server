@@ -14,7 +14,12 @@ spring:
       port: 6379
       database: 5
 app:
-  loginUrl: "https://demo.spms.work/login"
-  authorize-url: "https://demo.spms.work/authorize"
+  loginUrl: "https://spms.work/login"
+  authorize-url: "https://spms.work/authorize"
   upload-platform: local
-  upload-directory: /home/upload
+  upload-directory: "/home/upload/"
+
+airpower:
+  curd:
+    export:
+      save-file-path: "/home/export/"
