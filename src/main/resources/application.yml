@@ -38,10 +38,10 @@ spring:
 
 airpower:
   access:
-    access-token-secret: 1234567890
+    access-token-secret: "1234567890"
   websocket:
     support: redis
-    channel-prefix: airpower
+    channel-prefix: "airpower"
   curd:
     export:
       save-file-path: "/tmp/spms/export/"

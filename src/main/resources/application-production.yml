@@ -5,20 +5,20 @@ spring:
       # todo 请注意 生产环境一定要修改为none或者validate
       ddl-auto: create-drop
   datasource:
-    url: jdbc:mysql://localhost:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
-    username: spms
-    password: spms
+    url: "jdbc:mysql://localhost:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false"
+    username: "spms"
+    password: "spms"
   data:
     redis:
-      host: localhost
+      host: "localhost"
       port: 6379
       database: 5
 app:
-  loginUrl: "https://spms.work/login"
-  authorize-url: "https://spms.work/authorize"
+  loginUrl: "https://spms.hamm.cn/login"
+  authorize-url: "https://spms.hamm.cn/authorize"
   upload-platform: local
   upload-directory: "/home/upload/"
-
+  is-dev-mode: true
 airpower:
   curd:
     export:
