@@ -76,7 +76,7 @@
 Server后端项目仓库，你可以查看 [开发者指南@Github](https://github.com/s-pms/SPMS-Docs)、[开发者指南@Gitee](https://gitee.com/s-pms/SPMS-Docs)
 等帮助文档。
 
-项目示例站点：[DEMO](https://demo.spms.work)
+项目示例站点：[DEMO](https://spms.hamm.cn)
 
 > 请注意，示例项目可能不是最新代码，建议自行部署后体验。
 
