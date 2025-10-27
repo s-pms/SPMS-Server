@@ -17,8 +17,8 @@ app:
   loginUrl: "https://spms.work/login"
   authorize-url: "https://spms.work/authorize"
   upload-platform: local
-  upload-directory: "/home/upload"
+  upload-directory: "/home/upload/"
 airpower:
   curd:
     export:
-      save-file-path: "/home/export"
+      save-file-path: "/home/export/"
