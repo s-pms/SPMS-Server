@@ -17,11 +17,15 @@ import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.personnel.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.department.DepartmentService;
+import cn.hamm.spms.module.personnel.role.menu.RoleMenuService;
+import cn.hamm.spms.module.personnel.role.permission.RolePermissionService;
 import cn.hamm.spms.module.personnel.user.enums.UserTokenType;
+import cn.hamm.spms.module.personnel.user.role.UserRoleService;
 import cn.hamm.spms.module.system.config.ConfigEntity;
 import cn.hamm.spms.module.system.config.ConfigService;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import cn.hamm.spms.module.system.menu.MenuEntity;
+import cn.hamm.spms.module.system.menu.MenuService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -80,6 +84,15 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     @Autowired
     private AccessConfig accessConfig;
 
+    @Autowired
+    private UserRoleService userRoleService;
+
+    @Autowired
+    private RoleMenuService roleMenuService;
+
+    @Autowired
+    private RolePermissionService rolePermissionService;
+
     /**
      * 获取新的密码盐
      *
@@ -131,20 +144,22 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     public List<MenuEntity> getMenuListByUserId(long userId) {
         UserEntity user = get(userId);
         if (user.isRootUser()) {
-            return TreeUtil.buildTreeList(
-                    Services.getMenuService().filter(new MenuEntity(), new Sort().setField("orderNo"))
+            MenuService menuService = Services.getMenuService();
+            return TreeUtil.buildTreeList(menuService.filter(
+                    new MenuEntity(),
+                    new Sort().setField(MenuService.ORDER_FIELD_NAME))
             );
         }
         List<MenuEntity> menuList = new ArrayList<>();
-        user.getRoleList().forEach(role -> role.getMenuList()
-                .forEach(menu -> {
-                    boolean isExist = menuList.stream()
-                            .anyMatch(existMenu -> Objects.equals(menu.getId(), existMenu.getId()));
-                    if (!isExist) {
-                        menuList.add(menu);
-                    }
-                })
-        );
+        userRoleService.getUserRoleList(userId)
+                .forEach(role -> roleMenuService.getRoleMenuList(role.getId())
+                        .forEach(menu -> {
+                            boolean isExist = menuList.stream()
+                                    .anyMatch(existMenu -> Objects.equals(menu.getId(), existMenu.getId()));
+                            if (!isExist) {
+                                menuList.add(menu);
+                            }
+                        }));
         return TreeUtil.buildTreeList(menuList);
     }
 
@@ -160,15 +175,15 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             return Services.getPermissionService().getList(null);
         }
         List<PermissionEntity> permissionList = new ArrayList<>();
-        user.getRoleList().forEach(roleEntity -> roleEntity.getPermissionList()
-                .forEach(permission -> {
-                    boolean isExist = permissionList.stream()
-                            .anyMatch(existPermission -> Objects.equals(permission.getId(), existPermission.getId()));
-                    if (!isExist) {
-                        permissionList.add(permission);
-                    }
-                })
-        );
+        userRoleService.getUserRoleList(userId)
+                .forEach(role -> rolePermissionService.getRolePermissionList(role.getId())
+                        .forEach(permission -> {
+                            boolean isExist = permissionList.stream()
+                                    .anyMatch(existPermission -> Objects.equals(permission.getId(), existPermission.getId()));
+                            if (!isExist) {
+                                permissionList.add(permission);
+                            }
+                        }));
         return permissionList;
     }
 

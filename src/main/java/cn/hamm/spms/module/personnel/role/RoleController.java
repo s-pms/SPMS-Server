@@ -4,7 +4,6 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.api.Json;
 import cn.hamm.spms.base.BaseController;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,10 +28,5 @@ public class RoleController extends BaseController<RoleEntity, RoleService, Role
     public Json authorizePermission(@RequestBody @Validated({WhenAuthorizePermission.class, WhenIdRequired.class}) RoleEntity role) {
         service.update(role);
         return Json.success("授权菜单成功");
-    }
-
-    @Override
-    protected RoleEntity beforeAppUpdate(@NotNull RoleEntity role) {
-        return role.setMenuList(null).setPermissionList(null);
     }
 }

@@ -39,6 +39,8 @@ import cn.hamm.spms.module.personnel.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.department.DepartmentService;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
+import cn.hamm.spms.module.personnel.user.department.UserDepartmentEntity;
+import cn.hamm.spms.module.personnel.user.department.UserDepartmentService;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
@@ -55,7 +57,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
 
 import static cn.hamm.spms.module.iot.report.ReportConstant.*;
 
@@ -111,6 +116,8 @@ public class InitializeRunner implements CommandLineRunner {
     private RoomService roomService;
     @Autowired
     private Environment environment;
+    @Autowired
+    private UserDepartmentService userDepartmentService;
 
     @Autowired
     private AppConfig appConfig;
@@ -193,17 +200,14 @@ public class InitializeRunner implements CommandLineRunner {
             return;
         }
         long departmentId = departmentService.add(new DepartmentEntity().setCode("a1").setName("生产部"));
-        long departmentMaterial = departmentService.add(new DepartmentEntity().setName("材料部").setCode("aaa1").setParentId(departmentId));
+        departmentService.add(new DepartmentEntity().setName("材料部").setCode("aaa1").setParentId(departmentId));
         String salt = RandomUtil.randomString(UserService.PASSWORD_SALT_LENGTH);
-        Set<DepartmentEntity> departmentList = new HashSet<>();
-        departmentList.add(new DepartmentEntity().setId(departmentMaterial));
-        userService.add(new UserEntity()
+        long userId = userService.add(new UserEntity()
                 .setNickname("凌小云")
                 .setPhone("17666666666")
                 .setEmail("admin@hamm.cn")
                 .setPassword(PasswordUtil.encode("Aa123456", salt))
                 .setSalt(salt)
-                .setDepartmentList(departmentList)
         );
         userService.add(new UserEntity()
                 .setNickname("张三")
@@ -211,7 +215,10 @@ public class InitializeRunner implements CommandLineRunner {
                 .setEmail("admin@hamm.com")
                 .setPassword(PasswordUtil.encode("Aa123456", salt))
                 .setSalt(salt));
-
+        userDepartmentService.add(new UserDepartmentEntity()
+                .setUser(new UserEntity().setId(userId))
+                .setDepartment(new DepartmentEntity().setId(departmentId))
+        );
         System.out.println("---------------------------------");
         user = userService.getMaybeNull(1L);
 

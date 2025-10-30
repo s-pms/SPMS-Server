@@ -3,21 +3,17 @@ package cn.hamm.spms.module.personnel.role;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
-import cn.hamm.spms.module.system.menu.MenuEntity;
-import cn.hamm.spms.module.system.permission.PermissionEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.Set;
-
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.RoleCode;
-import static jakarta.persistence.FetchType.EAGER;
 
 /**
  * <h1>角色实体</h1>
@@ -42,15 +38,4 @@ public class RoleEntity extends BaseEntity<RoleEntity> implements IRoleAction {
     @Column(columnDefinition = "varchar(255) default '' comment '角色编码'", unique = true)
     @AutoGenerateCode(RoleCode)
     private String code;
-
-    @Description("角色的菜单列表")
-    @ManyToMany(fetch = EAGER)
-    @OrderBy("orderNo DESC")
-    @NotNull(groups = {WhenAuthorizeMenu.class}, message = "请传入授权的菜单列表")
-    private Set<MenuEntity> menuList;
-
-    @Description("角色的权限列表")
-    @ManyToMany(fetch = EAGER)
-    @NotNull(groups = {WhenAuthorizeMenu.class}, message = "请传入授权的权限列表")
-    private Set<PermissionEntity> permissionList;
 }

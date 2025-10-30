@@ -6,12 +6,13 @@ import cn.hamm.airpower.desensitize.Desensitize;
 import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.airpower.validate.Phone;
 import cn.hamm.spms.base.BaseEntity;
-import cn.hamm.spms.module.personnel.department.DepartmentEntity;
-import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.personnel.user.enums.UserGender;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Null;
@@ -23,12 +24,10 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.Objects;
-import java.util.Set;
 
 import static cn.hamm.airpower.desensitize.DesensitizeType.CHINESE_NAME;
 import static cn.hamm.airpower.desensitize.DesensitizeType.ID_CARD;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
-import static jakarta.persistence.FetchType.EAGER;
 
 /**
  * <h1>用户实体</h1>
@@ -94,14 +93,6 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @JsonIgnore
     @Column(columnDefinition = "varchar(255) default '' comment '密码盐'")
     private String salt;
-
-    @Description("角色列表")
-    @ManyToMany(fetch = EAGER)
-    private Set<RoleEntity> roleList;
-
-    @Description("部门列表")
-    @ManyToMany(fetch = EAGER)
-    private Set<DepartmentEntity> departmentList;
 
     /// ////////////////////
 

@@ -23,7 +23,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     /**
      * 排序字段
      */
-    private static final String ORDER_FIELD_NAME = "orderNo";
+    public static final String ORDER_FIELD_NAME = "orderNo";
 
     @Override
     protected void beforeDelete(long id) {
