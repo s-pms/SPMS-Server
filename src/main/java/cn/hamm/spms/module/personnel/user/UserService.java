@@ -447,7 +447,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             return new ArrayList<>();
         }
         List<Predicate> predicateList = new ArrayList<>();
-        Set<Long> departmentIdList = getDepartmentList(departmentId);
+        Set<Long> departmentIdList = getDepartmentListByParentId(departmentId);
         if (!departmentIdList.isEmpty()) {
             Join<UserEntity, DepartmentEntity> departmentJoin = root.join("departmentList");
             Predicate inPredicate = departmentJoin.get(CurdEntity.STRING_ID).in(departmentIdList);
@@ -457,18 +457,18 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     @Contract("_ -> new")
-    private @NotNull Set<Long> getDepartmentList(long parentId) {
+    private @NotNull Set<Long> getDepartmentListByParentId(long parentId) {
         Set<Long> departmentList = new HashSet<>();
-        getDepartmentList(parentId, departmentList);
+        getDepartmentListByParentId(parentId, departmentList);
         return departmentList;
     }
 
-    private void getDepartmentList(long parentId, @NotNull Set<Long> departmentIds) {
+    private void getDepartmentListByParentId(long parentId, @NotNull Set<Long> departmentIds) {
         DepartmentService departmentService = Services.getDepartmentService();
         DepartmentEntity parent = departmentService.get(parentId);
         departmentIds.add(parent.getId());
         List<DepartmentEntity> children = departmentService.filter(new DepartmentEntity().setParentId(parent.getId()));
-        children.forEach(child -> getDepartmentList(child.getId(), departmentIds));
+        children.forEach(child -> getDepartmentListByParentId(child.getId(), departmentIds));
     }
 
     /**
