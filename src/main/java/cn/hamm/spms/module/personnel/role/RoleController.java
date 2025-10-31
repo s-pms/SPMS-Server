@@ -31,14 +31,24 @@ public class RoleController extends BaseController<RoleEntity, RoleService, Role
     @Description("授权菜单")
     @PostMapping("authorizeMenu")
     public Json authorizeMenu(@RequestBody @Validated({WhenAuthorizePermission.class, WhenIdRequired.class}) RoleEntity role) {
-        service.update(role);
+        roleMenuService.filter(new RoleMenuEntity().setRole(role))
+                .forEach(roleMenu -> roleMenuService.delete(roleMenu.getId()));
+        role.getMenuList().forEach(menu -> roleMenuService.add(new RoleMenuEntity()
+                .setRole(role)
+                .setMenu(menu.copyOnlyId())
+        ));
         return Json.success("授权菜单成功");
     }
 
     @Description("授权权限")
     @PostMapping("authorizePermission")
     public Json authorizePermission(@RequestBody @Validated({WhenAuthorizePermission.class, WhenIdRequired.class}) RoleEntity role) {
-        service.update(role);
+        rolePermissionService.filter(new RolePermissionEntity().setRole(role))
+                .forEach(rolePermission -> rolePermissionService.delete(rolePermission.getId()));
+        role.getPermissionList().forEach(permission -> rolePermissionService.add(new RolePermissionEntity()
+                .setRole(role)
+                .setPermission(permission.copyOnlyId())
+        ));
         return Json.success("授权菜单成功");
     }
 
@@ -47,35 +57,5 @@ public class RoleController extends BaseController<RoleEntity, RoleService, Role
         return role.setMenuList(roleMenuService.getMenuList(role.getId()))
                 .setPermissionList(rolePermissionService.getPermissionList(role.getId()))
                 ;
-    }
-
-    @Override
-    protected void afterAdd(long id, @NotNull RoleEntity source) {
-        RoleEntity role = new RoleEntity().setId(id);
-        source.getPermissionList().forEach(permission -> rolePermissionService.add(new RolePermissionEntity()
-                .setRole(role)
-                .setPermission(permission.copyOnlyId())
-        ));
-        source.getMenuList().forEach(menu -> roleMenuService.add(new RoleMenuEntity()
-                .setRole(role)
-                .setMenu(menu.copyOnlyId())
-        ));
-    }
-
-    @Override
-    protected void afterUpdate(long id, @NotNull RoleEntity source) {
-        RoleEntity role = new RoleEntity().setId(id);
-        rolePermissionService.filter(new RolePermissionEntity().setRole(role))
-                .forEach(rolePermission -> rolePermissionService.delete(rolePermission.getId()));
-        source.getPermissionList().forEach(permission -> rolePermissionService.add(new RolePermissionEntity()
-                .setRole(role)
-                .setPermission(permission.copyOnlyId())
-        ));
-        roleMenuService.filter(new RoleMenuEntity().setRole(role))
-                .forEach(roleMenu -> roleMenuService.delete(roleMenu.getId()));
-        source.getMenuList().forEach(menu -> roleMenuService.add(new RoleMenuEntity()
-                .setRole(role)
-                .setMenu(menu.copyOnlyId())
-        ));
     }
 }

@@ -29,6 +29,7 @@ public class RoleMenuService extends BaseService<RoleMenuEntity, RoleMenuReposit
         return filter(roleMenuFilter)
                 .stream()
                 .map(RoleMenuEntity::getMenu)
+                .sorted((a, b) -> b.getOrderNo() - (a.getOrderNo()))
                 .toList();
     }
 }
