@@ -8,7 +8,11 @@ import cn.hamm.airpower.cookie.CookieHelper;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginEntity;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginService;
+import cn.hamm.spms.module.personnel.user.department.UserDepartmentEntity;
+import cn.hamm.spms.module.personnel.user.department.UserDepartmentService;
 import cn.hamm.spms.module.personnel.user.enums.UserLoginType;
+import cn.hamm.spms.module.personnel.user.role.UserRoleEntity;
+import cn.hamm.spms.module.personnel.user.role.UserRoleService;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenEntity;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
@@ -46,6 +50,10 @@ public class UserController extends BaseController<UserEntity, UserService, User
 
     @Autowired
     private PersonalTokenService personalTokenService;
+    @Autowired
+    private UserRoleService userRoleService;
+    @Autowired
+    private UserDepartmentService userDepartmentService;
 
     @Description("获取我的信息")
     @Permission(authorize = false)
@@ -81,6 +89,12 @@ public class UserController extends BaseController<UserEntity, UserService, User
         FORBIDDEN_EDIT.whenNotEquals(exist.getUser().getId(), getCurrentUserId(), "你没有权限禁用此令牌");
         personalTokenService.disable(personalToken.getId());
         return Json.success("禁用成功");
+    }
+
+    @Override
+    protected UserEntity afterGetDetail(@NotNull UserEntity user) {
+        return user.setDepartmentList(userDepartmentService.getDepartmentList(user.getId()))
+                .setRoleList(userRoleService.getRoleList(user.getId()));
     }
 
     @Description("启用我的令牌")
@@ -216,5 +230,35 @@ public class UserController extends BaseController<UserEntity, UserService, User
         };
         FORBIDDEN_DISABLED.when(exist.getIsDisabled(), "登录失败，你的账号已被禁用");
         return Json.data(userService.loginWithCookieAndResponse(response, exist), "登录成功");
+    }
+
+    @Override
+    protected void afterAdd(long id, @NotNull UserEntity source) {
+        UserEntity user = new UserEntity().setId(id);
+        source.getRoleList().forEach(role -> userRoleService.add(new UserRoleEntity()
+                .setUser(user)
+                .setRole(role.copyOnlyId())
+        ));
+        source.getDepartmentList().forEach(department -> userDepartmentService.add(new UserDepartmentEntity()
+                .setUser(user)
+                .setDepartment(department.copyOnlyId())
+        ));
+    }
+
+    @Override
+    protected void afterUpdate(long id, @NotNull UserEntity source) {
+        UserEntity user = new UserEntity().setId(id);
+        userRoleService.filter(new UserRoleEntity().setUser(user))
+                .forEach(userRole -> userRoleService.delete(userRole.getId()));
+        source.getRoleList().forEach(role -> userRoleService.add(new UserRoleEntity()
+                .setUser(user)
+                .setRole(role.copyOnlyId())
+        ));
+        userDepartmentService.filter(new UserDepartmentEntity().setUser(user))
+                .forEach(userDepartment -> userDepartmentService.delete(userDepartment.getId()));
+        source.getDepartmentList().forEach(department -> userDepartmentService.add(new UserDepartmentEntity()
+                .setUser(user)
+                .setDepartment(department.copyOnlyId())
+        ));
     }
 }

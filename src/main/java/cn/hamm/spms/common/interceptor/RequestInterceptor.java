@@ -61,9 +61,9 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
             return;
         }
         PermissionEntity needPermission = permissionService.getPermissionByIdentity(permissionIdentity);
-        List<RoleEntity> roleList = userRoleService.getUserRoleList(userId);
+        List<RoleEntity> roleList = userRoleService.getRoleList(userId);
         if (roleList.stream()
-                .flatMap(role -> rolePermissionService.getRolePermissionList(role.getId()).stream())
+                .flatMap(role -> rolePermissionService.getPermissionList(role.getId()).stream())
                 .anyMatch(permission -> needPermission.getId().equals(permission.getId()))
         ) {
             return;

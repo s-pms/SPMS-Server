@@ -3,15 +3,20 @@ package cn.hamm.spms.module.personnel.role;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
+import cn.hamm.spms.module.system.menu.MenuEntity;
+import cn.hamm.spms.module.system.permission.PermissionEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import java.util.List;
 
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.RoleCode;
 
@@ -38,4 +43,10 @@ public class RoleEntity extends BaseEntity<RoleEntity> implements IRoleAction {
     @Column(columnDefinition = "varchar(255) default '' comment '角色编码'", unique = true)
     @AutoGenerateCode(RoleCode)
     private String code;
+
+    @Transient
+    private List<MenuEntity> menuList;
+
+    @Transient
+    private List<PermissionEntity> permissionList;
 }

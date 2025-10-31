@@ -19,6 +19,7 @@ import cn.hamm.spms.module.personnel.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.department.DepartmentService;
 import cn.hamm.spms.module.personnel.role.menu.RoleMenuService;
 import cn.hamm.spms.module.personnel.role.permission.RolePermissionService;
+import cn.hamm.spms.module.personnel.user.department.UserDepartmentService;
 import cn.hamm.spms.module.personnel.user.enums.UserTokenType;
 import cn.hamm.spms.module.personnel.user.role.UserRoleService;
 import cn.hamm.spms.module.system.config.ConfigEntity;
@@ -92,6 +93,8 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
 
     @Autowired
     private RolePermissionService rolePermissionService;
+    @Autowired
+    private UserDepartmentService userDepartmentService;
 
     /**
      * 获取新的密码盐
@@ -151,8 +154,8 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             );
         }
         List<MenuEntity> menuList = new ArrayList<>();
-        userRoleService.getUserRoleList(userId)
-                .forEach(role -> roleMenuService.getRoleMenuList(role.getId())
+        userRoleService.getRoleList(userId)
+                .forEach(role -> roleMenuService.getMenuList(role.getId())
                         .forEach(menu -> {
                             boolean isExist = menuList.stream()
                                     .anyMatch(existMenu -> Objects.equals(menu.getId(), existMenu.getId()));
@@ -175,8 +178,8 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             return Services.getPermissionService().getList(null);
         }
         List<PermissionEntity> permissionList = new ArrayList<>();
-        userRoleService.getUserRoleList(userId)
-                .forEach(role -> rolePermissionService.getRolePermissionList(role.getId())
+        userRoleService.getRoleList(userId)
+                .forEach(role -> rolePermissionService.getPermissionList(role.getId())
                         .forEach(permission -> {
                             boolean isExist = permissionList.stream()
                                     .anyMatch(existPermission -> Objects.equals(permission.getId(), existPermission.getId()));

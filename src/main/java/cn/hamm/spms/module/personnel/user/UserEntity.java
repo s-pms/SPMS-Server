@@ -6,6 +6,8 @@ import cn.hamm.airpower.desensitize.Desensitize;
 import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.airpower.validate.Phone;
 import cn.hamm.spms.base.BaseEntity;
+import cn.hamm.spms.module.personnel.department.DepartmentEntity;
+import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.personnel.user.enums.UserGender;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,6 +25,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.List;
 import java.util.Objects;
 
 import static cn.hamm.airpower.desensitize.DesensitizeType.CHINESE_NAME;
@@ -109,6 +112,12 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @Description("部门ID查询")
     @Transient
     private Long departmentId;
+
+    @Transient
+    private List<RoleEntity> roleList;
+
+    @Transient
+    private List<DepartmentEntity> departmentList;
 
     /**
      * 获取是否超级管理员

@@ -22,7 +22,7 @@ public class RoleMenuService extends BaseService<RoleMenuEntity, RoleMenuReposit
      * @param roleId 角色ID
      * @return 菜单列表
      */
-    public List<MenuEntity> getRoleMenuList(long roleId) {
+    public List<MenuEntity> getMenuList(long roleId) {
         RoleMenuEntity roleMenuFilter = new RoleMenuEntity().setRole(
                 new RoleEntity().setId(roleId)
         );
