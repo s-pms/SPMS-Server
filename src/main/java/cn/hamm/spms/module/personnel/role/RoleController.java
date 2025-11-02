@@ -2,7 +2,9 @@ package cn.hamm.spms.module.personnel.role;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.Extends;
 import cn.hamm.airpower.api.Json;
+import cn.hamm.airpower.curd.Curd;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.personnel.role.menu.RoleMenuEntity;
 import cn.hamm.spms.module.personnel.role.menu.RoleMenuService;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  */
 @Api("role")
 @Description("角色")
+@Extends({Curd.Disable, Curd.Enable})
 public class RoleController extends BaseController<RoleEntity, RoleService, RoleRepository> implements IRoleAction {
     @Autowired
     private RoleMenuService roleMenuService;

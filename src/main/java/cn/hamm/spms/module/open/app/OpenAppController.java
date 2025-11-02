@@ -5,6 +5,7 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.api.Extends;
 import cn.hamm.airpower.api.Json;
+import cn.hamm.airpower.curd.Curd;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.notify.NotifyService;
@@ -17,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Base64;
 
-import static cn.hamm.airpower.curd.Curd.Export;
-import static cn.hamm.airpower.curd.Curd.QueryExport;
 import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
 
 /**
@@ -28,7 +27,7 @@ import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
  */
 @Api("openApp")
 @Description("开放应用")
-@Extends(exclude = {Export, QueryExport})
+@Extends({Curd.Disable, Curd.Enable})
 public class OpenAppController extends BaseController<OpenAppEntity, OpenAppService, OpenAppRepository> implements IOpenAppAction {
     @Autowired
     private NotifyService notifyService;

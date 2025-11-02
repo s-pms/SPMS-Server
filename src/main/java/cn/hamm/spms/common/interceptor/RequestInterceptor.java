@@ -60,9 +60,11 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
         if (existUser.isRootUser()) {
             return;
         }
+        FORBIDDEN.when(existUser.getIsDisabled(), "当前登录的用户已被禁用");
         PermissionEntity needPermission = permissionService.getPermissionByIdentity(permissionIdentity);
         List<RoleEntity> roleList = userRoleService.getRoleList(userId);
         if (roleList.stream()
+                .filter(role -> !role.getIsDisabled())
                 .flatMap(role -> rolePermissionService.getPermissionList(role.getId()).stream())
                 .anyMatch(permission -> needPermission.getId().equals(permission.getId()))
         ) {

@@ -2,7 +2,9 @@ package cn.hamm.spms.base.bill;
 
 import cn.hamm.airpower.access.Permission;
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.api.Extends;
 import cn.hamm.airpower.api.Json;
+import cn.hamm.airpower.curd.Curd;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
@@ -31,6 +33,7 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
  */
 @Slf4j
 @Permission
+@Extends(exclude = {Curd.Delete})
 public class BaseBillController<
         E extends AbstractBaseBillEntity<E, D>, S extends AbstractBaseBillService<E, R, D, DS, DR>, R extends BaseBillRepository<E, D>,
         D extends BaseBillDetailEntity<D>, DS extends BaseBillDetailService<D, DR>, DR extends BaseBillDetailRepository<D>

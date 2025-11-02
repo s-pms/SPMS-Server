@@ -57,6 +57,7 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
                 List<NotifyEntity> notifyList = filter(
                         new NotifyEntity()
                                 .setScene(notifyScene.getKey())
+                                .setIsDisabled(false)
                 );
                 final String title = notifyScene.getLabel();
                 notifyList.forEach(notify -> {

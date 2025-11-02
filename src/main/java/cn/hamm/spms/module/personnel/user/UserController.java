@@ -3,8 +3,10 @@ package cn.hamm.spms.module.personnel.user;
 import cn.hamm.airpower.access.Permission;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.Extends;
 import cn.hamm.airpower.api.Json;
 import cn.hamm.airpower.cookie.CookieHelper;
+import cn.hamm.airpower.curd.Curd;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginEntity;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginService;
@@ -38,6 +40,7 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EDIT;
  */
 @Api("user")
 @Description("用户")
+@Extends({Curd.Disable, Curd.Enable})
 public class UserController extends BaseController<UserEntity, UserService, UserRepository> implements IUserAction {
     @Autowired
     private CookieHelper cookieHelper;
