@@ -53,8 +53,10 @@ public class UserController extends BaseController<UserEntity, UserService, User
 
     @Autowired
     private PersonalTokenService personalTokenService;
+    
     @Autowired
     private UserRoleService userRoleService;
+
     @Autowired
     private UserDepartmentService userDepartmentService;
 
