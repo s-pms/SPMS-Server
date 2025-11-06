@@ -94,31 +94,47 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
             return predicateList;
         }
         switch (DictionaryUtil.getDictionary(InventoryType.class, search.getType())) {
-            case STORAGE -> {
-                if (Objects.isNull(search.getStorage())) {
-                    return predicateList;
-                }
-                Set<Long> idList = TreeUtil.getChildrenIdList(search.getStorage().getId(), storageService, StorageEntity.class);
-                if (!idList.isEmpty()) {
-                    Join<InventoryEntity, StorageEntity> join = root.join("storage");
-                    Predicate inPredicate = join.get(CurdEntity.STRING_ID).in(idList);
-                    predicateList.add(inPredicate);
-                }
-            }
-            case STRUCTURE -> {
-                if (Objects.isNull(search.getStructure())) {
-                    return predicateList;
-                }
-                Set<Long> idList = TreeUtil.getChildrenIdList(search.getStructure().getId(), structureService, StructureEntity.class);
-                if (!idList.isEmpty()) {
-                    Join<InventoryEntity, StructureEntity> join = root.join("structure");
-                    Predicate inPredicate = join.get(CurdEntity.STRING_ID).in(idList);
-                    predicateList.add(inPredicate);
-                }
-            }
-            default -> {
-            }
+            case STORAGE -> addStoragePredicate(root, search, predicateList);
+            case STRUCTURE -> addStructurePredicate(root, search, predicateList);
         }
         return predicateList;
+    }
+
+    /**
+     * 添加生产单元查询条件
+     *
+     * @param root          ROOT
+     * @param search        查询条件
+     * @param predicateList 查询条件列表
+     */
+    private void addStructurePredicate(@NotNull Root<InventoryEntity> root, @NotNull InventoryEntity search, List<Predicate> predicateList) {
+        StructureEntity structure = search.getStructure();
+        if (Objects.nonNull(structure)) {
+            Set<Long> idList = TreeUtil.getChildrenIdList(structure.getId(), structureService);
+            if (!idList.isEmpty()) {
+                Join<InventoryEntity, StructureEntity> join = root.join("structure");
+                Predicate inPredicate = join.get(CurdEntity.STRING_ID).in(idList);
+                predicateList.add(inPredicate);
+            }
+        }
+    }
+
+    /**
+     * 添加仓库查询条件
+     *
+     * @param root          ROOT
+     * @param search        查询条件
+     * @param predicateList 查询条件列表
+     */
+    private void addStoragePredicate(@NotNull Root<InventoryEntity> root, @NotNull InventoryEntity search, List<Predicate> predicateList) {
+        StorageEntity storage = search.getStorage();
+        if (Objects.nonNull(storage)) {
+            Set<Long> idList = TreeUtil.getChildrenIdList(storage.getId(), storageService);
+            if (!idList.isEmpty()) {
+                Join<InventoryEntity, StorageEntity> join = root.join("storage");
+                Predicate inPredicate = join.get(CurdEntity.STRING_ID).in(idList);
+                predicateList.add(inPredicate);
+            }
+        }
     }
 }
