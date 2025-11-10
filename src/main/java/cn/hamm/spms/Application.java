@@ -23,13 +23,15 @@ public class Application {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
-        int port = serverApplicationContext.getWebServer().getPort();
-        System.out.println("------------------------------------------");
-        System.out.println("   Hi Guy, Service is listen : [" + port + "] !");
-        System.out.println("------------------------------------------");
+        if (serverApplicationContext != null) {
+            int port = serverApplicationContext.getWebServer().getPort();
+            System.out.println("------------------------------------------");
+            System.out.println("   Hi Guy, Service is listen : [" + port + "] !");
+            System.out.println("------------------------------------------");
+        }
     }
 
-    @Autowired
+    @Autowired(required = false)
     public void autorun(ServletWebServerApplicationContext serverApplicationContext) {
         Application.serverApplicationContext = serverApplicationContext;
         // ReportEventListener 注入后可开启MQTT监听
