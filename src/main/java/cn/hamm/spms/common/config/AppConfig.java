@@ -23,11 +23,6 @@ public class AppConfig {
     private String projectName = "SPMS";
 
     /**
-     * 授权地址 用于 {@code OAuth2}
-     */
-    private String authorizeUrl;
-
-    /**
      * 默认房间ID {@code 不是房间号}
      */
     private long defaultRoomId = 1L;
