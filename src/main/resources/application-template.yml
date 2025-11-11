@@ -25,7 +25,6 @@ airpower:
     user: your_mqtt_username
     pass: your_mqtt_password
 app:
-  loginUrl: "http://localhost:3000/login"
   influxdb:
     url: your_influxdb_url
     token: your_influxdb_token

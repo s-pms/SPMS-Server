@@ -45,5 +45,3 @@ airpower:
   curd:
     export:
       save-file-path: "/tmp/spms/export/"
-app:
-  upload-directory: "/home/upload"

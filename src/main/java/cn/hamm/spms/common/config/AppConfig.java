@@ -23,11 +23,6 @@ public class AppConfig {
     private String projectName = "SPMS";
 
     /**
-     * 登录地址 用于 {@code OAuth2}
-     */
-    private String loginUrl;
-
-    /**
      * 授权地址 用于 {@code OAuth2}
      */
     private String authorizeUrl;
@@ -40,7 +35,7 @@ public class AppConfig {
     /**
      * 上传文件目录
      */
-    private String uploadDirectory = "upload";
+    private String uploadDirectory = "/home/";
 
     /**
      * 上传文件最大大小

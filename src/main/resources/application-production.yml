@@ -2,24 +2,21 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      # todo 请注意 生产环境一定要修改为none或者validate
-      ddl-auto: create-drop
+      ddl-auto: update
   datasource:
-    url: "jdbc:mysql://localhost:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false"
+    url: "jdbc:mysql://mysql:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false"
     username: "spms"
     password: "spms"
   data:
     redis:
-      host: "localhost"
+      host: "redis"
       port: 6379
       database: 5
 app:
-  loginUrl: "https://spms.hamm.cn/login"
-  authorize-url: "https://spms.hamm.cn/authorize"
   upload-platform: local
-  upload-directory: "/home/upload/"
   is-dev-mode: true
+  upload-directory: "/home/"
 airpower:
   curd:
     export:
-      save-file-path: "/home/export/"
+      save-file-path: "/home/"

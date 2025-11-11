@@ -13,7 +13,6 @@ import cn.hamm.airpower.desensitize.DesensitizeIgnore;
 import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.airpower.request.RequestUtil;
 import cn.hamm.airpower.util.RandomUtil;
-import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.open.app.OpenAppEntity;
 import cn.hamm.spms.module.open.app.OpenAppService;
 import cn.hamm.spms.module.open.oauth.model.enums.OauthScope;
@@ -83,9 +82,6 @@ public class OauthController extends ApiController implements IOauthAction {
     private OpenAppService openAppService;
 
     @Autowired
-    private AppConfig appConfig;
-
-    @Autowired
     private OauthService service;
 
     @Autowired
@@ -127,7 +123,7 @@ public class OauthController extends ApiController implements IOauthAction {
                 REDIRECT_URI, URLEncoder.encode(redirectUri, UTF_8),
                 SCOPE, scope
         );
-        redirect(response, RequestUtil.buildQueryUrl(appConfig.getAuthorizeUrl(), params));
+        redirect(response, RequestUtil.buildQueryUrl("/authorize", params));
         return null;
     }
 
@@ -275,8 +271,7 @@ public class OauthController extends ApiController implements IOauthAction {
      * @return 无返回
      */
     private @Nullable ModelAndView redirectLogin(HttpServletResponse response, String appKey, String redirectUri, String scope) {
-        String url = appConfig.getLoginUrl() +
-                "?appKey=" +
+        String url = "/login?appKey=" +
                 appKey +
                 "&redirectUri=" +
                 URLEncoder.encode(redirectUri, UTF_8)
