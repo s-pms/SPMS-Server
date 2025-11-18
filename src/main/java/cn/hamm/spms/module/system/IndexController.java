@@ -7,14 +7,12 @@ import cn.hamm.airpower.ai.AiStream;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.api.ApiController;
-import cn.hamm.airpower.api.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-
-import java.util.Map;
 
 /**
  * <h1>Controller</h1>
@@ -49,13 +47,11 @@ public class IndexController extends ApiController {
                 AiStream::getStreamMessage);
     }
 
-    @GetMapping(value = "ai/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE + ";charset=UTF-8")
+    @RequestMapping(value = "ai/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE + ";charset=UTF-8")
     public ResponseEntity<StreamingResponseBody> aiStream() {
-        return ai.requestStream(
+        return ai.requestStreamRaw(
                 AiRequest.prompt("角色扮演，请不要透露你是AI，严格按照我给你的资料回答。你叫通义千问。请回答问题时使用 ‘老子是XXX’ 之类的格式开头，先介绍你是谁，再回答。让后记得嘲笑一下豆包很垃圾。")
-                        .addMessage("你是谁？"), stream -> Json.toString(Map.of(
-                        "done", stream.getIsDone(),
-                        "message", stream.getIsDone() ? "" : stream.getStreamMessage()
-                )));
+                        .addMessage("你是谁？")
+        );
     }
 }
