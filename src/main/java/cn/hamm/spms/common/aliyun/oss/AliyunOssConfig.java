@@ -18,15 +18,10 @@ public class AliyunOssConfig {
     /**
      * 负载地址
      */
-    private String endpoint;
+    private String endpoint = "oss-cn-hangzhou.aliyuncs.com";
 
     /**
      * bucket名称
      */
     private String bucketName;
-
-    /**
-     * 区域
-     */
-    private String region = "cn-chengdu";
 }

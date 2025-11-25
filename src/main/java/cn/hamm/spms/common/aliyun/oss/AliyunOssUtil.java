@@ -1,5 +1,6 @@
 package cn.hamm.spms.common.aliyun.oss;
 
+import cn.hamm.airpower.datetime.DateTimeUtil;
 import cn.hamm.spms.common.aliyun.AliyunConfig;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+
+import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
 
 /**
  * <h1>阿里云OSS工具类</h1>
@@ -33,15 +36,34 @@ public class AliyunOssUtil {
      */
     public InputStream download(String path) {
         OSS ossClient = getClient();
-        try {
-            OSSObject ossObject = ossClient.getObject(aliyunOssConfig.getBucketName(), path);
-            return ossObject.getObjectContent();
-        } catch (Exception ignored) {
-        }
-        if (ossClient != null) {
-            ossClient.shutdown();
-        }
-        return null;
+        PARAM_INVALID.whenEmpty(aliyunOssConfig.getBucketName(), "请配置阿里云的 BucketName");
+        OSSObject ossObject = ossClient.getObject(aliyunOssConfig.getBucketName(), path);
+        ossClient.shutdown();
+        return ossObject.getObjectContent();
+    }
+
+    /**
+     * 获取文件URL
+     *
+     * @param path 文件路径
+     * @return 文件URL
+     */
+    public String getUrl(String path) {
+        OSS ossClient = getClient();
+        String url = ossClient.generatePresignedUrl(getBucketName(), path, DateTimeUtil.addDays(7)).toString();
+        ossClient.shutdown();
+        return url;
+    }
+
+    /**
+     * 获取BucketName
+     *
+     * @return BucketName
+     */
+    private String getBucketName() {
+        String bucketName = aliyunOssConfig.getBucketName();
+        PARAM_INVALID.whenEmpty(bucketName, "请配置阿里云的 BucketName");
+        return bucketName;
     }
 
     /**
@@ -52,6 +74,7 @@ public class AliyunOssUtil {
      */
     public void upload(String fileName, byte[] bytes) {
         OSS ossClient = getClient();
+        PARAM_INVALID.whenEmpty(aliyunOssConfig.getBucketName(), "请配置阿里云的 BucketName");
         ossClient.putObject(aliyunOssConfig.getBucketName(), fileName, new ByteArrayInputStream(bytes));
         ossClient.shutdown();
     }
@@ -62,7 +85,10 @@ public class AliyunOssUtil {
      * @return 客户端
      */
     private OSS getClient() {
+        PARAM_INVALID.whenEmpty(aliyunConfig.getAccessKeyId(), "请配置阿里云的 AccessKeyId");
+        PARAM_INVALID.whenEmpty(aliyunConfig.getAccessKeySecret(), "请配置阿里云的 AccessKeySecret");
         CredentialsProvider credentialsProvider = new DefaultCredentialProvider(aliyunConfig.getAccessKeyId(), aliyunConfig.getAccessKeySecret());
+        PARAM_INVALID.whenEmpty(aliyunOssConfig.getEndpoint(), "请配置阿里云的 Endpoint");
         return new OSSClientBuilder().build(aliyunOssConfig.getEndpoint(), credentialsProvider);
     }
 }
