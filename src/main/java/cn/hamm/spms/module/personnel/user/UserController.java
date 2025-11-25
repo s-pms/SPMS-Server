@@ -53,7 +53,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
 
     @Autowired
     private PersonalTokenService personalTokenService;
-    
+
     @Autowired
     private UserRoleService userRoleService;
 
@@ -126,8 +126,8 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Permission(authorize = false)
     @PostMapping("createMyPersonalToken")
     public Json createMyPersonalToken(@RequestBody @Validated(WhenAdd.class) PersonalTokenEntity personal) {
-        long id = personalTokenService.add(personal.setUser(new UserEntity().setId(getCurrentUserId())));
-        String token = personalTokenService.get(id).getToken();
+        PersonalTokenEntity personalToken = personalTokenService.add(personal.setUser(new UserEntity().setId(getCurrentUserId())));
+        String token = personalToken.getToken();
         return Json.data(token, "创建成功");
     }
 
@@ -238,8 +238,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
     }
 
     @Override
-    protected void afterAdd(long id, @NotNull UserEntity source) {
-        UserEntity user = new UserEntity().setId(id);
+    protected void afterAdd(@NotNull UserEntity user, @NotNull UserEntity source) {
         source.getRoleList().forEach(role -> userRoleService.add(new UserRoleEntity()
                 .setUser(user)
                 .setRole(role.copyOnlyId())
@@ -251,8 +250,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
     }
 
     @Override
-    protected void afterUpdate(long id, @NotNull UserEntity source) {
-        UserEntity user = new UserEntity().setId(id);
+    protected void afterUpdate(@NotNull UserEntity user, @NotNull UserEntity source) {
         userRoleService.filter(new UserRoleEntity().setUser(user))
                 .forEach(userRole -> userRoleService.delete(userRole.getId()));
         source.getRoleList().forEach(role -> userRoleService.add(new UserRoleEntity()

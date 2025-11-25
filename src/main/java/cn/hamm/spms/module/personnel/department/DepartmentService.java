@@ -28,8 +28,8 @@ public class DepartmentService extends BaseService<DepartmentEntity, DepartmentR
     private static final String ORDER_FIELD_NAME = "orderNo";
 
     @Override
-    protected void beforeDelete(long id) {
-        TreeUtil.ensureNoChildrenBeforeDelete(this, id);
+    protected void beforeDelete(@NotNull DepartmentEntity department) {
+        TreeUtil.ensureNoChildrenBeforeDelete(this, department.getId());
     }
 
     @Override

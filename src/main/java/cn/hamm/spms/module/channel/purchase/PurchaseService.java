@@ -141,7 +141,7 @@ public class PurchaseService extends AbstractBaseBillService<
                 .setReason(reason)
                 .setDetails(details)
                 .setStatus(PurchaseStatus.AUDITING.getKey());
-        long id = add(purchaseBill);
-        return "采购单已经创建成功，单号为 " + get(id).getBillCode();
+        PurchaseEntity purchase = add(purchaseBill);
+        return "采购单已经创建成功，单号为 " + purchase.getBillCode();
     }
 }

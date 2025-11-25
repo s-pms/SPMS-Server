@@ -37,10 +37,9 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     }
 
     @Override
-    protected void beforeDelete(long id) {
-        PermissionEntity permission = get(id);
+    protected void beforeDelete(@NotNull PermissionEntity permission) {
         FORBIDDEN_DELETE.when(permission.getIsSystem(), "系统内置权限无法被删除!");
-        TreeUtil.ensureNoChildrenBeforeDelete(this, id);
+        TreeUtil.ensureNoChildrenBeforeDelete(this, permission.getId());
     }
 
     @Override
@@ -55,14 +54,14 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                 .setIdentity("mcp:tools")
                 .setType(PermissionType.MCP.getKey())
                 .setIsSystem(true);
-        long parentId = add(parent);
+        parent = add(parent);
         for (McpTool mcpTool : list) {
             add(new PermissionEntity()
                     .setName(mcpTool.getName())
                     .setIdentity(McpService.getPermissionIdentity(mcpTool))
                     .setType(PermissionType.MCP.getKey())
                     .setIsSystem(true)
-                    .setParentId(parentId));
+                    .setParentId(parent.getParentId()));
         }
     }
 
@@ -75,12 +74,12 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                         .setName(permission.getName())
                         .setIdentity(permission.getIdentity())
                         .setIsSystem(true);
-                exist.setId(add(exist));
+                exist = add(exist);
             } else {
                 exist.setName(permission.getName())
                         .setIdentity(permission.getIdentity())
                         .setIsSystem(true);
-                update(exist);
+                exist = update(exist);
             }
             exist = get(exist.getId());
             for (PermissionEntity subPermission : permission.getChildren()) {

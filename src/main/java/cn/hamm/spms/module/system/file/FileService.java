@@ -98,8 +98,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
                     .setName(multipartFile.getOriginalFilename())
                     .setHashMd5(hashMd5)
                     .setUrl(relativeFilePath);
-            long fileId = add(file);
-            return get(fileId);
+            return add(file);
         } catch (Exception exception) {
             log.error(exception.getMessage(), exception);
             throw new ServiceException(exception);

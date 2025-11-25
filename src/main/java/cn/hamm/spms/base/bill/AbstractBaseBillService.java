@@ -181,16 +181,16 @@ public abstract class AbstractBaseBillService<
     }
 
     @Override
-    protected final void afterAdd(long id, @NotNull E source) {
-        saveDetails(id, source.getDetails());
+    protected final void afterAdd(@NotNull E bill, @NotNull E source) {
+        saveDetails(bill.getId(), source.getDetails());
         ConfigFlag configFlag = getAutoAuditConfigFlag();
         if (Objects.nonNull(configFlag)) {
             ConfigEntity config = Services.getConfigService().get(configFlag);
             if (config.booleanConfig()) {
-                audit(id);
+                audit(bill.getId());
             }
         }
-        TaskUtil.run(() -> afterBillAdd(id));
+        TaskUtil.run(() -> afterBillAdd(bill.getId()));
     }
 
     /**
@@ -203,8 +203,8 @@ public abstract class AbstractBaseBillService<
     }
 
     @Override
-    protected final void afterUpdate(long id, @NotNull E source) {
-        saveDetails(id, source.getDetails());
+    protected final void afterUpdate(@NotNull E bill, @NotNull E source) {
+        saveDetails(bill.getId(), source.getDetails());
     }
 
     /**

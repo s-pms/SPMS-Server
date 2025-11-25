@@ -129,17 +129,16 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         InputEntity input = new InputEntity();
         input.setType(InputType.PRODUCTION.getKey());
         input.setOrder(order);
-        long inputId = inputService.add(input);
+        InputEntity inputSaved = inputService.add(input);
 
         List<InputDetailEntity> details = new ArrayList<>();
         details.add(new InputDetailEntity()
                 .setQuantity(order.getFinishQuantity())
-                .setBillId(inputId)
+                .setBillId(inputSaved.getId())
                 .setMaterial(order.getMaterial())
         );
-        input = inputService.get(inputId);
-        input.setDetails(details);
-        inputService.update(input);
+        inputSaved.setDetails(details);
+        inputService.update(inputSaved);
     }
 
     @Override

@@ -44,10 +44,9 @@ public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>
     }
 
     @Override
-    protected final void beforeDelete(long id) {
-        E entity = service.get(id);
+    protected void beforeDelete(@NotNull E entity) {
         FORBIDDEN_EDIT.when(entity.getIsPublished(), "无法删除已经发布的数据");
-        beforeAppDelete(id);
+        beforeAppDelete(entity.getId());
     }
 
     @Description("发布")

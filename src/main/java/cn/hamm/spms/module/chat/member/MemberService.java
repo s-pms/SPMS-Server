@@ -34,9 +34,9 @@ public class MemberService extends BaseService<MemberEntity, MemberRepository> {
      *
      * @param userId 用户ID
      * @param roomId 房间ID
-     * @return 成员ID
+     * @return 成员
      */
-    public long addMember(long userId, long roomId) {
+    public MemberEntity addMember(long userId, long roomId) {
         MemberEntity member = getMember(userId, roomId);
         FORBIDDEN_EXIST.whenNotNull(member);
         // 没有查到成员信息
@@ -63,7 +63,7 @@ public class MemberService extends BaseService<MemberEntity, MemberRepository> {
     public MemberEntity getMemberWithAutoCreate(long userId, long roomId) {
         MemberEntity member = getMember(userId, roomId);
         if (Objects.isNull(member)) {
-            return get(addMember(userId, roomId));
+            return addMember(userId, roomId);
         }
         return member;
     }

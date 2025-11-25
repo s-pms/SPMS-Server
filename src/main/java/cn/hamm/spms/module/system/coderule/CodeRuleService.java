@@ -90,8 +90,7 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
     }
 
     @Override
-    protected void beforeDelete(long id) {
-        CodeRuleEntity codeRule = get(id);
+    protected void beforeDelete(@NotNull CodeRuleEntity codeRule) {
         FORBIDDEN_DELETE.when(codeRule.getIsSystem(), "内置编码规则不能删除!");
     }
 }

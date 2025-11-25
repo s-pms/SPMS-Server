@@ -47,7 +47,7 @@ public class OpenAppController extends BaseController<OpenAppEntity, OpenAppServ
                 .setAppSecret(service.createAppSecret())
         ;
         service.resetKeyPair(openApp);
-        openApp = service.get(service.add(openApp));
+        openApp = service.add(openApp);
         return Json.data(String.format("应用名称: %s\n\nAppKey:\n%s\n\nAppSecret:\n%s\n\n公钥:\n%s", openApp.getAppName(), openApp.getAppKey(), openApp.getAppSecret(), openApp.getPublicKey()));
     }
 

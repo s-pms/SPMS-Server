@@ -349,8 +349,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         ConfigEntity configuration = configService.get(ConfigFlag.AUTO_REGISTER_EMAIL_LOGIN);
         if (configuration.booleanConfig()) {
             // 注册一个用户
-            long userId = registerUserViaEmail(user.getEmail());
-            existUser = get(userId);
+            existUser = registerUserViaEmail(user.getEmail());
         }
         PARAM_INVALID.whenNull(existUser, "登录的邮箱账户不存在");
         return existUser;
@@ -360,9 +359,9 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * 邮箱注册
      *
      * @param email 邮箱
-     * @return 注册的用户ID
+     * @return 注册的用户
      */
-    public long registerUserViaEmail(@NotNull String email) {
+    public UserEntity registerUserViaEmail(@NotNull String email) {
         return registerUserViaEmail(email, RandomUtil.randomString());
     }
 
@@ -371,9 +370,9 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      *
      * @param email    邮箱
      * @param password 密码
-     * @return 注册的用户ID
+     * @return 注册的用户
      */
-    public long registerUserViaEmail(@NotNull String email, String password) {
+    public UserEntity registerUserViaEmail(@NotNull String email, String password) {
         // 昵称默认为邮箱账号 @ 前面的
         String nickname = email.split("@")[0];
         String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
@@ -419,9 +418,8 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     @Override
-    protected void beforeDelete(long id) {
-        UserEntity entity = get(id);
-        FORBIDDEN_DELETE.when(entity.isRootUser(), "系统内置用户无法被删除!");
+    protected void beforeDelete(@NotNull UserEntity user) {
+        FORBIDDEN_DELETE.when(user.isRootUser(), "系统内置用户无法被删除!");
     }
 
     @Override
@@ -438,8 +436,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     @Override
-    protected void beforeDisable(long id) {
-        UserEntity existUser = get(id);
+    protected void beforeDisable(@NotNull UserEntity existUser) {
         FORBIDDEN_DISABLED_NOT_ALLOWED.when(existUser.isRootUser(), "系统内置用户无法被禁用!");
     }
 

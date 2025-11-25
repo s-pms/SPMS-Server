@@ -28,9 +28,9 @@ public class RoomController extends BaseController<RoomEntity, RoomService, Room
     @Description("创建房间")
     @PostMapping("create")
     @Permission(authorize = false)
-    public Json create(@RequestBody @Validated(WhenCreate.class) RoomEntity room) {
-        Long id = service.create(room, getCurrentUserId());
-        return Json.entity(id, "房间创建成功");
+    public Json create(@RequestBody @Validated(WhenCreate.class) RoomEntity source) {
+        RoomEntity room = service.create(source, getCurrentUserId());
+        return Json.entity(room.getId(), "房间创建成功");
     }
 
     @Description("获取我的房间")

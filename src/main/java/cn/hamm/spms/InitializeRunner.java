@@ -199,10 +199,10 @@ public class InitializeRunner implements CommandLineRunner {
         if (Objects.nonNull(user)) {
             return;
         }
-        long departmentId = departmentService.add(new DepartmentEntity().setCode("a1").setName("生产部"));
-        departmentService.add(new DepartmentEntity().setName("材料部").setCode("aaa1").setParentId(departmentId));
+        DepartmentEntity department = departmentService.add(new DepartmentEntity().setCode("a1").setName("生产部"));
+        departmentService.add(new DepartmentEntity().setName("材料部").setCode("aaa1").setParentId(department.getId()));
         String salt = RandomUtil.randomString(UserService.PASSWORD_SALT_LENGTH);
-        long userId = userService.add(new UserEntity()
+        user = userService.add(new UserEntity()
                 .setNickname("凌小云")
                 .setPhone("17666666666")
                 .setEmail("admin@hamm.cn")
@@ -216,8 +216,8 @@ public class InitializeRunner implements CommandLineRunner {
                 .setPassword(PasswordUtil.encode("Aa123456", salt))
                 .setSalt(salt));
         userDepartmentService.add(new UserDepartmentEntity()
-                .setUser(new UserEntity().setId(userId))
-                .setDepartment(new DepartmentEntity().setId(departmentId))
+                .setUser(user)
+                .setDepartment(department)
         );
         System.out.println("---------------------------------");
         user = userService.getMaybeNull(1L);
@@ -266,7 +266,7 @@ public class InitializeRunner implements CommandLineRunner {
 
         UnitEntity unit = new UnitEntity();
         unit.setName("台");
-        unit = unitService.get(unitService.add(unit));
+        unit = unitService.add(unit);
 
         MaterialEntity material = new MaterialEntity()
                 .setMaterialType(MaterialType.PURCHASE.getKey())
@@ -275,26 +275,26 @@ public class InitializeRunner implements CommandLineRunner {
                 .setUnit(unit)
                 .setPurchasePrice(28000D)
                 .setSalePrice(29999D);
-        material = materialService.get(materialService.add(material));
+        material = materialService.add(material);
 
         CustomerEntity customer = new CustomerEntity();
         customer.setName("腾讯科技").setPhone("17666666666");
-        customer = customerService.get(customerService.add(customer));
+        customer = customerService.add(customer);
 
         SupplierEntity supplier = new SupplierEntity();
         supplier.setName("Apple中国").setPhone("17666666666");
-        supplier = supplierService.get(supplierService.add(supplier));
+        supplier = supplierService.add(supplier);
 
         SalePriceEntity salePrice = new SalePriceEntity();
         salePrice.setCustomer(customer).setPrice(29999D).setMaterial(material);
-        salePriceService.get(salePriceService.add(salePrice));
+        salePriceService.add(salePrice);
 
         PurchasePriceEntity purchasePrice = new PurchasePriceEntity();
         purchasePrice.setSupplier(supplier).setPrice(28000D).setMaterial(material);
-        purchasePriceService.get(purchasePriceService.add(purchasePrice));
+        purchasePriceService.add(purchasePrice);
 
         StorageEntity storage = new StorageEntity().setName("东部大仓");
-        storage = storageService.get(storageService.add(storage));
+        storageService.add(storage);
 
         for (int i = 0; i < TWO; i++) {
             storageService.add(new StorageEntity()
@@ -304,7 +304,7 @@ public class InitializeRunner implements CommandLineRunner {
         }
 
         storage = new StorageEntity().setName("西部大仓");
-        storage = storageService.get(storageService.add(storage));
+        storage = storageService.add(storage);
 
         for (int i = 0; i < TWO; i++) {
             storageService.add(new StorageEntity()
@@ -313,56 +313,56 @@ public class InitializeRunner implements CommandLineRunner {
             );
         }
 
-        long operationIdKeyboard = operationService.add(new OperationEntity().setName("键盘安装"));
-        long operationIdScreen = operationService.add(new OperationEntity().setName("屏幕贴膜"));
-        long operationIdSystem = operationService.add(new OperationEntity().setName("系统安装"));
+        OperationEntity operationKeyboard = operationService.add(new OperationEntity().setName("键盘安装"));
+        OperationEntity operationScreen = operationService.add(new OperationEntity().setName("屏幕贴膜"));
+        OperationEntity operationSystem = operationService.add(new OperationEntity().setName("系统安装"));
 
-        long materialIdKeyboard = materialService.add(new MaterialEntity().setName("键盘").setMaterialType(MaterialType.PURCHASE.getKey()).setUnit(unit));
-        long materialIdScreen = materialService.add(new MaterialEntity().setName("屏幕").setMaterialType(MaterialType.PURCHASE.getKey()).setUnit(unit));
+        MaterialEntity materialKeyboard = materialService.add(new MaterialEntity().setName("键盘").setMaterialType(MaterialType.PURCHASE.getKey()).setUnit(unit));
+        MaterialEntity materialScreen = materialService.add(new MaterialEntity().setName("屏幕").setMaterialType(MaterialType.PURCHASE.getKey()).setUnit(unit));
 
-        long bomId = bomService.add(new BomEntity().setName("笔记本电脑清单").setType(BomType.NORMAL.getKey()).setDetails(
+        BomEntity bomComputer = bomService.add(new BomEntity().setName("笔记本电脑清单").setType(BomType.NORMAL.getKey()).setDetails(
                 new HashSet<>(Arrays.asList(
-                        new BomDetailEntity().setMaterial(materialService.get(materialIdKeyboard)).setQuantity(1D),
-                        new BomDetailEntity().setMaterial(materialService.get(materialIdScreen)).setQuantity(1D)
+                        new BomDetailEntity().setMaterial(materialKeyboard).setQuantity(1D),
+                        new BomDetailEntity().setMaterial(materialScreen).setQuantity(1D)
                 ))
         ));
 
-        long bomIdKeyboard = bomService.add(new BomEntity().setName("键盘安装清单").setType(BomType.OPERATION.getKey()).setDetails(
+        BomEntity bomKeyboard = bomService.add(new BomEntity().setName("键盘安装清单").setType(BomType.OPERATION.getKey()).setDetails(
                 new HashSet<>(Collections.singletonList(
-                        new BomDetailEntity().setMaterial(materialService.get(materialIdKeyboard)).setQuantity(1D)
+                        new BomDetailEntity().setMaterial(materialKeyboard).setQuantity(1D)
                 ))
         ));
-        long bomIdScreen = bomService.add(new BomEntity().setName("屏幕贴膜清单").setType(BomType.OPERATION.getKey()).setDetails(
+        BomEntity bomIdScreen = bomService.add(new BomEntity().setName("屏幕贴膜清单").setType(BomType.OPERATION.getKey()).setDetails(
                 new HashSet<>(Collections.singletonList(
-                        new BomDetailEntity().setMaterial(materialService.get(materialIdScreen)).setQuantity(1D)
+                        new BomDetailEntity().setMaterial(materialScreen).setQuantity(1D)
                 ))
         ));
 
-        routingService.add(new RoutingEntity().setBom(bomService.get(bomId))
+        routingService.add(new RoutingEntity().setBom(bomComputer)
                 .setName("笔记本安装")
                 .setMaterial(material)
                 .setDetails(Arrays.asList(
-                        new RoutingOperationEntity().setBom(bomService.get(bomIdKeyboard))
+                        new RoutingOperationEntity().setBom(bomKeyboard)
                                 .setIsAutoNext(true)
-                                .setOperation(operationService.get(operationIdKeyboard)),
-                        new RoutingOperationEntity().setBom(bomService.get(bomIdScreen))
+                                .setOperation(operationKeyboard),
+                        new RoutingOperationEntity().setBom(bomIdScreen)
                                 .setIsAutoNext(true)
-                                .setOperation(operationService.get(operationIdScreen)),
-                        new RoutingOperationEntity().setOperation(operationService.get(operationIdSystem))
+                                .setOperation(operationScreen),
+                        new RoutingOperationEntity().setOperation(operationSystem)
                 ))
         );
 
         StructureEntity structure = new StructureEntity().setName("笔记本电脑产线");
-        structure = structureService.get(structureService.add(structure));
+        structureService.add(structure);
 
         for (int i = 0; i < TWO; i++) {
             structureService.add(new StructureEntity()
                     .setParentId(structure.getId())
                     .setName(String.format("工位%s", (i + 1)))
                     .setOperationList(new HashSet<>(Arrays.asList(
-                            operationService.get(operationIdKeyboard),
-                            operationService.get(operationIdScreen),
-                            operationService.get(operationIdSystem)
+                            operationKeyboard,
+                            operationScreen,
+                            operationSystem
                     )))
             );
         }

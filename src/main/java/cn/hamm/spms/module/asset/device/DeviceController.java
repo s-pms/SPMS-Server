@@ -35,7 +35,7 @@ public class DeviceController extends BaseController<
     private RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    protected DeviceEntity afterGetDetail(DeviceEntity device) {
+    protected DeviceEntity afterGetDetail(@NotNull DeviceEntity device) {
         return service.getDeviceParameters(device);
     }
 
@@ -80,7 +80,7 @@ public class DeviceController extends BaseController<
     }
 
     @Override
-    protected DeviceEntity beforeAdd(DeviceEntity device) {
+    protected DeviceEntity beforeAdd(@NotNull DeviceEntity device) {
         return service.getDeviceParameters(device);
     }
 }

@@ -51,8 +51,8 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
         List<E> savedDetails = new ArrayList<>(details.size());
         details.forEach(detail -> {
             detail.setBillId(billId);
-            long detailId = add(detail);
-            savedDetails.add(get(detailId));
+            E saved = add(detail);
+            savedDetails.add(saved);
         });
         return savedDetails;
     }
