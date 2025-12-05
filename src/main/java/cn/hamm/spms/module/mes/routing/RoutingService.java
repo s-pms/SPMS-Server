@@ -28,13 +28,13 @@ public class RoutingService extends BaseService<RoutingEntity, RoutingRepository
     private static final String ORDER_FIELD_NAME = "orderNo";
 
     @Override
-    protected void afterUpdate(@NotNull RoutingEntity routing, @NotNull RoutingEntity source) {
+    protected void afterAppUpdate(@NotNull RoutingEntity routing, @NotNull RoutingEntity source) {
         Services.getRoutingOperationService().deleteByRoutingId(routing.getId());
         afterAdd(routing, source);
     }
 
     @Override
-    protected void afterAdd(@NotNull RoutingEntity routing, @NotNull RoutingEntity source) {
+    protected void afterAppAdd(@NotNull RoutingEntity routing, @NotNull RoutingEntity source) {
         List<RoutingOperationEntity> routingOperationList = source.getDetails();
         RoutingOperationService routingOperationService = Services.getRoutingOperationService();
         for (RoutingOperationEntity routingOperation : routingOperationList) {
@@ -44,7 +44,7 @@ public class RoutingService extends BaseService<RoutingEntity, RoutingRepository
     }
 
     @Override
-    protected RoutingEntity afterGet(@NotNull RoutingEntity routing) {
+    protected RoutingEntity afterAppGet(@NotNull RoutingEntity routing) {
         RoutingOperationEntity filter = new RoutingOperationEntity().setRoutingId(routing.getId());
         List<RoutingOperationEntity> details = Services.getRoutingOperationService().filter(filter, new Sort()
                 .setField(ORDER_FIELD_NAME)

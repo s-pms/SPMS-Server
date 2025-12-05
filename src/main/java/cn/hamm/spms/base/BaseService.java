@@ -73,4 +73,29 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
     protected void beforePublish(@NotNull E entity) {
         log.info("单据发布前，ID:{}", entity.getId());
     }
+
+    @Override
+    protected E afterGet(@NotNull E entity) {
+        return afterAppGet(entity);
+    }
+
+    protected E afterAppGet(@NotNull E entity) {
+        return entity;
+    }
+
+    @Override
+    protected final void afterAdd(@NotNull E entity, @NotNull E source) {
+        afterAppAdd(entity, source);
+    }
+
+    protected void afterAppAdd(@NotNull E entity, @NotNull E source) {
+    }
+
+    @Override
+    protected void afterUpdate(@NotNull E entity, @NotNull E source) {
+        afterAppUpdate(entity, source);
+    }
+
+    protected void afterAppUpdate(@NotNull E entity, @NotNull E source) {
+    }
 }

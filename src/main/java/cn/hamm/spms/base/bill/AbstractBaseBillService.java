@@ -175,13 +175,25 @@ public abstract class AbstractBaseBillService<
     }
 
     @Override
-    protected final E afterGet(@NotNull E bill) {
+    protected final E afterAppGet(@NotNull E bill) {
         List<D> details = detailService.getAllByBillId(bill.getId());
-        return bill.setDetails(details);
+        bill.setDetails(details);
+        return afterBillGet(bill);
+    }
+
+    /**
+     * 单据获取后置
+     *
+     * @param bill 单据
+     * @return 单据
+     */
+    protected E afterBillGet(@NotNull E bill) {
+        log.info("单据获取后置，单据ID:{}", bill.getId());
+        return bill;
     }
 
     @Override
-    protected final void afterAdd(@NotNull E bill, @NotNull E source) {
+    protected final void afterAppAdd(@NotNull E bill, @NotNull E source) {
         saveDetails(bill.getId(), source.getDetails());
         ConfigFlag configFlag = getAutoAuditConfigFlag();
         if (Objects.nonNull(configFlag)) {
@@ -203,8 +215,19 @@ public abstract class AbstractBaseBillService<
     }
 
     @Override
-    protected final void afterUpdate(@NotNull E bill, @NotNull E source) {
+    protected final void afterAppUpdate(@NotNull E bill, @NotNull E source) {
         saveDetails(bill.getId(), source.getDetails());
+        afterBillUpdate(bill, source);
+    }
+
+    /**
+     * 单据更新后置
+     *
+     * @param bill   单据
+     * @param source 源数据
+     */
+    protected void afterBillUpdate(@NotNull E bill, @NotNull E source) {
+        log.info("单据更新后置，单据ID:{}", bill.getId());
     }
 
     /**
