@@ -75,22 +75,17 @@ public class BaseBillController<
         E exist = service.get(bill.getId());
         FORBIDDEN.when(!service.canEdit(exist), "该单据状态下无法编辑");
         service.setAuditing(bill);
+        beforeBillUpdate(bill);
         return bill;
-    }
-
-    @Override
-    protected final E beforeAdd(@NotNull E bill) {
-        return beforeAppAdd(bill);
     }
 
     /**
-     * 添加前置方法
+     * 单据更新前置方法
      *
      * @param bill 单据
-     * @return 单据
      */
-    protected E beforeAppAdd(@NotNull E bill) {
-        return bill;
+    protected void beforeBillUpdate(@NotNull E bill) {
+        log.info("单据更新，单据ID：{}", bill.getId());
     }
 
     /**
