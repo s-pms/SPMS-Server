@@ -44,13 +44,13 @@ public class PickingEntity extends AbstractBaseBillEntity<PickingEntity, Picking
     private String billCode;
 
     @Description("领料状态")
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '领料状态'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '领料状态'")
     @Dictionary(value = PickingStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     @ReadOnly
     private Integer status;
 
     @Description("领料类型")
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '领料类型'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '领料类型'")
     @Dictionary(value = PickingType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 

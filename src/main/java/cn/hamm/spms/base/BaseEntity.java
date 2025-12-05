@@ -25,7 +25,7 @@ import static cn.hamm.airpower.export.Export.Type.BOOLEAN;
 public class BaseEntity<E extends BaseEntity<E>> extends CurdEntity<E> {
     @Description("是否已发布")
     @ReadOnly
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否已发布'")
+    @Column(columnDefinition = "bit(1)default 0 comment '是否已发布'")
     @Export(BOOLEAN)
     private Boolean isPublished;
 

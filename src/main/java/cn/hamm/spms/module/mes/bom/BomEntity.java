@@ -54,13 +54,13 @@ public class BomEntity extends BaseEntity<BomEntity> {
     private String name;
 
     @Description("配方状态")
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '配方状态'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '配方状态'")
     @Dictionary(value = BomStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     @ReadOnly
     private Integer status;
 
     @Description("配方类型")
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '配方类型'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '配方类型'")
     @Dictionary(value = BomType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 

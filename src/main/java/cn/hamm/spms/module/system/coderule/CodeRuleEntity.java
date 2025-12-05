@@ -33,19 +33,19 @@ import org.hibernate.validator.constraints.Range;
 @Description("编码规则")
 public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     @Description("规则字段")
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '规则字段'", unique = true)
+    @Column(columnDefinition = "int UNSIGNED default 0 comment '规则字段'", unique = true)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "规则字段不能为空")
     @Dictionary(value = CodeRuleField.class, groups = {WhenUpdate.class, WhenAdd.class})
     private Integer ruleField;
 
     @Description("流水号更新方式")
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '流水号更新方式'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '流水号更新方式'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "流水号更新方式不能为空")
     @Dictionary(value = SerialNumberUpdate.class, groups = {WhenUpdate.class, WhenAdd.class})
     private Integer snType;
 
     @Description("流水号起始长度")
-    @Column(columnDefinition = "tinyint UNSIGNED default 4 comment '流水号起始长度'")
+    @Column(columnDefinition = "int UNSIGNED default 4 comment '流水号起始长度'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "流水号起始长度不能为空")
     @Range(min = 1, max = 10, message = "流水号只允许{min}-{max}位")
     private Integer snLength;
@@ -69,7 +69,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
 
     @Description("内置参数")
     @ReadOnly
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否内置参数'")
+    @Column(columnDefinition = "bit(1)default 0 comment '是否内置参数'")
     private Boolean isSystem;
 
     /**

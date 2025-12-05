@@ -42,13 +42,13 @@ public class ParameterEntity extends BaseEntity<ParameterEntity> {
 
     @Description("内置参数")
     @ReadOnly
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否内置参数'")
+    @Column(columnDefinition = "bit(1)default 0 comment '是否内置参数'")
     private Boolean isSystem;
 
     @Description("数据类型")
     @Dictionary(value = ReportDataType.class, groups = {WhenAdd.class, WhenUpdate.class})
     @NotNull(groups = {WhenAdd.class, WhenUpdate.class}, message = "数据类型不允许为空")
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '数据类型'")
+    @Column(columnDefinition = "int UNSIGNED default 0 comment '数据类型'")
     private Integer dataType;
 
     /**

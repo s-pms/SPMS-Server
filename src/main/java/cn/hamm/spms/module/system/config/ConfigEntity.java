@@ -55,13 +55,13 @@ public class ConfigEntity extends BaseEntity<ConfigEntity> {
     private String config;
 
     @Description("配置类型")
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '配置类型'")
+    @Column(columnDefinition = "int UNSIGNED default 0 comment '配置类型'")
     @Dictionary(value = ConfigType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 
     @Description("内置配置")
     @ReadOnly
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '内置配置'")
+    @Column(columnDefinition = "bit(1)default 0 comment '内置配置'")
     private Boolean isSystem;
 
     /**

@@ -40,11 +40,11 @@ public class UserThirdLoginEntity extends BaseEntity<UserThirdLoginEntity> {
     private String nickName;
 
     @Description("性别")
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '性别'")
+    @Column(columnDefinition = "int UNSIGNED default 0 comment '性别'")
     private Integer gender;
 
     @Description("所属平台")
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '所属平台'")
+    @Column(columnDefinition = "int UNSIGNED default 0 comment '所属平台'")
     private Integer platform;
 
     @Description("用户")

@@ -50,7 +50,7 @@ public class DepartmentEntity extends BaseEntity<DepartmentEntity> implements IT
     private Long parentId;
 
     @Description("排序号")
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '排序号'")
+    @Column(columnDefinition = "int UNSIGNED default 0 comment '排序号'")
     private Integer orderNo;
 
     @Description("树子集节点数组")

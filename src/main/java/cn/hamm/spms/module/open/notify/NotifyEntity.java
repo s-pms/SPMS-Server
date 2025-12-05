@@ -32,12 +32,12 @@ import org.hibernate.validator.constraints.Length;
 public class NotifyEntity extends BaseEntity<NotifyEntity> {
     @Description("通知渠道")
     @Dictionary(value = NotifyChannel.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '通知渠道'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '通知渠道'")
     private Integer channel;
 
     @Description("通知场景")
     @Dictionary(value = NotifyScene.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '通知场景'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '通知场景'")
     private Integer scene;
 
     @Description("通知地址")

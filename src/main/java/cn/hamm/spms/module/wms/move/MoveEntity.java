@@ -43,7 +43,7 @@ public class MoveEntity extends AbstractBaseBillEntity<MoveEntity, MoveDetailEnt
     private String billCode;
 
     @Description("移库状态")
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '移库状态'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '移库状态'")
     @Dictionary(value = MoveStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer status;
 

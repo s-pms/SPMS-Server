@@ -59,7 +59,7 @@ public class PurchaseEntity extends AbstractBaseBillEntity<PurchaseEntity, Purch
     private Double totalRealPrice;
 
     @Description("采购状态")
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '采购状态'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '采购状态'")
     @Dictionary(value = PurchaseStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer status;
 }

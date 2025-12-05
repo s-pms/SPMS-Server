@@ -43,7 +43,7 @@ public class MemberEntity extends BaseEntity<MemberEntity> implements IMemberAct
 
     @Description("成员角色")
     @Dictionary(value = MemberRole.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Column(columnDefinition = "tinyint UNSIGNED default 6 comment '类型'")
+    @Column(columnDefinition = "int UNSIGNED default 6 comment '类型'")
     private Integer role;
 
     @Override

@@ -55,7 +55,7 @@ public class RoutingEntity extends BaseEntity<RoutingEntity> {
     @Description("工艺状态")
     @Dictionary(value = RoutingStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     @ReadOnly
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '工艺状态'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '工艺状态'")
     private Integer status;
 
     @Description("BOM信息")
@@ -63,7 +63,7 @@ public class RoutingEntity extends BaseEntity<RoutingEntity> {
     private BomEntity bom;
 
     @Description("使用工艺BOM")
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '使用工艺BOM'")
+    @Column(columnDefinition = "bit(1)default 0 comment '使用工艺BOM'")
     private Boolean isRoutingBom;
 
     @Description("工序配置列表")

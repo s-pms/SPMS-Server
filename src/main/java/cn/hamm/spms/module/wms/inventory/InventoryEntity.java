@@ -42,7 +42,7 @@ public class InventoryEntity extends BaseEntity<InventoryEntity> {
     private Double quantity;
 
     @Description("存储类型")
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '存储类型'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '存储类型'")
     @Dictionary(value = InventoryType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 

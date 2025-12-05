@@ -45,12 +45,12 @@ public class OutputEntity extends AbstractBaseBillEntity<OutputEntity, OutputDet
     private String billCode;
 
     @Description("出库状态")
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '出库状态'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '出库状态'")
     @Dictionary(value = OutputStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer status;
 
     @Description("出库类型")
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '出库类型'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '出库类型'")
     @Dictionary(value = OutputType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 

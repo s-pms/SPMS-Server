@@ -40,11 +40,11 @@ public class PermissionEntity extends BaseEntity<PermissionEntity> implements IP
     private String identity;
 
     @Description("系统权限")
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '系统权限'")
+    @Column(columnDefinition = "bit(1)default 0 comment '系统权限'")
     private Boolean isSystem;
 
     @Description("权限类型")
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '权限类型'")
+    @Column(columnDefinition = "int UNSIGNED default 0 comment '权限类型'")
     @Dictionary(value = PermissionType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 

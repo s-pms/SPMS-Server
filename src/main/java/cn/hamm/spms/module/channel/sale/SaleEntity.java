@@ -56,7 +56,7 @@ public class SaleEntity extends AbstractBaseBillEntity<SaleEntity, SaleDetailEnt
     private Double totalPrice;
 
     @Description("销售状态")
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '销售状态'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '销售状态'")
     @Dictionary(value = SaleStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer status;
 

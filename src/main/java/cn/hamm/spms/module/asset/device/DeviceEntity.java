@@ -61,13 +61,13 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAct
 
     @Description("设备状态")
     @ReadOnly
-    @Column(columnDefinition = "tinyint UNSIGNED default 4 comment '设备状态'")
+    @Column(columnDefinition = "int UNSIGNED default 4 comment '设备状态'")
     @Dictionary(value = DeviceStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer status;
 
     @Description("报警状态")
     @ReadOnly
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '报警状态'")
+    @Column(columnDefinition = "int UNSIGNED default 0 comment '报警状态'")
     @Dictionary(value = DeviceAlarm.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer alarm;
 
@@ -77,7 +77,7 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAct
     private Long partCount;
 
     @Description("开启采集")
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '开启采集'")
+    @Column(columnDefinition = "bit(1) default 1 comment '开启采集'")
     private Boolean isReporting;
 
     @Description("采集频率")

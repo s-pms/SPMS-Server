@@ -42,7 +42,7 @@ public class FileEntity extends BaseEntity<FileEntity> {
     private String url;
 
     @Description("存储平台")
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '存储平台'")
+    @Column(columnDefinition = "int UNSIGNED default 0 comment '存储平台'")
     private Integer platform;
 
     @Description("文件类别")

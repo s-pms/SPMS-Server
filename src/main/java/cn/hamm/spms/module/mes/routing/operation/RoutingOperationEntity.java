@@ -46,11 +46,11 @@ public class RoutingOperationEntity extends BaseEntity<RoutingOperationEntity> {
     private BomEntity bom;
 
     @Description("排序号")
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '排序号'")
+    @Column(columnDefinition = "int UNSIGNED default 0 comment '排序号'")
     private Integer orderNo;
 
     @Description("是否自动流转")
     @ReadOnly
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '是否自动流转'")
+    @Column(columnDefinition = "bit(1)default 0 comment '是否自动流转'")
     private Boolean isAutoNext;
 }

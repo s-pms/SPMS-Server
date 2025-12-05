@@ -44,12 +44,12 @@ public class PlanEntity extends AbstractBaseBillEntity<PlanEntity, PlanDetailEnt
     private String billCode;
 
     @Description("计划状态")
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '计划状态'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '计划状态'")
     @Dictionary(value = PlanStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer status;
 
     @Description("计划类型")
-    @Column(columnDefinition = "tinyint UNSIGNED default 1 comment '计划类型'")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '计划类型'")
     @Dictionary(value = PlanType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 

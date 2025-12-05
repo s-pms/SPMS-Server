@@ -81,7 +81,7 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
 
     @Description("性别")
     @Dictionary(value = UserGender.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Column(columnDefinition = "tinyint UNSIGNED default 0 comment '性别'")
+    @Column(columnDefinition = "int UNSIGNED default 0 comment '性别'")
     private Integer gender;
 
     @JsonProperty(access = WRITE_ONLY)
