@@ -59,33 +59,34 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
     @Override
     protected void afterDetailFinishAdded(long detailId, MoveDetailEntity moveDetail) {
         moveDetail = detailService.get(detailId);
-        if (moveDetail.getInventory().getQuantity() < moveDetail.getQuantity()) {
+        Double moveDetailQuantity = moveDetail.getQuantity();
+        InventoryEntity from = moveDetail.getInventory();
+        if (from.getQuantity() < moveDetailQuantity) {
             // 判断来源库存
-            FORBIDDEN.show("库存信息不足" + moveDetail.getQuantity());
+            FORBIDDEN.show("库存信息不足" + moveDetailQuantity);
         }
 
         // 扣除来源库存
-        InventoryEntity from = moveDetail.getInventory();
-        from.setQuantity(NumberUtil.subtract(from.getQuantity(), moveDetail.getQuantity()));
+        from.setQuantity(NumberUtil.subtract(from.getQuantity(), moveDetailQuantity));
         InventoryService inventoryService = Services.getInventoryService();
         inventoryService.update(from);
 
         // 查询移库单
         MoveEntity bill = get(moveDetail.getBillId());
-        InventoryEntity to = inventoryService.getByMaterialIdAndStorageId(moveDetail.getInventory().getMaterial().getId(), bill.getStorage().getId());
+        InventoryEntity to = inventoryService.getByMaterialIdAndStorageId(from.getMaterial().getId(), bill.getStorage().getId());
         if (Objects.nonNull(to)) {
             // 更新目标库存
-            to.setQuantity(NumberUtil.add(to.getQuantity(), moveDetail.getQuantity()));
+            to.setQuantity(NumberUtil.add(to.getQuantity(), moveDetailQuantity));
             inventoryService.update(to);
-        } else {
-            // 创建目标库存
-            to = new InventoryEntity()
-                    .setQuantity(moveDetail.getQuantity())
-                    .setMaterial(moveDetail.getInventory().getMaterial())
-                    .setStorage(bill.getStorage())
-                    .setType(InventoryType.STORAGE.getKey());
-            inventoryService.add(to);
+            return;
         }
+        // 创建目标库存
+        to = new InventoryEntity()
+                .setQuantity(moveDetailQuantity)
+                .setMaterial(from.getMaterial())
+                .setStorage(bill.getStorage())
+                .setType(InventoryType.STORAGE.getKey());
+        inventoryService.add(to);
     }
 
     @Override
