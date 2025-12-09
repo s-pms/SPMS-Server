@@ -60,14 +60,23 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
 
     @Override
     protected void afterDetailFinishAdded(long detailId, @NotNull OutputDetailEntity outputDetail) {
+        // 出库来源库存信息
         InventoryEntity inventory = outputDetail.getInventory();
         FORBIDDEN.whenNull(inventory, "请传入库存信息");
         OutputDetailEntity existDetail = detailService.get(outputDetail.getId());
         InventoryService inventoryService = Services.getInventoryService();
         inventory = inventoryService.get(inventory.getId());
         FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), existDetail.getMaterial().getId(), "物料信息不匹配");
-        FORBIDDEN.when(inventory.getQuantity() < outputDetail.getQuantity(), "库存信息不足" + outputDetail.getQuantity());
-        inventory.setQuantity(NumberUtil.subtract(inventory.getQuantity(), outputDetail.getQuantity()));
+
+        // 库存数量
+        Double inventoryQuantity = inventory.getQuantity();
+
+        // 出库数量
+        Double outputDetailQuantity = outputDetail.getQuantity();
+        FORBIDDEN.when(inventoryQuantity < outputDetailQuantity, "库存信息不足" + outputDetailQuantity);
+
+        // 更新库存
+        inventory.setQuantity(NumberUtil.subtract(inventoryQuantity, outputDetailQuantity));
         inventoryService.update(inventory);
 
         OutputEntity bill = get(existDetail.getBillId());
@@ -75,7 +84,7 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
         switch (outputType) {
             case SALE -> Services.getSaleDetailService().updateDetailQuantity(
                     bill.getSale().getId(),
-                    outputDetail.getQuantity(),
+                    outputDetailQuantity,
                     Services.getSaleService(),
                     detail -> FORBIDDEN.whenNotEquals(
                             detail.getMaterial().getId(),
@@ -83,7 +92,7 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
                             "物料信息不匹配"));
             case PICKING -> Services.getPickingDetailService().updateDetailQuantity(
                     bill.getPicking().getId(),
-                    outputDetail.getQuantity(),
+                    outputDetailQuantity,
                     Services.getPickingService(), detail -> FORBIDDEN.whenNotEquals(
                             detail.getMaterial().getId(),
                             existDetail.getMaterial().getId(),

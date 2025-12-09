@@ -5,6 +5,7 @@ import cn.hamm.airpower.dictionary.IDictionary;
 import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
+import cn.hamm.spms.module.factory.storage.StorageEntity;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.input.detail.InputDetailRepository;
@@ -66,25 +67,34 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
 
     @Override
     protected void afterDetailFinishAdded(long detailId, @NotNull InputDetailEntity inputDetail) {
-        if (Objects.isNull(inputDetail.getStorage()) || Objects.isNull(inputDetail.getStorage().getId())) {
+        // 入库仓库信息
+        StorageEntity storage = inputDetail.getStorage();
+        if (Objects.isNull(storage) || Objects.isNull(storage.getId())) {
             FORBIDDEN.show("请传入入库仓库");
             return;
         }
         InputDetailEntity existDetail = detailService.get(inputDetail.getId());
         InventoryService inventoryService = Services.getInventoryService();
-        InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(existDetail.getMaterial().getId(), inputDetail.getStorage().getId());
+
+        // 查询库存信息
+        InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(existDetail.getMaterial().getId(), storage.getId());
+
+        // 入库数量
+        Double inputDetailQuantity = inputDetail.getQuantity();
+        
         if (Objects.nonNull(inventory)) {
-            inventory.setQuantity(NumberUtil.add(inventory.getQuantity(), inputDetail.getQuantity()));
+            inventory.setQuantity(NumberUtil.add(inventory.getQuantity(), inputDetailQuantity));
             inventoryService.update(inventory);
-        } else {
-            inventory = new InventoryEntity()
-                    .setQuantity(inputDetail.getQuantity())
-                    .setMaterial(existDetail.getMaterial())
-                    .setStorage(inputDetail.getStorage())
-                    .setType(InventoryType.STORAGE.getKey());
-            inventoryService.add(inventory);
+            log.info("入库单明细更新库存完毕，单据ID: {}", inputDetail.getId());
+            return;
         }
-        log.info("入库单明细更新库存完毕，单据ID: {}", inputDetail.getId());
+        inventory = new InventoryEntity()
+                .setQuantity(inputDetailQuantity)
+                .setMaterial(existDetail.getMaterial())
+                .setStorage(storage)
+                .setType(InventoryType.STORAGE.getKey());
+        inventoryService.add(inventory);
+        log.info("入库单明细创建库存完毕，单据ID: {}", inputDetail.getId());
     }
 
     @Override

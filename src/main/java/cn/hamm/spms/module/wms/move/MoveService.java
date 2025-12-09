@@ -4,6 +4,7 @@ import cn.hamm.airpower.dictionary.IDictionary;
 import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
+import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import cn.hamm.spms.module.wms.input.InputEntity;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
@@ -59,7 +60,11 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
     @Override
     protected void afterDetailFinishAdded(long detailId, MoveDetailEntity moveDetail) {
         moveDetail = detailService.get(detailId);
+
+        // 本次移动数量
         Double moveDetailQuantity = moveDetail.getQuantity();
+
+        // 来源库存信息
         InventoryEntity from = moveDetail.getInventory();
         if (from.getQuantity() < moveDetailQuantity) {
             // 判断来源库存
@@ -71,9 +76,14 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
         InventoryService inventoryService = Services.getInventoryService();
         inventoryService.update(from);
 
+        // 物料信息
+        MaterialEntity material = from.getMaterial();
+
         // 查询移库单
         MoveEntity bill = get(moveDetail.getBillId());
-        InventoryEntity to = inventoryService.getByMaterialIdAndStorageId(from.getMaterial().getId(), bill.getStorage().getId());
+
+        // 查询目标库信息
+        InventoryEntity to = inventoryService.getByMaterialIdAndStorageId(material.getId(), bill.getStorage().getId());
         if (Objects.nonNull(to)) {
             // 更新目标库存
             to.setQuantity(NumberUtil.add(to.getQuantity(), moveDetailQuantity));
@@ -83,7 +93,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
         // 创建目标库存
         to = new InventoryEntity()
                 .setQuantity(moveDetailQuantity)
-                .setMaterial(from.getMaterial())
+                .setMaterial(material)
                 .setStorage(bill.getStorage())
                 .setType(InventoryType.STORAGE.getKey());
         inventoryService.add(to);
@@ -92,33 +102,38 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
     @Override
     protected void afterAllBillDetailFinished(long billId) {
         MoveEntity moveBill = get(billId);
-        InputEntity inputBill = new InputEntity()
-                .setType(InputType.MOVE.getKey())
-                .setMove(moveBill)
-                .setStatus(InputStatus.DONE.getKey());
-        OutputEntity outputBill = new OutputEntity()
-                .setType(OutputType.MOVE.getKey())
-                .setMove(moveBill)
-                .setStatus(OutputStatus.DONE.getKey());
         List<MoveDetailEntity> details = detailService.getAllByBillId(moveBill.getId());
         List<OutputDetailEntity> outputDetails = new ArrayList<>();
         List<InputDetailEntity> inputDetails = new ArrayList<>();
         details.forEach(detail -> {
+            // 库存信息
+            InventoryEntity inventory = detail.getInventory();
             inputDetails.add(new InputDetailEntity()
                     .setStorage(moveBill.getStorage())
-                    .setMaterial(detail.getInventory().getMaterial())
+                    .setMaterial(inventory.getMaterial())
                     .setQuantity(detail.getQuantity())
                     .setFinishQuantity(detail.getFinishQuantity())
             );
             outputDetails.add(new OutputDetailEntity()
-                    .setInventory(detail.getInventory())
-                    .setMaterial(detail.getInventory().getMaterial())
+                    .setInventory(inventory)
+                    .setMaterial(inventory.getMaterial())
                     .setQuantity(detail.getQuantity())
                     .setFinishQuantity(detail.getFinishQuantity())
             );
         });
+        // 添加入库单
+        InputEntity inputBill = new InputEntity()
+                .setType(InputType.MOVE.getKey())
+                .setMove(moveBill)
+                .setStatus(InputStatus.DONE.getKey());
         inputBill.setDetails(inputDetails);
         Services.getInputService().add(inputBill);
+
+        // 添加出库单
+        OutputEntity outputBill = new OutputEntity()
+                .setType(OutputType.MOVE.getKey())
+                .setMove(moveBill)
+                .setStatus(OutputStatus.DONE.getKey());
         outputBill.setDetails(outputDetails);
         Services.getOutputService().add(outputBill);
     }
