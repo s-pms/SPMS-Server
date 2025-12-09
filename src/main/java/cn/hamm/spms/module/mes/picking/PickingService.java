@@ -83,18 +83,19 @@ public class PickingService extends AbstractBaseBillService<PickingEntity, Picki
         PickingEntity picking = get(billId);
         InventoryService inventoryService = Services.getInventoryService();
         details.forEach(detail -> {
+            // 查询库存信息
             InventoryEntity inventory = inventoryService.getByMaterialIdAndStructureId(detail.getMaterial().getId(), picking.getStructure().getId());
             if (Objects.nonNull(inventory)) {
                 inventory.setQuantity(NumberUtil.add(inventory.getQuantity(), detail.getFinishQuantity()));
                 inventoryService.update(inventory);
-            } else {
-                inventory = new InventoryEntity()
-                        .setQuantity(detail.getFinishQuantity())
-                        .setMaterial(detail.getMaterial())
-                        .setStructure(picking.getStructure())
-                        .setType(InventoryType.STRUCTURE.getKey());
-                inventoryService.add(inventory);
+                return;
             }
+            inventory = new InventoryEntity()
+                    .setQuantity(detail.getFinishQuantity())
+                    .setMaterial(detail.getMaterial())
+                    .setStructure(picking.getStructure())
+                    .setType(InventoryType.STRUCTURE.getKey());
+            inventoryService.add(inventory);
         });
     }
 }
