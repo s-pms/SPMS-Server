@@ -19,7 +19,6 @@ import cn.hamm.spms.module.personnel.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.department.DepartmentService;
 import cn.hamm.spms.module.personnel.role.menu.RoleMenuService;
 import cn.hamm.spms.module.personnel.role.permission.RolePermissionService;
-import cn.hamm.spms.module.personnel.user.department.UserDepartmentService;
 import cn.hamm.spms.module.personnel.user.enums.UserTokenType;
 import cn.hamm.spms.module.personnel.user.role.UserRoleService;
 import cn.hamm.spms.module.system.config.ConfigEntity;
@@ -93,8 +92,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
 
     @Autowired
     private RolePermissionService rolePermissionService;
-    @Autowired
-    private UserDepartmentService userDepartmentService;
 
     /**
      * 获取新的密码盐
