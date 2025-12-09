@@ -13,6 +13,9 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: validate
+    properties:
+      hibernate:
+        column_ordering_strategy: legacy
   mail:
     properties:
       mail:
