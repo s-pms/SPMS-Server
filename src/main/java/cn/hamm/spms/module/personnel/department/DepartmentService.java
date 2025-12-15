@@ -1,8 +1,6 @@
 package cn.hamm.spms.module.personnel.department;
 
 import cn.hamm.airpower.curd.CurdEntity;
-import cn.hamm.airpower.curd.Sort;
-import cn.hamm.airpower.curd.query.QueryListRequest;
 import cn.hamm.airpower.tree.TreeUtil;
 import cn.hamm.spms.base.BaseService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,22 +23,11 @@ public class DepartmentService extends BaseService<DepartmentEntity, DepartmentR
     /**
      * 排序字段
      */
-    private static final String ORDER_FIELD_NAME = "orderNo";
+    static final String ORDER_FIELD_NAME = "orderNo";
 
     @Override
     protected void beforeDelete(@NotNull DepartmentEntity department) {
         TreeUtil.ensureNoChildrenBeforeDelete(this, department.getId());
-    }
-
-    @Override
-    protected @NotNull QueryListRequest<DepartmentEntity> beforeGetList(@NotNull QueryListRequest<DepartmentEntity> queryListRequest) {
-        DepartmentEntity filter = queryListRequest.getFilter();
-        queryListRequest.setSort(Objects.requireNonNullElse(
-                queryListRequest.getSort(),
-                new Sort().setField(ORDER_FIELD_NAME)
-        ));
-        queryListRequest.setFilter(filter);
-        return queryListRequest;
     }
 
     @Override

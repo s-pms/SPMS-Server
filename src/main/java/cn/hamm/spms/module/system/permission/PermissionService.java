@@ -25,7 +25,6 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
 @Service
 @Slf4j
 public class PermissionService extends BaseService<PermissionEntity, PermissionRepository> {
-
     /**
      * 通过标识获取一个权限
      *

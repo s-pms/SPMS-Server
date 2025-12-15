@@ -1,15 +1,12 @@
 package cn.hamm.spms.module.system.menu;
 
 import cn.hamm.airpower.curd.CurdEntity;
-import cn.hamm.airpower.curd.Sort;
-import cn.hamm.airpower.curd.query.QueryListRequest;
 import cn.hamm.airpower.tree.TreeUtil;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 import static cn.hamm.airpower.tree.TreeUtil.ROOT_ID;
 
@@ -28,17 +25,6 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     @Override
     protected void beforeDelete(@NotNull MenuEntity menu) {
         TreeUtil.ensureNoChildrenBeforeDelete(this, menu.getId());
-    }
-
-    @Override
-    protected @NotNull QueryListRequest<MenuEntity> beforeGetList(@NotNull QueryListRequest<MenuEntity> queryListRequest) {
-        MenuEntity filter = queryListRequest.getFilter();
-        queryListRequest.setSort(Objects.requireNonNullElse(
-                queryListRequest.getSort(),
-                new Sort().setField(ORDER_FIELD_NAME)
-        ));
-        queryListRequest.setFilter(filter);
-        return queryListRequest;
     }
 
     @Override

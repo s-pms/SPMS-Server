@@ -5,10 +5,14 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.api.Extends;
 import cn.hamm.airpower.api.Json;
+import cn.hamm.airpower.curd.Sort;
 import cn.hamm.airpower.curd.query.QueryListRequest;
 import cn.hamm.airpower.tree.TreeUtil;
 import cn.hamm.spms.base.BaseController;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.Objects;
 
 import static cn.hamm.airpower.curd.Curd.Export;
 import static cn.hamm.airpower.curd.Curd.QueryExport;
@@ -24,7 +28,13 @@ import static cn.hamm.airpower.curd.Curd.QueryExport;
 public class DepartmentController extends BaseController<DepartmentEntity, DepartmentService, DepartmentRepository> {
     @Permission(authorize = false)
     @Override
-    public Json getList(@RequestBody QueryListRequest<DepartmentEntity> queryListRequest) {
+    public Json getList(@RequestBody @NotNull QueryListRequest<DepartmentEntity> queryListRequest) {
+        DepartmentEntity filter = queryListRequest.getFilter();
+        queryListRequest.setSort(Objects.requireNonNullElse(
+                queryListRequest.getSort(),
+                new Sort().setField(DepartmentService.ORDER_FIELD_NAME)
+        ));
+        queryListRequest.setFilter(filter);
         return Json.data(TreeUtil.buildTreeList(service.getList(queryListRequest)));
     }
 }
