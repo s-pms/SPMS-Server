@@ -2,6 +2,7 @@ package cn.hamm.spms.module.wms.input;
 
 import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.airpower.dictionary.IDictionary;
+import cn.hamm.airpower.reflect.ReflectUtil;
 import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
@@ -53,10 +54,14 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
     }
 
     @Override
-    public void afterBillFinished(Long billId) {
-        InputEntity inputBill = get(billId);
+    public void afterBillFinished(@NotNull InputEntity inputBill) {
         InputType inputType = DictionaryUtil.getDictionary(InputType.class, inputBill.getType());
-        log.info("入库单入库完成，单据ID:{}, 入库类型:{}", billId, inputType.getLabel());
+        log.info("入库单入库完成 {}，单据ID:{} {} 入库类型 {}",
+                ReflectUtil.getDescription(getFirstParameterizedTypeClass()),
+                inputBill.getId(),
+                inputBill.getBillCode(),
+                inputType.getLabel()
+        );
         switch (inputType) {
             case PURCHASE -> Services.getPurchaseService().setBillFinished(inputBill.getPurchase().getId());
             case PRODUCTION -> Services.getOrderService().setBillFinished(inputBill.getOrder().getId());
@@ -81,7 +86,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
 
         // 入库数量
         Double inputDetailQuantity = inputDetail.getQuantity();
-        
+
         if (Objects.nonNull(inventory)) {
             inventory.setQuantity(NumberUtil.add(inventory.getQuantity(), inputDetailQuantity));
             inventoryService.update(inventory);

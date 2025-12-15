@@ -16,6 +16,7 @@ import cn.hamm.spms.module.wms.output.OutputEntity;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
 import cn.hamm.spms.module.wms.output.enums.OutputType;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -59,9 +60,10 @@ public class PickingService extends AbstractBaseBillService<PickingEntity, Picki
     }
 
     @Override
-    protected void afterBillAudited(long billId) {
+    protected void afterBillAudited(@NotNull PickingEntity bill) {
         // 创建领料出库单
         List<OutputDetailEntity> details = new ArrayList<>();
+        Long billId = bill.getId();
         detailService.getAllByBillId(billId)
                 .forEach(detail -> details.add(
                         new OutputDetailEntity()
@@ -76,15 +78,14 @@ public class PickingService extends AbstractBaseBillService<PickingEntity, Picki
     }
 
     @Override
-    protected void afterAllBillDetailFinished(long billId) {
-        log.info("领料单所有明细都已完成，单据ID:{}", billId);
+    protected void afterAllBillDetailFinished(@NotNull PickingEntity pickingBill) {
+        log.info("领料单所有明细都已完成，单据ID:{}", pickingBill.getId());
         // 添加线边库存
-        List<PickingDetailEntity> details = detailService.getAllByBillId(billId);
-        PickingEntity picking = get(billId);
+        List<PickingDetailEntity> details = detailService.getAllByBillId(pickingBill.getId());
         InventoryService inventoryService = Services.getInventoryService();
         details.forEach(detail -> {
             // 查询库存信息
-            InventoryEntity inventory = inventoryService.getByMaterialIdAndStructureId(detail.getMaterial().getId(), picking.getStructure().getId());
+            InventoryEntity inventory = inventoryService.getByMaterialIdAndStructureId(detail.getMaterial().getId(), pickingBill.getStructure().getId());
             if (Objects.nonNull(inventory)) {
                 inventory.setQuantity(NumberUtil.add(inventory.getQuantity(), detail.getFinishQuantity()));
                 inventoryService.update(inventory);
@@ -93,7 +94,7 @@ public class PickingService extends AbstractBaseBillService<PickingEntity, Picki
             inventory = new InventoryEntity()
                     .setQuantity(detail.getFinishQuantity())
                     .setMaterial(detail.getMaterial())
-                    .setStructure(picking.getStructure())
+                    .setStructure(pickingBill.getStructure())
                     .setType(InventoryType.STRUCTURE.getKey());
             inventoryService.add(inventory);
         });

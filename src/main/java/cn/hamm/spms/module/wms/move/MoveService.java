@@ -21,6 +21,7 @@ import cn.hamm.spms.module.wms.output.OutputEntity;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
 import cn.hamm.spms.module.wms.output.enums.OutputStatus;
 import cn.hamm.spms.module.wms.output.enums.OutputType;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
     }
 
     @Override
-    protected void afterDetailFinishAdded(long detailId, MoveDetailEntity moveDetail) {
+    protected void afterDetailFinishAdded(long detailId, @NotNull MoveDetailEntity moveDetail) {
         moveDetail = detailService.get(detailId);
 
         // 本次移动数量
@@ -100,8 +101,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
     }
 
     @Override
-    protected void afterAllBillDetailFinished(long billId) {
-        MoveEntity moveBill = get(billId);
+    protected void afterAllBillDetailFinished(@NotNull MoveEntity moveBill) {
         List<MoveDetailEntity> details = detailService.getAllByBillId(moveBill.getId());
         List<OutputDetailEntity> outputDetails = new ArrayList<>();
         List<InputDetailEntity> inputDetails = new ArrayList<>();

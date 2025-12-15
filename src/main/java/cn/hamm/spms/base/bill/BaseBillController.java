@@ -45,8 +45,7 @@ public class BaseBillController<
     @Description("审核")
     @PostMapping("audit")
     public Json audit(@RequestBody @Validated(WhenIdRequired.class) E bill) {
-        service.audit(bill.getId());
-        E savedBill = service.get(bill.getId());
+        E savedBill = service.audit(bill.getId());
         afterAudit(savedBill);
         return Json.success("审核成功");
     }

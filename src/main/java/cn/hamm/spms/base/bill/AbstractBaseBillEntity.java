@@ -43,6 +43,13 @@ public abstract class AbstractBaseBillEntity<
     private String rejectReason;
 
     /**
+     * 获取单据编号
+     *
+     * @return 单据编号
+     */
+    public abstract String getBillCode();
+
+    /**
      * 设置驳回原因
      *
      * @param rejectReason 驳回原因

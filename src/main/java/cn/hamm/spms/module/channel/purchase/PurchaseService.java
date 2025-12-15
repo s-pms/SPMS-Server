@@ -72,8 +72,7 @@ public class PurchaseService extends AbstractBaseBillService<
     }
 
     @Override
-    protected void afterAllBillDetailFinished(long billId) {
-        PurchaseEntity purchaseBill = get(billId);
+    protected void afterAllBillDetailFinished(@NotNull PurchaseEntity purchaseBill) {
         List<PurchaseDetailEntity> details = detailService.getAllByBillId(purchaseBill.getId());
         List<InputDetailEntity> inputDetails = new ArrayList<>();
         double totalRealPrice = 0D;

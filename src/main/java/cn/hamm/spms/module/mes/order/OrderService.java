@@ -93,8 +93,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     @Override
-    protected void afterAllBillDetailFinished(long billId) {
-        OrderEntity orderBill = get(billId);
+    protected void afterAllBillDetailFinished(@NotNull OrderEntity orderBill) {
         if (orderBill.getFinishQuantity() == 0) {
             // 直接完成 无需入库
             orderBill.setStatus(OrderStatus.DONE.getKey())
@@ -148,10 +147,10 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     @Override
-    protected void afterBillAudited(long id) {
+    protected void afterBillAudited(@NotNull OrderEntity order) {
         ConfigEntity config = Services.getConfigService().get(ConfigFlag.ORDER_AUTO_START_AFTER_AUDIT);
         if (config.booleanConfig()) {
-            start(id);
+            start(order.getId());
         }
     }
 

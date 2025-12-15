@@ -47,8 +47,7 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
     }
 
     @Override
-    public void afterBillFinished(Long billId) {
-        OutputEntity outputBill = get(billId);
+    public void afterBillFinished(@NotNull OutputEntity outputBill) {
         OutputType outputType = DictionaryUtil.getDictionary(OutputType.class, outputBill.getType());
         switch (outputType) {
             case SALE -> Services.getSaleService().setBillFinished(outputBill.getSale().getId());
