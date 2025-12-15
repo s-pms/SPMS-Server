@@ -58,9 +58,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
      */
     public FileEntity upload(@NotNull MultipartFile multipartFile, @NotNull FileCategory fileCategory) {
         // 上传文件的绝对路径
-        final String absoluteDirectory = FileUtil.formatDirectory(
-                fileConfig.getUploadDirectory()
-        );
+        final String absoluteDirectory = fileConfig.getFileDirectory();
         // 判断文件大小和类型
         FORBIDDEN_UPLOAD_MAX_SIZE.when(multipartFile.getSize() > appConfig.getUploadMaxSize());
         String originalFilename = multipartFile.getOriginalFilename();
@@ -70,7 +68,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
         PARAM_INVALID.when(!Arrays.stream(fileCategory.getExtensions()).toList().contains(extension), "文件类型不允许上传");
 
         // 存储的相对路径目录
-        String relativeDirectory = fileCategory.name().toLowerCase() + "/" + FileUtil.getTodayDirectory();
+        String relativeDirectory = fileConfig.getUploadDirectory() + fileCategory.name().toLowerCase() + "/" + FileUtil.getTodayDirectory();
 
         try {
             // 获取文件的MD5
