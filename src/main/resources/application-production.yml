@@ -15,8 +15,3 @@ spring:
 app:
   upload-platform: local
   is-dev-mode: true
-  upload-directory: "/home/"
-airpower:
-  curd:
-    export:
-      save-file-path: "/home/"

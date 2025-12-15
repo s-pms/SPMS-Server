@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.system.file;
 
 import cn.hamm.airpower.exception.ServiceException;
+import cn.hamm.airpower.file.FileConfig;
 import cn.hamm.airpower.file.FileUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.aliyun.oss.AliyunOssUtil;
@@ -32,6 +33,9 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
     private AppConfig appConfig;
 
     @Autowired
+    private FileConfig fileConfig;
+
+    @Autowired
     private AliyunOssUtil aliyunOssUtil;
 
     /**
@@ -55,7 +59,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
     public FileEntity upload(@NotNull MultipartFile multipartFile, @NotNull FileCategory fileCategory) {
         // 上传文件的绝对路径
         final String absoluteDirectory = FileUtil.formatDirectory(
-                appConfig.getUploadDirectory()
+                fileConfig.getUploadDirectory()
         );
         // 判断文件大小和类型
         FORBIDDEN_UPLOAD_MAX_SIZE.when(multipartFile.getSize() > appConfig.getUploadMaxSize());
@@ -66,7 +70,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
         PARAM_INVALID.when(!Arrays.stream(fileCategory.getExtensions()).toList().contains(extension), "文件类型不允许上传");
 
         // 存储的相对路径目录
-        String relativeDirectory = FileUtil.getTodayDirectory(fileCategory.name().toLowerCase());
+        String relativeDirectory = fileCategory.name().toLowerCase() + "/" + FileUtil.getTodayDirectory();
 
         try {
             // 获取文件的MD5

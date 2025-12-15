@@ -28,11 +28,6 @@ public class AppConfig {
     private long defaultRoomId = 1L;
 
     /**
-     * 上传文件目录
-     */
-    private String uploadDirectory = "/home/";
-
-    /**
      * 上传文件最大大小
      */
     private long uploadMaxSize = FILE_SCALE * FILE_SCALE * 10;
