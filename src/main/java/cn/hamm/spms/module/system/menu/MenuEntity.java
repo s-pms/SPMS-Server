@@ -44,7 +44,6 @@ public class MenuEntity extends BaseEntity<MenuEntity> implements ITree<MenuEnti
     private Long parentId;
 
     @Description("菜单路径")
-    @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "菜单路径不能为空")
     @Column(columnDefinition = "varchar(255) default '' comment '菜单路径'")
     private String path;
 
