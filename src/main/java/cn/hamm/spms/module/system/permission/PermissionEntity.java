@@ -40,7 +40,7 @@ public class PermissionEntity extends BaseEntity<PermissionEntity> implements IP
     private String identity;
 
     @Description("系统权限")
-    @Column(columnDefinition = "bit(1)default 0 comment '系统权限'")
+    @Column(columnDefinition = "bit(1) default 0 comment '系统权限'")
     private Boolean isSystem;
 
     @Description("权限类型")

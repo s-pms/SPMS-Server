@@ -69,7 +69,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
 
     @Description("内置参数")
     @ReadOnly
-    @Column(columnDefinition = "bit(1)default 0 comment '是否内置参数'")
+    @Column(columnDefinition = "bit(1) default 0 comment '是否内置参数'")
     private Boolean isSystem;
 
     /**

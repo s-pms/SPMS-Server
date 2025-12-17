@@ -61,7 +61,7 @@ public class ConfigEntity extends BaseEntity<ConfigEntity> {
 
     @Description("内置配置")
     @ReadOnly
-    @Column(columnDefinition = "bit(1)default 0 comment '内置配置'")
+    @Column(columnDefinition = "bit(1) default 0 comment '内置配置'")
     private Boolean isSystem;
 
     /**

@@ -78,6 +78,6 @@ public class OpenAppEntity extends BaseEntity<OpenAppEntity> implements IOpenApp
     private String url;
 
     @Description("是否内部应用")
-    @Column(columnDefinition = "bit(1)default 0 comment '是否内部应用'")
+    @Column(columnDefinition = "bit(1) default 0 comment '是否内部应用'")
     private Boolean isInternal;
 }

@@ -54,15 +54,15 @@ public class RoomEntity extends BaseEntity<RoomEntity> implements IRoomAction {
     private Integer orderNumber;
 
     @Description("是否热门")
-    @Column(columnDefinition = "bit(1)default 0 comment '是否热门'")
+    @Column(columnDefinition = "bit(1) default 0 comment '是否热门'")
     private Boolean isHot;
 
     @Description("是否官方")
-    @Column(columnDefinition = "bit(1)default 0 comment '是否官方'")
+    @Column(columnDefinition = "bit(1) default 0 comment '是否官方'")
     private Boolean isOfficial;
 
     @Description("是否私有房间")
-    @Column(columnDefinition = "bit(1)default 0 comment '是否私有房间'")
+    @Column(columnDefinition = "bit(1) default 0 comment '是否私有房间'")
     private Boolean isPrivate;
 
     @Description("房间密码")
