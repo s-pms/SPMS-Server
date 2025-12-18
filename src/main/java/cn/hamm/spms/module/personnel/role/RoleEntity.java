@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.personnel.role;
 
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.system.menu.MenuEntity;
@@ -37,11 +38,13 @@ public class RoleEntity extends BaseEntity<RoleEntity> implements IRoleAction {
     @Description("角色名称")
     @Column(columnDefinition = "varchar(255) default '' comment '角色名称'", unique = true)
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "角色名称不能为空")
+    @Meta
     private String name;
 
     @Description("角色编码")
     @Column(columnDefinition = "varchar(255) default '' comment '角色编码'", unique = true)
     @AutoGenerateCode(RoleCode)
+    @Meta
     private String code;
 
     @Transient

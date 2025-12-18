@@ -4,6 +4,7 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.device.enums.DeviceAlarm;
@@ -46,11 +47,13 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAct
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '设备名称'", unique = true)
     @NotBlank(groups = {WhenAdd.class, WhenUpdate.class}, message = "设备名称不能为空")
+    @Meta
     private String name;
 
     @Description("设备编码")
     @Column(columnDefinition = "varchar(255) default '' comment '设备编码'", unique = true)
     @AutoGenerateCode(DeviceCode)
+    @Meta
     private String code;
 
     @Description("设备UUID")

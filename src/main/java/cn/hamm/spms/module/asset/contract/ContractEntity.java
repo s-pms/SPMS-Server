@@ -3,6 +3,7 @@ package cn.hamm.spms.module.asset.contract;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.contract.document.ContractDocumentEntity;
@@ -38,12 +39,14 @@ public class ContractEntity extends BaseEntity<ContractEntity> {
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '合同编码'", unique = true)
     @AutoGenerateCode(CodeRuleField.ContractCode)
+    @Meta
     private String code;
 
     @Description("合同名称")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '合同名称'")
     @NotBlank(groups = {WhenAdd.class, WhenUpdate.class}, message = "合同名称不能为空")
+    @Meta
     private String name;
 
     @Description("合同内容")

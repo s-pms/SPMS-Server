@@ -10,6 +10,7 @@ import cn.hamm.airpower.curd.Sort;
 import cn.hamm.airpower.datetime.DateTimeUtil;
 import cn.hamm.airpower.helper.EmailHelper;
 import cn.hamm.airpower.mcp.method.McpMethod;
+import cn.hamm.airpower.root.RootModel;
 import cn.hamm.airpower.tree.TreeUtil;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseService;
@@ -143,24 +144,25 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public List<MenuEntity> getMenuListByUserId(long userId) {
         UserEntity user = get(userId);
+        List<MenuEntity> menuList;
         if (user.isRootUser()) {
             MenuService menuService = Services.getMenuService();
-            return TreeUtil.buildTreeList(menuService.filter(
+            menuList = menuService.filter(
                     new MenuEntity(),
-                    new Sort().setField(MenuService.ORDER_FIELD_NAME))
-            );
+                    new Sort().setField(MenuService.ORDER_FIELD_NAME));
+        } else {
+            menuList = new ArrayList<>();
+            userRoleService.getRoleList(userId)
+                    .forEach(role -> roleMenuService.getMenuList(role.getId())
+                            .forEach(menu -> {
+                                boolean isExist = menuList.stream()
+                                        .anyMatch(existMenu -> Objects.equals(menu.getId(), existMenu.getId()));
+                                if (!isExist) {
+                                    menuList.add(menu);
+                                }
+                            }));
         }
-        List<MenuEntity> menuList = new ArrayList<>();
-        userRoleService.getRoleList(userId)
-                .forEach(role -> roleMenuService.getMenuList(role.getId())
-                        .forEach(menu -> {
-                            boolean isExist = menuList.stream()
-                                    .anyMatch(existMenu -> Objects.equals(menu.getId(), existMenu.getId()));
-                            if (!isExist) {
-                                menuList.add(menu);
-                            }
-                        }));
-        return TreeUtil.buildTreeList(menuList);
+        return TreeUtil.buildTreeList(menuList.stream().map(RootModel::excludeFieldNotMeta).toList());
     }
 
     /**
