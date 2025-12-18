@@ -24,7 +24,7 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
 
     @Description("是否已完成")
     @ReadOnly
-    @Column(columnDefinition = "bit(1)default 0 comment '是否已完成'")
+    @Column(columnDefinition = "bit(1) default 0 comment '是否已完成'")
     private Boolean isFinished;
 
     /**

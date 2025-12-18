@@ -4,6 +4,7 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.mes.bom.detail.BomDetailEntity;
@@ -45,12 +46,14 @@ public class BomEntity extends BaseEntity<BomEntity> {
     @Column(columnDefinition = "varchar(255) default '' comment '配方编码'", unique = true)
     @AutoGenerateCode(BomCode)
     @Search
+    @Meta
     private String code;
 
     @Description("配方名称")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '配方名称'")
     @NotBlank(groups = {WhenAdd.class, WhenUpdate.class}, message = "配方名称不能为空")
+    @Meta
     private String name;
 
     @Description("配方状态")

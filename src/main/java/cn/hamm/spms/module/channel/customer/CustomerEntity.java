@@ -2,6 +2,7 @@ package cn.hamm.spms.module.channel.customer;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.airpower.validate.Phone;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
@@ -35,12 +36,14 @@ public class CustomerEntity extends BaseEntity<CustomerEntity> {
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "客户名称不能为空")
     @Column(columnDefinition = "varchar(255) default '' comment '客户名称'")
     @Search
+    @Meta
     private String name;
 
     @Description("客户编码")
     @Column(columnDefinition = "varchar(255) default '' comment '客户编码'", unique = true)
     @AutoGenerateCode(CustomerCode)
     @Search
+    @Meta
     private String code;
 
     @Description("联系电话")

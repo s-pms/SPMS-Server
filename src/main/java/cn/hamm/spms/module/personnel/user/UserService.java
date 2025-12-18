@@ -143,24 +143,28 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public List<MenuEntity> getMenuListByUserId(long userId) {
         UserEntity user = get(userId);
+        List<MenuEntity> menuList;
         if (user.isRootUser()) {
             MenuService menuService = Services.getMenuService();
-            return TreeUtil.buildTreeList(menuService.filter(
+            menuList = menuService.filter(
                     new MenuEntity(),
-                    new Sort().setField(MenuService.ORDER_FIELD_NAME))
-            );
+                    new Sort().setField(MenuService.ORDER_FIELD_NAME));
+        } else {
+            menuList = new ArrayList<>();
+            userRoleService.getRoleList(userId)
+                    .forEach(role -> roleMenuService.getMenuList(role.getId())
+                            .forEach(menu -> {
+                                boolean isExist = menuList.stream()
+                                        .anyMatch(existMenu -> Objects.equals(menu.getId(), existMenu.getId()));
+                                if (!isExist) {
+                                    menuList.add(menu);
+                                }
+                            }));
         }
-        List<MenuEntity> menuList = new ArrayList<>();
-        userRoleService.getRoleList(userId)
-                .forEach(role -> roleMenuService.getMenuList(role.getId())
-                        .forEach(menu -> {
-                            boolean isExist = menuList.stream()
-                                    .anyMatch(existMenu -> Objects.equals(menu.getId(), existMenu.getId()));
-                            if (!isExist) {
-                                menuList.add(menu);
-                            }
-                        }));
-        return TreeUtil.buildTreeList(menuList);
+        return TreeUtil.buildTreeList(menuList.stream().peek(item -> {
+            item.excludeBaseData();
+            item.setIsPublished(null);
+        }).toList());
     }
 
     /**

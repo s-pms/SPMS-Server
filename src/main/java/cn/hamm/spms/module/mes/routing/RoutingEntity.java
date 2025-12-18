@@ -3,6 +3,7 @@ package cn.hamm.spms.module.mes.routing;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
@@ -40,11 +41,13 @@ public class RoutingEntity extends BaseEntity<RoutingEntity> {
     @Description("工艺编码")
     @Column(columnDefinition = "varchar(255) default '' comment '工艺编码'", unique = true)
     @AutoGenerateCode(RoutingCode)
+    @Meta
     private String code;
 
     @Description("工艺名称")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "工艺名称不能为空")
     @Column(columnDefinition = "varchar(255) default '' comment '工艺名称'")
+    @Meta
     private String name;
 
     @Description("关联物料")
@@ -63,7 +66,7 @@ public class RoutingEntity extends BaseEntity<RoutingEntity> {
     private BomEntity bom;
 
     @Description("使用工艺BOM")
-    @Column(columnDefinition = "bit(1)default 0 comment '使用工艺BOM'")
+    @Column(columnDefinition = "bit(1) default 0 comment '使用工艺BOM'")
     private Boolean isRoutingBom;
 
     @Description("工序配置列表")

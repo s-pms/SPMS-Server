@@ -4,6 +4,7 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
 import cn.hamm.airpower.export.Export;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.material.enums.MaterialType;
@@ -44,6 +45,7 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
     @Column(columnDefinition = "varchar(255) default '' comment '物料名称'", unique = true)
     @NotBlank(groups = {WhenAdd.class, WhenUpdate.class}, message = "物料名称不能为空")
     @Export
+    @Meta
     private String name;
 
     @Description("物料编码")
@@ -51,6 +53,7 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
     @Search
     @AutoGenerateCode(CodeRuleField.MaterialCode)
     @Export
+    @Meta
     private String code;
 
     @Description("规格型号")
@@ -85,4 +88,11 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '销售标准价'")
     @Export(NUMBER)
     private Double salePrice;
+
+
+    @Override
+    @Meta
+    public Boolean getIsDisabled() {
+        return super.getIsDisabled();
+    }
 }

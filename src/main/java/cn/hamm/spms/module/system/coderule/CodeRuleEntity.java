@@ -3,6 +3,7 @@ package cn.hamm.spms.module.system.coderule;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
 import cn.hamm.spms.module.system.coderule.enums.SerialNumberUpdate;
@@ -36,6 +37,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     @Column(columnDefinition = "int UNSIGNED default 0 comment '规则字段'", unique = true)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "规则字段不能为空")
     @Dictionary(value = CodeRuleField.class, groups = {WhenUpdate.class, WhenAdd.class})
+    @Meta
     private Integer ruleField;
 
     @Description("流水号更新方式")
@@ -69,7 +71,7 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
 
     @Description("内置参数")
     @ReadOnly
-    @Column(columnDefinition = "bit(1)default 0 comment '是否内置参数'")
+    @Column(columnDefinition = "bit(1) default 0 comment '是否内置参数'")
     private Boolean isSystem;
 
     /**

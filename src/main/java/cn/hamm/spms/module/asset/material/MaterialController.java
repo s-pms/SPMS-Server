@@ -15,5 +15,4 @@ import cn.hamm.spms.base.BaseController;
 @Description("物料")
 @Extends({Curd.Export, Curd.QueryExport})
 public class MaterialController extends BaseController<MaterialEntity, MaterialService, MaterialRepository> {
-
 }

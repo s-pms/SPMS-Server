@@ -3,6 +3,7 @@ package cn.hamm.spms.module.asset.contract.participant;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.asset.contract.enums.CertificateType;
 import cn.hamm.spms.module.asset.contract.enums.IdentityType;
@@ -35,6 +36,7 @@ public class ParticipantEntity extends BaseEntity<ParticipantEntity> {
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '参与方名称'")
     @NotBlank(groups = {WhenAdd.class, WhenUpdate.class}, message = "参与方名称不能为空")
+    @Meta
     private String name;
 
     @Description("联系电话")
@@ -62,6 +64,7 @@ public class ParticipantEntity extends BaseEntity<ParticipantEntity> {
     @Description("参与人角色")
     @Column(columnDefinition = "bigint UNSIGNED default 1 comment '参与人角色'")
     @Dictionary(value = ParticipantRole.class, groups = {WhenAdd.class, WhenUpdate.class})
+    @Meta
     private Integer role;
 
     @Description("证件类型")

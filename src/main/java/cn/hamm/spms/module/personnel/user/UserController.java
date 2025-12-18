@@ -7,6 +7,7 @@ import cn.hamm.airpower.api.Extends;
 import cn.hamm.airpower.api.Json;
 import cn.hamm.airpower.cookie.CookieHelper;
 import cn.hamm.airpower.curd.Curd;
+import cn.hamm.airpower.meta.ExposeAll;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginEntity;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginService;
@@ -63,6 +64,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Description("获取我的信息")
     @Permission(authorize = false)
     @PostMapping("getMyInfo")
+    @ExposeAll(UserEntity.class)
     public Json getMyInfo() {
         return Json.data(service.get(getCurrentUserId()));
     }

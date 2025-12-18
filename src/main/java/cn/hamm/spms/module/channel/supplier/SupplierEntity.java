@@ -2,6 +2,7 @@ package cn.hamm.spms.module.channel.supplier;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.airpower.validate.Phone;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
@@ -35,12 +36,14 @@ public class SupplierEntity extends BaseEntity<SupplierEntity> {
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "供应商名称不能为空")
     @Column(columnDefinition = "varchar(255) default '' comment '供应商名称'")
     @Search
+    @Meta
     private String name;
 
     @Description("供应商编码")
     @Column(columnDefinition = "varchar(255) default '' comment '供应商编码'", unique = true)
     @AutoGenerateCode(SupplierCode)
     @Search
+    @Meta
     private String code;
 
     @Description("联系电话")

@@ -3,6 +3,7 @@ package cn.hamm.spms.module.mes.picking;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.factory.structure.StructureEntity;
@@ -41,6 +42,7 @@ public class PickingEntity extends AbstractBaseBillEntity<PickingEntity, Picking
     @Description("领料单号")
     @Column(columnDefinition = "varchar(255) default '' comment '领料单号'", unique = true)
     @AutoGenerateCode(PickingBillCode)
+    @Meta
     private String billCode;
 
     @Description("领料状态")

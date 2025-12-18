@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.open.thirdlogin;
 
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import jakarta.persistence.Column;
@@ -29,6 +30,7 @@ import org.hibernate.annotations.DynamicUpdate;
 public class UserThirdLoginEntity extends BaseEntity<UserThirdLoginEntity> {
     @Description("userId")
     @Column(columnDefinition = "varchar(255) default '' comment 'userId'")
+    @Meta
     private String thirdUserId;
 
     @Description("头像")
@@ -37,6 +39,7 @@ public class UserThirdLoginEntity extends BaseEntity<UserThirdLoginEntity> {
 
     @Description("昵称")
     @Column(columnDefinition = "varchar(255) default '' comment '昵称'")
+    @Meta
     private String nickName;
 
     @Description("性别")
@@ -45,6 +48,7 @@ public class UserThirdLoginEntity extends BaseEntity<UserThirdLoginEntity> {
 
     @Description("所属平台")
     @Column(columnDefinition = "int UNSIGNED default 0 comment '所属平台'")
+    @Meta
     private Integer platform;
 
     @Description("用户")

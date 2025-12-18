@@ -2,6 +2,7 @@ package cn.hamm.spms.module.asset.contract.document;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,6 +37,7 @@ public class ContractDocumentEntity extends BaseEntity<ContractDocumentEntity> {
     @Description("名称")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '名称'")
+    @Meta
     private String name;
 
     @Description("扩展名")

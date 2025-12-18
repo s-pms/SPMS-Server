@@ -2,6 +2,7 @@ package cn.hamm.spms.module.personnel.department;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.airpower.tree.ITree;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
@@ -37,20 +38,24 @@ public class DepartmentEntity extends BaseEntity<DepartmentEntity> implements IT
     @Description("部门编码")
     @Column(columnDefinition = "varchar(255) default '' comment 'code'", unique = true)
     @AutoGenerateCode(DepartmentCode)
+    @Meta
     private String code;
 
     @Description("部门名称")
     @Column(columnDefinition = "varchar(255) default '' comment '部门名称'")
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "应用名称不能为空")
     @Search
+    @Meta
     private String name;
 
     @Description("父级ID")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '父级ID'")
+    @Meta
     private Long parentId;
 
     @Description("排序号")
     @Column(columnDefinition = "int UNSIGNED default 0 comment '排序号'")
+    @Meta
     private Integer orderNo;
 
     @Description("树子集节点数组")
