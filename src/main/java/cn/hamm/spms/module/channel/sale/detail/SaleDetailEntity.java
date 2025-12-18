@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.channel.sale.detail;
 
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import jakarta.persistence.Column;
@@ -38,14 +39,17 @@ public class SaleDetailEntity extends BaseBillDetailEntity<SaleDetailEntity> {
     @Description("销售数量")
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '销售数量'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "销售数量不能为空")
+    @Meta
     private Double quantity;
 
     @Description("销售单价")
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '销售单价'")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "销售单价不能为空")
+    @Meta
     private Double price;
 
     @Description("已出库数量")
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已出库数量'")
+    @Meta
     private Double finishQuantity;
 }
