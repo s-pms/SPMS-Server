@@ -18,7 +18,6 @@ import cn.hamm.spms.module.personnel.user.role.UserRoleEntity;
 import cn.hamm.spms.module.personnel.user.role.UserRoleService;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenEntity;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenService;
-import cn.hamm.spms.module.system.menu.MenuEntity;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.Cookie;
@@ -137,7 +136,6 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Description("获取我的菜单")
     @Permission(authorize = false)
     @PostMapping("getMyMenuList")
-    @ExposeAll(MenuEntity.class)
     public Json getMyMenuList() {
         return Json.data(service.getMenuListByUserId(getCurrentUserId()));
     }
