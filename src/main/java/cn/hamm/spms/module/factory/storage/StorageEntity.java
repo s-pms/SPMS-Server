@@ -2,6 +2,7 @@ package cn.hamm.spms.module.factory.storage;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.airpower.tree.ITree;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
@@ -38,6 +39,7 @@ public class StorageEntity extends BaseEntity<StorageEntity> implements ITree<St
     @Description("仓库编码")
     @Column(columnDefinition = "varchar(255) default '' comment '仓库编码'", unique = true)
     @AutoGenerateCode(StorageCode)
+    @Meta
     private String code;
 
     @Description("名称")
@@ -45,10 +47,12 @@ public class StorageEntity extends BaseEntity<StorageEntity> implements ITree<St
     @Column(columnDefinition = "varchar(255) default '' comment '名称'")
     @Length(max = 200, message = "名称最多允许{max}个字符")
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "名称不能为空")
+    @Meta
     private String name;
 
     @Description("父级ID")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '父级ID'")
+    @Meta
     private Long parentId;
 
     @Description("树子集节点数组")

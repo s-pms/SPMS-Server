@@ -3,6 +3,7 @@ package cn.hamm.spms.module.system.config;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.system.config.enums.ConfigType;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -39,11 +40,13 @@ public class ConfigEntity extends BaseEntity<ConfigEntity> {
     @Description("配置标识")
     @Column(columnDefinition = "varchar(255) comment '规则字段'", unique = true)
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "配置标识不能为空")
+    @Meta
     private String flag;
 
     @Description("配置名称")
     @Column(columnDefinition = "varchar(255) default '' comment '配置名称'")
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "配置名称不能为空")
+    @Meta
     private String name;
 
     @Description("配置描述")
@@ -52,11 +55,13 @@ public class ConfigEntity extends BaseEntity<ConfigEntity> {
 
     @Description("配置的值")
     @Column(columnDefinition = "varchar(255) default '' comment '字符串值'")
+    @Meta
     private String config;
 
     @Description("配置类型")
     @Column(columnDefinition = "int UNSIGNED default 0 comment '配置类型'")
     @Dictionary(value = ConfigType.class, groups = {WhenAdd.class, WhenUpdate.class})
+    @Meta
     private Integer type;
 
     @Description("内置配置")

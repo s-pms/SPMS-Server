@@ -4,6 +4,7 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.channel.customer.CustomerEntity;
@@ -41,6 +42,7 @@ public class PlanEntity extends AbstractBaseBillEntity<PlanEntity, PlanDetailEnt
     @Column(columnDefinition = "varchar(255) default '' comment '生产计划号'", unique = true)
     @AutoGenerateCode(PlanBillCode)
     @Search
+    @Meta
     private String billCode;
 
     @Description("计划状态")

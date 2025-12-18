@@ -2,6 +2,7 @@ package cn.hamm.spms.module.system.file;
 
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,11 +30,13 @@ public class FileEntity extends BaseEntity<FileEntity> {
     @Description("名称")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '名称'")
+    @Meta
     private String name;
 
     @Description("扩展名")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '扩展名'")
+    @Meta
     private String extension;
 
     @Description("文件路径")
@@ -56,5 +59,6 @@ public class FileEntity extends BaseEntity<FileEntity> {
 
     @Description("文件大小")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '文件大小'")
+    @Meta
     private Long size;
 }

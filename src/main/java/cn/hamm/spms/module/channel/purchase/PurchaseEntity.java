@@ -4,6 +4,7 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailEntity;
@@ -39,6 +40,7 @@ public class PurchaseEntity extends AbstractBaseBillEntity<PurchaseEntity, Purch
     @Column(columnDefinition = "varchar(255) default '' comment '采购单号'", unique = true)
     @AutoGenerateCode(PurchaseBillCode)
     @Search
+    @Meta
     private String billCode;
 
     @Description("采购事由")

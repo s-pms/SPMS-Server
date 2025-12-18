@@ -3,6 +3,7 @@ package cn.hamm.spms.module.wms.input;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.channel.purchase.PurchaseEntity;
@@ -43,6 +44,7 @@ public class InputEntity extends AbstractBaseBillEntity<InputEntity, InputDetail
     @Column(columnDefinition = "varchar(255) default '' comment '入库单号'", unique = true)
     @AutoGenerateCode(InputBillCode)
     @Search
+    @Meta
     private String billCode;
 
     @Description("入库状态")

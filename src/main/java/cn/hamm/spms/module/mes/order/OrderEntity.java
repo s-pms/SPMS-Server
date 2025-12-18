@@ -4,6 +4,7 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
@@ -44,6 +45,7 @@ public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetail
     @Column(columnDefinition = "varchar(255) default '' comment '订单号'", unique = true)
     @AutoGenerateCode(OrderBillCode)
     @Search
+    @Meta
     private String billCode;
 
     @Description("订单状态")

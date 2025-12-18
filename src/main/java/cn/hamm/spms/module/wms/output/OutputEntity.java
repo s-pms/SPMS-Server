@@ -3,6 +3,7 @@ package cn.hamm.spms.module.wms.output;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.channel.sale.SaleEntity;
@@ -42,6 +43,7 @@ public class OutputEntity extends AbstractBaseBillEntity<OutputEntity, OutputDet
     @Column(columnDefinition = "varchar(255) default '' comment '出库单号'", unique = true)
     @AutoGenerateCode(OutputBillCode)
     @Search
+    @Meta
     private String billCode;
 
     @Description("出库状态")

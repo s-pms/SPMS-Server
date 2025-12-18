@@ -4,6 +4,7 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.airpower.open.IOpenApp;
 import cn.hamm.airpower.open.OpenArithmeticType;
 import cn.hamm.spms.base.BaseEntity;
@@ -38,6 +39,7 @@ public class OpenAppEntity extends BaseEntity<OpenAppEntity> implements IOpenApp
     @Description("应用Key")
     @Column(columnDefinition = "varchar(255) default '' comment 'AppKey'", unique = true)
     @Search
+    @Meta
     private String appKey;
 
     @Description("应用密钥")
@@ -49,6 +51,7 @@ public class OpenAppEntity extends BaseEntity<OpenAppEntity> implements IOpenApp
     @Column(columnDefinition = "varchar(255) default '' comment '应用名称'")
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "应用名称不能为空")
     @Search
+    @Meta
     private String appName;
 
     @Description("加密算法")

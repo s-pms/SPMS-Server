@@ -3,6 +3,7 @@ package cn.hamm.spms.module.factory.structure;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.airpower.tree.ITree;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
@@ -40,6 +41,7 @@ public class StructureEntity extends BaseEntity<StructureEntity> implements ITre
     @Description("生产单元编码")
     @Column(columnDefinition = "varchar(255) default '' comment '生产单元编码'", unique = true)
     @AutoGenerateCode(StructureCode)
+    @Meta
     private String code;
 
     @Description("名称")
@@ -47,6 +49,7 @@ public class StructureEntity extends BaseEntity<StructureEntity> implements ITre
     @Column(columnDefinition = "varchar(255) default '' comment '名称'")
     @Length(max = 200, message = "名称最多允许{max}个字符")
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "名称不能为空")
+    @Meta
     private String name;
 
     @Description("生产单元类型")
@@ -56,6 +59,7 @@ public class StructureEntity extends BaseEntity<StructureEntity> implements ITre
 
     @Description("父级ID")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '父级ID'")
+    @Meta
     private Long parentId;
 
     @Description("树子集节点数组")

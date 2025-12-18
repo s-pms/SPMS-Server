@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.mes.operation;
 
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import jakarta.persistence.Column;
@@ -32,10 +33,12 @@ public class OperationEntity extends BaseEntity<OperationEntity> {
     @Description("工序名称")
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "工序名称不能为空")
     @Column(columnDefinition = "varchar(255) default '' comment '工序名称'", unique = true)
+    @Meta
     private String name;
 
     @Description("工序编码")
     @Column(columnDefinition = "varchar(255) default '' comment '工序编码'", unique = true)
+    @Meta
     @AutoGenerateCode(OperationCode)
     private String code;
 

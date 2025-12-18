@@ -4,6 +4,7 @@ import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.desensitize.Desensitize;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.airpower.validate.Phone;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.department.DepartmentEntity;
@@ -50,6 +51,7 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @Column(columnDefinition = "varchar(255) default '' comment '昵称'")
     @NotBlank(groups = {WhenUpdate.class, WhenAdd.class, WhenUpdateMyInfo.class}, message = "昵称不能为空")
     @Search
+    @Meta
     private String nickname;
 
     @Description("头像")

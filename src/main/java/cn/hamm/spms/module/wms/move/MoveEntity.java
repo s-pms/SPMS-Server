@@ -3,6 +3,7 @@ package cn.hamm.spms.module.wms.move;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.annotation.Search;
 import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
@@ -40,6 +41,7 @@ public class MoveEntity extends AbstractBaseBillEntity<MoveEntity, MoveDetailEnt
     @Column(columnDefinition = "varchar(255) default '' comment '移库单号'", unique = true)
     @AutoGenerateCode(MoveBillCode)
     @Search
+    @Meta
     private String billCode;
 
     @Description("移库状态")

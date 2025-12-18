@@ -10,7 +10,6 @@ import cn.hamm.airpower.curd.Sort;
 import cn.hamm.airpower.datetime.DateTimeUtil;
 import cn.hamm.airpower.helper.EmailHelper;
 import cn.hamm.airpower.mcp.method.McpMethod;
-import cn.hamm.airpower.root.RootModel;
 import cn.hamm.airpower.tree.TreeUtil;
 import cn.hamm.airpower.util.RandomUtil;
 import cn.hamm.spms.base.BaseService;
@@ -162,7 +161,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
                                 }
                             }));
         }
-        return TreeUtil.buildTreeList(menuList.stream().map(RootModel::excludeFieldNotMeta).toList());
+        return TreeUtil.buildTreeList(menuList.stream().peek(item -> {
+            item.excludeBaseData();
+            item.setIsPublished(null);
+        }).toList());
     }
 
     /**
