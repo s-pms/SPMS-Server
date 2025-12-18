@@ -93,6 +93,12 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     @Override
+    protected void afterBillFinished(@NotNull OrderEntity bill) {
+        bill.setFinishTime(System.currentTimeMillis());
+        updateToDatabase(bill);
+    }
+
+    @Override
     protected void afterAllBillDetailFinished(@NotNull OrderEntity orderBill) {
         if (orderBill.getFinishQuantity() == 0) {
             // 直接完成 无需入库
