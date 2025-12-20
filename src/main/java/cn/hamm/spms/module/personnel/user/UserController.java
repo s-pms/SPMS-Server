@@ -82,6 +82,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Description("获取我的私人令牌列表")
     @Permission(authorize = false)
     @PostMapping("getMyPersonalTokenList")
+    @ExposeAll(PersonalTokenEntity.class)
     public Json getMyPersonalTokenList() {
         UserEntity user = new UserEntity().setId(getCurrentUserId());
         List<PersonalTokenEntity> list = personalTokenService.filter(new PersonalTokenEntity().setUser(user));
