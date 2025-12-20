@@ -1,6 +1,5 @@
 cd /home/server/ && rm -rf ./* && tar zxvf /home/app.tgz -C ./ && rm -f /home/app.tgz
 JAR="server-2.0.0.jar"
-LOG="./server.log"
 CHECK_URL="http://127.0.0.1:8080"
 MAX=100
 SECOND=2
@@ -21,7 +20,7 @@ for pid in $pids; do
 done
 
 # 启动新进程
-nohup java -jar "$JAR" --spring.profiles.active="$PROFILE" > "$LOG" 2>&1 &
+nohup java -jar "$JAR" --spring.profiles.active="$PROFILE" > "/dev/null" 2>&1 &
 echo "$JAR starting."
 
 # 检查启动状态
