@@ -1,4 +1,6 @@
 #file: noinspection SpellCheckingInspection
+logging:
+  config: classpath:logback-spring.xml
 server:
   port: 8080
 spring:

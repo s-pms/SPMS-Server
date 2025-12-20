@@ -36,3 +36,6 @@ build/
 
 ### Environment ###
 src/main/resources/application-local-**.yml
+
+
+*.log
