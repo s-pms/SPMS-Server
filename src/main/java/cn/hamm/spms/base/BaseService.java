@@ -49,8 +49,7 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
             ReflectUtil.setFieldValue(entity, field, code);
             break;
         }
-        entity = beforeAppSaveToDatabase(entity);
-        return entity;
+        return beforeAppSaveToDatabase(entity);
     }
 
     /**

@@ -113,7 +113,7 @@ public abstract class AbstractBaseBillService<
         log.info("添加明细完成数量 {}，单据ID:{}, 明细数量:{}, 完成数量:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), sourceDetail.getBillId(), sourceDetail.getId(), sourceDetail.getQuantity());
         transactionHelper.run(() -> {
             // 查保存的明细
-            D savedDetail = detailService.get(sourceDetail.getId());
+            D savedDetail = detailService.getForUpdate(sourceDetail.getId());
             FORBIDDEN.when(savedDetail.getIsFinished(), "该明细已标记完成，无法再添加明细完成数量");
             // 更新保存明细完成数量 = 保存明细完成数量 + 提交完成数量
             double finishQuantity = NumberUtil.add(savedDetail.getFinishQuantity(), sourceDetail.getQuantity());
@@ -263,7 +263,7 @@ public abstract class AbstractBaseBillService<
     /**
      * 保存单据明细
      * <li>
-     * 请不要再重写后直接调用 {@link #update(CurdEntity)} #{@link #updateWithNull(CurdEntity)}，避免出现调用循环。
+     * 请不要再重写后直接调用 {@link #update(CurdEntity)} ，避免出现调用循环。
      * </li>
      * <li>
      * 如需再次保存，请调用 {@link #updateToDatabase(CurdEntity)} }
