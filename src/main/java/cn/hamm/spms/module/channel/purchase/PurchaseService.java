@@ -7,7 +7,6 @@ import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
-import cn.hamm.spms.module.asset.material.MaterialService;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailEntity;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailRepository;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailService;
@@ -37,14 +36,6 @@ public class PurchaseService extends AbstractBaseBillService<
         PurchaseEntity, PurchaseRepository,
         PurchaseDetailEntity, PurchaseDetailService, PurchaseDetailRepository
         > {
-
-    private final MaterialService materialService;
-
-    public PurchaseService(MaterialService materialService) {
-        super();
-        this.materialService = materialService;
-    }
-
     @Override
     public IDictionary getAuditingStatus() {
         return PurchaseStatus.AUDITING;
@@ -120,7 +111,7 @@ public class PurchaseService extends AbstractBaseBillService<
             String name,
             @Description("purchase count, required.")
             Integer count) {
-        List<MaterialEntity> materials = materialService.filter(new MaterialEntity().setName(name));
+        List<MaterialEntity> materials = Services.getMaterialService().filter(new MaterialEntity().setName(name));
         if (materials.isEmpty()) {
             return "未找到该物料";
         } else if (materials.size() > 1) {

@@ -1,5 +1,6 @@
 package cn.hamm.spms;
 
+import cn.hamm.spms.common.config.AppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,19 +22,22 @@ public class Application {
      */
     private static ServletWebServerApplicationContext serverApplicationContext;
 
+    private static AppConfig appConfig;
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
         if (serverApplicationContext != null) {
             int port = serverApplicationContext.getWebServer().getPort();
             System.out.println("------------------------------------------");
-            System.out.println("   Hi Guy, Service is listen : [" + port + "] !");
+            System.out.println("   Hi Guy, " + appConfig.getProjectName() + " is running at [" + port + "] !");
             System.out.println("------------------------------------------");
         }
     }
 
     @Autowired(required = false)
-    public void autorun(ServletWebServerApplicationContext serverApplicationContext) {
+    public void autorun(ServletWebServerApplicationContext serverApplicationContext, AppConfig appConfig) {
         Application.serverApplicationContext = serverApplicationContext;
+        Application.appConfig = appConfig;
         // ReportEventListener 注入后可开启MQTT监听
     }
 }

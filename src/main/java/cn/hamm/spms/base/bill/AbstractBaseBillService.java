@@ -273,12 +273,12 @@ public abstract class AbstractBaseBillService<
      * @param billId 单据 ID
      */
     protected final void audit(long billId) {
-        updateWithLock(billId, bill -> {
-            FORBIDDEN.when(!canAudit(bill), "该单据状态无法审核");
-            setAudited(bill);
-            updateToDatabase(getEntityInstance(billId));
-            TaskUtil.run(() -> afterBillAudited(billId));
-        });
+        E bill = get(billId);
+        FORBIDDEN.when(!canAudit(bill), "该单据状态无法审核");
+        bill = getEntityInstance(billId);
+        setAudited(bill);
+        updateToDatabase(bill);
+        TaskUtil.run(() -> afterBillAudited(billId));
     }
 
     /**
@@ -287,12 +287,12 @@ public abstract class AbstractBaseBillService<
      * @param billId 单据 ID
      */
     protected final void reject(long billId) {
-        updateWithLock(billId, bill -> {
-            FORBIDDEN.when(!canReject(bill), "该单据状态无法驳回");
-            bill.setRejectReason(bill.getRejectReason());
-            setReject(bill);
-            updateToDatabase(getEntityInstance(billId));
-        });
+        E bill = get(billId);
+        FORBIDDEN.when(!canReject(bill), "该单据状态无法驳回");
+        bill = getEntityInstance(billId);
+        setAudited(bill);
+        bill.setRejectReason(bill.getRejectReason());
+        updateToDatabase(getEntityInstance(billId));
     }
 
     /**

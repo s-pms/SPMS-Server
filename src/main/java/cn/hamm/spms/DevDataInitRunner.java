@@ -54,9 +54,10 @@ import cn.hamm.spms.module.system.unit.UnitService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -71,9 +72,8 @@ import static cn.hamm.spms.module.iot.report.ReportConstant.*;
  */
 @Component
 @Slf4j
-public class InitializeRunner implements CommandLineRunner {
+public class DevDataInitRunner implements CommandLineRunner {
     public static final int TWO = 2;
-    private static final String CREATE_DROP = "create-drop";
     @Autowired
     private ParameterService parameterService;
     @Autowired
@@ -115,8 +115,6 @@ public class InitializeRunner implements CommandLineRunner {
     @Autowired
     private RoomService roomService;
     @Autowired
-    private Environment environment;
-    @Autowired
     private UserDepartmentService userDepartmentService;
 
     @Autowired
@@ -124,23 +122,29 @@ public class InitializeRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        System.out.println(appConfig.getProjectName());
-        System.out.println("---------------------------------");
         McpService.scanMcpMethods("cn.hamm.spms", "cn.hamm.airpower");
         if (!appConfig.getIsDevMode()) {
+            log.info("非开发者模式，无需初始化数据");
             return;
         }
-        // 获取环境变量的 JPA ddl-auto
-        String ddlAuto = environment.getProperty("spring.jpa.hibernate.ddl-auto");
-        if (CREATE_DROP.equals(ddlAuto)) {
-            permissionService.initMcpToolPermission(McpService.tools);
-            initRootUser();
-            initCodeRules();
-            initConfigs();
-            initParameters();
-            permissionService.loadPermission();
-            menuService.initMenu();
-            initDevData();
+        // 判断运行目录是否存在 init.lock 文件，如存在，则不初始化数据
+        if (new File("init.lock").exists()) {
+            log.info("已存在 init.lock 文件，无需初始化数据");
+            return;
+        }
+        permissionService.initMcpToolPermission(McpService.tools);
+        initRootUser();
+        initCodeRules();
+        initConfigs();
+        initParameters();
+        permissionService.loadPermission();
+        menuService.initMenu();
+        initDevData();
+        try {
+            //noinspection ResultOfMethodCallIgnored
+            new File("init.lock").createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -219,7 +223,6 @@ public class InitializeRunner implements CommandLineRunner {
                 .setUser(user)
                 .setDepartment(department)
         );
-        System.out.println("---------------------------------");
         user = userService.getMaybeNull(1L);
 
         roomService.addAndGet(new RoomEntity()
