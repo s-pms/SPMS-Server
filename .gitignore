@@ -35,7 +35,7 @@ build/
 .DS_Store
 
 ### Environment ###
-src/main/resources/application-local-**.yml
+application-local-**.yml
 
 
 *.log
