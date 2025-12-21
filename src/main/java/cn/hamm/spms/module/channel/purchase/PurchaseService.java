@@ -18,7 +18,6 @@ import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.input.enums.InputStatus;
 import cn.hamm.spms.module.wms.input.enums.InputType;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -72,8 +71,9 @@ public class PurchaseService extends AbstractBaseBillService<
     }
 
     @Override
-    protected void afterAllBillDetailFinished(@NotNull PurchaseEntity purchaseBill) {
-        List<PurchaseDetailEntity> details = detailService.getAllByBillId(purchaseBill.getId());
+    protected void afterAllBillDetailFinished(long billId) {
+        PurchaseEntity purchaseBill = get(billId);
+        List<PurchaseDetailEntity> details = detailService.getAllByBillId(billId);
         List<InputDetailEntity> inputDetails = new ArrayList<>();
         double totalRealPrice = 0D;
         for (PurchaseDetailEntity detail : details) {
@@ -84,7 +84,7 @@ public class PurchaseService extends AbstractBaseBillService<
             );
         }
         purchaseBill.setTotalRealPrice(totalRealPrice);
-        update(purchaseBill);
+        updateToDatabase(purchaseBill);
         log.info("采购单已经全部采购完成，单据ID:{}", purchaseBill.getId());
 
         // 创建采购入库单
@@ -98,13 +98,12 @@ public class PurchaseService extends AbstractBaseBillService<
     }
 
     @Override
-    protected void afterDetailSaved(@NotNull PurchaseEntity purchase) {
-        List<PurchaseDetailEntity> details = detailService.getAllByBillId(purchase.getId());
+    protected void afterDetailSaved(long purchaseId) {
+        List<PurchaseDetailEntity> details = detailService.getAllByBillId(purchaseId);
         double totalPrice = details.stream()
                 .mapToDouble(detail -> NumberUtil.multiply(detail.getPrice(), detail.getQuantity()))
                 .sum();
-        purchase.setTotalPrice(totalPrice);
-        updateToDatabase(purchase);
+        updateToDatabase(getEntityInstance(purchaseId).setTotalPrice(totalPrice));
     }
 
     @Override
@@ -140,7 +139,7 @@ public class PurchaseService extends AbstractBaseBillService<
                 .setReason(reason)
                 .setDetails(details)
                 .setStatus(PurchaseStatus.AUDITING.getKey());
-        PurchaseEntity purchase = add(purchaseBill);
+        PurchaseEntity purchase = addAndGet(purchaseBill);
         return "采购单已经创建成功，单号为 " + purchase.getBillCode();
     }
 }

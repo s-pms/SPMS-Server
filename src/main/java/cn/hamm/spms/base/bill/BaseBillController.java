@@ -45,19 +45,14 @@ public class BaseBillController<
     @Description("审核")
     @PostMapping("audit")
     public Json audit(@RequestBody @Validated(WhenIdRequired.class) E bill) {
-        E savedBill = service.audit(bill.getId());
-        afterAudit(savedBill);
+        service.audit(bill.getId());
         return Json.success("审核成功");
     }
 
     @Description("驳回")
     @PostMapping("reject")
     public Json reject(@RequestBody @Validated(WhenReject.class) E bill) {
-        E savedBill = service.get(bill.getId());
-        FORBIDDEN.when(!service.canReject(savedBill), "该单据状态无法驳回");
-        savedBill.setRejectReason(bill.getRejectReason());
-        service.setReject(savedBill);
-        service.update(savedBill);
+        service.reject(bill.getId());
         return Json.success("驳回成功");
     }
 

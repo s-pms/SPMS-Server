@@ -28,17 +28,17 @@ public class RoutingService extends BaseService<RoutingEntity, RoutingRepository
     private static final String ORDER_FIELD_NAME = "orderNo";
 
     @Override
-    protected void afterAppUpdate(@NotNull RoutingEntity routing, @NotNull RoutingEntity source) {
-        Services.getRoutingOperationService().deleteByRoutingId(routing.getId());
-        afterAdd(routing, source);
+    protected void afterAppUpdate(long id, @NotNull RoutingEntity source) {
+        Services.getRoutingOperationService().deleteByRoutingId(id);
+        afterAdd(id, source);
     }
 
     @Override
-    protected void afterAppAdd(@NotNull RoutingEntity routing, @NotNull RoutingEntity source) {
+    protected void afterAppAdd(long id, @NotNull RoutingEntity source) {
         List<RoutingOperationEntity> routingOperationList = source.getDetails();
         RoutingOperationService routingOperationService = Services.getRoutingOperationService();
         for (RoutingOperationEntity routingOperation : routingOperationList) {
-            routingOperation.setRoutingId(routing.getId());
+            routingOperation.setRoutingId(id);
             routingOperationService.add(routingOperation);
         }
     }

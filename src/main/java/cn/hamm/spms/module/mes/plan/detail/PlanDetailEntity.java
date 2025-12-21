@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.mes.plan.detail;
 
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
@@ -45,5 +46,6 @@ public class PlanDetailEntity extends BaseBillDetailEntity<PlanDetailEntity> {
     @Description("已完成数量")
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已完成数量'")
     @Meta
+    @ReadOnly
     private Double finishQuantity;
 }

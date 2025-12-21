@@ -84,7 +84,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         order.setFinishQuantity(finishQuantity)
                 .setNgQuantity(ngQuantity)
         ;
-        update(order);
+        updateToDatabase(order);
 
         config = configService.get(ConfigFlag.ORDER_AUTO_FINISH);
         if (config.booleanConfig() && order.getFinishQuantity() >= order.getQuantity()) {
@@ -93,18 +93,20 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     @Override
-    protected void afterBillFinished(@NotNull OrderEntity bill) {
-        bill.setFinishTime(System.currentTimeMillis());
-        updateToDatabase(bill);
+    protected void afterBillFinished(long billId) {
+        updateToDatabase(getEntityInstance(billId)
+                .setFinishTime(System.currentTimeMillis())
+        );
     }
 
     @Override
-    protected void afterAllBillDetailFinished(@NotNull OrderEntity orderBill) {
+    protected void afterAllBillDetailFinished(long billId) {
+        OrderEntity orderBill = get(billId);
         if (orderBill.getFinishQuantity() == 0) {
             // 直接完成 无需入库
             orderBill.setStatus(OrderStatus.DONE.getKey())
                     .setFinishTime(System.currentTimeMillis());
-            update(orderBill);
+            updateToDatabase(orderBill);
             return;
         }
 
@@ -134,7 +136,8 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         InputEntity input = new InputEntity();
         input.setType(InputType.PRODUCTION.getKey());
         input.setOrder(order);
-        InputEntity inputSaved = inputService.add(input);
+        InputEntity inputSaved = inputService.addAndGet(input);
+
 
         List<InputDetailEntity> details = new ArrayList<>();
         details.add(new InputDetailEntity()
@@ -143,7 +146,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
                 .setMaterial(order.getMaterial())
         );
         inputSaved.setDetails(details);
-        inputService.update(inputSaved);
+        inputService.updateToDatabase(inputSaved);
     }
 
     @Override
@@ -153,10 +156,10 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     @Override
-    protected void afterBillAudited(@NotNull OrderEntity order) {
+    protected void afterBillAudited(long billId) {
         ConfigEntity config = Services.getConfigService().get(ConfigFlag.ORDER_AUTO_START_AFTER_AUDIT);
         if (config.booleanConfig()) {
-            start(order.getId());
+            start(billId);
         }
     }
 
@@ -170,8 +173,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         OrderStatus[] canStartStatusList = {OrderStatus.PREPARE, OrderStatus.PAUSED};
         OrderStatus currentStatus = DictionaryUtil.getDictionary(OrderStatus.class, order.getStatus());
         FORBIDDEN.when(!Arrays.asList(canStartStatusList).contains(currentStatus), "该单据状态无法开始生产");
-        order.setStatus(OrderStatus.PRODUCING.getKey());
-        update(order);
+        updateToDatabase(getEntityInstance(id).setStatus(OrderStatus.PRODUCING.getKey()));
     }
 
     /**
@@ -184,7 +186,6 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         OrderStatus[] canPauseStatusList = {OrderStatus.PRODUCING};
         OrderStatus currentStatus = DictionaryUtil.getDictionary(OrderStatus.class, order.getStatus());
         FORBIDDEN.when(!Arrays.asList(canPauseStatusList).contains(currentStatus), "该单据状态无法暂停生产");
-        order.setStatus(OrderStatus.PAUSED.getKey());
-        update(order);
+        updateToDatabase(getEntityInstance(id).setStatus(OrderStatus.PAUSED.getKey()));
     }
 }

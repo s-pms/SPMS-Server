@@ -19,7 +19,10 @@ import cn.hamm.spms.module.personnel.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.department.DepartmentService;
 import cn.hamm.spms.module.personnel.role.menu.RoleMenuService;
 import cn.hamm.spms.module.personnel.role.permission.RolePermissionService;
+import cn.hamm.spms.module.personnel.user.department.UserDepartmentEntity;
+import cn.hamm.spms.module.personnel.user.department.UserDepartmentService;
 import cn.hamm.spms.module.personnel.user.enums.UserTokenType;
+import cn.hamm.spms.module.personnel.user.role.UserRoleEntity;
 import cn.hamm.spms.module.personnel.user.role.UserRoleService;
 import cn.hamm.spms.module.system.config.ConfigEntity;
 import cn.hamm.spms.module.system.config.ConfigService;
@@ -92,6 +95,8 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
 
     @Autowired
     private RolePermissionService rolePermissionService;
+    @Autowired
+    private UserDepartmentService userDepartmentService;
 
     /**
      * 获取新的密码盐
@@ -209,7 +214,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         String salt = RandomUtil.randomString();
         existUser.setSalt(salt);
         existUser.setPassword(PasswordUtil.encode(user.getPassword(), salt));
-        update(existUser);
+        updateToDatabase(existUser);
     }
 
     /**
@@ -242,7 +247,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         if (StringUtils.hasText(user.getPhone())) {
             redisHelper.del(getPhoneCodeCacheKey(user.getPhone()));
         }
-        update(existUser);
+        updateToDatabase(existUser);
     }
 
     /**
@@ -380,7 +385,8 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         UserEntity user = new UserEntity().setPassword(PasswordUtil.encode(password, salt))
                 .setSalt(salt)
                 .setNickname(nickname);
-        return add(user);
+        long id = add(user);
+        return get(id);
     }
 
     /**
@@ -508,5 +514,35 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         DATA_NOT_FOUND.when(userList.isEmpty(), "没有叫 " + name + " 的用户");
         userList.forEach(user -> updateToDatabase(get(user.getId()).setEmail(email)));
         return "已经将 " + userList.size() + " 个叫 " + name + " 的用户邮箱修改为 " + email;
+    }
+
+    @Override
+    protected void afterAppAdd(long id, @NotNull UserEntity source) {
+        UserEntity user = get(id);
+        source.getRoleList().forEach(role -> userRoleService.add(new UserRoleEntity()
+                .setUser(user)
+                .setRole(role.copyOnlyId())
+        ));
+        source.getDepartmentList().forEach(department -> userDepartmentService.add(new UserDepartmentEntity()
+                .setUser(user)
+                .setDepartment(department.copyOnlyId())
+        ));
+    }
+
+    @Override
+    protected void afterAppUpdate(long id, @NotNull UserEntity source) {
+        UserEntity user = get(id);
+        userRoleService.filter(new UserRoleEntity().setUser(user))
+                .forEach(userRole -> userRoleService.delete(userRole.getId()));
+        source.getRoleList().forEach(role -> userRoleService.add(new UserRoleEntity()
+                .setUser(user)
+                .setRole(role.copyOnlyId())
+        ));
+        userDepartmentService.filter(new UserDepartmentEntity().setUser(user))
+                .forEach(userDepartment -> userDepartmentService.delete(userDepartment.getId()));
+        source.getDepartmentList().forEach(department -> userDepartmentService.add(new UserDepartmentEntity()
+                .setUser(user)
+                .setDepartment(department.copyOnlyId())
+        ));
     }
 }

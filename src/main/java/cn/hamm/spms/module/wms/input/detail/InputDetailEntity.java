@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.wms.input.detail;
 
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
@@ -43,6 +44,7 @@ public class InputDetailEntity extends BaseBillDetailEntity<InputDetailEntity> {
     @Description("已入库数量")
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已入库数量'")
     @Meta
+    @ReadOnly
     private Double finishQuantity;
 
     @Description("仓库")

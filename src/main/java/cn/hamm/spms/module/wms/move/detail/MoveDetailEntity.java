@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.wms.move.detail;
 
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
@@ -45,5 +46,6 @@ public class MoveDetailEntity extends BaseBillDetailEntity<MoveDetailEntity> {
     @Description("已移动数量")
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已移动数量'")
     @Meta
+    @ReadOnly
     private Double finishQuantity;
 }

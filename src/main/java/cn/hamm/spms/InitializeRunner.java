@@ -149,7 +149,7 @@ public class InitializeRunner implements CommandLineRunner {
 
         parameter = parameterService.getByCode(REPORT_KEY_OF_STATUS);
         if (Objects.isNull(parameter)) {
-            parameterService.add(new ParameterEntity()
+            parameterService.addAndGet(new ParameterEntity()
                     .setCode(REPORT_KEY_OF_STATUS)
                     .setLabel("运行状态")
                     .setDataType(ReportDataType.STATUS.getKey())
@@ -158,7 +158,7 @@ public class InitializeRunner implements CommandLineRunner {
         }
         parameter = parameterService.getByCode(REPORT_KEY_OF_ALARM);
         if (Objects.isNull(parameter)) {
-            parameterService.add(new ParameterEntity()
+            parameterService.addAndGet(new ParameterEntity()
                     .setCode(REPORT_KEY_OF_ALARM)
                     .setLabel("报警状态")
                     .setDataType(ReportDataType.STATUS.getKey())
@@ -167,7 +167,7 @@ public class InitializeRunner implements CommandLineRunner {
         }
         parameter = parameterService.getByCode(REPORT_KEY_OF_PART_COUNT);
         if (Objects.isNull(parameter)) {
-            parameterService.add(new ParameterEntity()
+            parameterService.addAndGet(new ParameterEntity()
                     .setCode(REPORT_KEY_OF_PART_COUNT)
                     .setLabel("实时产量")
                     .setDataType(ReportDataType.NUMBER.getKey())
@@ -181,7 +181,7 @@ public class InitializeRunner implements CommandLineRunner {
         for (CodeRuleField codeRuleField : codeRuleFields) {
             CodeRuleEntity codeRule = codeRuleService.getByRuleField(codeRuleField.getKey());
             if (Objects.isNull(codeRule)) {
-                codeRuleService.add(
+                codeRuleService.addAndGet(
                         new CodeRuleEntity()
                                 .setIsSystem(true)
                                 .setRuleField(codeRuleField.getKey())
@@ -199,37 +199,37 @@ public class InitializeRunner implements CommandLineRunner {
         if (Objects.nonNull(user)) {
             return;
         }
-        DepartmentEntity department = departmentService.add(new DepartmentEntity().setCode("a1").setName("生产部"));
-        departmentService.add(new DepartmentEntity().setName("材料部").setCode("aaa1").setParentId(department.getId()));
+        DepartmentEntity department = departmentService.addAndGet(new DepartmentEntity().setCode("a1").setName("生产部"));
+        departmentService.addAndGet(new DepartmentEntity().setName("材料部").setCode("aaa1").setParentId(department.getId()));
         String salt = RandomUtil.randomString(UserService.PASSWORD_SALT_LENGTH);
-        user = userService.add(new UserEntity()
+        user = userService.addAndGet(new UserEntity()
                 .setNickname("凌小云")
                 .setPhone("17666666666")
                 .setEmail("admin@hamm.cn")
                 .setPassword(PasswordUtil.encode("Aa123456", salt))
                 .setSalt(salt)
         );
-        userService.add(new UserEntity()
+        userService.addAndGet(new UserEntity()
                 .setNickname("张三")
                 .setPhone("13888888888")
                 .setEmail("admin@hamm.com")
                 .setPassword(PasswordUtil.encode("Aa123456", salt))
                 .setSalt(salt));
-        userDepartmentService.add(new UserDepartmentEntity()
+        userDepartmentService.addAndGet(new UserDepartmentEntity()
                 .setUser(user)
                 .setDepartment(department)
         );
         System.out.println("---------------------------------");
         user = userService.getMaybeNull(1L);
 
-        roomService.add(new RoomEntity()
+        roomService.addAndGet(new RoomEntity()
                 .setName("广场")
                 .setCode(666)
                 .setIsOfficial(true)
                 .setIsHot(true).setOwner(user)
         );
 
-        roomService.add(new RoomEntity()
+        roomService.addAndGet(new RoomEntity()
                 .setName("测试")
                 .setCode(888)
                 .setIsHot(true).setOwner(user)
@@ -247,7 +247,7 @@ public class InitializeRunner implements CommandLineRunner {
             } catch (RuntimeException exception) {
                 log.info("需要初始化配置");
             }
-            configService.add(new ConfigEntity()
+            configService.addAndGet(new ConfigEntity()
                     .setConfig(configFlag.getDefaultValue())
                     .setType(configFlag.getType().getKey())
                     .setName(configFlag.getLabel())
@@ -261,12 +261,12 @@ public class InitializeRunner implements CommandLineRunner {
     private void initDevData() {
         int deviceCount = 2;
         for (int i = 0; i < deviceCount; i++) {
-            deviceService.add(new DeviceEntity().setCode("Simulator00" + (i + 1)).setName("设备" + (i + 1)));
+            deviceService.addAndGet(new DeviceEntity().setCode("Simulator00" + (i + 1)).setName("设备" + (i + 1)));
         }
 
         UnitEntity unit = new UnitEntity();
         unit.setName("台");
-        unit = unitService.add(unit);
+        unit = unitService.addAndGet(unit);
 
         MaterialEntity material = new MaterialEntity()
                 .setMaterialType(MaterialType.PURCHASE.getKey())
@@ -275,70 +275,70 @@ public class InitializeRunner implements CommandLineRunner {
                 .setUnit(unit)
                 .setPurchasePrice(28000D)
                 .setSalePrice(29999D);
-        material = materialService.add(material);
+        material = materialService.addAndGet(material);
 
         CustomerEntity customer = new CustomerEntity();
         customer.setName("腾讯科技").setPhone("17666666666");
-        customer = customerService.add(customer);
+        customer = customerService.addAndGet(customer);
 
         SupplierEntity supplier = new SupplierEntity();
         supplier.setName("Apple中国").setPhone("17666666666");
-        supplier = supplierService.add(supplier);
+        supplier = supplierService.addAndGet(supplier);
 
         SalePriceEntity salePrice = new SalePriceEntity();
         salePrice.setCustomer(customer).setPrice(29999D).setMaterial(material);
-        salePriceService.add(salePrice);
+        salePriceService.addAndGet(salePrice);
 
         PurchasePriceEntity purchasePrice = new PurchasePriceEntity();
         purchasePrice.setSupplier(supplier).setPrice(28000D).setMaterial(material);
-        purchasePriceService.add(purchasePrice);
+        purchasePriceService.addAndGet(purchasePrice);
 
         StorageEntity storage = new StorageEntity().setName("东部大仓");
-        storageService.add(storage);
+        storageService.addAndGet(storage);
 
         for (int i = 0; i < TWO; i++) {
-            storageService.add(new StorageEntity()
+            storageService.addAndGet(new StorageEntity()
                     .setParentId(storage.getId())
                     .setName(String.format("东部%s仓", (i + 1)))
             );
         }
 
         storage = new StorageEntity().setName("西部大仓");
-        storage = storageService.add(storage);
+        storage = storageService.addAndGet(storage);
 
         for (int i = 0; i < TWO; i++) {
-            storageService.add(new StorageEntity()
+            storageService.addAndGet(new StorageEntity()
                     .setParentId(storage.getId())
                     .setName(String.format("西部%s仓", (i + 1)))
             );
         }
 
-        OperationEntity operationKeyboard = operationService.add(new OperationEntity().setName("键盘安装"));
-        OperationEntity operationScreen = operationService.add(new OperationEntity().setName("屏幕贴膜"));
-        OperationEntity operationSystem = operationService.add(new OperationEntity().setName("系统安装"));
+        OperationEntity operationKeyboard = operationService.addAndGet(new OperationEntity().setName("键盘安装"));
+        OperationEntity operationScreen = operationService.addAndGet(new OperationEntity().setName("屏幕贴膜"));
+        OperationEntity operationSystem = operationService.addAndGet(new OperationEntity().setName("系统安装"));
 
-        MaterialEntity materialKeyboard = materialService.add(new MaterialEntity().setName("键盘").setMaterialType(MaterialType.PURCHASE.getKey()).setUnit(unit));
-        MaterialEntity materialScreen = materialService.add(new MaterialEntity().setName("屏幕").setMaterialType(MaterialType.PURCHASE.getKey()).setUnit(unit));
+        MaterialEntity materialKeyboard = materialService.addAndGet(new MaterialEntity().setName("键盘").setMaterialType(MaterialType.PURCHASE.getKey()).setUnit(unit));
+        MaterialEntity materialScreen = materialService.addAndGet(new MaterialEntity().setName("屏幕").setMaterialType(MaterialType.PURCHASE.getKey()).setUnit(unit));
 
-        BomEntity bomComputer = bomService.add(new BomEntity().setName("笔记本电脑清单").setType(BomType.NORMAL.getKey()).setDetails(
+        BomEntity bomComputer = bomService.addAndGet(new BomEntity().setName("笔记本电脑清单").setType(BomType.NORMAL.getKey()).setDetails(
                 new HashSet<>(Arrays.asList(
                         new BomDetailEntity().setMaterial(materialKeyboard).setQuantity(1D),
                         new BomDetailEntity().setMaterial(materialScreen).setQuantity(1D)
                 ))
         ));
 
-        BomEntity bomKeyboard = bomService.add(new BomEntity().setName("键盘安装清单").setType(BomType.OPERATION.getKey()).setDetails(
+        BomEntity bomKeyboard = bomService.addAndGet(new BomEntity().setName("键盘安装清单").setType(BomType.OPERATION.getKey()).setDetails(
                 new HashSet<>(Collections.singletonList(
                         new BomDetailEntity().setMaterial(materialKeyboard).setQuantity(1D)
                 ))
         ));
-        BomEntity bomIdScreen = bomService.add(new BomEntity().setName("屏幕贴膜清单").setType(BomType.OPERATION.getKey()).setDetails(
+        BomEntity bomIdScreen = bomService.addAndGet(new BomEntity().setName("屏幕贴膜清单").setType(BomType.OPERATION.getKey()).setDetails(
                 new HashSet<>(Collections.singletonList(
                         new BomDetailEntity().setMaterial(materialScreen).setQuantity(1D)
                 ))
         ));
 
-        routingService.add(new RoutingEntity().setBom(bomComputer)
+        routingService.addAndGet(new RoutingEntity().setBom(bomComputer)
                 .setName("笔记本安装")
                 .setMaterial(material)
                 .setDetails(Arrays.asList(
@@ -353,10 +353,10 @@ public class InitializeRunner implements CommandLineRunner {
         );
 
         StructureEntity structure = new StructureEntity().setName("笔记本电脑产线");
-        structureService.add(structure);
+        structureService.addAndGet(structure);
 
         for (int i = 0; i < TWO; i++) {
-            structureService.add(new StructureEntity()
+            structureService.addAndGet(new StructureEntity()
                     .setParentId(structure.getId())
                     .setName(String.format("工位%s", (i + 1)))
                     .setOperationList(new HashSet<>(Arrays.asList(

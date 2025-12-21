@@ -75,7 +75,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
         // 扣除来源库存
         from.setQuantity(NumberUtil.subtract(from.getQuantity(), moveDetailQuantity));
         InventoryService inventoryService = Services.getInventoryService();
-        inventoryService.update(from);
+        inventoryService.updateToDatabase(from);
 
         // 物料信息
         MaterialEntity material = from.getMaterial();
@@ -88,7 +88,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
         if (Objects.nonNull(to)) {
             // 更新目标库存
             to.setQuantity(NumberUtil.add(to.getQuantity(), moveDetailQuantity));
-            inventoryService.update(to);
+            inventoryService.updateToDatabase(to);
             return;
         }
         // 创建目标库存
@@ -101,8 +101,9 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
     }
 
     @Override
-    protected void afterAllBillDetailFinished(@NotNull MoveEntity moveBill) {
-        List<MoveDetailEntity> details = detailService.getAllByBillId(moveBill.getId());
+    protected void afterAllBillDetailFinished(long billId) {
+        MoveEntity moveBill = get(billId);
+        List<MoveDetailEntity> details = detailService.getAllByBillId(billId);
         List<OutputDetailEntity> outputDetails = new ArrayList<>();
         List<InputDetailEntity> inputDetails = new ArrayList<>();
         details.forEach(detail -> {

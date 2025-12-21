@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.channel.sale.detail;
 
 import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.annotation.ReadOnly;
 import cn.hamm.airpower.meta.Meta;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
@@ -51,5 +52,6 @@ public class SaleDetailEntity extends BaseBillDetailEntity<SaleDetailEntity> {
     @Description("已出库数量")
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已出库数量'")
     @Meta
+    @ReadOnly
     private Double finishQuantity;
 }

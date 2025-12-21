@@ -6,7 +6,6 @@ import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -44,17 +43,10 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
      *
      * @param billId  单据ID
      * @param details 明细
-     * @return 存储后的明细
      */
-    public final @NotNull List<E> saveDetails(Long billId, @NotNull List<E> details) {
+    public final void saveDetails(long billId, @NotNull List<E> details) {
         deleteAllByBillId(billId);
-        List<E> savedDetails = new ArrayList<>(details.size());
-        details.forEach(detail -> {
-            detail.setBillId(billId);
-            E saved = add(detail);
-            savedDetails.add(saved);
-        });
-        return savedDetails;
+        details.forEach(detail -> add(detail.setBillId(billId)));
     }
 
     /**
@@ -89,7 +81,7 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
                 quantity = NumberUtil.subtract(quantity, detailNeedQuantity);
                 detail.setFinishQuantity(detail.getQuantity()).setIsFinished(true);
             }
-            update(detail);
+            updateToDatabase(detail);
         }
         // 判断所有明细是否完成
         details = getAllByBillId(billId);

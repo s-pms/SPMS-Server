@@ -57,11 +57,10 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
      *
      * @param id ID
      */
-    public final void publish(Long id) {
-        E exist = get(id);
-        beforePublish(exist.copy());
-        exist.setIsPublished(true);
-        update(exist);
+    public final void publish(long id) {
+        E entity = get(id);
+        beforePublish(entity);
+        updateToDatabase(getEntityInstance(id).setIsPublished(true));
     }
 
     /**
@@ -83,18 +82,18 @@ public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> e
     }
 
     @Override
-    protected final void afterAdd(@NotNull E entity, @NotNull E source) {
-        afterAppAdd(entity, source);
+    protected final void afterAdd(long id, @NotNull E source) {
+        afterAppAdd(id, source);
     }
 
-    protected void afterAppAdd(@NotNull E entity, @NotNull E source) {
+    protected void afterAppAdd(long id, @NotNull E source) {
     }
 
     @Override
-    protected void afterUpdate(@NotNull E entity, @NotNull E source) {
-        afterAppUpdate(entity, source);
+    protected void afterUpdate(long id, @NotNull E source) {
+        afterAppUpdate(id, source);
     }
 
-    protected void afterAppUpdate(@NotNull E entity, @NotNull E source) {
+    protected void afterAppUpdate(long id, @NotNull E source) {
     }
 }

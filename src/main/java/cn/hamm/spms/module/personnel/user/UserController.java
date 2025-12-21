@@ -11,10 +11,8 @@ import cn.hamm.airpower.meta.ExposeAll;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginEntity;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginService;
-import cn.hamm.spms.module.personnel.user.department.UserDepartmentEntity;
 import cn.hamm.spms.module.personnel.user.department.UserDepartmentService;
 import cn.hamm.spms.module.personnel.user.enums.UserLoginType;
-import cn.hamm.spms.module.personnel.user.role.UserRoleEntity;
 import cn.hamm.spms.module.personnel.user.role.UserRoleService;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenEntity;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenService;
@@ -129,7 +127,8 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Permission(authorize = false)
     @PostMapping("createMyPersonalToken")
     public Json createMyPersonalToken(@RequestBody @Validated(WhenAdd.class) PersonalTokenEntity personal) {
-        PersonalTokenEntity personalToken = personalTokenService.add(personal.setUser(new UserEntity().setId(getCurrentUserId())));
+        long id = personalTokenService.add(personal.setUser(new UserEntity().setId(getCurrentUserId())));
+        PersonalTokenEntity personalToken = personalTokenService.get(id);
         String token = personalToken.getToken();
         return Json.data(token, "创建成功");
     }
@@ -238,33 +237,5 @@ public class UserController extends BaseController<UserEntity, UserService, User
         };
         FORBIDDEN_DISABLED.when(exist.getIsDisabled(), "登录失败，你的账号已被禁用");
         return Json.data(userService.loginWithCookieAndResponse(response, exist), "登录成功");
-    }
-
-    @Override
-    protected void afterAdd(@NotNull UserEntity user, @NotNull UserEntity source) {
-        source.getRoleList().forEach(role -> userRoleService.add(new UserRoleEntity()
-                .setUser(user)
-                .setRole(role.copyOnlyId())
-        ));
-        source.getDepartmentList().forEach(department -> userDepartmentService.add(new UserDepartmentEntity()
-                .setUser(user)
-                .setDepartment(department.copyOnlyId())
-        ));
-    }
-
-    @Override
-    protected void afterUpdate(@NotNull UserEntity user, @NotNull UserEntity source) {
-        userRoleService.filter(new UserRoleEntity().setUser(user))
-                .forEach(userRole -> userRoleService.delete(userRole.getId()));
-        source.getRoleList().forEach(role -> userRoleService.add(new UserRoleEntity()
-                .setUser(user)
-                .setRole(role.copyOnlyId())
-        ));
-        userDepartmentService.filter(new UserDepartmentEntity().setUser(user))
-                .forEach(userDepartment -> userDepartmentService.delete(userDepartment.getId()));
-        source.getDepartmentList().forEach(department -> userDepartmentService.add(new UserDepartmentEntity()
-                .setUser(user)
-                .setDepartment(department.copyOnlyId())
-        ));
     }
 }

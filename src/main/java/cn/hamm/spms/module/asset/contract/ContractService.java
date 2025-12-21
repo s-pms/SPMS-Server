@@ -22,7 +22,7 @@ public class ContractService extends BaseService<ContractEntity, ContractReposit
         ContractEntity exist = get(id);
         FORBIDDEN.when(ContractStatus.INVALID.notEqualsKey(exist.getStatus()), "该合同状态无法生效");
         exist.setStatus(ContractStatus.EFFECTIVE.getKey());
-        update(exist);
+        updateToDatabase(exist);
     }
 
     /**
@@ -34,6 +34,6 @@ public class ContractService extends BaseService<ContractEntity, ContractReposit
         ContractEntity exist = get(id);
         FORBIDDEN.when(ContractStatus.EFFECTIVE.notEqualsKey(exist.getStatus()), "该合同状态无法终止");
         exist.setStatus(ContractStatus.TERMINATED.getKey());
-        update(exist);
+        updateToDatabase(exist);
     }
 }
