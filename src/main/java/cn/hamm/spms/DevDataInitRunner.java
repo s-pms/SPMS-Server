@@ -54,6 +54,7 @@ import cn.hamm.spms.module.system.unit.UnitService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -74,6 +75,8 @@ import static cn.hamm.spms.module.iot.report.ReportConstant.*;
 @Slf4j
 public class DevDataInitRunner implements CommandLineRunner {
     public static final int TWO = 2;
+    private static final String CREATE_DROP = "create-drop";
+    private static final String LOCK_FILE = "init.lock";
     @Autowired
     private ParameterService parameterService;
     @Autowired
@@ -116,9 +119,10 @@ public class DevDataInitRunner implements CommandLineRunner {
     private RoomService roomService;
     @Autowired
     private UserDepartmentService userDepartmentService;
-
     @Autowired
     private AppConfig appConfig;
+    @Autowired
+    private Environment environment;
 
     @Override
     public void run(String... args) {
@@ -128,7 +132,8 @@ public class DevDataInitRunner implements CommandLineRunner {
             return;
         }
         // 判断运行目录是否存在 init.lock 文件，如存在，则不初始化数据
-        if (new File("init.lock").exists()) {
+        String ddlAuto = "spring.jpa.hibernate.ddl-auto";
+        if (new File(LOCK_FILE).exists() && !CREATE_DROP.equals(environment.getProperty(ddlAuto))) {
             log.info("已存在 init.lock 文件，无需初始化数据");
             return;
         }
@@ -142,7 +147,7 @@ public class DevDataInitRunner implements CommandLineRunner {
         initDevData();
         try {
             //noinspection ResultOfMethodCallIgnored
-            new File("init.lock").createNewFile();
+            new File(LOCK_FILE).createNewFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

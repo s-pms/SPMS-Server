@@ -519,14 +519,18 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     @Override
     protected void afterAppAdd(long id, @NotNull UserEntity source) {
         UserEntity user = get(id);
-        source.getRoleList().forEach(role -> userRoleService.add(new UserRoleEntity()
-                .setUser(user)
-                .setRole(role.copyOnlyId())
-        ));
-        source.getDepartmentList().forEach(department -> userDepartmentService.add(new UserDepartmentEntity()
-                .setUser(user)
-                .setDepartment(department.copyOnlyId())
-        ));
+        if (Objects.nonNull(source.getRoleList())) {
+            source.getRoleList().forEach(role -> userRoleService.add(new UserRoleEntity()
+                    .setUser(user)
+                    .setRole(role.copyOnlyId())
+            ));
+        }
+        if (Objects.nonNull(source.getDepartmentList())) {
+            source.getDepartmentList().forEach(department -> userDepartmentService.add(new UserDepartmentEntity()
+                    .setUser(user)
+                    .setDepartment(department.copyOnlyId())
+            ));
+        }
     }
 
     @Override
