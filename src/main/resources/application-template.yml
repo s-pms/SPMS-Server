@@ -2,7 +2,8 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      # 生产模式请严格使用 validate
+      ddl-auto: update
   datasource:
     url: jdbc:mysql://localhost:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
     username: your_database_username

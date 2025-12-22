@@ -7,7 +7,6 @@ import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
-import cn.hamm.spms.module.asset.material.MaterialService;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailEntity;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailRepository;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailService;
@@ -18,7 +17,6 @@ import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.input.enums.InputStatus;
 import cn.hamm.spms.module.wms.input.enums.InputType;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,14 +36,6 @@ public class PurchaseService extends AbstractBaseBillService<
         PurchaseEntity, PurchaseRepository,
         PurchaseDetailEntity, PurchaseDetailService, PurchaseDetailRepository
         > {
-
-    private final MaterialService materialService;
-
-    public PurchaseService(MaterialService materialService) {
-        super();
-        this.materialService = materialService;
-    }
-
     @Override
     public IDictionary getAuditingStatus() {
         return PurchaseStatus.AUDITING;
@@ -72,8 +62,9 @@ public class PurchaseService extends AbstractBaseBillService<
     }
 
     @Override
-    protected void afterAllBillDetailFinished(@NotNull PurchaseEntity purchaseBill) {
-        List<PurchaseDetailEntity> details = detailService.getAllByBillId(purchaseBill.getId());
+    protected void afterAllBillDetailFinished(long billId) {
+        PurchaseEntity purchaseBill = get(billId);
+        List<PurchaseDetailEntity> details = detailService.getAllByBillId(billId);
         List<InputDetailEntity> inputDetails = new ArrayList<>();
         double totalRealPrice = 0D;
         for (PurchaseDetailEntity detail : details) {
@@ -84,7 +75,7 @@ public class PurchaseService extends AbstractBaseBillService<
             );
         }
         purchaseBill.setTotalRealPrice(totalRealPrice);
-        update(purchaseBill);
+        updateToDatabase(purchaseBill);
         log.info("采购单已经全部采购完成，单据ID:{}", purchaseBill.getId());
 
         // 创建采购入库单
@@ -98,13 +89,12 @@ public class PurchaseService extends AbstractBaseBillService<
     }
 
     @Override
-    protected void afterDetailSaved(@NotNull PurchaseEntity purchase) {
-        List<PurchaseDetailEntity> details = detailService.getAllByBillId(purchase.getId());
+    protected void afterDetailSaved(long purchaseId) {
+        List<PurchaseDetailEntity> details = detailService.getAllByBillId(purchaseId);
         double totalPrice = details.stream()
                 .mapToDouble(detail -> NumberUtil.multiply(detail.getPrice(), detail.getQuantity()))
                 .sum();
-        purchase.setTotalPrice(totalPrice);
-        updateToDatabase(purchase);
+        updateToDatabase(getEntityInstance(purchaseId).setTotalPrice(totalPrice));
     }
 
     @Override
@@ -121,7 +111,7 @@ public class PurchaseService extends AbstractBaseBillService<
             String name,
             @Description("purchase count, required.")
             Integer count) {
-        List<MaterialEntity> materials = materialService.filter(new MaterialEntity().setName(name));
+        List<MaterialEntity> materials = Services.getMaterialService().filter(new MaterialEntity().setName(name));
         if (materials.isEmpty()) {
             return "未找到该物料";
         } else if (materials.size() > 1) {
@@ -140,7 +130,7 @@ public class PurchaseService extends AbstractBaseBillService<
                 .setReason(reason)
                 .setDetails(details)
                 .setStatus(PurchaseStatus.AUDITING.getKey());
-        PurchaseEntity purchase = add(purchaseBill);
+        PurchaseEntity purchase = addAndGet(purchaseBill);
         return "采购单已经创建成功，单号为 " + purchase.getBillCode();
     }
 }

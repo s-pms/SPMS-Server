@@ -83,6 +83,7 @@ public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetail
 
     @Description("已完成数量")
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '已完成数量'")
+    @ReadOnly
     private Double finishQuantity;
 
     @Description("异常数量")

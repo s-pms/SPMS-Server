@@ -53,14 +53,14 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                 .setIdentity("mcp:tools")
                 .setType(PermissionType.MCP.getKey())
                 .setIsSystem(true);
-        parent = add(parent);
+        long parentId = add(parent);
         for (McpTool mcpTool : list) {
             add(new PermissionEntity()
                     .setName(mcpTool.getName())
                     .setIdentity(McpService.getPermissionIdentity(mcpTool))
                     .setType(PermissionType.MCP.getKey())
                     .setIsSystem(true)
-                    .setParentId(parent.getParentId()));
+                    .setParentId(parentId));
         }
     }
 
@@ -68,19 +68,21 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
         List<PermissionEntity> permissions = PermissionUtil.scanPermission(Application.class.getPackageName(), PermissionEntity.class);
         for (var permission : permissions) {
             PermissionEntity exist = getPermissionByIdentity(permission.getIdentity());
+            long existId;
             if (Objects.isNull(exist)) {
                 exist = new PermissionEntity()
                         .setName(permission.getName())
                         .setIdentity(permission.getIdentity())
                         .setIsSystem(true);
-                exist = add(exist);
+                existId = add(exist);
             } else {
+                existId = exist.getId();
                 exist.setName(permission.getName())
                         .setIdentity(permission.getIdentity())
                         .setIsSystem(true);
-                exist = update(exist);
+                updateToDatabase(exist);
             }
-            exist = get(exist.getId());
+            exist = get(existId);
             for (PermissionEntity subPermission : permission.getChildren()) {
                 PermissionEntity existSub = getPermissionByIdentity(subPermission.getIdentity());
                 if (Objects.isNull(existSub)) {
@@ -95,7 +97,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
                             .setIdentity(subPermission.getIdentity())
                             .setIsSystem(true)
                             .setParentId(exist.getId());
-                    update(existSub);
+                    updateToDatabase(existSub);
                 }
             }
         }

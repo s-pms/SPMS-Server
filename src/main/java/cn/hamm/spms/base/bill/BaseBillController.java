@@ -13,7 +13,6 @@ import cn.hamm.spms.base.bill.detail.IBaseBillDetailAction;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,25 +38,17 @@ public class BaseBillController<
         D extends BaseBillDetailEntity<D>, DS extends BaseBillDetailService<D, DR>, DR extends BaseBillDetailRepository<D>
         > extends BaseController<E, S, R> implements IBaseBillAction, IBaseBillDetailAction {
 
-    @Autowired(required = false)
-    protected DS detailService;
-
     @Description("审核")
     @PostMapping("audit")
     public Json audit(@RequestBody @Validated(WhenIdRequired.class) E bill) {
-        E savedBill = service.audit(bill.getId());
-        afterAudit(savedBill);
+        service.audit(bill.getId());
         return Json.success("审核成功");
     }
 
     @Description("驳回")
     @PostMapping("reject")
     public Json reject(@RequestBody @Validated(WhenReject.class) E bill) {
-        E savedBill = service.get(bill.getId());
-        FORBIDDEN.when(!service.canReject(savedBill), "该单据状态无法驳回");
-        savedBill.setRejectReason(bill.getRejectReason());
-        service.setReject(savedBill);
-        service.update(savedBill);
+        service.reject(bill.getId());
         return Json.success("驳回成功");
     }
 
@@ -85,14 +76,5 @@ public class BaseBillController<
      */
     protected void beforeBillUpdate(@NotNull E bill) {
         log.info("单据更新，单据ID：{}", bill.getId());
-    }
-
-    /**
-     * 审核后置方法
-     *
-     * @param bill 单据
-     */
-    protected void afterAudit(@NotNull E bill) {
-        log.info("单据审核成功，单据ID：{}", bill.getId());
     }
 }

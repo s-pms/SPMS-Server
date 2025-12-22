@@ -2,6 +2,7 @@ spring:
   jpa:
     show-sql: false
     hibernate:
+      # 生产模式请严格使用 validate
       ddl-auto: update
   datasource:
     url: "jdbc:mysql://mysql:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false"
@@ -14,4 +15,3 @@ spring:
       database: 5
 app:
   upload-platform: local
-  is-dev-mode: true

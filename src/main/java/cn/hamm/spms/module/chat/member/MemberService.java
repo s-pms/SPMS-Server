@@ -50,7 +50,7 @@ public class MemberService extends BaseService<MemberEntity, MemberRepository> {
         } else {
             member.setRole(MemberRole.VISITOR.getKey());
         }
-        return add(member);
+        return addAndGet(member);
     }
 
     /**

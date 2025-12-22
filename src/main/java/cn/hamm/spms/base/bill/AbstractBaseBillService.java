@@ -65,13 +65,11 @@ public abstract class AbstractBaseBillService<
         log.info("标记明细已全部完成 {}，单据ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId);
         IDictionary status = getBillDetailsFinishStatus();
         FORBIDDEN.whenNull(status, "没有找到单据的所有明细完成状态");
-        E bill = get(billId);
-        bill.setStatus(status.getKey());
-        update(bill);
-        afterAllBillDetailFinished(bill);
+        updateToDatabase(getEntityInstance(billId).setStatus(status.getKey()));
+        afterAllBillDetailFinished(billId);
         if (status.equals(getFinishedStatus())) {
             log.info("明细完成状态是终态");
-            setBillFinished(bill.getId());
+            setBillFinished(billId);
         }
     }
 
@@ -84,23 +82,20 @@ public abstract class AbstractBaseBillService<
         log.info("标记单据已完成 {}，单据ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId);
         IDictionary status = getFinishedStatus();
         FORBIDDEN.whenNull(status, "标记完成失败，没有找到完成状态");
-        E bill = get(billId);
-        beforeBillFinish(bill.copy());
-        bill.setStatus(status.getKey());
-        bill = update(bill);
-        afterBillFinished(bill);
+        beforeBillFinish(billId);
+        updateToDatabase(getEntityInstance(billId).setStatus(status.getKey()));
+        afterBillFinished(billId);
     }
 
     /**
      * 单据完成前置方法
      *
-     * @param bill 单据
+     * @param billId 单据ID
      */
-    protected void beforeBillFinish(@NotNull E bill) {
-        log.info("标记单据完成前 {}，单据ID:{} {}",
+    protected void beforeBillFinish(long billId) {
+        log.info("标记单据完成前 {}，单据ID:{}",
                 ReflectUtil.getDescription(getFirstParameterizedTypeClass()),
-                bill.getId(),
-                bill.getBillCode()
+                billId
         );
     }
 
@@ -151,43 +146,40 @@ public abstract class AbstractBaseBillService<
     /**
      * 单据完成的后置方法
      *
-     * @param bill 单据
+     * @param billId 单据 ID
      * @apiNote 一般用于在当前单据完成后同步标记关联的其他单据为完成状态
-     * @see #afterAllBillDetailFinished(E)
+     * @see #afterAllBillDetailFinished(long)
      */
-    protected void afterBillFinished(@NotNull E bill) {
-        log.info("单据已完成 {}，单据ID:{} {}",
+    protected void afterBillFinished(long billId) {
+        log.info("单据已完成 {}，单据ID:{}",
                 ReflectUtil.getDescription(getFirstParameterizedTypeClass()),
-                bill.getId(),
-                bill.getBillCode()
+                billId
         );
     }
 
     /**
      * 单据所有明细完成的后置方法
      *
-     * @param bill 单据
+     * @param billId 单据ID
      * @apiNote 一般用于当前单据的所有明细都已完成，可能会创建其他的单据，也可能去修改其他单据的明细
-     * @see #afterBillFinished(E)
+     * @see #afterBillFinished(long)
      */
-    protected void afterAllBillDetailFinished(@NotNull E bill) {
-        log.info("单据所有明细已完成 {}，单据ID:{} {}",
+    protected void afterAllBillDetailFinished(long billId) {
+        log.info("单据所有明细已完成 {}，单据ID:{}",
                 ReflectUtil.getDescription(getFirstParameterizedTypeClass()),
-                bill.getId(),
-                bill.getBillCode()
+                billId
         );
     }
 
     /**
      * 单据明细保存后置方法
      *
-     * @param bill 单据
+     * @param billId 单据 ID
      */
-    protected void afterDetailSaved(@NotNull E bill) {
-        log.info("单据明细保存成功 {}，单据ID:{} {}",
+    protected void afterDetailSaved(long billId) {
+        log.info("单据明细保存成功 {}，单据ID:{}",
                 ReflectUtil.getDescription(getFirstParameterizedTypeClass()),
-                bill.getId(),
-                bill.getBillCode()
+                billId
         );
     }
 
@@ -214,49 +206,47 @@ public abstract class AbstractBaseBillService<
     }
 
     @Override
-    protected final void afterAppAdd(@NotNull E bill, @NotNull E source) {
-        saveDetails(bill, source.getDetails());
+    protected void afterAppAdd(long billId, @NotNull E source) {
+        E bill = get(billId);
+        saveDetails(billId, source.getDetails());
         ConfigFlag configFlag = getAutoAuditConfigFlag();
         if (Objects.nonNull(configFlag)) {
             ConfigEntity config = Services.getConfigService().get(configFlag);
             if (config.booleanConfig()) {
-                bill = audit(bill.getId());
+                audit(bill.getId());
             }
         }
-        @NotNull E finalBill = bill;
-        TaskUtil.run(() -> afterBillAdd(finalBill));
+        TaskUtil.run(() -> afterBillAdd(bill.getId()));
     }
 
     /**
      * 单据添加后置
      *
-     * @param bill 单据
+     * @param billId 单据 ID
      */
-    protected void afterBillAdd(@NotNull E bill) {
-        log.info("单据添加后 {}，单据ID:{} {}",
+    protected void afterBillAdd(long billId) {
+        log.info("单据添加后 {}，单据ID:{}",
                 ReflectUtil.getDescription(getFirstParameterizedTypeClass()),
-                bill.getId(),
-                bill.getBillCode()
+                billId
         );
     }
 
     @Override
-    protected final void afterAppUpdate(@NotNull E bill, @NotNull E source) {
-        saveDetails(bill, source.getDetails());
-        afterBillUpdate(bill, source);
+    protected void afterAppUpdate(long billId, @NotNull E source) {
+        saveDetails(billId, source.getDetails());
+        afterBillUpdate(billId, source);
     }
 
     /**
      * 单据更新后置
      *
-     * @param bill   单据
+     * @param billId 单据 ID
      * @param source 源数据
      */
-    protected void afterBillUpdate(@NotNull E bill, @NotNull E source) {
-        log.info("单据修改后 {}，单据ID:{} {}",
+    protected void afterBillUpdate(long billId, @NotNull E source) {
+        log.info("单据修改后 {}，单据ID:{}",
                 ReflectUtil.getDescription(getFirstParameterizedTypeClass()),
-                bill.getId(),
-                bill.getBillCode()
+                billId
         );
     }
 
@@ -269,40 +259,52 @@ public abstract class AbstractBaseBillService<
      * 如需再次保存，请调用 {@link #updateToDatabase(CurdEntity)} }
      * </li>
      *
-     * @param bill    单据
+     * @param billId  单据 ID
      * @param details 明细列表
      */
-    private void saveDetails(@NotNull E bill, List<D> details) {
-        details = detailService.saveDetails(bill.getId(), details);
-        bill.setDetails(details);
-        afterDetailSaved(bill);
+    private void saveDetails(long billId, List<D> details) {
+        detailService.saveDetails(billId, details);
+        afterDetailSaved(billId);
     }
 
     /**
      * 单据审核
      *
-     * @param billId 单据ID
+     * @param billId 单据 ID
      */
-    protected final @NotNull E audit(long billId) {
+    protected final void audit(long billId) {
         E bill = get(billId);
         FORBIDDEN.when(!canAudit(bill), "该单据状态无法审核");
+        bill = getEntityInstance(billId);
         setAudited(bill);
-        E update = update(bill);
-        TaskUtil.run(() -> afterBillAudited(update));
-        return update;
+        updateToDatabase(bill);
+        TaskUtil.run(() -> afterBillAudited(billId));
+    }
+
+    /**
+     * 单据驳回
+     *
+     * @param billId 单据 ID
+     */
+    protected final void reject(long billId) {
+        E bill = get(billId);
+        FORBIDDEN.when(!canReject(bill), "该单据状态无法驳回");
+        bill = getEntityInstance(billId);
+        setAudited(bill);
+        bill.setRejectReason(bill.getRejectReason());
+        updateToDatabase(getEntityInstance(billId));
     }
 
     /**
      * 单据审核的后置方法
      *
-     * @param bill 单据
+     * @param billId 单据 ID
      * @apiNote 可以添加一些审核后的业务逻辑
      */
-    protected void afterBillAudited(@NotNull E bill) {
-        log.info("单据审核后 {}，单据ID:{} {}",
+    protected void afterBillAudited(long billId) {
+        log.info("单据审核后 {}，单据ID:{}",
                 ReflectUtil.getDescription(getFirstParameterizedTypeClass()),
-                bill.getId(),
-                bill.getBillCode()
+                billId
         );
     }
 

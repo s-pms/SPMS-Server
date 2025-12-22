@@ -54,11 +54,12 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
     }
 
     @Override
-    public void afterBillFinished(@NotNull InputEntity inputBill) {
+    protected void afterBillFinished(long billId) {
+        InputEntity inputBill = get(billId);
         InputType inputType = DictionaryUtil.getDictionary(InputType.class, inputBill.getType());
         log.info("入库单入库完成 {}，单据ID:{} {} 入库类型 {}",
                 ReflectUtil.getDescription(getFirstParameterizedTypeClass()),
-                inputBill.getId(),
+                billId,
                 inputBill.getBillCode(),
                 inputType.getLabel()
         );
@@ -89,7 +90,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
 
         if (Objects.nonNull(inventory)) {
             inventory.setQuantity(NumberUtil.add(inventory.getQuantity(), inputDetailQuantity));
-            inventoryService.update(inventory);
+            inventoryService.updateToDatabase(inventory);
             log.info("入库单明细更新库存完毕，单据ID: {}", inputDetail.getId());
             return;
         }

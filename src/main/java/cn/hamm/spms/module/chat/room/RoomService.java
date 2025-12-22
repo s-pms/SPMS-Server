@@ -46,7 +46,7 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
      * @param userId 房主ID
      * @return 房间ID
      */
-    public final RoomEntity create(RoomEntity room, long userId) {
+    public final long create(RoomEntity room, long userId) {
         RoomEntity filter = new RoomEntity().setOwner(new UserEntity().setId(userId));
         List<RoomEntity> list = filter(filter);
         PARAM_INVALID.when(list.size() >= MAX_ROOM_COUNT, "您最多只能创建" + MAX_ROOM_COUNT + "个房间");
