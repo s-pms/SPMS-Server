@@ -7,10 +7,6 @@ import cn.hamm.airpower.ai.AiStream;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.api.ApiController;
-import cn.hamm.airpower.helper.TransactionHelper;
-import cn.hamm.spms.common.Services;
-import cn.hamm.spms.module.asset.device.DeviceEntity;
-import cn.hamm.spms.module.asset.device.DeviceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,17 +26,9 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 public class IndexController extends ApiController {
     @Autowired
     private Ai ai;
-    @Autowired
-    private TransactionHelper transactionHelper;
 
     @GetMapping("")
     public String index() {
-        DeviceService deviceService = Services.getDeviceService();
-        transactionHelper.run(() -> {
-            long add = deviceService.add(new DeviceEntity().setName("lastName" + System.currentTimeMillis()));
-            DeviceEntity device = deviceService.get(add);
-            log.info("device {}", device.getRate());
-        });
         return "<h1>Server running!</h1>";
     }
 
