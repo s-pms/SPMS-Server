@@ -39,25 +39,24 @@ public class ServiceCron {
      * @param codeRule 编码规则
      */
     private void resetSn(@NotNull CodeRuleEntity codeRule) {
-        Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        if (codeRule.getSnType().equals(YEAR.getKey()) && month == 1 && day == 1) {
-            // 按年更新 且是1月1号
-            codeRule.setCurrentSn(0);
-            codeRuleService.update(codeRule);
-            return;
-        }
-        if (codeRule.getSnType().equals(MONTH.getKey()) && day == 1) {
-            // 按月更新 且是1号
-            codeRule.setCurrentSn(0);
-            codeRuleService.update(codeRule);
-            return;
-        }
-        if (codeRule.getSnType().equals(DAY.getKey())) {
-            // 按日更新 直接更新
-            codeRule.setCurrentSn(0);
-            codeRuleService.update(codeRule);
-        }
+        codeRuleService.updateWithLock(codeRule.getId(), exist -> {
+            Calendar calendar = Calendar.getInstance();
+            int month = calendar.get(Calendar.MONTH) + 1;
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            if (exist.getSnType().equals(YEAR.getKey()) && month == 1 && day == 1) {
+                // 按年更新 且是1月1号
+                exist.setCurrentSn(0);
+                return;
+            }
+            if (exist.getSnType().equals(MONTH.getKey()) && day == 1) {
+                // 按月更新 且是1号
+                exist.setCurrentSn(0);
+                return;
+            }
+            if (exist.getSnType().equals(DAY.getKey())) {
+                // 按日更新 直接更新
+                exist.setCurrentSn(0);
+            }
+        });
     }
 }
