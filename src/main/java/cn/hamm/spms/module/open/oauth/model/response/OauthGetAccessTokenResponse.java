@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.open.oauth.model.response;
 
+import cn.hamm.airpower.meta.Meta;
 import cn.hamm.airpower.root.RootModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,20 +18,24 @@ public class OauthGetAccessTokenResponse extends RootModel<OauthGetAccessTokenRe
     /**
      * AccessToken
      */
+    @Meta
     private String accessToken;
 
     /**
      * 过期时间(秒)
      */
+    @Meta
     private Long expiresIn;
 
     /**
      * 刷新Token
      */
+    @Meta
     private String refreshToken;
 
     /**
      * 权限范围
      */
+    @Meta
     private String scope;
 }
