@@ -1,6 +1,6 @@
 package cn.hamm.spms.common.cron;
 
-import cn.hamm.airpower.api.ApiConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -9,10 +9,11 @@ import org.springframework.stereotype.Component;
  *
  * @author Hamm.cn
  */
+@Slf4j
 @Component
 public class ServiceCron {
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "1/5 * * * * *")
     void test() {
-        ApiConfig.isServerRunning = !ApiConfig.isServerRunning;
+        log.info("测试定时任务");
     }
 }
