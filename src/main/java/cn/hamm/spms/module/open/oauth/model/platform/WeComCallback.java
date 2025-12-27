@@ -4,7 +4,7 @@ import cn.hamm.airpower.api.Json;
 import cn.hamm.airpower.datetime.DateTimeUtil;
 import cn.hamm.airpower.redis.RedisHelper;
 import cn.hamm.airpower.request.HttpUtil;
-import cn.hamm.spms.module.open.oauth.OauthConfig;
+import cn.hamm.spms.module.open.oauth.config.WecomConfig;
 import cn.hamm.spms.module.open.oauth.model.base.AbstractOauthCallback;
 import cn.hamm.spms.module.open.oauth.model.base.OauthUserInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +33,9 @@ public class WeComCallback extends AbstractOauthCallback {
     @Autowired
     private RedisHelper redisHelper;
 
+    @Autowired
+    private WecomConfig wecomConfig;
+
     @Override
     public OauthUserInfo getUserInfo(String code) {
         String accessToken = getAccessToken();
@@ -40,7 +43,7 @@ public class WeComCallback extends AbstractOauthCallback {
         HttpResponse<String> httpResponse = HttpUtil.create().setUrl(url).get();
         Map<String, Object> map = Json.parse2Map(httpResponse.body());
         Object userId = map.get("UserId");
-        FORBIDDEN.whenNull(userId, "获取用户ID失败");
+        FORBIDDEN.whenNull(userId, "获取用户 ID 失败");
         return new OauthUserInfo().setUserId(userId.toString());
     }
 
@@ -50,11 +53,11 @@ public class WeComCallback extends AbstractOauthCallback {
         if (Objects.nonNull(object)) {
             return object.toString();
         }
-        String url = String.format(ACCESS_TOKEN_URL, OauthConfig.getWecomConfig().getCorpId(), OauthConfig.getWecomConfig().getCorpSecret());
+        String url = String.format(ACCESS_TOKEN_URL, wecomConfig.getCorpId(), wecomConfig.getCorpSecret());
         HttpResponse<String> httpResponse = HttpUtil.create().setUrl(url).get();
         Map<String, Object> map = Json.parse2Map(httpResponse.body());
-        Object accessToken = Objects.requireNonNull(map.get("access_token"), "AccessToken获取失败");
-        FORBIDDEN.when(!StringUtils.hasText(accessToken.toString()), "AccessToken获取失败");
+        Object accessToken = Objects.requireNonNull(map.get("access_token"), "AccessToken 获取失败");
+        FORBIDDEN.when(!StringUtils.hasText(accessToken.toString()), "AccessToken 获取失败");
         redisHelper.set(ACCESS_TOKEN_CACHE_KEY, accessToken.toString(), DateTimeUtil.SECOND_PER_HOUR);
         log.info("企业微信获取AccessToken: {}", accessToken);
         return accessToken.toString();

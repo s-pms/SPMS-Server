@@ -13,6 +13,7 @@ import cn.hamm.airpower.desensitize.DesensitizeIgnore;
 import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.airpower.request.RequestUtil;
 import cn.hamm.airpower.util.RandomUtil;
+import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.open.app.OpenAppEntity;
 import cn.hamm.spms.module.open.app.OpenAppService;
 import cn.hamm.spms.module.open.oauth.model.enums.OauthScope;
@@ -90,6 +91,9 @@ public class OauthController extends ApiController implements IOauthAction {
     @Autowired
     private AccessConfig accessConfig;
 
+    @Autowired
+    private AppConfig appConfig;
+
     @GetMapping("authorize")
     public ModelAndView index(
             HttpServletRequest request,
@@ -113,7 +117,7 @@ public class OauthController extends ApiController implements IOauthAction {
             return redirectLogin(response, appKey, redirectUri, scope);
         }
         if (openApp.getIsInternal()) {
-            // 内部应用直接返回code
+            // 内部应用直接返回 code
             redirectToThirdPlatform(response, openApp.getAppKey(), userId, scope, redirectUri);
             return null;
         }
@@ -123,22 +127,22 @@ public class OauthController extends ApiController implements IOauthAction {
                 REDIRECT_URI, URLEncoder.encode(redirectUri, UTF_8),
                 SCOPE, scope
         );
-        redirect(response, RequestUtil.buildQueryUrl("/authorize", params));
+        redirect(response, RequestUtil.buildQueryUrl(appConfig.getLoginUrl(), params));
         return null;
     }
 
-    @Description("获取AccessToken")
+    @Description("获取 AccessToken")
     @Permission(login = false)
     @PostMapping("accessToken")
     public Json accessToken(@RequestBody @Validated({OauthGetAccessTokenRequest.WhenGetAccessToken.class, WhenAppKeyRequired.class}) OauthGetAccessTokenRequest request) {
-        // 获取Code所属的用户ID
+        // 获取 Code 所属的用户 ID
         Long userId = service.getOauthUserCache(request.getAppKey(), request.getCode());
-        // 查询App信息
+        // 查询 App 信息
         OpenAppEntity existApp = openAppService.getByAppKey(request.getAppKey());
         FORBIDDEN.whenNotEquals(existApp.getAppSecret(), request.getAppSecret(), "应用秘钥错误");
         // 移除缓存的用户
         service.removeOauthUserCache(existApp.getAppKey(), request.getCode());
-        // 获取Scope
+        // 获取 Scope
         String scope = service.getOauthScopeCache(request.getAppKey(), request.getCode());
         if (!StringUtils.hasText(scope)) {
             scope = OauthScope.BASIC_INFO.name();
@@ -184,12 +188,12 @@ public class OauthController extends ApiController implements IOauthAction {
     @DesensitizeIgnore
     public Json getUserInfo(@RequestBody @Validated(WhenAccessTokenRequired.class) OauthGetUserInfoRequest request) {
         AccessTokenUtil.VerifiedToken verify = AccessTokenUtil.create().verify(request.getAccessToken(), accessConfig.getAccessTokenSecret());
-        long userId = Long.parseLong(Objects.requireNonNull(verify.getPayload(USER_ID), "无效的UserId").toString());
+        long userId = Long.parseLong(Objects.requireNonNull(verify.getPayload(USER_ID), "无效的 UserId").toString());
         UserEntity user = userService.get(userId);
-        String appKey = Objects.requireNonNull(verify.getPayload(APP_KEY), "无效的AppKey").toString();
+        String appKey = Objects.requireNonNull(verify.getPayload(APP_KEY), "无效的 AppKey").toString();
         OpenAppEntity existApp = openAppService.getByAppKey(appKey);
         FORBIDDEN.whenNull(existApp, "应用信息异常");
-        String scope = Objects.requireNonNull(verify.getPayload(SCOPE), "无效的Scope").toString();
+        String scope = Objects.requireNonNull(verify.getPayload(SCOPE), "无效的 Scope").toString();
         List<String> scopeList = Arrays.stream(scope.split(SCOPE_DELIMITER)).toList();
         OauthScope[] oauthScopes = OauthScope.values();
         for (OauthScope oauthScope : oauthScopes) {
@@ -221,12 +225,12 @@ public class OauthController extends ApiController implements IOauthAction {
         ));
     }
 
-    @Description("创建Code")
+    @Description("创建 Code")
     @Permission(authorize = false)
     @PostMapping("createCode")
     public Json createCode(@RequestBody @Validated({WhenAppKeyRequired.class, OauthCreateCodeRequest.WhenCreateCode.class}) OauthCreateCodeRequest request) {
         OpenAppEntity openApp = openAppService.getByAppKey(request.getAppKey());
-        INVALID_APP_KEY.whenNull(openApp, "AppKey无效");
+        INVALID_APP_KEY.whenNull(openApp, "AppKey 无效");
         String[] scopes = request.getScope().split(SCOPE_DELIMITER);
         List<String> scopeList = new ArrayList<>();
         PARAM_INVALID.when(scopes.length == 0, "授权范围无效");
@@ -244,9 +248,9 @@ public class OauthController extends ApiController implements IOauthAction {
     }
 
     /**
-     * 生成Token
+     * 生成 Token
      *
-     * @param userId    用户ID
+     * @param userId    用户 ID
      * @param scope     权限
      * @param appKey    App Key
      * @param expiresIn 过期时间(秒)
@@ -272,7 +276,7 @@ public class OauthController extends ApiController implements IOauthAction {
      * @return 无返回
      */
     private @Nullable ModelAndView redirectLogin(HttpServletResponse response, String appKey, String redirectUri, String scope) {
-        String url = "/login?appKey=" +
+        String url = appConfig.getLoginUrl() + "?appKey=" +
                 appKey +
                 "&redirectUri=" +
                 URLEncoder.encode(redirectUri, UTF_8)
@@ -294,10 +298,10 @@ public class OauthController extends ApiController implements IOauthAction {
     }
 
     /**
-     * 重定向到指定的URL
+     * 重定向到指定的 URL
      *
      * @param response 响应体
-     * @param url      目标URL
+     * @param url      目标 URL
      */
     private void redirect(@NotNull HttpServletResponse response, String url) {
         try {
@@ -308,18 +312,18 @@ public class OauthController extends ApiController implements IOauthAction {
     }
 
     /**
-     * 从Cookie获取用户ID
+     * 从 Cookie 获取用户ID
      *
-     * @return Cookie字符串
+     * @return Cookie 字符串
      */
     private @Nullable Long getUserIdFromCookie() {
         Cookie[] cookies = request.getCookies();
         if (Objects.isNull(cookies)) {
-            // 没有cookie
+            // 没有 Cookie
             return null;
         }
         String cookieString = Arrays.stream(cookies)
-                .filter(c -> Objects.equals(cookieConfig.getAuthCookieName(), c.getName()))
+                .filter(cookie -> Objects.equals(cookieConfig.getAuthCookieName(), cookie.getName()))
                 .findFirst().map(Cookie::getValue)
                 .orElse(null);
         if (!StringUtils.hasText(cookieString)) {
@@ -327,17 +331,17 @@ public class OauthController extends ApiController implements IOauthAction {
         }
         Long userId = userService.getUserIdByCookie(cookieString);
         if (Objects.isNull(userId)) {
-            // cookie没有找到用户
+            // Cookie 没有找到用户
             return null;
         }
         return userId;
     }
 
     /**
-     * 获取scope
+     * 获取权限范围
      *
      * @param request 请求
-     * @return scope字符串
+     * @return 权限字符串
      */
     private @NotNull String getScopeFromRequest(@NotNull HttpServletRequest request) {
         String scope = request.getParameter(SCOPE);
@@ -355,7 +359,7 @@ public class OauthController extends ApiController implements IOauthAction {
      *
      * @param response    响应
      * @param appKey      appKey
-     * @param userId      用户ID
+     * @param userId      用户 ID
      * @param scope       权限列表
      * @param redirectUri 第三方回调地址
      */
