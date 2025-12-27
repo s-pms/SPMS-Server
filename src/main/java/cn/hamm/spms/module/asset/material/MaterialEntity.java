@@ -88,11 +88,4 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '销售标准价'")
     @Export(NUMBER)
     private Double salePrice;
-
-
-    @Override
-    @Meta
-    public Boolean getIsDisabled() {
-        return super.getIsDisabled();
-    }
 }

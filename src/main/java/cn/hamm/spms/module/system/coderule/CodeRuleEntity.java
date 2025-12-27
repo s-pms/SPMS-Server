@@ -69,6 +69,21 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     @Column(columnDefinition = "int UNSIGNED default 0 comment '当前序列号'")
     private Integer currentSn;
 
+    @Description("重置年")
+    @ReadOnly
+    @Column(columnDefinition = "int UNSIGNED default 0 comment '重置年'")
+    private Integer currentYear;
+
+    @Description("重置月")
+    @ReadOnly
+    @Column(columnDefinition = "int UNSIGNED default 0 comment '重置月'")
+    private Integer currentMonth;
+
+    @Description("重置日")
+    @ReadOnly
+    @Column(columnDefinition = "int UNSIGNED default 0 comment '重置日'")
+    private Integer currentDay;
+
     @Description("内置参数")
     @ReadOnly
     @Column(columnDefinition = "bit(1) default 0 comment '是否内置参数'")

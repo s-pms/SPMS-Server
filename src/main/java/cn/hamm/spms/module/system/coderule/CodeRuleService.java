@@ -1,16 +1,18 @@
 package cn.hamm.spms.module.system.coderule;
 
+import cn.hamm.airpower.datetime.DateTimeUtil;
 import cn.hamm.airpower.dictionary.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
 import cn.hamm.spms.module.system.coderule.enums.CodeRuleParam;
+import cn.hamm.spms.module.system.coderule.enums.SerialNumberUpdate;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
 import static cn.hamm.airpower.exception.ServiceError.SERVICE_ERROR;
@@ -46,37 +48,70 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
     public final @NotNull String createCode(@NotNull CodeRuleField codeRuleField) {
         CodeRuleEntity codeRule = repository.getByRuleField(codeRuleField.getKey());
         SERVICE_ERROR.whenNull(codeRule, "保存失败,请先配置自定义编码规则!");
-        String template = codeRule.getTemplate();
-        List<Map<String, Object>> mapList = DictionaryUtil.getDictionaryList(CodeRuleParam.class);
-        Calendar calendar = Calendar.getInstance();
-        for (val map : mapList) {
-            String param = map.get(STRING_LABEL).toString();
-            if (FULL_YEAR.getLabel().equals(param)) {
-                template = template.replaceAll(param, String.valueOf(calendar.get(Calendar.YEAR)));
-                continue;
+        AtomicReference<String> code = new AtomicReference<>("");
+        transactionHelper.run(() -> {
+            CodeRuleEntity forUpdate = getForUpdate(codeRule.getId());
+            SerialNumberUpdate serialNumberUpdate = DictionaryUtil.getDictionary(SerialNumberUpdate.class, forUpdate.getSnType());
+            final int currentYear = DateTimeUtil.getCurrentYear();
+            final int currentMonth = DateTimeUtil.getCurrentMonth();
+            final int currentDay = DateTimeUtil.getCurrentDay();
+            switch (serialNumberUpdate) {
+                case YEAR -> {
+                    if (forUpdate.getCurrentYear() != currentYear) {
+                        forUpdate.setCurrentYear(currentYear)
+                                .setCurrentSn(0);
+                    }
+                }
+                case MONTH -> {
+                    if (forUpdate.getCurrentMonth() != currentMonth) {
+                        forUpdate
+                                .setCurrentYear(currentYear)
+                                .setCurrentMonth(currentMonth)
+                                .setCurrentSn(0);
+                    }
+                }
+                case DAY -> {
+                    if (forUpdate.getCurrentDay() != currentDay) {
+                        forUpdate
+                                .setCurrentYear(currentYear)
+                                .setCurrentMonth(currentMonth)
+                                .setCurrentDay(currentDay)
+                                .setCurrentSn(0);
+                    }
+                }
             }
-            if (YEAR.getLabel().equals(param)) {
-                String fullYear = String.valueOf(calendar.get(Calendar.YEAR));
-                template = template.replaceAll(param, fullYear.substring(SHORT_YEAR_LENGTH));
-                continue;
+            String template = forUpdate.getTemplate();
+            List<Map<String, Object>> mapList = DictionaryUtil.getDictionaryList(CodeRuleParam.class);
+            for (val map : mapList) {
+                String param = map.get(STRING_LABEL).toString();
+                if (FULL_YEAR.getLabel().equals(param)) {
+                    template = template.replaceAll(param, String.valueOf(currentYear));
+                    continue;
+                }
+                if (YEAR.getLabel().equals(param)) {
+                    String fullYear = String.valueOf(currentYear);
+                    template = template.replaceAll(param, fullYear.substring(SHORT_YEAR_LENGTH));
+                    continue;
+                }
+                if (MONTH.getLabel().equals(param)) {
+                    template = template.replaceAll(param, String.format(CODE_RULE_FORMATTER, currentMonth));
+                    continue;
+                }
+                if (DATE.getLabel().equals(param)) {
+                    template = template.replaceAll(param, String.format(CODE_RULE_FORMATTER, currentDay));
+                    continue;
+                }
+                if (HOUR.getLabel().equals(param)) {
+                    template = template.replaceAll(param, String.format(CODE_RULE_FORMATTER, DateTimeUtil.getCurrentHour()));
+                }
             }
-            if (MONTH.getLabel().equals(param)) {
-                template = template.replaceAll(param, String.format(CODE_RULE_FORMATTER, calendar.get(Calendar.MONTH) + 1));
-                continue;
-            }
-            if (DATE.getLabel().equals(param)) {
-                template = template.replaceAll(param, String.format(CODE_RULE_FORMATTER, calendar.get(Calendar.DAY_OF_MONTH)));
-                continue;
-            }
-            if (HOUR.getLabel().equals(param)) {
-                template = template.replaceAll(param, String.format(CODE_RULE_FORMATTER, calendar.get(Calendar.HOUR_OF_DAY)));
-            }
-        }
-        int serialNumber = codeRule.getCurrentSn();
-        serialNumber++;
-        codeRule.setCurrentSn(serialNumber);
-        repository.saveAndFlush(codeRule);
-        return codeRule.getPrefix() + template + String.format("%0" + codeRule.getSnLength() + "d", serialNumber);
+            int serialNumber = forUpdate.getCurrentSn();
+            serialNumber++;
+            forUpdate.setCurrentSn(serialNumber);
+            repository.saveAndFlush(forUpdate);
+            code.set(forUpdate.getPrefix() + template + String.format("%0" + forUpdate.getSnLength() + "d", serialNumber));
+        });
+        return code.get();
     }
 
     /**

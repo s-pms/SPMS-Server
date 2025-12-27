@@ -213,6 +213,7 @@ public class OauthController extends ApiController implements IOauthAction {
     @PostMapping("getScopeList")
     public Json getScopeList() {
         return Json.data(DictionaryUtil.getDictionaryList(OauthScope.class,
+                OauthScope::name,
                 OauthScope::getKey,
                 OauthScope::getLabel,
                 OauthScope::getDescription,

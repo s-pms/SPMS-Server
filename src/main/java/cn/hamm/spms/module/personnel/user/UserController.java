@@ -8,6 +8,7 @@ import cn.hamm.airpower.api.Json;
 import cn.hamm.airpower.cookie.CookieHelper;
 import cn.hamm.airpower.curd.Curd;
 import cn.hamm.airpower.meta.ExposeAll;
+import cn.hamm.airpower.redis.RedisHelper;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginEntity;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginService;
@@ -16,10 +17,12 @@ import cn.hamm.spms.module.personnel.user.enums.UserLoginType;
 import cn.hamm.spms.module.personnel.user.role.UserRoleService;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenEntity;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenService;
+import cn.hamm.spms.module.system.menu.MenuEntity;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DISABLED;
@@ -43,6 +47,9 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EDIT;
 public class UserController extends BaseController<UserEntity, UserService, UserRepository> implements IUserAction {
     @Autowired
     private CookieHelper cookieHelper;
+
+    @Autowired
+    private RedisHelper redisHelper;
 
     @Autowired
     private UserService userService;
@@ -137,18 +144,51 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Permission(authorize = false)
     @PostMapping("getMyMenuList")
     public Json getMyMenuList() {
-        return Json.data(service.getMenuListByUserId(getCurrentUserId()));
+        String userMenuCacheKey = getUserMenuCacheKey(getCurrentUserId());
+        Object object = redisHelper.get(userMenuCacheKey);
+        if (Objects.nonNull(object)) {
+            return Json.data(Json.parseList(object.toString(), MenuEntity[].class), "获取成功");
+        }
+        List<MenuEntity> menuListByUserId = service.getMenuListByUserId(getCurrentUserId());
+        redisHelper.set(userMenuCacheKey, Json.toString(menuListByUserId));
+        return Json.data(menuListByUserId, "查询成功");
     }
 
     @Description("获取我的权限")
     @Permission(authorize = false)
     @PostMapping("getMyPermissionList")
     public Json getMyPermissionList() {
+        String userPermissionCacheKey = getUserPermissionCacheKey(getCurrentUserId());
+        Object object = redisHelper.get(userPermissionCacheKey);
+        if (Objects.nonNull(object)) {
+            return Json.data(Json.parseList(object.toString(), String[].class), "获取成功");
+        }
         List<PermissionEntity> permissionList = service.getPermissionListByUserId(getCurrentUserId());
         List<String> permissions = permissionList.stream()
                 .map(PermissionEntity::getIdentity)
                 .collect(Collectors.toList());
-        return Json.data(permissions);
+        redisHelper.set(userPermissionCacheKey, Json.toString(permissions));
+        return Json.data(permissions, "查询成功");
+    }
+
+    /**
+     * 获取用户权限缓存 Key
+     *
+     * @return key
+     */
+    @Contract(pure = true)
+    private @NotNull String getUserPermissionCacheKey(long userId) {
+        return "user_permission_" + userId;
+    }
+
+    /**
+     * 获取用户菜单缓存 Key
+     *
+     * @return key
+     */
+    @Contract(pure = true)
+    private @NotNull String getUserMenuCacheKey(long userId) {
+        return "user_menu_" + userId;
     }
 
     @Description("获取我绑定的社交账号")
@@ -193,7 +233,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
         Cookie cookie = cookieHelper.getAuthorizeCookie("");
         cookie.setHttpOnly(false);
         cookie.setPath(CookieHelper.DEFAULT_PATH);
-        // 清除cookie
+        // 清除 cookie
         cookie.setMaxAge(0);
         httpServletResponse.addCookie(cookie);
         return Json.success("退出登录成功");
@@ -236,6 +276,8 @@ public class UserController extends BaseController<UserEntity, UserService, User
             case VIA_EMAIL_CODE -> service.loginViaEmail(user);
         };
         FORBIDDEN_DISABLED.when(exist.getIsDisabled(), "登录失败，你的账号已被禁用");
+        redisHelper.del(getUserPermissionCacheKey(exist.getId()));
+        redisHelper.del(getUserMenuCacheKey(exist.getId()));
         return Json.data(userService.loginWithCookieAndResponse(response, exist), "登录成功");
     }
 }
