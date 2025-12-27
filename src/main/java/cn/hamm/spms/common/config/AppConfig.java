@@ -41,4 +41,9 @@ public class AppConfig {
      * 是否是开发模式
      */
     private Boolean isDevMode = false;
+
+    /**
+     * 登录 URL
+     */
+    private String loginUrl;
 }
