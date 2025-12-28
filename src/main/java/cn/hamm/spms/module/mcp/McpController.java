@@ -51,7 +51,7 @@ public class McpController extends ApiController {
     }
 
     @PostMapping("getMcpTools")
-    @Description("获取MCP工具列表")
+    @Description("获取 MCP 工具列表")
     public Json messages() {
         return Json.data(McpService.tools);
     }

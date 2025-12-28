@@ -92,9 +92,9 @@ public enum ChatEventType implements IDictionary {
     }
 
     /**
-     * 获取字符串类型的Key
+     * 获取字符串类型的 Key
      *
-     * @return 字符串类型的Key
+     * @return 字符串类型的 Key
      */
     @Contract(pure = true)
     public @NotNull String getKeyString() {

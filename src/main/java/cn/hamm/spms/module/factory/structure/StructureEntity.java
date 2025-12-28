@@ -57,7 +57,7 @@ public class StructureEntity extends BaseEntity<StructureEntity> implements ITre
     @Dictionary(value = StructureType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 
-    @Description("父级ID")
+    @Description("父级 ID")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '父级ID'")
     @Meta
     private Long parentId;

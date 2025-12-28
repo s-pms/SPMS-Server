@@ -63,7 +63,7 @@ public class RoutingService extends BaseService<RoutingEntity, RoutingRepository
             routing.setBom(null);
             return routing;
         }
-        PARAM_INVALID.whenNull(routing.getBom(), "请配置工艺使用的BOM");
+        PARAM_INVALID.whenNull(routing.getBom(), "请配置工艺使用的 BOM");
         return routing;
     }
 

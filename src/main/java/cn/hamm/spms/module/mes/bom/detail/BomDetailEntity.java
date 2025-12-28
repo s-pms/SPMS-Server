@@ -28,7 +28,7 @@ import static jakarta.persistence.FetchType.EAGER;
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "bom_detail")
-@Description("BOM明细")
+@Description("BOM 明细")
 public class BomDetailEntity extends BaseEntity<BomDetailEntity> {
     @Description("物料信息")
     @ManyToOne(fetch = EAGER)

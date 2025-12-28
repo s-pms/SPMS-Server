@@ -24,7 +24,7 @@ public class ReportEventListener {
     private ReportMqCallback reportMqCallback;
 
     /**
-     * 开始监听MQTT
+     * 开始监听 MQTT
      *
      * @throws MqttException 异常
      */

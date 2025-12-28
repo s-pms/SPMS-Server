@@ -290,7 +290,7 @@ public class DevDataInitRunner implements CommandLineRunner {
         customer = customerService.addAndGet(customer);
 
         SupplierEntity supplier = new SupplierEntity();
-        supplier.setName("Apple中国").setPhone("17666666666");
+        supplier.setName("Apple 中国").setPhone("17666666666");
         supplier = supplierService.addAndGet(supplier);
 
         SalePriceEntity salePrice = new SalePriceEntity();

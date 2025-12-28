@@ -18,7 +18,7 @@ import lombok.Getter;
 @Getter
 @Description("")
 public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> extends BaseEntity<E> implements IBaseBillDetailAction {
-    @Description("单据ID")
+    @Description("单据 ID")
     @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '单据ID'")
     private Long billId;
 
@@ -39,9 +39,9 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
     }
 
     /**
-     * 设置单据ID
+     * 设置单据 ID
      *
-     * @param billId 单据ID
+     * @param billId 单据 ID
      * @return 明细实体
      */
     public E setBillId(Long billId) {

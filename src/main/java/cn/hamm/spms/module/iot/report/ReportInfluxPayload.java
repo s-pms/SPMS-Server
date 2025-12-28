@@ -25,7 +25,7 @@ public class ReportInfluxPayload {
     private Double value;
 
     /**
-     * 时序存储设备ID
+     * 时序存储设备 ID
      */
     @Column(tag = true)
     private String uuid;

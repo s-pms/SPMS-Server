@@ -30,17 +30,17 @@ public class ReportConstant {
     public static final String REPORT_KEY_OF_ALARM = "Alarm";
 
     /**
-     * 订阅Topic
+     * 订阅 Topic
      */
     public final static String IOT_REPORT_TOPIC_V1 = "sys/msg/v1";
 
     /**
-     * Redis存IOT采集数据的前缀
+     * Redis 存 IOT采集数据的前缀
      */
     public final static String CACHE_PREFIX = "iot_report_";
 
     /**
-     * 获取设备报告缓存的key
+     * 获取设备报告缓存的 key
      *
      * @param uuid UUID
      * @return key
@@ -51,11 +51,11 @@ public class ReportConstant {
     }
 
     /**
-     * 获取设备指定参数的缓存Key
+     * 获取设备指定参数的缓存 Key
      *
      * @param code 参数编码
-     * @param uuid 设备UUID
-     * @return 缓存KEY
+     * @param uuid 设备 UUID
+     * @return 缓存 KEY
      */
     @Contract(pure = true)
     static @NotNull String getDeviceReportParamCacheKey(String code, String uuid) {

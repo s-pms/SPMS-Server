@@ -21,7 +21,7 @@ public class AliyunOssConfig {
     private String endpoint = "oss-cn-hangzhou.aliyuncs.com";
 
     /**
-     * bucket名称
+     * bucket 名称
      */
     private String bucketName;
 }

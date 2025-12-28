@@ -38,10 +38,10 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
     private StructureService structureService;
 
     /**
-     * 查询指定物料ID和仓库ID下的库存
+     * 查询指定物料 ID 和仓库 ID 下的库存
      *
-     * @param materialId 物料ID
-     * @param storageId  仓库ID
+     * @param materialId 物料 ID
+     * @param storageId  仓库 ID
      * @return 库存
      */
     public InventoryEntity getByMaterialIdAndStorageId(Long materialId, Long storageId) {
@@ -52,10 +52,10 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
     }
 
     /**
-     * 查询指定物料ID和生产单元ID下的库存
+     * 查询指定物料 ID 和生产单元 ID 下的库存
      *
-     * @param materialId  物料ID
-     * @param structureId 生产单元ID
+     * @param materialId  物料 ID
+     * @param structureId 生产单元 ID
      * @return 库存
      */
     @SuppressWarnings("unused")

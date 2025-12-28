@@ -63,7 +63,7 @@ public class PermissionEntity extends BaseEntity<PermissionEntity> implements IP
     @Meta
     private String name;
 
-    @Description("父级ID")
+    @Description("父级 ID")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '父级ID'")
     @Meta
     private Long parentId;

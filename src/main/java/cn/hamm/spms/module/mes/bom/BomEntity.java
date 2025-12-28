@@ -29,7 +29,7 @@ import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**
- * <h1>BOM实体</h1>
+ * <h1>BOM 实体</h1>
  *
  * @author Hamm.cn
  */

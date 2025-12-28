@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("app.oauth.wecom")
 public class WecomConfig {
     /**
-     * 企业ID
+     * 企业 ID
      */
     private String corpId;
 
@@ -24,7 +24,7 @@ public class WecomConfig {
     private String corpSecret;
 
     /**
-     * 应用ID
+     * 应用 ID
      */
     private String agentId;
 }

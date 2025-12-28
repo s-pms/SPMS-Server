@@ -166,7 +166,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     /**
      * 开始生产
      *
-     * @param id 单据ID
+     * @param id 单据 ID
      */
     public final void start(long id) {
         OrderEntity order = get(id);
@@ -179,7 +179,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     /**
      * 暂停生产
      *
-     * @param id 单据ID
+     * @param id 单据 ID
      */
     public final void pause(long id) {
         OrderEntity order = get(id);

@@ -19,10 +19,10 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EXIST;
 @Service
 public class MemberService extends BaseService<MemberEntity, MemberRepository> {
     /**
-     * 根据用户ID和房间ID获取成员信息
+     * 根据用户 ID 和房间 ID 获取成员信息
      *
-     * @param userId 用户ID
-     * @param roomId 房间ID
+     * @param userId 用户 ID
+     * @param roomId 房间 ID
      * @return 成员信息
      */
     public MemberEntity getMember(long userId, long roomId) {
@@ -32,8 +32,8 @@ public class MemberService extends BaseService<MemberEntity, MemberRepository> {
     /**
      * 添加成员
      *
-     * @param userId 用户ID
-     * @param roomId 房间ID
+     * @param userId 用户 ID
+     * @param roomId 房间 ID
      * @return 成员
      */
     public MemberEntity addMember(long userId, long roomId) {
@@ -56,8 +56,8 @@ public class MemberService extends BaseService<MemberEntity, MemberRepository> {
     /**
      * 获取成员信息，若不存在则自动创建
      *
-     * @param userId 用户ID
-     * @param roomId 房间ID
+     * @param userId 用户 ID
+     * @param roomId 房间 ID
      * @return 成员信息
      */
     public MemberEntity getMemberWithAutoCreate(long userId, long roomId) {

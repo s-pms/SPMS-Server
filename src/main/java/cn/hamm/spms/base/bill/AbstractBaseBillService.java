@@ -24,12 +24,12 @@ import java.util.Objects;
 import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 
 /**
- * <h1>单据Service基类</h1>
+ * <h1>单据 Service 基类</h1>
  *
  * @param <E>   单据实体
  * @param <R>   单据数据源
  * @param <D>   明细实体
- * @param <DS>  明细Service
+ * @param <DS>  明细 Service
  * @param <DR>> 明细数据源
  * @author Hamm.cn
  */
@@ -59,7 +59,7 @@ public abstract class AbstractBaseBillService<
     /**
      * 设置单据所有明细都已完成
      *
-     * @param billId 单据ID
+     * @param billId 单据 ID
      */
     public final void setBillDetailsAllFinished(long billId) {
         log.info("标记明细已全部完成 {}，单据ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId);
@@ -76,7 +76,7 @@ public abstract class AbstractBaseBillService<
     /**
      * 设置单据已完成
      *
-     * @param billId 单据ID
+     * @param billId 单据 ID
      */
     public final void setBillFinished(long billId) {
         log.info("标记单据已完成 {}，单据ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId);
@@ -90,7 +90,7 @@ public abstract class AbstractBaseBillService<
     /**
      * 单据完成前置方法
      *
-     * @param billId 单据ID
+     * @param billId 单据 ID
      */
     protected void beforeBillFinish(long billId) {
         log.info("标记单据完成前 {}，单据ID:{}",
@@ -136,7 +136,7 @@ public abstract class AbstractBaseBillService<
     /**
      * 添加完成数量成功后置
      *
-     * @param detailId     明细ID
+     * @param detailId     明细 ID
      * @param sourceDetail 提交明细
      */
     protected void afterDetailFinishAdded(long detailId, @NotNull D sourceDetail) {
@@ -160,7 +160,7 @@ public abstract class AbstractBaseBillService<
     /**
      * 单据所有明细完成的后置方法
      *
-     * @param billId 单据ID
+     * @param billId 单据 ID
      * @apiNote 一般用于当前单据的所有明细都已完成，可能会创建其他的单据，也可能去修改其他单据的明细
      * @see #afterBillFinished(long)
      */

@@ -39,7 +39,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
     private AliyunOssUtil aliyunOssUtil;
 
     /**
-     * 上传到阿里云OSS
+     * 上传到阿里云 OSS
      *
      * @param multipartFile 文件
      * @param savedFilePath 文件路径

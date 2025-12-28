@@ -61,11 +61,11 @@ public class RoutingEntity extends BaseEntity<RoutingEntity> {
     @Column(columnDefinition = "int UNSIGNED default 1 comment '工艺状态'")
     private Integer status;
 
-    @Description("BOM信息")
+    @Description("BOM 信息")
     @ManyToOne(fetch = EAGER)
     private BomEntity bom;
 
-    @Description("使用工艺BOM")
+    @Description("使用工艺 BOM")
     @Column(columnDefinition = "bit(1) default 0 comment '使用工艺BOM'")
     private Boolean isRoutingBom;
 

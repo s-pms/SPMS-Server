@@ -28,7 +28,7 @@ import static cn.hamm.airpower.exception.ServiceError.SERVICE_ERROR;
 @Service
 public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository> implements IOpenAppService {
     /**
-     * 通过AppKey获取一个应用
+     * 通过 AppKey 获取一个应用
      *
      * @param appKey AppKey
      * @return 应用
@@ -53,7 +53,7 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
     }
 
     /**
-     * 创建AppSecret
+     * 创建 AppSecret
      *
      * @return AppSecret
      */
@@ -88,7 +88,7 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
     }
 
     /**
-     * 创建AppKey
+     * 创建 AppKey
      *
      * @return AppKey
      */

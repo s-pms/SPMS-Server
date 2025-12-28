@@ -36,7 +36,7 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 @Table(name = "open_app")
 @Description("开放应用")
 public class OpenAppEntity extends BaseEntity<OpenAppEntity> implements IOpenAppAction, IOpenApp, IOauthAction {
-    @Description("应用Key")
+    @Description("应用 Key")
     @Column(columnDefinition = "varchar(255) default '' comment 'AppKey'", unique = true)
     @Search
     @Meta
@@ -59,7 +59,7 @@ public class OpenAppEntity extends BaseEntity<OpenAppEntity> implements IOpenApp
     @Column(columnDefinition = "int UNSIGNED default 1 comment '加密算法'")
     private Integer arithmetic;
 
-    @Description("IP白名单")
+    @Description("IP 白名单")
     @Column(columnDefinition = "text comment 'IP白名单'")
     private String ipWhiteList;
 

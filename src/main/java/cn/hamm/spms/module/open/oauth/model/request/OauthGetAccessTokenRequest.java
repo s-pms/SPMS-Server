@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * <h1>创建Code请求</h1>
+ * <h1>创建 Code 请求</h1>
  *
  * @author Hamm
  */
@@ -17,11 +17,11 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class OauthGetAccessTokenRequest extends OauthAppKeyRequest {
     @Description("Code")
-    @NotBlank(groups = {WhenGetAccessToken.class}, message = "Code不能为空")
+    @NotBlank(groups = {WhenGetAccessToken.class}, message = "Code 不能为空")
     private String code;
 
     @Description("AppSecret")
-    @NotBlank(groups = {WhenGetAccessToken.class}, message = "AppSecret不能为空")
+    @NotBlank(groups = {WhenGetAccessToken.class}, message = "AppSecret 不能为空")
     private String appSecret;
 
     /**

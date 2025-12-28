@@ -21,7 +21,7 @@ public class UserRoleService extends BaseService<UserRoleEntity, UserRoleReposit
     /**
      * 获取用户的角色列表
      *
-     * @param userId 用户ID
+     * @param userId 用户 ID
      * @return 角色列表
      */
     public List<RoleEntity> getRoleList(long userId) {

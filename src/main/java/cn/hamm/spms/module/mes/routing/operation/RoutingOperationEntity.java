@@ -32,7 +32,7 @@ import static jakarta.persistence.FetchType.EAGER;
 @Table(name = "routing_operation")
 @Description("工序配置")
 public class RoutingOperationEntity extends BaseEntity<RoutingOperationEntity> {
-    @Description("工艺ID")
+    @Description("工艺 ID")
     @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '工艺ID'")
     private Long routingId;
 
@@ -41,7 +41,7 @@ public class RoutingOperationEntity extends BaseEntity<RoutingOperationEntity> {
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "工序信息")
     private OperationEntity operation;
 
-    @Description("BOM信息")
+    @Description("BOM 信息")
     @ManyToOne(fetch = EAGER)
     private BomEntity bom;
 

@@ -27,7 +27,7 @@ import static cn.hamm.spms.module.iot.report.enums.ReportDataType.*;
 import static cn.hamm.spms.module.system.config.ConfigService.STRING_ONE;
 
 /**
- * <h1>Influx助手类</h1>
+ * <h1>Influx 助手类</h1>
  *
  * @author Hamm.cn
  */
@@ -47,7 +47,7 @@ public class InfluxHelper {
      * 保存数据
      *
      * @param code  参数名
-     * @param uuid  设备ID
+     * @param uuid  设备 ID
      * @param value 数据
      */
     public void save(String code, String uuid, Object value) {
@@ -69,9 +69,9 @@ public class InfluxHelper {
     }
 
     /**
-     * 获取写入API
+     * 获取写入 API
      *
-     * @return 写入API
+     * @return 写入 API
      */
     private @Nullable WriteApiBlocking getWriteApi() {
         try {
@@ -173,7 +173,7 @@ public class InfluxHelper {
     }
 
     /**
-     * 初始化InfluxDB
+     * 初始化 InfluxDB
      */
     private void initInfluxDbClient() {
         if (Objects.isNull(influxDbClient)) {

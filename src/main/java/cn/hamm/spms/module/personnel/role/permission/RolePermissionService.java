@@ -19,7 +19,7 @@ public class RolePermissionService extends BaseService<RolePermissionEntity, Rol
     /**
      * 获取角色权限列表
      *
-     * @param roleId 角色ID
+     * @param roleId 角色 ID
      * @return 角色权限列表
      */
     public List<PermissionEntity> getPermissionList(long roleId) {

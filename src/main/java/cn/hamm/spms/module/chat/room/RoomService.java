@@ -43,8 +43,8 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
      * 创建房间
      *
      * @param room   房间对象
-     * @param userId 房主ID
-     * @return 房间ID
+     * @param userId 房主 ID
+     * @return 房间 ID
      */
     public final long create(RoomEntity room, long userId) {
         RoomEntity filter = new RoomEntity().setOwner(new UserEntity().setId(userId));

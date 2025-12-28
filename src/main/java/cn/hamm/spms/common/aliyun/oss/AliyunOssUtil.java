@@ -16,7 +16,7 @@ import java.io.InputStream;
 import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
 
 /**
- * <h1>阿里云OSS工具类</h1>
+ * <h1>阿里云 OSS 工具类</h1>
  *
  * @author zhoul
  */
@@ -29,7 +29,7 @@ public class AliyunOssUtil {
     private AliyunOssConfig aliyunOssConfig;
 
     /**
-     * 从阿里云OSS获取文件流
+     * 从阿里云 OSS 获取文件流
      *
      * @param path 路径
      * @return 文件流
@@ -43,10 +43,10 @@ public class AliyunOssUtil {
     }
 
     /**
-     * 获取文件URL
+     * 获取文件 URL
      *
      * @param path 文件路径
-     * @return 文件URL
+     * @return 文件 URL
      */
     public String getUrl(String path) {
         OSS ossClient = getClient();
@@ -56,7 +56,7 @@ public class AliyunOssUtil {
     }
 
     /**
-     * 获取BucketName
+     * 获取 BucketName
      *
      * @return BucketName
      */
@@ -67,7 +67,7 @@ public class AliyunOssUtil {
     }
 
     /**
-     * 上传到阿里云OSS
+     * 上传到阿里云 OSS
      *
      * @param fileName 保存对象名称
      * @param bytes    文件

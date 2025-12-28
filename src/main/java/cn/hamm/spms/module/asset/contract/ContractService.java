@@ -16,7 +16,7 @@ public class ContractService extends BaseService<ContractEntity, ContractReposit
     /**
      * 生效合同
      *
-     * @param id 合同ID
+     * @param id 合同 ID
      */
     public void enforce(long id) {
         ContractEntity exist = get(id);
@@ -28,7 +28,7 @@ public class ContractService extends BaseService<ContractEntity, ContractReposit
     /**
      * 终止合同
      *
-     * @param id 合同ID
+     * @param id 合同 ID
      */
     public void stop(long id) {
         ContractEntity exist = get(id);

@@ -23,7 +23,7 @@ public class AppConfig {
     private String projectName = "SPMS";
 
     /**
-     * 默认房间ID {@code 不是房间号}
+     * 默认房间 ID {@code 不是房间号}
      */
     private long defaultRoomId = 1L;
 

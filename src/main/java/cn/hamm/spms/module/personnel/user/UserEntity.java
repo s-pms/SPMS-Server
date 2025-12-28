@@ -90,7 +90,7 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @Description("密码")
     @Column(columnDefinition = "varchar(255) default '' comment '密码'")
     @NotBlank(groups = {WhenLogin.class, WhenResetMyPassword.class, WhenUpdateMyPassword.class}, message = "密码不能为空")
-    @Null(groups = {WhenUpdateMyInfo.class}, message = "请勿传入password字段")
+    @Null(groups = {WhenUpdateMyInfo.class}, message = "请勿传入 Password 字段")
     @Length(min = 6, message = "密码至少6位长度")
     private String password;
 
@@ -111,7 +111,7 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @Transient
     private String oldPassword;
 
-    @Description("部门ID查询")
+    @Description("部门 ID 查询")
     @Transient
     private Long departmentId;
 

@@ -50,7 +50,7 @@ public class StorageEntity extends BaseEntity<StorageEntity> implements ITree<St
     @Meta
     private String name;
 
-    @Description("父级ID")
+    @Description("父级 ID")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '父级ID'")
     @Meta
     private Long parentId;

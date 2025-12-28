@@ -17,11 +17,11 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class OauthCallbackRequest extends OauthAppKeyRequest {
     @Description("Code")
-    @NotBlank(groups = {WhenOauthCallback.class}, message = "Code不能为空")
+    @NotBlank(groups = {WhenOauthCallback.class}, message = "Code 不能为空")
     private String code;
 
     @Description("Platform")
-    @NotBlank(groups = {WhenOauthCallback.class}, message = "Platform不能为空")
+    @NotBlank(groups = {WhenOauthCallback.class}, message = "Platform 不能为空")
     private String platform;
 
     public interface WhenOauthCallback {

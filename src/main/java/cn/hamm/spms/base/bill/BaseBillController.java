@@ -23,10 +23,10 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
  * <h1>单据控制器基类</h1>
  *
  * @param <E>  单据实体
- * @param <S>  单据Service
+ * @param <S>  单据 Service
  * @param <R>  单据数据源
  * @param <D>  明细实体
- * @param <DS> 明细Service
+ * @param <DS> 明细 Service
  * @param <DR> 明细数据源
  * @author Hamm.cn
  */

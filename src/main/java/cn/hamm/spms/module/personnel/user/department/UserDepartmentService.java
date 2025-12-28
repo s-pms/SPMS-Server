@@ -21,7 +21,7 @@ public class UserDepartmentService extends BaseService<UserDepartmentEntity, Use
     /**
      * 获取用户部门列表
      *
-     * @param userId 用户ID
+     * @param userId 用户 ID
      * @return 部门列表
      */
     public List<DepartmentEntity> getDepartmentList(long userId) {

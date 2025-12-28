@@ -63,7 +63,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     public static final int PASSWORD_SALT_LENGTH = 4;
 
     /**
-     * Code缓存秒数
+     * Code 缓存秒数
      */
     private static final int CACHE_CODE_EXPIRE_SECOND = DateTimeUtil.SECOND_PER_MINUTE * 5;
 
@@ -108,10 +108,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 获取短信验证码的缓存key
+     * 获取短信验证码的缓存 key
      *
      * @param phone 手机号
-     * @return 缓存Key
+     * @return 缓存 Key
      */
     @Contract(pure = true)
     private static @NotNull String getPhoneCodeCacheKey(String phone) {
@@ -119,10 +119,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 获取邮箱验证码的缓存key
+     * 获取邮箱验证码的缓存 key
      *
      * @param email 邮箱
-     * @return 缓存Key
+     * @return 缓存 Key
      */
     @Contract(pure = true)
     private static @NotNull String getEmailCacheKey(String email) {
@@ -130,10 +130,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 获取Cookie的缓存key
+     * 获取 Cookie 的缓存 key
      *
      * @param cookie Cookie
-     * @return 缓存Key
+     * @return 缓存 Key
      */
     @Contract(pure = true)
     private static @NotNull String getCookieCodeKey(String cookie) {
@@ -143,7 +143,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * 获取登录用户的菜单列表
      *
-     * @param userId 用户id
+     * @param userId 用户 ID
      * @return 菜单树列表
      */
     public List<MenuEntity> getMenuListByUserId(long userId) {
@@ -175,7 +175,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * 获取登录用户的权限列表
      *
-     * @param userId 用户ID
+     * @param userId 用户 ID
      * @return 权限列表
      */
     public List<PermissionEntity> getPermissionListByUserId(long userId) {
@@ -274,17 +274,17 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 登录并设置Cookie
+     * 登录并设置 Cookie
      *
      * @param response 响应
      * @param user     用户
      * @return AccessToken
      */
     public final String loginWithCookieAndResponse(@NotNull HttpServletResponse response, @NotNull UserEntity user) {
-        // 创建AccessToken
+        // 创建 AccessToken
         String accessToken = createAccessToken(user.getId());
 
-        // 存储Cookies
+        // 存储 Cookies
         String cookieString = RandomUtil.randomString();
         saveCookie(user.getId(), cookieString);
         Cookie cookie = cookieHelper.getAuthorizeCookie(cookieString);
@@ -295,7 +295,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 存储Cookie
+     * 存储 Cookie
      *
      * @param userId UserId
      * @param cookie Cookie
@@ -305,7 +305,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 通过Cookie获取一个用户
+     * 通过 Cookie 获取一个用户
      *
      * @param cookie Cookie
      * @return UserId
@@ -327,7 +327,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     public UserEntity login(@NotNull UserEntity user) {
         UserEntity existUser = null;
         if (Objects.nonNull(user.getId())) {
-            // ID登录
+            // ID 登录
             existUser = getMaybeNull(user.getId());
         } else if (Objects.nonNull(user.getEmail())) {
             // 邮箱登录
@@ -390,9 +390,9 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 创建AccessToken
+     * 创建 AccessToken
      *
-     * @param userId 用户ID
+     * @param userId 用户 ID
      * @return AccessToken
      */
     public String createAccessToken(long userId) {
@@ -479,10 +479,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 获取当前用户所在的房间ID
+     * 获取当前用户所在的房间 ID
      *
-     * @param userId 用户ID
-     * @return 房间ID
+     * @param userId 用户 ID
+     * @return 房间 ID
      */
     public long getCurrentRoomId(long userId) {
         Object data = redisHelper.get(CACHE_ROOM_KEY + userId);
@@ -493,10 +493,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 保存当前用户所在的房间ID
+     * 保存当前用户所在的房间 ID
      *
-     * @param userId 用户ID
-     * @param roomId 房间ID
+     * @param userId 用户 ID
+     * @param roomId 房间 ID
      */
     public void saveCurrentRoomId(long userId, long roomId) {
         redisHelper.set(CACHE_ROOM_KEY + userId, roomId, DateTimeUtil.SECOND_PER_DAY * 30);

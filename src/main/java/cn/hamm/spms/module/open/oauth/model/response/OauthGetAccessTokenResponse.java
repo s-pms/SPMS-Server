@@ -28,7 +28,7 @@ public class OauthGetAccessTokenResponse extends RootModel<OauthGetAccessTokenRe
     private Long expiresIn;
 
     /**
-     * 刷新Token
+     * 刷新 Token
      */
     @Meta
     private String refreshToken;

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * <h1>单据明细Service基类</h1>
+ * <h1>单据明细 Service 基类</h1>
  *
  * @param <E> 明细实体
  * @param <R> 明细数据源
@@ -19,9 +19,9 @@ import java.util.function.Consumer;
 public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends BaseBillDetailRepository<E>> extends BaseService<E, R> {
 
     /**
-     * 根据单据ID删除所有明细
+     * 根据单据 ID 删除所有明细
      *
-     * @param billId 单据ID
+     * @param billId 单据 ID
      */
     public final void deleteAllByBillId(Long billId) {
         List<E> details = getAllByBillId(billId);
@@ -31,7 +31,7 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
     /**
      * 查询指定单据的所有明细
      *
-     * @param billId 单据ID
+     * @param billId 单据 ID
      * @return 明细
      */
     public final List<E> getAllByBillId(Long billId) {
@@ -41,7 +41,7 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
     /**
      * 保存指定单据的明细
      *
-     * @param billId  单据ID
+     * @param billId  单据 ID
      * @param details 明细
      */
     public final void saveDetails(long billId, @NotNull List<E> details) {
@@ -52,9 +52,9 @@ public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends 
     /**
      * 更新明细的数量
      *
-     * @param billId      单据ID
+     * @param billId      单据 ID
      * @param quantity    本次更新数量
-     * @param billService 单据Service
+     * @param billService 单据 Service
      * @param detailCheck 明细检查函数
      */
     public <B extends AbstractBaseBillEntity<B, ?>, BS extends AbstractBaseBillService<B, ?, ?, ?, ?>> void updateDetailQuantity(long billId, double quantity, @NotNull BS billService, Consumer<E> detailCheck) {

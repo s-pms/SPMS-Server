@@ -56,7 +56,7 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAct
     @Meta
     private String code;
 
-    @Description("设备UUID")
+    @Description("设备 UUID")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '设备UUID'", unique = true)
     @NotBlank(groups = {WhenGetDeviceConfig.class}, message = "请传入设备uuid(采集端deviceId)")
