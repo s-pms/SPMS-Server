@@ -7,6 +7,7 @@ import cn.hamm.airpower.ai.AiStream;
 import cn.hamm.airpower.annotation.Description;
 import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.api.ApiController;
+import cn.hamm.airpower.redis.RedisHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -26,10 +27,13 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 public class IndexController extends ApiController {
     @Autowired
     private Ai ai;
+    @Autowired
+    private RedisHelper redisHelper;
 
     @GetMapping("")
     public String index() {
-        return "<h1>Server running!</h1>";
+        long index = redisHelper.increment("index");
+        return "<h1>Server running! " + index + "</h1>";
     }
 
     @GetMapping("ai")
