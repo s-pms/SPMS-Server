@@ -17,7 +17,9 @@ import lombok.Getter;
 @MappedSuperclass
 @Getter
 @Description("")
-public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> extends BaseEntity<E> implements IBaseBillDetailAction {
+public abstract class BaseBillDetailEntity<
+        E extends BaseBillDetailEntity<E>
+        > extends BaseEntity<E> implements IBaseBillDetailAction {
     @Description("单据 ID")
     @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '单据ID'")
     private Long billId;

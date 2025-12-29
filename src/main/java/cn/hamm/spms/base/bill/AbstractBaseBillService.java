@@ -35,8 +35,10 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
  */
 @Slf4j
 public abstract class AbstractBaseBillService<
-        E extends AbstractBaseBillEntity<E, D>, R extends BaseRepository<E>,
-        D extends BaseBillDetailEntity<D>, DS extends BaseBillDetailService<D, DR>,
+        E extends AbstractBaseBillEntity<E, D>,
+        R extends BaseRepository<E>,
+        D extends BaseBillDetailEntity<D>,
+        DS extends BaseBillDetailService<D, DR>,
         DR extends BaseBillDetailRepository<D>
         > extends BaseService<E, R> {
 

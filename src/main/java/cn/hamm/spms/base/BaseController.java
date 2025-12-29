@@ -25,7 +25,11 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EDIT;
 @Slf4j
 @Permission
 @Extends(exclude = {Curd.Export, Curd.QueryExport, Curd.Disable, Curd.Enable})
-public class BaseController<E extends BaseEntity<E>, S extends BaseService<E, R>, R extends BaseRepository<E>> extends CurdController<E, S, R> {
+public class BaseController<
+        E extends BaseEntity<E>,
+        S extends BaseService<E, R>,
+        R extends BaseRepository<E>
+        > extends CurdController<E, S, R> {
     @Override
     protected final E beforeUpdate(@NotNull E entity) {
         E exist = service.get(entity.getId());

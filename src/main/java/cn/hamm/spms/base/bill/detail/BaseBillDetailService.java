@@ -16,7 +16,10 @@ import java.util.function.Consumer;
  * @param <R> 明细数据源
  * @author Hamm.cn
  */
-public class BaseBillDetailService<E extends BaseBillDetailEntity<E>, R extends BaseBillDetailRepository<E>> extends BaseService<E, R> {
+public class BaseBillDetailService<
+        E extends BaseBillDetailEntity<E>,
+        R extends BaseBillDetailRepository<E>
+        > extends BaseService<E, R> {
 
     /**
      * 根据单据 ID 删除所有明细

@@ -21,7 +21,10 @@ import java.util.Objects;
  * @author Hamm.cn
  */
 @Slf4j
-public class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> extends CurdService<E, R> {
+public class BaseService<
+        E extends BaseEntity<E>,
+        R extends BaseRepository<E>
+        > extends CurdService<E, R> {
     /**
      * 当前服务的数据库最后一次确认
      *
