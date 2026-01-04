@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.asset.device;
 
-import cn.hamm.airpower.access.Permission;
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.api.Api;
-import cn.hamm.airpower.api.Json;
+import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.web.access.Permission;
+import cn.hamm.airpower.web.api.Api;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.report.IReportPayloadAction;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.HashSet;
 import java.util.Set;
 
-import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
+import static cn.hamm.airpower.web.exception.ServiceError.DATA_NOT_FOUND;
 import static cn.hamm.spms.module.iot.report.ReportConstant.getDeviceReportCacheKey;
 
 /**

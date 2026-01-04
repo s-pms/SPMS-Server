@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.chat.room;
 
-import cn.hamm.airpower.access.Permission;
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.api.Api;
-import cn.hamm.airpower.api.Json;
+import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.web.access.Permission;
+import cn.hamm.airpower.web.api.Api;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,7 @@ public class RoomController extends BaseController<RoomEntity, RoomService, Room
     @Permission(authorize = false)
     public Json create(@RequestBody @Validated(WhenCreate.class) RoomEntity source) {
         long roomId = service.create(source, getCurrentUserId());
-        return Json.entity(roomId, "房间创建成功");
+        return Json.data(roomId, "房间创建成功");
     }
 
     @Description("获取我的房间")

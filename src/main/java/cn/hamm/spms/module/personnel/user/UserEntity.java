@@ -1,11 +1,8 @@
 package cn.hamm.spms.module.personnel.user;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.desensitize.Desensitize;
-import cn.hamm.airpower.dictionary.Dictionary;
-import cn.hamm.airpower.meta.Meta;
-import cn.hamm.airpower.validate.Phone;
+import cn.hamm.airpower.core.annotation.*;
+import cn.hamm.airpower.core.enums.DesensitizeType;
+import cn.hamm.airpower.web.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
@@ -29,8 +26,6 @@ import org.hibernate.validator.constraints.Length;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.desensitize.DesensitizeType.CHINESE_NAME;
-import static cn.hamm.airpower.desensitize.DesensitizeType.ID_CARD;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
@@ -59,12 +54,12 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     private String avatar;
 
     @Description("真实姓名")
-    @Desensitize(CHINESE_NAME)
+    @Desensitize(DesensitizeType.CHINESE_NAME)
     @Column(columnDefinition = "varchar(255) default '' comment '真实姓名'")
     private String realName;
 
     @Description("身份证号")
-    @Desensitize(ID_CARD)
+    @Desensitize(DesensitizeType.ID_CARD)
     @Column(columnDefinition = "varchar(255) default '' comment '身份证号'")
     private String idCard;
 

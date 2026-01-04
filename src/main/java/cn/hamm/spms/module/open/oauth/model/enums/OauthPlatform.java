@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.open.oauth.model.enums;
 
-import cn.hamm.airpower.dictionary.IDictionary;
+import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.module.open.oauth.model.base.AbstractOauthCallback;
 import cn.hamm.spms.module.open.oauth.model.platform.WeComCallback;
 import lombok.AllArgsConstructor;

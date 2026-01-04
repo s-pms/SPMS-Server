@@ -1,14 +1,14 @@
 package cn.hamm.spms.module.system.menu;
 
-import cn.hamm.airpower.curd.CurdEntity;
-import cn.hamm.airpower.tree.TreeUtil;
+import cn.hamm.airpower.core.TreeUtil;
+import cn.hamm.airpower.web.curd.CurdEntity;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static cn.hamm.airpower.tree.TreeUtil.ROOT_ID;
+import static cn.hamm.airpower.core.TreeUtil.ROOT_ID;
 
 /**
  * <h1>Service</h1>
@@ -24,7 +24,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
 
     @Override
     protected void beforeDelete(@NotNull MenuEntity menu) {
-        TreeUtil.ensureNoChildrenBeforeDelete(this, menu.getId());
+        TreeUtil.ensureNoChildrenBeforeDelete(menu.getId(), (id) -> filter(new MenuEntity().setParentId(id)));
     }
 
     @Override

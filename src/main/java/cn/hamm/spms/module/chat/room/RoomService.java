@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.chat.room;
 
-import cn.hamm.airpower.curd.Sort;
-import cn.hamm.airpower.util.RandomUtil;
+import cn.hamm.airpower.core.RandomUtil;
+import cn.hamm.airpower.web.curd.Sort;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.chat.member.MemberEntity;
@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
+import static cn.hamm.airpower.web.exception.ServiceError.PARAM_INVALID;
 
 /**
  * <h1>Service</h1>

@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.personnel.user.department;
 
-import cn.hamm.airpower.exception.ServiceError;
+import cn.hamm.airpower.web.exception.ServiceError;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.personnel.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;

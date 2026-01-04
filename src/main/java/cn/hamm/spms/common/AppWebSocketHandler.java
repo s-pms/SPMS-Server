@@ -1,9 +1,9 @@
 package cn.hamm.spms.common;
 
-import cn.hamm.airpower.api.Json;
-import cn.hamm.airpower.websocket.WebSocketHandler;
-import cn.hamm.airpower.websocket.WebSocketPayload;
-import cn.hamm.airpower.websocket.WebsocketHelper;
+import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.web.websocket.WebSocketHandler;
+import cn.hamm.airpower.web.websocket.WebSocketPayload;
+import cn.hamm.airpower.web.websocket.WebsocketHelper;
 import cn.hamm.spms.module.chat.enums.ChatEventType;
 import cn.hamm.spms.module.chat.member.MemberEntity;
 import cn.hamm.spms.module.chat.member.MemberService;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
+import static cn.hamm.airpower.web.exception.ServiceError.PARAM_INVALID;
 import static cn.hamm.spms.module.chat.enums.ChatEventType.*;
 
 /**

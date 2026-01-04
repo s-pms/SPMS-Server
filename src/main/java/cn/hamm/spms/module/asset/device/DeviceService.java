@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.asset.device;
 
-import cn.hamm.airpower.api.Json;
-import cn.hamm.airpower.dictionary.DictionaryUtil;
+import cn.hamm.airpower.core.DictionaryUtil;
+import cn.hamm.airpower.core.Json;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.helper.InfluxHelper;
@@ -23,7 +23,7 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
+import static cn.hamm.airpower.web.exception.ServiceError.PARAM_INVALID;
 import static cn.hamm.spms.module.iot.report.ReportConstant.*;
 
 /**

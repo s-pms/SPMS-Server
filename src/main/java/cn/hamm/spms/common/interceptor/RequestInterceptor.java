@@ -1,8 +1,8 @@
 package cn.hamm.spms.common.interceptor;
 
-import cn.hamm.airpower.access.AccessTokenUtil;
-import cn.hamm.airpower.dictionary.DictionaryUtil;
-import cn.hamm.airpower.interceptor.AbstractRequestInterceptor;
+import cn.hamm.airpower.core.DictionaryUtil;
+import cn.hamm.airpower.web.access.AccessTokenUtil;
+import cn.hamm.airpower.web.interceptor.AbstractRequestInterceptor;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.personnel.role.permission.RolePermissionService;
 import cn.hamm.spms.module.personnel.user.UserEntity;
@@ -20,8 +20,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
-import static cn.hamm.airpower.exception.ServiceError.UNAUTHORIZED;
+import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.web.exception.ServiceError.UNAUTHORIZED;
 
 /**
  * <h1>请求拦截器</h1>

@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.asset.contract.document;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.meta.Meta;
+import cn.hamm.airpower.core.annotation.Meta;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.web.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

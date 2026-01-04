@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.mes.operation;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.meta.Meta;
+import cn.hamm.airpower.core.annotation.Meta;
+import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import jakarta.persistence.Column;

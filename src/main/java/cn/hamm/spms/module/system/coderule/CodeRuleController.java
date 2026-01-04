@@ -1,10 +1,10 @@
 package cn.hamm.spms.module.system.coderule;
 
-import cn.hamm.airpower.access.Permission;
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.api.Api;
-import cn.hamm.airpower.api.Json;
-import cn.hamm.airpower.dictionary.DictionaryUtil;
+import cn.hamm.airpower.core.DictionaryUtil;
+import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.web.access.Permission;
+import cn.hamm.airpower.web.api.Api;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
 import cn.hamm.spms.module.system.coderule.enums.CodeRuleParam;

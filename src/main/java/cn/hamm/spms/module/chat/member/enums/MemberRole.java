@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.chat.member.enums;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.dictionary.IDictionary;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

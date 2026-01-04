@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.system.file;
 
-import cn.hamm.airpower.exception.ServiceException;
-import cn.hamm.airpower.file.FileConfig;
-import cn.hamm.airpower.file.FileUtil;
+import cn.hamm.airpower.core.FileUtil;
+import cn.hamm.airpower.core.exception.ServiceException;
+import cn.hamm.airpower.web.file.FileConfig;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.aliyun.oss.AliyunOssUtil;
 import cn.hamm.spms.common.config.AppConfig;
@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_UPLOAD_MAX_SIZE;
-import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
+import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN_UPLOAD_MAX_SIZE;
+import static cn.hamm.airpower.web.exception.ServiceError.PARAM_INVALID;
 
 /**
  * <h1>Service</h1>

@@ -1,8 +1,8 @@
 package cn.hamm.spms;
 
-import cn.hamm.airpower.access.PasswordUtil;
-import cn.hamm.airpower.mcp.McpService;
-import cn.hamm.airpower.util.RandomUtil;
+import cn.hamm.airpower.core.RandomUtil;
+import cn.hamm.airpower.web.access.PasswordUtil;
+import cn.hamm.airpower.web.mcp.McpService;
 import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.asset.device.DeviceService;

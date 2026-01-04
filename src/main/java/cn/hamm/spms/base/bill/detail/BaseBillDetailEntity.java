@@ -1,7 +1,7 @@
 package cn.hamm.spms.base.bill.detail;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.ReadOnly;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.ReadOnly;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;

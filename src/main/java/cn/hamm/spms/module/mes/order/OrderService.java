@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.mes.order;
 
-import cn.hamm.airpower.dictionary.DictionaryUtil;
-import cn.hamm.airpower.dictionary.IDictionary;
-import cn.hamm.airpower.util.NumberUtil;
+import cn.hamm.airpower.core.DictionaryUtil;
+import cn.hamm.airpower.core.NumberUtil;
+import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailEntity;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN;
 
 /**
  * <h1>Service</h1>

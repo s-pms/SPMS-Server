@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.chat.room;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.ReadOnly;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.ReadOnly;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;

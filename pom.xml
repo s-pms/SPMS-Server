@@ -5,7 +5,7 @@
     <parent>
         <groupId>cn.hamm</groupId>
         <artifactId>airpower</artifactId>
-        <version>4.1.3</version>
+        <version>5.0.0-beta.4</version>
     </parent>
     <groupId>cn.hamm.spms</groupId>
     <artifactId>server</artifactId>
@@ -15,7 +15,8 @@
     <dependencies>
         <dependency>
             <groupId>cn.hamm</groupId>
-            <artifactId>airpower-core</artifactId>
+            <artifactId>airpower-web</artifactId>
+            <version>${airpower.version}</version>
         </dependency>
 
         <!-- 阿里云OSS开始 -->
@@ -54,6 +55,16 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
     </dependencies>
     <build>

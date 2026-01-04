@@ -1,7 +1,7 @@
 package cn.hamm.spms;
 
-import cn.hamm.airpower.AbstractWebConfig;
-import cn.hamm.airpower.websocket.WebSocketHandler;
+import cn.hamm.airpower.web.AbstractWebConfig;
+import cn.hamm.airpower.web.websocket.WebSocketHandler;
 import cn.hamm.spms.common.AppWebSocketHandler;
 import cn.hamm.spms.common.interceptor.RequestInterceptor;
 import org.jetbrains.annotations.NotNull;
