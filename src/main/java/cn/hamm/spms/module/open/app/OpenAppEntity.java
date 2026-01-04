@@ -1,10 +1,10 @@
 package cn.hamm.spms.module.open.app;
 
-import cn.hamm.airpower.util.Meta;
-import cn.hamm.airpower.util.annotation.Description;
-import cn.hamm.airpower.util.annotation.ReadOnly;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Dictionary;
+import cn.hamm.airpower.core.annotation.Meta;
+import cn.hamm.airpower.core.annotation.ReadOnly;
 import cn.hamm.airpower.web.annotation.Search;
-import cn.hamm.airpower.web.dictionary.Dictionary;
 import cn.hamm.airpower.web.open.IOpenApp;
 import cn.hamm.airpower.web.open.OpenArithmeticType;
 import cn.hamm.spms.base.BaseEntity;

@@ -1,9 +1,9 @@
 package cn.hamm.spms.base;
 
-import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.web.access.Permission;
 import cn.hamm.airpower.web.api.Extends;
-import cn.hamm.airpower.web.api.Json;
 import cn.hamm.airpower.web.curd.Curd;
 import cn.hamm.airpower.web.curd.CurdController;
 import lombok.extern.slf4j.Slf4j;

@@ -1,11 +1,12 @@
 package cn.hamm.spms.module.mcp;
 
-import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.exception.ServiceException;
 import cn.hamm.airpower.web.access.AccessTokenUtil;
 import cn.hamm.airpower.web.access.Permission;
 import cn.hamm.airpower.web.api.Api;
 import cn.hamm.airpower.web.api.ApiController;
-import cn.hamm.airpower.web.api.Json;
 import cn.hamm.airpower.web.mcp.McpService;
 import cn.hamm.airpower.web.mcp.model.McpRequest;
 import cn.hamm.airpower.web.mcp.model.McpResponse;

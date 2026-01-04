@@ -1,5 +1,6 @@
 package cn.hamm.spms;
 
+import cn.hamm.airpower.core.RandomUtil;
 import cn.hamm.airpower.web.access.PasswordUtil;
 import cn.hamm.airpower.web.mcp.McpService;
 import cn.hamm.spms.common.config.AppConfig;

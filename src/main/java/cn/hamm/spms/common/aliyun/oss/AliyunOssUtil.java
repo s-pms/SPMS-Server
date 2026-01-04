@@ -1,6 +1,6 @@
 package cn.hamm.spms.common.aliyun.oss;
 
-import cn.hamm.airpower.web.datetime.DateTimeUtil;
+import cn.hamm.airpower.core.DateTimeUtil;
 import cn.hamm.spms.common.aliyun.AliyunConfig;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;

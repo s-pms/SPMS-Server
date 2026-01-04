@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.wms.output;
 
-import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.web.api.Api;
 import cn.hamm.airpower.web.api.Extends;
 import cn.hamm.airpower.web.curd.Curd;

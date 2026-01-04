@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.factory.structure;
 
+import cn.hamm.airpower.core.TreeUtil;
 import cn.hamm.airpower.web.curd.query.QueryListRequest;
-import cn.hamm.airpower.web.tree.TreeUtil;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -18,12 +18,12 @@ import java.util.Objects;
 public class StructureService extends BaseService<StructureEntity, StructureRepository> {
     @Override
     protected @NotNull List<StructureEntity> afterGetList(@NotNull List<StructureEntity> list) {
-        return TreeUtil.getAllChildren(this, list);
+        return list;
     }
 
     @Override
     protected void beforeDelete(@NotNull StructureEntity structure) {
-        TreeUtil.ensureNoChildrenBeforeDelete(this, structure.getId());
+        TreeUtil.ensureNoChildrenBeforeDelete(structure.getId(), id -> filter(new StructureEntity().setParentId(id)));
     }
 
     @Override

@@ -1,10 +1,10 @@
 package cn.hamm.spms.module.asset.device;
 
-import cn.hamm.airpower.util.Meta;
-import cn.hamm.airpower.util.annotation.Description;
-import cn.hamm.airpower.util.annotation.ReadOnly;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Dictionary;
+import cn.hamm.airpower.core.annotation.Meta;
+import cn.hamm.airpower.core.annotation.ReadOnly;
 import cn.hamm.airpower.web.annotation.Search;
-import cn.hamm.airpower.web.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.device.enums.DeviceAlarm;

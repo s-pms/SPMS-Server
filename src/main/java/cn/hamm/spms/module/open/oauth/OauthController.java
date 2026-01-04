@@ -1,17 +1,18 @@
 package cn.hamm.spms.module.open.oauth;
 
-import cn.hamm.airpower.util.DictionaryUtil;
-import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.core.DictionaryUtil;
+import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.core.RandomUtil;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.DesensitizeIgnore;
 import cn.hamm.airpower.web.access.AccessConfig;
 import cn.hamm.airpower.web.access.AccessTokenUtil;
 import cn.hamm.airpower.web.access.Permission;
 import cn.hamm.airpower.web.api.Api;
 import cn.hamm.airpower.web.api.ApiController;
-import cn.hamm.airpower.web.api.Json;
 import cn.hamm.airpower.web.cookie.CookieConfig;
 import cn.hamm.airpower.web.curd.ICurdAction;
-import cn.hamm.airpower.web.desensitize.DesensitizeIgnore;
-import cn.hamm.airpower.web.request.RequestUtil;
+import cn.hamm.airpower.web.util.RequestUtil;
 import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.open.app.OpenAppEntity;
 import cn.hamm.spms.module.open.app.OpenAppService;
@@ -45,9 +46,9 @@ import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cn.hamm.airpower.web.datetime.DateTimeUtil.SECOND_PER_DAY;
-import static cn.hamm.airpower.web.datetime.DateTimeUtil.SECOND_PER_HOUR;
-import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.core.DateTimeUtil.SECOND_PER_DAY;
+import static cn.hamm.airpower.core.DateTimeUtil.SECOND_PER_HOUR;
+import static cn.hamm.airpower.web.exception.ServiceError.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**

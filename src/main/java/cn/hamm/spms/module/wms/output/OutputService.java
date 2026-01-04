@@ -1,7 +1,8 @@
 package cn.hamm.spms.module.wms.output;
 
-import cn.hamm.airpower.util.DictionaryUtil;
-import cn.hamm.airpower.web.dictionary.IDictionary;
+import cn.hamm.airpower.core.DictionaryUtil;
+import cn.hamm.airpower.core.NumberUtil;
+import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.asset.material.MaterialEntity;

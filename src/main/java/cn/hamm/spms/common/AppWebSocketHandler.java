@@ -1,6 +1,6 @@
 package cn.hamm.spms.common;
 
-import cn.hamm.airpower.web.api.Json;
+import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.web.websocket.WebSocketHandler;
 import cn.hamm.airpower.web.websocket.WebSocketPayload;
 import cn.hamm.airpower.web.websocket.WebsocketHelper;

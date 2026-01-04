@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.asset.material;
 
-import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.web.mcp.method.McpMethod;
 import cn.hamm.airpower.web.mcp.method.McpOptional;
 import cn.hamm.spms.base.BaseService;

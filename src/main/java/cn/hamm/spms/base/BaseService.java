@@ -1,7 +1,7 @@
 package cn.hamm.spms.base;
 
+import cn.hamm.airpower.core.ReflectUtil;
 import cn.hamm.airpower.web.curd.CurdService;
-import cn.hamm.airpower.web.reflect.ReflectUtil;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;

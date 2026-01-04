@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.system.coderule;
 
-import cn.hamm.airpower.util.DictionaryUtil;
-import cn.hamm.airpower.web.datetime.DateTimeUtil;
+import cn.hamm.airpower.core.DateTimeUtil;
+import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
 import cn.hamm.spms.module.system.coderule.enums.CodeRuleParam;

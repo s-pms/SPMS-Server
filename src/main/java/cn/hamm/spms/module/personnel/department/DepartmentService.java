@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.personnel.department;
 
+import cn.hamm.airpower.core.TreeUtil;
 import cn.hamm.airpower.web.curd.CurdEntity;
-import cn.hamm.airpower.web.tree.TreeUtil;
 import cn.hamm.spms.base.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +27,7 @@ public class DepartmentService extends BaseService<DepartmentEntity, DepartmentR
 
     @Override
     protected void beforeDelete(@NotNull DepartmentEntity department) {
-        TreeUtil.ensureNoChildrenBeforeDelete(this, department.getId());
+        TreeUtil.ensureNoChildrenBeforeDelete(department.getId(), (id) -> filter(new DepartmentEntity().setId(id)));
     }
 
     @Override

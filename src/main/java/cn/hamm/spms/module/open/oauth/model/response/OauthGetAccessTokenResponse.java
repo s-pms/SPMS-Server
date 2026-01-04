@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.open.oauth.model.response;
 
-import cn.hamm.airpower.util.Meta;
+import cn.hamm.airpower.core.RootModel;
+import cn.hamm.airpower.core.annotation.Meta;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

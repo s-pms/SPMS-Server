@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.chat.room.model;
 
+import cn.hamm.airpower.core.RootModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

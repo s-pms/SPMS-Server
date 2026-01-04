@@ -1,11 +1,11 @@
 package cn.hamm.spms.module.open.notify;
 
-import cn.hamm.airpower.util.DictionaryUtil;
-import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.core.DictionaryUtil;
+import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.web.access.Permission;
 import cn.hamm.airpower.web.api.Api;
 import cn.hamm.airpower.web.api.Extends;
-import cn.hamm.airpower.web.api.Json;
 import cn.hamm.airpower.web.curd.Curd;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.notify.enums.NotifyScene;

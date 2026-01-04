@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.system.config;
 
-import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import cn.hamm.spms.module.system.config.enums.ConfigType;

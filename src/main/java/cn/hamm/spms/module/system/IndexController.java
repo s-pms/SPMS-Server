@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.system;
 
-import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.web.ai.Ai;
 import cn.hamm.airpower.web.ai.AiRequest;
 import cn.hamm.airpower.web.ai.AiResponse;

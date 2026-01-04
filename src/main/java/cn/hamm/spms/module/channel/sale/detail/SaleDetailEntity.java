@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.channel.sale.detail;
 
-import cn.hamm.airpower.util.Meta;
-import cn.hamm.airpower.util.annotation.Description;
-import cn.hamm.airpower.util.annotation.ReadOnly;
+import cn.hamm.airpower.core.annotation.Meta;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.ReadOnly;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import jakarta.persistence.Column;

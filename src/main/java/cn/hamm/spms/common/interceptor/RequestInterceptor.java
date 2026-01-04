@@ -1,6 +1,6 @@
 package cn.hamm.spms.common.interceptor;
 
-import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.web.access.AccessTokenUtil;
 import cn.hamm.airpower.web.interceptor.AbstractRequestInterceptor;
 import cn.hamm.spms.module.personnel.role.RoleEntity;

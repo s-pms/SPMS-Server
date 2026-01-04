@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.mes.bom;
 
-import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.web.api.Api;
 import cn.hamm.spms.base.BaseController;
 

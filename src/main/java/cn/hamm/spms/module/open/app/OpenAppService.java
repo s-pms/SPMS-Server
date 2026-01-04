@@ -1,7 +1,9 @@
 package cn.hamm.spms.module.open.app;
 
-import cn.hamm.airpower.util.RsaUtil;
-import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.core.RandomUtil;
+import cn.hamm.airpower.core.RsaUtil;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.exception.ServiceException;
 import cn.hamm.airpower.web.mcp.method.McpMethod;
 import cn.hamm.airpower.web.open.IOpenAppService;
 import cn.hamm.spms.base.BaseService;

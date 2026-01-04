@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.iot.report.enums;
 
-import cn.hamm.airpower.web.dictionary.IDictionary;
+import cn.hamm.airpower.core.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

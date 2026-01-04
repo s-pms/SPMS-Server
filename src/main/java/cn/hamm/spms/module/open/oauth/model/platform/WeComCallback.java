@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.open.oauth.model.platform;
 
-import cn.hamm.airpower.web.api.Json;
-import cn.hamm.airpower.web.datetime.DateTimeUtil;
+import cn.hamm.airpower.core.DateTimeUtil;
+import cn.hamm.airpower.core.HttpUtil;
+import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.web.redis.RedisHelper;
-import cn.hamm.airpower.web.request.HttpUtil;
 import cn.hamm.spms.module.open.oauth.config.WecomConfig;
 import cn.hamm.spms.module.open.oauth.model.base.AbstractOauthCallback;
 import cn.hamm.spms.module.open.oauth.model.base.OauthUserInfo;

@@ -1,5 +1,7 @@
 package cn.hamm.spms.module.system.file;
 
+import cn.hamm.airpower.core.FileUtil;
+import cn.hamm.airpower.core.exception.ServiceException;
 import cn.hamm.airpower.web.file.FileConfig;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.aliyun.oss.AliyunOssUtil;

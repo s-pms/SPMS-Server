@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.open.oauth;
 
-import cn.hamm.airpower.web.datetime.DateTimeUtil;
+import cn.hamm.airpower.core.DateTimeUtil;
 import cn.hamm.airpower.web.redis.RedisHelper;
 import cn.hamm.spms.module.open.oauth.model.base.AbstractOauthCallback;
 import cn.hamm.spms.module.open.oauth.model.base.OauthUserInfo;
