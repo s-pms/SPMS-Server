@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.asset.contract.participant;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.web.api.Api;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.asset.contract.ContractEntity;
 

@@ -1,6 +1,5 @@
 package cn.hamm.spms.base.bill.detail;
 
-import cn.hamm.airpower.util.NumberUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;

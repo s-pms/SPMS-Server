@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.mes.routing.operation;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.ReadOnly;
+import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.util.annotation.ReadOnly;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.mes.bom.BomEntity;
 import cn.hamm.spms.module.mes.operation.OperationEntity;

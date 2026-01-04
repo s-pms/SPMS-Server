@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.open.notify;
 
-import cn.hamm.airpower.api.Json;
-import cn.hamm.airpower.dictionary.DictionaryUtil;
-import cn.hamm.airpower.helper.EmailHelper;
-import cn.hamm.airpower.request.HttpUtil;
+import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.web.api.Json;
+import cn.hamm.airpower.web.helper.EmailHelper;
+import cn.hamm.airpower.web.request.HttpUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.open.notify.enums.NotifyChannel;
 import cn.hamm.spms.module.open.notify.enums.NotifyScene;

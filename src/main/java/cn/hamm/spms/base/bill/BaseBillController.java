@@ -1,10 +1,10 @@
 package cn.hamm.spms.base.bill;
 
-import cn.hamm.airpower.access.Permission;
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.api.Extends;
-import cn.hamm.airpower.api.Json;
-import cn.hamm.airpower.curd.Curd;
+import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.web.access.Permission;
+import cn.hamm.airpower.web.api.Extends;
+import cn.hamm.airpower.web.api.Json;
+import cn.hamm.airpower.web.curd.Curd;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
@@ -17,7 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN;
 
 /**
  * <h1>单据控制器基类</h1>

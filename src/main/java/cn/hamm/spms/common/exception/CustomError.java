@@ -1,7 +1,6 @@
 package cn.hamm.spms.common.exception;
 
-import cn.hamm.airpower.dictionary.IDictionary;
-import cn.hamm.airpower.exception.IException;
+import cn.hamm.airpower.web.dictionary.IDictionary;
 import cn.hamm.spms.common.config.AppConstant;
 import lombok.Getter;
 import org.jetbrains.annotations.Contract;

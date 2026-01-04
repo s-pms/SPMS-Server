@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.mes.routing.operation;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.web.api.Api;
 import cn.hamm.spms.base.BaseController;
 import org.springframework.web.bind.annotation.RestController;
 

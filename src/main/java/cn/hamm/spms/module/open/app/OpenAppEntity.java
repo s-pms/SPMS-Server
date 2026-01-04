@@ -1,12 +1,12 @@
 package cn.hamm.spms.module.open.app;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.dictionary.Dictionary;
-import cn.hamm.airpower.meta.Meta;
-import cn.hamm.airpower.open.IOpenApp;
-import cn.hamm.airpower.open.OpenArithmeticType;
+import cn.hamm.airpower.util.Meta;
+import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.util.annotation.ReadOnly;
+import cn.hamm.airpower.web.annotation.Search;
+import cn.hamm.airpower.web.dictionary.Dictionary;
+import cn.hamm.airpower.web.open.IOpenApp;
+import cn.hamm.airpower.web.open.OpenArithmeticType;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.open.oauth.IOauthAction;
 import com.fasterxml.jackson.annotation.JsonProperty;

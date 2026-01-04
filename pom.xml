@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.hamm</groupId>
-            <artifactId>airpower-core</artifactId>
+            <artifactId>airpower-web</artifactId>
         </dependency>
 
         <!-- 阿里云OSS开始 -->

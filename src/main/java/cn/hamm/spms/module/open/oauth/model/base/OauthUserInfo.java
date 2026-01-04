@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.open.oauth.model.base;
 
-import cn.hamm.airpower.root.RootModel;
 import cn.hamm.spms.module.personnel.user.enums.UserGender;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

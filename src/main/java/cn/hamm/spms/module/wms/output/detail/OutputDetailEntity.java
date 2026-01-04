@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.wms.output.detail;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.meta.Meta;
+import cn.hamm.airpower.util.Meta;
+import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.util.annotation.ReadOnly;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;

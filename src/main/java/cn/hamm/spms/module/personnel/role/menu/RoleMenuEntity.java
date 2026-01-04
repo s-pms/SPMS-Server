@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.personnel.role.menu;
 
-import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.util.annotation.Description;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.system.menu.MenuEntity;

@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.open.thirdlogin;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.meta.Meta;
+import cn.hamm.airpower.util.Meta;
+import cn.hamm.airpower.util.annotation.Description;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import jakarta.persistence.Column;

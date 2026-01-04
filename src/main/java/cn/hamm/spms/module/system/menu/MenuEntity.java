@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.system.menu;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.meta.Meta;
-import cn.hamm.airpower.tree.ITree;
+import cn.hamm.airpower.util.Meta;
+import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.web.annotation.Search;
+import cn.hamm.airpower.web.tree.ITree;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

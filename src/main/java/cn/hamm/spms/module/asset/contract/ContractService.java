@@ -4,7 +4,7 @@ import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.asset.contract.enums.ContractStatus;
 import org.springframework.stereotype.Service;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN;
 
 /**
  * <h1>Service</h1>

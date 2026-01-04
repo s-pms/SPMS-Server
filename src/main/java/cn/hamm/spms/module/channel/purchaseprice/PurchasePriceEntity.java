@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.channel.purchaseprice;
 
-import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.util.annotation.Description;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.channel.supplier.SupplierEntity;

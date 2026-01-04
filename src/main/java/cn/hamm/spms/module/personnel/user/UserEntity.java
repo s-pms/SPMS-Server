@@ -1,11 +1,11 @@
 package cn.hamm.spms.module.personnel.user;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.desensitize.Desensitize;
-import cn.hamm.airpower.dictionary.Dictionary;
-import cn.hamm.airpower.meta.Meta;
-import cn.hamm.airpower.validate.Phone;
+import cn.hamm.airpower.util.Meta;
+import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.web.annotation.Search;
+import cn.hamm.airpower.web.desensitize.Desensitize;
+import cn.hamm.airpower.web.dictionary.Dictionary;
+import cn.hamm.airpower.web.validate.Phone;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
@@ -29,8 +29,8 @@ import org.hibernate.validator.constraints.Length;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.desensitize.DesensitizeType.CHINESE_NAME;
-import static cn.hamm.airpower.desensitize.DesensitizeType.ID_CARD;
+import static cn.hamm.airpower.web.desensitize.DesensitizeType.CHINESE_NAME;
+import static cn.hamm.airpower.web.desensitize.DesensitizeType.ID_CARD;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**

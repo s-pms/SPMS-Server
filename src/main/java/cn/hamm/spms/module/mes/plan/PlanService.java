@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.mes.plan;
 
-import cn.hamm.airpower.dictionary.IDictionary;
+import cn.hamm.airpower.web.dictionary.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.module.mes.plan.detail.PlanDetailEntity;
 import cn.hamm.spms.module.mes.plan.detail.PlanDetailRepository;

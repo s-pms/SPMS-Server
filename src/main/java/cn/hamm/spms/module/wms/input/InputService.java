@@ -1,9 +1,8 @@
 package cn.hamm.spms.module.wms.input;
 
-import cn.hamm.airpower.dictionary.DictionaryUtil;
-import cn.hamm.airpower.dictionary.IDictionary;
-import cn.hamm.airpower.reflect.ReflectUtil;
-import cn.hamm.airpower.util.NumberUtil;
+import cn.hamm.airpower.util.DictionaryUtil;
+import cn.hamm.airpower.web.dictionary.IDictionary;
+import cn.hamm.airpower.web.reflect.ReflectUtil;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
@@ -22,7 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN;
 import static cn.hamm.spms.module.system.config.enums.ConfigFlag.INPUT_BILL_AUTO_AUDIT;
 
 /**

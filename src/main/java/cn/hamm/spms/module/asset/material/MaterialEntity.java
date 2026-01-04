@@ -1,10 +1,9 @@
 package cn.hamm.spms.module.asset.material;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.dictionary.Dictionary;
-import cn.hamm.airpower.export.Export;
-import cn.hamm.airpower.meta.Meta;
+import cn.hamm.airpower.util.Meta;
+import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.web.annotation.Search;
+import cn.hamm.airpower.web.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.material.enums.MaterialType;
@@ -22,9 +21,6 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-
-import static cn.hamm.airpower.export.Export.Type.DICTIONARY;
-import static cn.hamm.airpower.export.Export.Type.NUMBER;
 
 /**
  * <h1>物料实体</h1>
@@ -44,7 +40,6 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '物料名称'", unique = true)
     @NotBlank(groups = {WhenAdd.class, WhenUpdate.class}, message = "物料名称不能为空")
-    @Export
     @Meta
     private String name;
 
@@ -52,26 +47,22 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
     @Column(columnDefinition = "varchar(255) default '' comment '物料编码'", unique = true)
     @Search
     @AutoGenerateCode(CodeRuleField.MaterialCode)
-    @Export
     @Meta
     private String code;
 
     @Description("规格型号")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '规格型号'")
-    @Export
     private String spc;
 
     @Description("物料类型")
     @Column(columnDefinition = "bigint UNSIGNED default 1 comment '物料类型'")
     @Dictionary(value = MaterialType.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Export(DICTIONARY)
     private Integer materialType;
 
     @Description("使用方式")
     @Column(columnDefinition = "bigint UNSIGNED default 1 comment '使用方式'")
     @Dictionary(value = MaterialUseType.class, groups = {WhenAdd.class, WhenUpdate.class})
-    @Export(DICTIONARY)
     private Integer useType;
 
     @Description("默认单位")
@@ -81,11 +72,9 @@ public class MaterialEntity extends BaseEntity<MaterialEntity> {
 
     @Description("采购标准价")
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '采购标准价'")
-    @Export(NUMBER)
     private Double purchasePrice;
 
     @Description("销售标准价")
     @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '销售标准价'")
-    @Export(NUMBER)
     private Double salePrice;
 }

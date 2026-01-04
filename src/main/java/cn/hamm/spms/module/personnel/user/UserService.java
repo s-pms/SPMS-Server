@@ -1,17 +1,16 @@
 package cn.hamm.spms.module.personnel.user;
 
-import cn.hamm.airpower.access.AccessConfig;
-import cn.hamm.airpower.access.AccessTokenUtil;
-import cn.hamm.airpower.access.PasswordUtil;
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.cookie.CookieHelper;
-import cn.hamm.airpower.curd.CurdEntity;
-import cn.hamm.airpower.curd.Sort;
-import cn.hamm.airpower.datetime.DateTimeUtil;
-import cn.hamm.airpower.helper.EmailHelper;
-import cn.hamm.airpower.mcp.method.McpMethod;
-import cn.hamm.airpower.tree.TreeUtil;
-import cn.hamm.airpower.util.RandomUtil;
+import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.web.access.AccessConfig;
+import cn.hamm.airpower.web.access.AccessTokenUtil;
+import cn.hamm.airpower.web.access.PasswordUtil;
+import cn.hamm.airpower.web.cookie.CookieHelper;
+import cn.hamm.airpower.web.curd.CurdEntity;
+import cn.hamm.airpower.web.curd.Sort;
+import cn.hamm.airpower.web.datetime.DateTimeUtil;
+import cn.hamm.airpower.web.helper.EmailHelper;
+import cn.hamm.airpower.web.mcp.method.McpMethod;
+import cn.hamm.airpower.web.tree.TreeUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConfig;
@@ -46,7 +45,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 
-import static cn.hamm.airpower.exception.ServiceError.*;
+import static cn.hamm.airpower.web.exception.ServiceError.*;
 import static cn.hamm.spms.common.exception.CustomError.*;
 
 /**

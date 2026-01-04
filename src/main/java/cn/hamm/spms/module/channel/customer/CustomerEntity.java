@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.channel.customer;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.meta.Meta;
-import cn.hamm.airpower.validate.Phone;
+import cn.hamm.airpower.util.Meta;
+import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.web.annotation.Search;
+import cn.hamm.airpower.web.validate.Phone;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import jakarta.persistence.Column;

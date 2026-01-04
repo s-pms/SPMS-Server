@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.chat.member;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.util.annotation.Description;
+import cn.hamm.airpower.util.annotation.ReadOnly;
+import cn.hamm.airpower.web.dictionary.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.chat.member.enums.MemberRole;
 import cn.hamm.spms.module.chat.room.RoomEntity;

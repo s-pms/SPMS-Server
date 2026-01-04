@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.open.oauth.model.base;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.root.RootModel;
+import cn.hamm.airpower.util.annotation.Description;
 import cn.hamm.spms.module.open.oauth.IOauthAction;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
