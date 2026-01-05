@@ -1,12 +1,12 @@
 package cn.hamm.spms.module.open.oauth;
 
+import cn.hamm.airpower.core.AccessTokenUtil;
 import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.RandomUtil;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.annotation.DesensitizeIgnore;
 import cn.hamm.airpower.web.access.AccessConfig;
-import cn.hamm.airpower.web.access.AccessTokenUtil;
 import cn.hamm.airpower.web.access.Permission;
 import cn.hamm.airpower.web.api.Api;
 import cn.hamm.airpower.web.api.ApiController;

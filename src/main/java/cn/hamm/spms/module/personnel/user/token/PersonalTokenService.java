@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.personnel.user.token;
 
+import cn.hamm.airpower.core.AccessTokenUtil;
 import cn.hamm.airpower.web.access.AccessConfig;
-import cn.hamm.airpower.web.access.AccessTokenUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.personnel.user.enums.UserTokenType;
 import org.jetbrains.annotations.NotNull;

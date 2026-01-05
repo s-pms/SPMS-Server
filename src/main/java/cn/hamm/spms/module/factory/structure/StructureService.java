@@ -18,6 +18,11 @@ import java.util.Objects;
 public class StructureService extends BaseService<StructureEntity, StructureRepository> {
     @Override
     protected @NotNull List<StructureEntity> afterGetList(@NotNull List<StructureEntity> list) {
+        list.forEach(item -> {
+            QueryListRequest<StructureEntity> queryListRequest = new QueryListRequest<>();
+            queryListRequest.setFilter(new StructureEntity().setParentId(item.getId()));
+            item.setChildren(getList(queryListRequest));
+        });
         return list;
     }
 

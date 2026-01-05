@@ -114,12 +114,12 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
         if (Objects.isNull(structure)) {
             return;
         }
-        Set<Long> idList = TreeUtil.getChildrenIdList(structure.getId(), id -> storageService.filter(new StorageEntity().setParentId(id)));
-        if (!idList.isEmpty()) {
-            Join<InventoryEntity, StructureEntity> join = root.join("structure");
-            Predicate inPredicate = join.get(CurdEntity.STRING_ID).in(idList);
-            predicateList.add(inPredicate);
-        }
+        Set<Long> idList = TreeUtil.getChildrenIdList(structure.getId(), id -> structureService.filter(new StructureEntity().setParentId(id)));
+        idList.add(structure.getId());
+        Join<InventoryEntity, StructureEntity> join = root.join("structure");
+        Predicate inPredicate = join.get(CurdEntity.STRING_ID).in(idList);
+        predicateList.add(inPredicate);
+        search.setStructure(null);
     }
 
     /**
@@ -135,10 +135,10 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
             return;
         }
         Set<Long> idList = TreeUtil.getChildrenIdList(storage.getId(), id -> storageService.filter(new StorageEntity().setParentId(id)));
-        if (!idList.isEmpty()) {
-            Join<InventoryEntity, StorageEntity> join = root.join("storage");
-            Predicate inPredicate = join.get(CurdEntity.STRING_ID).in(idList);
-            predicateList.add(inPredicate);
-        }
+        idList.add(storage.getId());
+        Join<InventoryEntity, StorageEntity> join = root.join("storage");
+        Predicate inPredicate = join.get(CurdEntity.STRING_ID).in(idList);
+        predicateList.add(inPredicate);
+        search.setStorage(null);
     }
 }
