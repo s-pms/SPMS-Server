@@ -7,7 +7,11 @@ import cn.hamm.airpower.web.ai.AiResponse;
 import cn.hamm.airpower.web.ai.AiStream;
 import cn.hamm.airpower.web.api.Api;
 import cn.hamm.airpower.web.api.ApiController;
+import cn.hamm.airpower.web.curd.Page;
+import cn.hamm.airpower.web.curd.query.PageData;
 import cn.hamm.airpower.web.redis.RedisHelper;
+import cn.hamm.spms.module.asset.material.MaterialEntity;
+import cn.hamm.spms.module.asset.material.MaterialService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -29,9 +33,13 @@ public class IndexController extends ApiController {
     private Ai ai;
     @Autowired
     private RedisHelper redisHelper;
+    @Autowired
+    private MaterialService materialService;
 
     @GetMapping("")
     public String index() {
+        PageData<MaterialEntity> pageData = materialService.query(new Page(), ((from, builder) -> builder.like(from.get("name"), "%屏幕%")));
+        log.info("materials: {}", pageData.getList());
         long index = redisHelper.increment("index");
         return "<h1>Server running! " + index + "</h1>";
     }
