@@ -103,7 +103,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
             return addAndGet(file);
         } catch (Exception exception) {
             log.error(exception.getMessage(), exception);
-            throw new ServiceException(exception);
+            throw new ServiceException("上传文件失败，" + exception.getMessage());
         }
     }
 }

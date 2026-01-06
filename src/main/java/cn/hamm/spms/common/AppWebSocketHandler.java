@@ -2,8 +2,8 @@ package cn.hamm.spms.common;
 
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.web.websocket.WebSocketHandler;
+import cn.hamm.airpower.web.websocket.WebSocketHelper;
 import cn.hamm.airpower.web.websocket.WebSocketPayload;
-import cn.hamm.airpower.web.websocket.WebsocketHelper;
 import cn.hamm.spms.module.chat.enums.ChatEventType;
 import cn.hamm.spms.module.chat.member.MemberEntity;
 import cn.hamm.spms.module.chat.member.MemberService;
@@ -46,7 +46,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
     protected final ConcurrentHashMap<String, List<Long>> roomOnlineUserList = new ConcurrentHashMap<>();
 
     @Autowired
-    private WebsocketHelper websocketHelper;
+    private WebSocketHelper webSocketHelper;
 
     @Autowired
     private UserService userService;
@@ -89,10 +89,10 @@ public class AppWebSocketHandler extends WebSocketHandler {
         RoomMemberEvent roomMemberEvent = new RoomMemberEvent();
         roomMemberEvent.setMember(member);
 
-        websocketHelper.publishToChannel(GROUP_PREFIX + roomId, new WebSocketPayload()
+        webSocketHelper.publishToChannel(GROUP_PREFIX + roomId, new WebSocketPayload()
                 .setType(event.getKeyString())
                 .setData(Json.toString(roomMemberEvent)));
-        websocketHelper.publishToChannel(GROUP_PREFIX + roomId, new WebSocketPayload()
+        webSocketHelper.publishToChannel(GROUP_PREFIX + roomId, new WebSocketPayload()
                 .setType(ONLINE_COUNT_CHANGED.getKeyString())
                 .setData(Json.toString(roomUserIdList))
         );
@@ -181,7 +181,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
     private void publishToUserRoom(long userId, @NotNull ChatEventType type, RoomMemberEvent event) {
         WebSocketPayload payload = new WebSocketPayload();
         payload.setType(type.getKeyString()).setData(Json.toString(event));
-        websocketHelper.publishToChannel(GROUP_PREFIX + userService.getCurrentRoomId(userId), payload);
+        webSocketHelper.publishToChannel(GROUP_PREFIX + userService.getCurrentRoomId(userId), payload);
     }
 
     /**

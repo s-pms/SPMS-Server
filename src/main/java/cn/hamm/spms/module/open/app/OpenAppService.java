@@ -72,7 +72,7 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
             openApp.setPrivateKey(RsaUtil.convertPrivateKeyToPem(keyPair.getPrivate()));
             openApp.setPublicKey(RsaUtil.convertPublicKeyToPem(keyPair.getPublic()));
         } catch (NoSuchAlgorithmException e) {
-            throw new ServiceException(e);
+            throw new ServiceException("重置密钥对失败，" + e.getMessage());
         }
     }
 

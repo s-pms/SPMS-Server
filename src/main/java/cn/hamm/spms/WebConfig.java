@@ -23,7 +23,7 @@ public class WebConfig extends AbstractWebConfig {
     private AppWebSocketHandler appWebSocketHandler;
 
     @Override
-    public WebSocketHandler getWebsocketHandler() {
+    public WebSocketHandler getWebSocketHandler() {
         return appWebSocketHandler;
     }
 
