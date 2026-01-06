@@ -32,12 +32,12 @@ public class OpenAppController extends BaseController<OpenAppEntity, OpenAppServ
     @Autowired
     private NotifyService notifyService;
 
-    @Description("通过AppKey获取应用信息")
+    @Description("通过 AppKey 获取应用信息")
     @PostMapping("getByAppKey")
     @Permission(login = false)
     public Json getByAppKey(@RequestBody @Validated(WhenGetByAppKey.class) OpenAppEntity openApp) {
         openApp = service.getByAppKey(openApp.getAppKey());
-        DATA_NOT_FOUND.whenNull(openApp, "没有查到指定AppKey的应用");
+        DATA_NOT_FOUND.whenNull(openApp, "没有查到指定 AppKey 的应用");
         return Json.data(openApp);
     }
 

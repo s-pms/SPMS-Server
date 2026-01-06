@@ -79,6 +79,8 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
                                 .setCurrentSn(0);
                     }
                 }
+                default -> {
+                }
             }
             String template = forUpdate.getTemplate();
             List<Map<String, Object>> mapList = DictionaryUtil.getDictionaryList(CodeRuleParam.class);

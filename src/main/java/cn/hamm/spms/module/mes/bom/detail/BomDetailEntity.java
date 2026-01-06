@@ -17,7 +17,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**
- * <h1>BOM明细实体</h1>
+ * <h1>BOM 明细实体</h1>
  *
  * @author Hamm.cn
  */
