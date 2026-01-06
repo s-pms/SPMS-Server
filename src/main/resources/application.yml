@@ -46,3 +46,6 @@ airpower:
     access-token-secret: "1234567890"
   websocket:
     support: redis
+  json:
+    request-log: true
+    response-log: true

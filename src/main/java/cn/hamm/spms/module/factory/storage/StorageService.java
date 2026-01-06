@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.factory.storage;
 
-import cn.hamm.airpower.curd.query.QueryListRequest;
-import cn.hamm.airpower.tree.TreeUtil;
+import cn.hamm.airpower.core.TreeUtil;
+import cn.hamm.airpower.web.curd.query.QueryListRequest;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -18,12 +18,17 @@ import java.util.Objects;
 public class StorageService extends BaseService<StorageEntity, StorageRepository> {
     @Override
     protected @NotNull List<StorageEntity> afterGetList(@NotNull List<StorageEntity> list) {
-        return TreeUtil.getAllChildren(this, list);
+        list.forEach(item -> {
+            QueryListRequest<StorageEntity> queryListRequest = new QueryListRequest<>();
+            queryListRequest.setFilter(new StorageEntity().setParentId(item.getId()));
+            item.setChildren(getList(queryListRequest));
+        });
+        return list;
     }
 
     @Override
     protected void beforeDelete(@NotNull StorageEntity storage) {
-        TreeUtil.ensureNoChildrenBeforeDelete(this, storage.getId());
+        TreeUtil.ensureNoChildrenBeforeDelete(storage.getId(), id -> filter(new StorageEntity().setParentId(id)));
     }
 
     @Override

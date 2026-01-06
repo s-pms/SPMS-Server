@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.open.oauth.model.base;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.root.RootModel;
+import cn.hamm.airpower.core.RootModel;
+import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.spms.module.open.oauth.IOauthAction;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class OauthAccessTokenRequest extends RootModel<OauthAccessTokenRequest> implements IOauthAction {
     @Description("AccessToken")
-    @NotBlank(groups = {WhenAccessTokenRequired.class}, message = "AccessToken不能为空")
+    @NotBlank(groups = {WhenAccessTokenRequired.class}, message = "AccessToken 不能为空")
     private String accessToken;
 
 }

@@ -1,11 +1,8 @@
 package cn.hamm.spms.module.personnel.user;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.desensitize.Desensitize;
-import cn.hamm.airpower.dictionary.Dictionary;
-import cn.hamm.airpower.meta.Meta;
-import cn.hamm.airpower.validate.Phone;
+import cn.hamm.airpower.core.annotation.*;
+import cn.hamm.airpower.core.enums.DesensitizeType;
+import cn.hamm.airpower.web.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
@@ -29,8 +26,6 @@ import org.hibernate.validator.constraints.Length;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.desensitize.DesensitizeType.CHINESE_NAME;
-import static cn.hamm.airpower.desensitize.DesensitizeType.ID_CARD;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
@@ -59,12 +54,12 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     private String avatar;
 
     @Description("真实姓名")
-    @Desensitize(CHINESE_NAME)
+    @Desensitize(DesensitizeType.CHINESE_NAME)
     @Column(columnDefinition = "varchar(255) default '' comment '真实姓名'")
     private String realName;
 
     @Description("身份证号")
-    @Desensitize(ID_CARD)
+    @Desensitize(DesensitizeType.ID_CARD)
     @Column(columnDefinition = "varchar(255) default '' comment '身份证号'")
     private String idCard;
 
@@ -90,7 +85,7 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @Description("密码")
     @Column(columnDefinition = "varchar(255) default '' comment '密码'")
     @NotBlank(groups = {WhenLogin.class, WhenResetMyPassword.class, WhenUpdateMyPassword.class}, message = "密码不能为空")
-    @Null(groups = {WhenUpdateMyInfo.class}, message = "请勿传入password字段")
+    @Null(groups = {WhenUpdateMyInfo.class}, message = "请勿传入 Password 字段")
     @Length(min = 6, message = "密码至少6位长度")
     private String password;
 
@@ -111,7 +106,7 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @Transient
     private String oldPassword;
 
-    @Description("部门ID查询")
+    @Description("部门 ID 查询")
     @Transient
     private Long departmentId;
 

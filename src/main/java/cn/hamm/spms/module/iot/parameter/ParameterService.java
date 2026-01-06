@@ -14,7 +14,7 @@ import java.util.Objects;
 @Service
 public class ParameterService extends BaseService<ParameterEntity, ParameterRepository> {
     /**
-     * 缓存的Key前缀
+     * 缓存的 Key 前缀
      */
     private final String PARAM_CODE_CACHE_PREFIX = "parameter_code_";
 

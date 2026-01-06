@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.chat.room;
 
-import cn.hamm.airpower.curd.Sort;
-import cn.hamm.airpower.util.RandomUtil;
+import cn.hamm.airpower.core.RandomUtil;
+import cn.hamm.airpower.web.curd.Sort;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.chat.member.MemberEntity;
@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
+import static cn.hamm.airpower.web.exception.ServiceError.PARAM_INVALID;
 
 /**
  * <h1>Service</h1>
@@ -43,8 +43,8 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
      * 创建房间
      *
      * @param room   房间对象
-     * @param userId 房主ID
-     * @return 房间ID
+     * @param userId 房主 ID
+     * @return 房间 ID
      */
     public final long create(RoomEntity room, long userId) {
         RoomEntity filter = new RoomEntity().setOwner(new UserEntity().setId(userId));

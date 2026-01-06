@@ -1,7 +1,7 @@
 package cn.hamm.spms.base.bill.detail;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.ReadOnly;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.ReadOnly;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
@@ -17,8 +17,10 @@ import lombok.Getter;
 @MappedSuperclass
 @Getter
 @Description("")
-public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> extends BaseEntity<E> implements IBaseBillDetailAction {
-    @Description("单据ID")
+public abstract class BaseBillDetailEntity<
+        E extends BaseBillDetailEntity<E>
+        > extends BaseEntity<E> implements IBaseBillDetailAction {
+    @Description("单据 ID")
     @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '单据ID'")
     private Long billId;
 
@@ -39,9 +41,9 @@ public abstract class BaseBillDetailEntity<E extends BaseBillDetailEntity<E>> ex
     }
 
     /**
-     * 设置单据ID
+     * 设置单据 ID
      *
-     * @param billId 单据ID
+     * @param billId 单据 ID
      * @return 明细实体
      */
     public E setBillId(Long billId) {

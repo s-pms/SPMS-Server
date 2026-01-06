@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.iot.report;
 
-import cn.hamm.airpower.curd.ICurdAction;
-import cn.hamm.airpower.dictionary.Dictionary;
-import cn.hamm.airpower.root.RootModel;
+import cn.hamm.airpower.core.RootModel;
+import cn.hamm.airpower.core.annotation.Dictionary;
+import cn.hamm.airpower.web.curd.ICurdAction;
 import cn.hamm.spms.module.iot.report.enums.ReportGranularity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -36,9 +36,9 @@ public class ReportPayload extends RootModel<ReportPayload> implements IReportPa
     private String label;
 
     /**
-     * 时序存储设备ID
+     * 时序存储设备 ID
      */
-    @NotBlank(groups = {WhenGetDevicePayloadHistory.class}, message = "设备采集ID不能为空")
+    @NotBlank(groups = {WhenGetDevicePayloadHistory.class}, message = "设备采集 ID 不能为空")
     private String uuid;
 
     /**

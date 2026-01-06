@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * <h1>创建Code请求</h1>
+ * <h1>创建 Code 请求</h1>
  *
  * @author Hamm
  */

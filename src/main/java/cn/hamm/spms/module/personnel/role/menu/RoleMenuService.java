@@ -19,7 +19,7 @@ public class RoleMenuService extends BaseService<RoleMenuEntity, RoleMenuReposit
     /**
      * 获取角色的菜单列表
      *
-     * @param roleId 角色ID
+     * @param roleId 角色 ID
      * @return 菜单列表
      */
     public List<MenuEntity> getMenuList(long roleId) {

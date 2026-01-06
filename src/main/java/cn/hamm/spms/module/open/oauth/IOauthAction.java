@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.open.oauth;
 
 /**
- * <h1>Oauth动作</h1>
+ * <h1>Oauth 动作</h1>
  *
  * @author Hamm.cn
  */

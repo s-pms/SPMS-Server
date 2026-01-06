@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.system.coderule;
 
-import cn.hamm.airpower.datetime.DateTimeUtil;
-import cn.hamm.airpower.dictionary.DictionaryUtil;
+import cn.hamm.airpower.core.DateTimeUtil;
+import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
 import cn.hamm.spms.module.system.coderule.enums.CodeRuleParam;
@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
-import static cn.hamm.airpower.exception.ServiceError.SERVICE_ERROR;
+import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN_DELETE;
+import static cn.hamm.airpower.web.exception.ServiceError.SERVICE_ERROR;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleParam.*;
 
 /**
@@ -78,6 +78,8 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
                                 .setCurrentDay(currentDay)
                                 .setCurrentSn(0);
                     }
+                }
+                default -> {
                 }
             }
             String template = forUpdate.getTemplate();

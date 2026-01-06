@@ -1,13 +1,13 @@
 package cn.hamm.spms.module.open.oauth.model.base;
 
-import cn.hamm.airpower.root.RootModel;
+import cn.hamm.airpower.core.RootModel;
 import cn.hamm.spms.module.personnel.user.enums.UserGender;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * <h1>Oauth用户信息</h1>
+ * <h1>Oauth 用户信息</h1>
  *
  * @author Hamm.cn
  */
@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class OauthUserInfo extends RootModel<OauthUserInfo> {
     /**
-     * 用户ID
+     * 用户 ID
      */
     private String userId;
 

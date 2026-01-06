@@ -1,12 +1,17 @@
 package cn.hamm.spms.module.system;
 
-import cn.hamm.airpower.ai.Ai;
-import cn.hamm.airpower.ai.AiRequest;
-import cn.hamm.airpower.ai.AiResponse;
-import cn.hamm.airpower.ai.AiStream;
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.api.Api;
-import cn.hamm.airpower.api.ApiController;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.web.ai.Ai;
+import cn.hamm.airpower.web.ai.AiRequest;
+import cn.hamm.airpower.web.ai.AiResponse;
+import cn.hamm.airpower.web.ai.AiStream;
+import cn.hamm.airpower.web.api.Api;
+import cn.hamm.airpower.web.api.ApiController;
+import cn.hamm.airpower.web.curd.Page;
+import cn.hamm.airpower.web.curd.query.PageData;
+import cn.hamm.airpower.web.redis.RedisHelper;
+import cn.hamm.spms.module.asset.material.MaterialEntity;
+import cn.hamm.spms.module.asset.material.MaterialService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -26,10 +31,17 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 public class IndexController extends ApiController {
     @Autowired
     private Ai ai;
+    @Autowired
+    private RedisHelper redisHelper;
+    @Autowired
+    private MaterialService materialService;
 
     @GetMapping("")
     public String index() {
-        return "<h1>Server running!</h1>";
+        PageData<MaterialEntity> pageData = materialService.query(new Page(), ((from, builder) -> builder.like(from.get("name"), "%屏幕%")));
+        log.info("materials: {}", pageData.getList());
+        long index = redisHelper.increment("index");
+        return "<h1>Server running! " + index + "</h1>";
     }
 
     @GetMapping("ai")

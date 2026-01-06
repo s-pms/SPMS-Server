@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.wms.inventory;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.dictionary.Dictionary;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Dictionary;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.factory.storage.StorageEntity;

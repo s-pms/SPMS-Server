@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.open.notify;
 
-import cn.hamm.airpower.api.Json;
-import cn.hamm.airpower.dictionary.DictionaryUtil;
-import cn.hamm.airpower.helper.EmailHelper;
-import cn.hamm.airpower.request.HttpUtil;
+import cn.hamm.airpower.core.DictionaryUtil;
+import cn.hamm.airpower.core.HttpUtil;
+import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.web.helper.EmailHelper;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.open.notify.enums.NotifyChannel;
 import cn.hamm.spms.module.open.notify.enums.NotifyScene;
@@ -53,7 +53,7 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     public <T> void sendNotification(NotifyScene notifyScene, T data, String content) {
         try {
             EXECUTOR.submit(() -> {
-                // 查询指定场景的Hook列表
+                // 查询指定场景的 Hook 列表
                 List<NotifyEntity> notifyList = filter(
                         new NotifyEntity()
                                 .setScene(notifyScene.getKey())
@@ -106,11 +106,11 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     }
 
     /**
-     * 获取企业微信MarkDown格式
+     * 获取企业微信 MarkDown 格式
      *
      * @param title   通知标题
      * @param content 通知内容
-     * @return 企业微信MarkDown
+     * @return 企业微信 MarkDown
      */
     protected final String getWorkWechatMarkDown(String title, String content) {
         return Json.toString(Map.of(
@@ -122,11 +122,11 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     }
 
     /**
-     * 获取钉钉MarkDown格式
+     * 获取钉钉 MarkDown 格式
      *
      * @param title   通知标题
      * @param content 通知内容
-     * @return 钉钉MarkDown
+     * @return 钉钉 MarkDown
      */
     protected final String getDingTalkMarkDown(String title, String content) {
         return Json.toString(Map.of(
@@ -139,11 +139,11 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     }
 
     /**
-     * 获取飞书MarkDown格式
+     * 获取飞书 MarkDown 格式
      *
      * @param title   通知标题
      * @param content 通知内容
-     * @return 飞书MarkDown
+     * @return 飞书 MarkDown
      */
     protected final String getFeishuMarkDown(String title, String content) {
         List<Map<String, Object>> elements = new ArrayList<>();
@@ -180,7 +180,7 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     }
 
     /**
-     * 获取通知WebHook包体
+     * 获取通知 WebHook 包体
      *
      * @param notify 通知
      * @return 通知包体

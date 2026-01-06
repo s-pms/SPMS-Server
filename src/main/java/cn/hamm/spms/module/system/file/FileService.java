@@ -1,8 +1,8 @@
 package cn.hamm.spms.module.system.file;
 
-import cn.hamm.airpower.exception.ServiceException;
-import cn.hamm.airpower.file.FileConfig;
-import cn.hamm.airpower.file.FileUtil;
+import cn.hamm.airpower.core.FileUtil;
+import cn.hamm.airpower.core.exception.ServiceException;
+import cn.hamm.airpower.web.file.FileConfig;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.aliyun.oss.AliyunOssUtil;
 import cn.hamm.spms.common.config.AppConfig;
@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_UPLOAD_MAX_SIZE;
-import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
+import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN_UPLOAD_MAX_SIZE;
+import static cn.hamm.airpower.web.exception.ServiceError.PARAM_INVALID;
 
 /**
  * <h1>Service</h1>
@@ -39,7 +39,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
     private AliyunOssUtil aliyunOssUtil;
 
     /**
-     * 上传到阿里云OSS
+     * 上传到阿里云 OSS
      *
      * @param multipartFile 文件
      * @param savedFilePath 文件路径
@@ -103,7 +103,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
             return addAndGet(file);
         } catch (Exception exception) {
             log.error(exception.getMessage(), exception);
-            throw new ServiceException(exception);
+            throw new ServiceException("上传文件失败，" + exception.getMessage());
         }
     }
 }

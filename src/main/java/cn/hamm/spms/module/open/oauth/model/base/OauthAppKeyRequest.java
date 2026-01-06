@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.open.oauth.model.base;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.root.RootModel;
+import cn.hamm.airpower.core.RootModel;
+import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.spms.module.open.oauth.IOauthAction;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class OauthAppKeyRequest extends RootModel<OauthAppKeyRequest> implements IOauthAction {
     @Description("AppKey")
-    @NotBlank(groups = {WhenAppKeyRequired.class}, message = "AppKey不能为空")
+    @NotBlank(groups = {WhenAppKeyRequired.class}, message = "AppKey 不能为空")
     private String appKey;
 
 }

@@ -1,10 +1,10 @@
 package cn.hamm.spms.module.system.permission;
 
-import cn.hamm.airpower.access.IPermission;
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.dictionary.Dictionary;
-import cn.hamm.airpower.meta.Meta;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Dictionary;
+import cn.hamm.airpower.core.annotation.Meta;
+import cn.hamm.airpower.web.access.IPermission;
+import cn.hamm.airpower.web.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.system.permission.enums.PermissionType;
 import jakarta.persistence.Column;
@@ -63,7 +63,7 @@ public class PermissionEntity extends BaseEntity<PermissionEntity> implements IP
     @Meta
     private String name;
 
-    @Description("父级ID")
+    @Description("父级 ID")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '父级ID'")
     @Meta
     private Long parentId;

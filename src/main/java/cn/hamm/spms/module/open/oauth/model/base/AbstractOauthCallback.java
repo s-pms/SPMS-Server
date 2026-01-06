@@ -9,7 +9,7 @@ public abstract class AbstractOauthCallback {
     /**
      * 获取用户信息
      *
-     * @param code 临时Code
+     * @param code 临时 Code
      * @return 用户信息
      */
     public abstract OauthUserInfo getUserInfo(String code);

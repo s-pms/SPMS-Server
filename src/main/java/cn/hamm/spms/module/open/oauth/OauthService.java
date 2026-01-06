@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.open.oauth;
 
-import cn.hamm.airpower.datetime.DateTimeUtil;
-import cn.hamm.airpower.redis.RedisHelper;
+import cn.hamm.airpower.core.DateTimeUtil;
+import cn.hamm.airpower.web.redis.RedisHelper;
 import cn.hamm.spms.module.open.oauth.model.base.AbstractOauthCallback;
 import cn.hamm.spms.module.open.oauth.model.base.OauthUserInfo;
 import cn.hamm.spms.module.open.oauth.model.enums.OauthPlatform;
@@ -21,8 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.web.exception.ServiceError.DATA_NOT_FOUND;
+import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN;
 
 /**
  * <h1>OauthService</h1>
@@ -33,7 +33,7 @@ import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 @Service
 public class OauthService {
     /**
-     * Code缓存秒数
+     * Code 缓存秒数
      */
     private static final int CACHE_CODE_EXPIRE_SECOND = DateTimeUtil.SECOND_PER_MINUTE * 5;
 
@@ -42,15 +42,16 @@ public class OauthService {
 
     @Autowired
     private UserThirdLoginService userThirdLoginService;
+
     @Autowired
     private BeanFactory beanFactory;
 
     /**
-     * 用户ID的缓存Key
+     * 用户 ID 的缓存 Key
      *
-     * @param appKey 应用Key
+     * @param appKey 应用 Key
      * @param code   Code
-     * @return 缓存的Key
+     * @return 缓存的 Key
      */
     @Contract(pure = true)
     public static @NotNull String getUserIdCacheKey(String appKey, String code) {
@@ -58,11 +59,11 @@ public class OauthService {
     }
 
     /**
-     * Scope的缓存Key
+     * Scope 的缓存 Key
      *
-     * @param appKey 应用Key
+     * @param appKey 应用 Key
      * @param code   Code
-     * @return 缓存的Key
+     * @return 缓存的 Key
      */
     @Contract(pure = true)
     public static @NotNull String getScopeCacheKey(String appKey, String code) {
@@ -81,18 +82,18 @@ public class OauthService {
     }
 
     /**
-     * 缓存用户ID
+     * 缓存用户 ID
      *
      * @param appKey AppKey
      * @param code   Code
-     * @param userId 用户ID
+     * @param userId 用户 ID
      */
     public void saveOauthUserCache(String appKey, String code, long userId) {
         redisHelper.set(getUserIdCacheKey(appKey, code), userId, CACHE_CODE_EXPIRE_SECOND);
     }
 
     /**
-     * 获取缓存的用户ID
+     * 获取缓存的用户 ID
      *
      * @param appKey AppKey
      * @param code   Code
@@ -100,12 +101,12 @@ public class OauthService {
      */
     public Long getOauthUserCache(String appKey, String code) {
         Object userId = redisHelper.get(getUserIdCacheKey(appKey, code));
-        FORBIDDEN.whenNull(userId, "你的AppKey或Code错误，请重新获取");
+        FORBIDDEN.whenNull(userId, "你的 AppKey 或 Code 错误，请重新获取");
         return Long.valueOf(userId.toString());
     }
 
     /**
-     * 删除缓存的用户ID
+     * 删除缓存的用户 ID
      *
      * @param appKey AppKey
      * @param code   Code
@@ -115,7 +116,7 @@ public class OauthService {
     }
 
     /**
-     * 删除缓存的Scope
+     * 删除缓存的 Scope
      *
      * @param appKey AppKey
      * @param code   Code
@@ -125,7 +126,7 @@ public class OauthService {
     }
 
     /**
-     * 缓存Scope
+     * 缓存 Scope
      *
      * @param appKey AppKey
      * @param code   Code
@@ -136,7 +137,7 @@ public class OauthService {
     }
 
     /**
-     * 获取缓存的Scope
+     * 获取缓存的 Scope
      *
      * @param appKey AppKey
      * @param code   Code

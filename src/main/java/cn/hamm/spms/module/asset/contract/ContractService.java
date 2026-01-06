@@ -4,7 +4,7 @@ import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.asset.contract.enums.ContractStatus;
 import org.springframework.stereotype.Service;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN;
 
 /**
  * <h1>Service</h1>
@@ -16,7 +16,7 @@ public class ContractService extends BaseService<ContractEntity, ContractReposit
     /**
      * 生效合同
      *
-     * @param id 合同ID
+     * @param id 合同 ID
      */
     public void enforce(long id) {
         ContractEntity exist = get(id);
@@ -28,7 +28,7 @@ public class ContractService extends BaseService<ContractEntity, ContractReposit
     /**
      * 终止合同
      *
-     * @param id 合同ID
+     * @param id 合同 ID
      */
     public void stop(long id) {
         ContractEntity exist = get(id);

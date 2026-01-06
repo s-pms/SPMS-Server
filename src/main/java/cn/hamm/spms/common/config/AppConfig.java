@@ -5,7 +5,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import static cn.hamm.airpower.file.FileUtil.FILE_SCALE;
+import static cn.hamm.airpower.core.FileUtil.FILE_SCALE;
 import static cn.hamm.spms.module.system.file.enums.FileUploadPlatform.LOCAL;
 
 /**
@@ -23,7 +23,7 @@ public class AppConfig {
     private String projectName = "SPMS";
 
     /**
-     * 默认房间ID {@code 不是房间号}
+     * 默认房间 ID {@code 不是房间号}
      */
     private long defaultRoomId = 1L;
 

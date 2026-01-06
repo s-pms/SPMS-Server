@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.personnel.user.role;
 
-import cn.hamm.airpower.exception.ServiceError;
+import cn.hamm.airpower.web.exception.ServiceError;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
@@ -21,7 +21,7 @@ public class UserRoleService extends BaseService<UserRoleEntity, UserRoleReposit
     /**
      * 获取用户的角色列表
      *
-     * @param userId 用户ID
+     * @param userId 用户 ID
      * @return 角色列表
      */
     public List<RoleEntity> getRoleList(long userId) {

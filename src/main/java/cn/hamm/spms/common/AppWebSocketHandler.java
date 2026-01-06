@@ -1,9 +1,9 @@
 package cn.hamm.spms.common;
 
-import cn.hamm.airpower.api.Json;
-import cn.hamm.airpower.websocket.WebSocketHandler;
-import cn.hamm.airpower.websocket.WebSocketPayload;
-import cn.hamm.airpower.websocket.WebsocketHelper;
+import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.web.websocket.WebSocketHandler;
+import cn.hamm.airpower.web.websocket.WebSocketHelper;
+import cn.hamm.airpower.web.websocket.WebSocketPayload;
 import cn.hamm.spms.module.chat.enums.ChatEventType;
 import cn.hamm.spms.module.chat.member.MemberEntity;
 import cn.hamm.spms.module.chat.member.MemberService;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
+import static cn.hamm.airpower.web.exception.ServiceError.PARAM_INVALID;
 import static cn.hamm.spms.module.chat.enums.ChatEventType.*;
 
 /**
@@ -46,7 +46,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
     protected final ConcurrentHashMap<String, List<Long>> roomOnlineUserList = new ConcurrentHashMap<>();
 
     @Autowired
-    private WebsocketHelper websocketHelper;
+    private WebSocketHelper webSocketHelper;
 
     @Autowired
     private UserService userService;
@@ -60,8 +60,8 @@ public class AppWebSocketHandler extends WebSocketHandler {
     /**
      * 房间事件
      *
-     * @param userId 用户ID
-     * @param roomId 房间ID
+     * @param userId 用户 ID
+     * @param roomId 房间 ID
      * @param event  事件类型
      */
     private void onRoomEvent(long userId, long roomId, @NotNull ChatEventType event) {
@@ -89,10 +89,10 @@ public class AppWebSocketHandler extends WebSocketHandler {
         RoomMemberEvent roomMemberEvent = new RoomMemberEvent();
         roomMemberEvent.setMember(member);
 
-        websocketHelper.publishToChannel(GROUP_PREFIX + roomId, new WebSocketPayload()
+        webSocketHelper.publishToChannel(GROUP_PREFIX + roomId, new WebSocketPayload()
                 .setType(event.getKeyString())
                 .setData(Json.toString(roomMemberEvent)));
-        websocketHelper.publishToChannel(GROUP_PREFIX + roomId, new WebSocketPayload()
+        webSocketHelper.publishToChannel(GROUP_PREFIX + roomId, new WebSocketPayload()
                 .setType(ONLINE_COUNT_CHANGED.getKeyString())
                 .setData(Json.toString(roomUserIdList))
         );
@@ -127,7 +127,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
                     return;
                 }
 
-                // 更新用户当前所在房间ID到缓存
+                // 更新用户当前所在房间 ID 到缓存
                 userService.saveCurrentRoomId(userId, room.getId());
                 onRoomEvent(userId, room.getId(), ROOM_MEMBER_JOIN);
                 subscribe(GROUP_PREFIX + room.getId(), session);
@@ -158,8 +158,8 @@ public class AppWebSocketHandler extends WebSocketHandler {
     /**
      * 离开房间
      *
-     * @param session websocket会话
-     * @param userId  用户ID
+     * @param session Websocket 会话
+     * @param userId  用户 ID
      */
     private void leaveRoom(@NotNull WebSocketSession session, long userId) {
         long leaveRoomId = userService.getCurrentRoomId(userId);
@@ -174,20 +174,20 @@ public class AppWebSocketHandler extends WebSocketHandler {
     /**
      * 发布消息到当前用户的房间
      *
-     * @param userId 用户ID
+     * @param userId 用户 ID
      * @param type   世界事件类型
      * @param event  事件
      */
     private void publishToUserRoom(long userId, @NotNull ChatEventType type, RoomMemberEvent event) {
         WebSocketPayload payload = new WebSocketPayload();
         payload.setType(type.getKeyString()).setData(Json.toString(event));
-        websocketHelper.publishToChannel(GROUP_PREFIX + userService.getCurrentRoomId(userId), payload);
+        webSocketHelper.publishToChannel(GROUP_PREFIX + userService.getCurrentRoomId(userId), payload);
     }
 
     /**
      * 获取当前用户的当前房间的成员信息
      *
-     * @param userId 用户ID
+     * @param userId 用户 ID
      * @return 成员信息
      */
     private @NotNull MemberEntity getCurrentMember(long userId) {

@@ -16,7 +16,7 @@ for pid in $pids; do
     echo "Waiting $pid STOP."
     sleep 1
   done
-  echo "PID $pid STOPED."
+  echo "PID $pid STOPPED."
 done
 
 # 启动新进程

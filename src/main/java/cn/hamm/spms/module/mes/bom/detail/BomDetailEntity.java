@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.mes.bom.detail;
 
-import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import jakarta.persistence.Column;
@@ -17,7 +17,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**
- * <h1>BOM明细实体</h1>
+ * <h1>BOM 明细实体</h1>
  *
  * @author Hamm.cn
  */
@@ -28,7 +28,7 @@ import static jakarta.persistence.FetchType.EAGER;
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "bom_detail")
-@Description("BOM明细")
+@Description("BOM 明细")
 public class BomDetailEntity extends BaseEntity<BomDetailEntity> {
     @Description("物料信息")
     @ManyToOne(fetch = EAGER)

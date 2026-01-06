@@ -1,11 +1,11 @@
 package cn.hamm.spms.module.open.app;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.crypto.RsaUtil;
-import cn.hamm.airpower.exception.ServiceException;
-import cn.hamm.airpower.mcp.method.McpMethod;
-import cn.hamm.airpower.open.IOpenAppService;
-import cn.hamm.airpower.util.RandomUtil;
+import cn.hamm.airpower.core.RandomUtil;
+import cn.hamm.airpower.core.RsaUtil;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.exception.ServiceException;
+import cn.hamm.airpower.web.mcp.method.McpMethod;
+import cn.hamm.airpower.web.open.IOpenAppService;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.SERVICE_ERROR;
+import static cn.hamm.airpower.web.exception.ServiceError.SERVICE_ERROR;
 
 /**
  * <h1>Service</h1>
@@ -28,7 +28,7 @@ import static cn.hamm.airpower.exception.ServiceError.SERVICE_ERROR;
 @Service
 public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository> implements IOpenAppService {
     /**
-     * 通过AppKey获取一个应用
+     * 通过 AppKey 获取一个应用
      *
      * @param appKey AppKey
      * @return 应用
@@ -53,7 +53,7 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
     }
 
     /**
-     * 创建AppSecret
+     * 创建 AppSecret
      *
      * @return AppSecret
      */
@@ -72,7 +72,7 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
             openApp.setPrivateKey(RsaUtil.convertPrivateKeyToPem(keyPair.getPrivate()));
             openApp.setPublicKey(RsaUtil.convertPublicKeyToPem(keyPair.getPublic()));
         } catch (NoSuchAlgorithmException e) {
-            throw new ServiceException(e);
+            throw new ServiceException("重置密钥对失败，" + e.getMessage());
         }
     }
 
@@ -88,7 +88,7 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
     }
 
     /**
-     * 创建AppKey
+     * 创建 AppKey
      *
      * @return AppKey
      */

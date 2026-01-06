@@ -1,10 +1,10 @@
 package cn.hamm.spms.module.system.permission;
 
-import cn.hamm.airpower.access.PermissionUtil;
-import cn.hamm.airpower.curd.CurdEntity;
-import cn.hamm.airpower.mcp.McpService;
-import cn.hamm.airpower.mcp.model.McpTool;
-import cn.hamm.airpower.tree.TreeUtil;
+import cn.hamm.airpower.core.TreeUtil;
+import cn.hamm.airpower.web.access.PermissionUtil;
+import cn.hamm.airpower.web.curd.CurdEntity;
+import cn.hamm.airpower.web.mcp.McpService;
+import cn.hamm.airpower.web.mcp.model.McpTool;
 import cn.hamm.spms.Application;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.system.permission.enums.PermissionType;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
+import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN_DELETE;
 
 /**
  * <h1>Service</h1>
@@ -38,7 +38,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     @Override
     protected void beforeDelete(@NotNull PermissionEntity permission) {
         FORBIDDEN_DELETE.when(permission.getIsSystem(), "系统内置权限无法被删除!");
-        TreeUtil.ensureNoChildrenBeforeDelete(this, permission.getId());
+        TreeUtil.ensureNoChildrenBeforeDelete(permission.getId(), id -> filter(new PermissionEntity().setParentId(id)));
     }
 
     @Override

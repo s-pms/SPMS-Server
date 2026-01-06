@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.open.oauth.model.platform;
 
-import cn.hamm.airpower.api.Json;
-import cn.hamm.airpower.datetime.DateTimeUtil;
-import cn.hamm.airpower.redis.RedisHelper;
-import cn.hamm.airpower.request.HttpUtil;
+import cn.hamm.airpower.core.DateTimeUtil;
+import cn.hamm.airpower.core.HttpUtil;
+import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.web.redis.RedisHelper;
 import cn.hamm.spms.module.open.oauth.config.WecomConfig;
 import cn.hamm.spms.module.open.oauth.model.base.AbstractOauthCallback;
 import cn.hamm.spms.module.open.oauth.model.base.OauthUserInfo;
@@ -17,7 +17,7 @@ import java.net.http.HttpResponse;
 import java.util.Map;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN;
 
 /**
  * <h1>企业微信回调</h1>

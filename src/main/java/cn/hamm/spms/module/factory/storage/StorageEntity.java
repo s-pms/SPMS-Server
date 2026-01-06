@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.factory.storage;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.meta.Meta;
-import cn.hamm.airpower.tree.ITree;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Meta;
+import cn.hamm.airpower.core.interfaces.ITree;
+import cn.hamm.airpower.web.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import jakarta.persistence.Column;
@@ -50,7 +50,7 @@ public class StorageEntity extends BaseEntity<StorageEntity> implements ITree<St
     @Meta
     private String name;
 
-    @Description("父级ID")
+    @Description("父级 ID")
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '父级ID'")
     @Meta
     private Long parentId;

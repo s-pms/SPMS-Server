@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.iot.report;
 
-import cn.hamm.airpower.api.Json;
+import cn.hamm.airpower.core.Json;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.helper.InfluxHelper;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
@@ -27,7 +27,7 @@ import java.util.function.BiFunction;
 import static cn.hamm.spms.module.iot.report.ReportConstant.*;
 
 /**
- * <h1>数据上报的MQ回调</h1>
+ * <h1>数据上报的 MQ 回调</h1>
  *
  * @author Hamm.cn
  */
@@ -123,7 +123,7 @@ public class ReportMqCallback implements MqttCallback {
      * 缓存设备指定参数的数据
      *
      * @param code        参数编码
-     * @param uuid        设备的UUID
+     * @param uuid        设备的 UUID
      * @param reportValue 上报的数据
      */
     private void saveLastReportParameterValue(String code, String uuid, String reportValue) {
@@ -133,8 +133,8 @@ public class ReportMqCallback implements MqttCallback {
     /**
      * 获取设备指定参数的缓存数据
      *
-     * @param code 参数Key
-     * @param uuid 设备的UUID
+     * @param code 参数 Key
+     * @param uuid 设备的 UUID
      * @return 上报的数据
      */
     private @Nullable String getLastDataInCache(String code, String uuid) {

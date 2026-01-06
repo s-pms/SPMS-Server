@@ -1,11 +1,11 @@
 package cn.hamm.spms.module.mes.bom.enums;
 
-import cn.hamm.airpower.dictionary.IDictionary;
+import cn.hamm.airpower.core.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * <h1>BOM类型</h1>
+ * <h1>BOM 类型</h1>
  *
  * @author Hamm.cn
  */

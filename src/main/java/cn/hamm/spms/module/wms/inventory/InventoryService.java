@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.wms.inventory;
 
-import cn.hamm.airpower.curd.CurdEntity;
-import cn.hamm.airpower.curd.query.QueryPageRequest;
-import cn.hamm.airpower.dictionary.DictionaryUtil;
-import cn.hamm.airpower.tree.TreeUtil;
+import cn.hamm.airpower.core.DictionaryUtil;
+import cn.hamm.airpower.core.TreeUtil;
+import cn.hamm.airpower.web.curd.CurdEntity;
+import cn.hamm.airpower.web.curd.query.QueryPageRequest;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
@@ -38,10 +38,10 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
     private StructureService structureService;
 
     /**
-     * 查询指定物料ID和仓库ID下的库存
+     * 查询指定物料 ID 和仓库 ID 下的库存
      *
-     * @param materialId 物料ID
-     * @param storageId  仓库ID
+     * @param materialId 物料 ID
+     * @param storageId  仓库 ID
      * @return 库存
      */
     public InventoryEntity getByMaterialIdAndStorageId(Long materialId, Long storageId) {
@@ -52,10 +52,10 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
     }
 
     /**
-     * 查询指定物料ID和生产单元ID下的库存
+     * 查询指定物料 ID 和生产单元 ID 下的库存
      *
-     * @param materialId  物料ID
-     * @param structureId 生产单元ID
+     * @param materialId  物料 ID
+     * @param structureId 生产单元 ID
      * @return 库存
      */
     @SuppressWarnings("unused")
@@ -114,12 +114,12 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
         if (Objects.isNull(structure)) {
             return;
         }
-        Set<Long> idList = TreeUtil.getChildrenIdList(structure.getId(), structureService);
-        if (!idList.isEmpty()) {
-            Join<InventoryEntity, StructureEntity> join = root.join("structure");
-            Predicate inPredicate = join.get(CurdEntity.STRING_ID).in(idList);
-            predicateList.add(inPredicate);
-        }
+        Set<Long> idList = TreeUtil.getChildrenIdList(structure.getId(), id -> structureService.filter(new StructureEntity().setParentId(id)));
+        idList.add(structure.getId());
+        Join<InventoryEntity, StructureEntity> join = root.join("structure");
+        Predicate inPredicate = join.get(CurdEntity.STRING_ID).in(idList);
+        predicateList.add(inPredicate);
+        search.setStructure(null);
     }
 
     /**
@@ -134,11 +134,11 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
         if (Objects.isNull(storage)) {
             return;
         }
-        Set<Long> idList = TreeUtil.getChildrenIdList(storage.getId(), storageService);
-        if (!idList.isEmpty()) {
-            Join<InventoryEntity, StorageEntity> join = root.join("storage");
-            Predicate inPredicate = join.get(CurdEntity.STRING_ID).in(idList);
-            predicateList.add(inPredicate);
-        }
+        Set<Long> idList = TreeUtil.getChildrenIdList(storage.getId(), id -> storageService.filter(new StorageEntity().setParentId(id)));
+        idList.add(storage.getId());
+        Join<InventoryEntity, StorageEntity> join = root.join("storage");
+        Predicate inPredicate = join.get(CurdEntity.STRING_ID).in(idList);
+        predicateList.add(inPredicate);
+        search.setStorage(null);
     }
 }

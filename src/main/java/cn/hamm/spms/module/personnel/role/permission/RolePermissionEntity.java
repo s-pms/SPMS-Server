@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.personnel.role.permission;
 
-import cn.hamm.airpower.annotation.Description;
+import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.system.permission.PermissionEntity;

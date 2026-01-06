@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.personnel.user.token;
 
-import cn.hamm.airpower.access.AccessConfig;
-import cn.hamm.airpower.access.AccessTokenUtil;
+import cn.hamm.airpower.core.AccessTokenUtil;
+import cn.hamm.airpower.web.access.AccessConfig;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.personnel.user.enums.UserTokenType;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EXIST;
+import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN_EXIST;
 
 /**
  * <h1>Service</h1>

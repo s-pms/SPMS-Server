@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.chat.enums;
 
-import cn.hamm.airpower.dictionary.IDictionary;
+import cn.hamm.airpower.core.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.Contract;
@@ -92,9 +92,9 @@ public enum ChatEventType implements IDictionary {
     }
 
     /**
-     * 获取字符串类型的Key
+     * 获取字符串类型的 Key
      *
-     * @return 字符串类型的Key
+     * @return 字符串类型的 Key
      */
     @Contract(pure = true)
     public @NotNull String getKeyString() {

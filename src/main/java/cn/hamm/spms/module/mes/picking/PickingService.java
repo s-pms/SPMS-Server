@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.mes.picking;
 
-import cn.hamm.airpower.dictionary.IDictionary;
-import cn.hamm.airpower.util.NumberUtil;
+import cn.hamm.airpower.core.NumberUtil;
+import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.mes.picking.detail.PickingDetailEntity;

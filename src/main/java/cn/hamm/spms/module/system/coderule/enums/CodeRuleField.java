@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.system.coderule.enums;
 
-import cn.hamm.airpower.dictionary.IDictionary;
+import cn.hamm.airpower.core.interfaces.IDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.Contract;
@@ -111,7 +111,7 @@ public enum CodeRuleField implements IDictionary {
     DepartmentCode(19, "部门编码", "DP", NEVER),
 
     /**
-     * BOM编码
+     * BOM 编码
      */
     BomCode(20, "配方编码", "BOM", NEVER),
 

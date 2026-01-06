@@ -1,12 +1,12 @@
 package cn.hamm.spms.module.open.app;
 
-import cn.hamm.airpower.access.Permission;
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.api.Api;
-import cn.hamm.airpower.api.Extends;
-import cn.hamm.airpower.api.Json;
-import cn.hamm.airpower.curd.Curd;
-import cn.hamm.airpower.util.RandomUtil;
+import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.core.RandomUtil;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.web.access.Permission;
+import cn.hamm.airpower.web.api.Api;
+import cn.hamm.airpower.web.api.Extends;
+import cn.hamm.airpower.web.curd.Curd;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.notify.NotifyService;
 import cn.hamm.spms.module.open.notify.enums.NotifyScene;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Base64;
 
-import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
+import static cn.hamm.airpower.web.exception.ServiceError.DATA_NOT_FOUND;
 
 /**
  * <h1>Controller</h1>
@@ -32,12 +32,12 @@ public class OpenAppController extends BaseController<OpenAppEntity, OpenAppServ
     @Autowired
     private NotifyService notifyService;
 
-    @Description("通过AppKey获取应用信息")
+    @Description("通过 AppKey 获取应用信息")
     @PostMapping("getByAppKey")
     @Permission(login = false)
     public Json getByAppKey(@RequestBody @Validated(WhenGetByAppKey.class) OpenAppEntity openApp) {
         openApp = service.getByAppKey(openApp.getAppKey());
-        DATA_NOT_FOUND.whenNull(openApp, "没有查到指定AppKey的应用");
+        DATA_NOT_FOUND.whenNull(openApp, "没有查到指定 AppKey 的应用");
         return Json.data(openApp);
     }
 

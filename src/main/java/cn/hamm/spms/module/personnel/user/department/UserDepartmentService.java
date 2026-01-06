@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.personnel.user.department;
 
-import cn.hamm.airpower.exception.ServiceError;
+import cn.hamm.airpower.web.exception.ServiceError;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.personnel.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
@@ -21,7 +21,7 @@ public class UserDepartmentService extends BaseService<UserDepartmentEntity, Use
     /**
      * 获取用户部门列表
      *
-     * @param userId 用户ID
+     * @param userId 用户 ID
      * @return 部门列表
      */
     public List<DepartmentEntity> getDepartmentList(long userId) {

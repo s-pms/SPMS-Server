@@ -1,10 +1,10 @@
 package cn.hamm.spms.module.asset.device;
 
-import cn.hamm.airpower.annotation.Description;
-import cn.hamm.airpower.annotation.ReadOnly;
-import cn.hamm.airpower.annotation.Search;
-import cn.hamm.airpower.dictionary.Dictionary;
-import cn.hamm.airpower.meta.Meta;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Dictionary;
+import cn.hamm.airpower.core.annotation.Meta;
+import cn.hamm.airpower.core.annotation.ReadOnly;
+import cn.hamm.airpower.web.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.device.enums.DeviceAlarm;
@@ -56,7 +56,7 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAct
     @Meta
     private String code;
 
-    @Description("设备UUID")
+    @Description("设备 UUID")
     @Search
     @Column(columnDefinition = "varchar(255) default '' comment '设备UUID'", unique = true)
     @NotBlank(groups = {WhenGetDeviceConfig.class}, message = "请传入设备uuid(采集端deviceId)")
