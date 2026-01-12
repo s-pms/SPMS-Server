@@ -3,12 +3,9 @@ package cn.hamm.spms.common.interceptor;
 import cn.hamm.airpower.core.AccessTokenUtil;
 import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.web.interceptor.AbstractRequestInterceptor;
-import cn.hamm.spms.module.personnel.role.RoleEntity;
-import cn.hamm.spms.module.personnel.role.permission.RolePermissionService;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
 import cn.hamm.spms.module.personnel.user.enums.UserTokenType;
-import cn.hamm.spms.module.personnel.user.role.UserRoleService;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenEntity;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
@@ -17,8 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN;
 import static cn.hamm.airpower.web.exception.ServiceError.UNAUTHORIZED;
@@ -39,12 +34,6 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
     @Autowired
     private PersonalTokenService personalTokenService;
 
-    @Autowired
-    private UserRoleService userRoleService;
-
-    @Autowired
-    private RolePermissionService rolePermissionService;
-
     /**
      * 验证指定的用户是否有指定权限标识的权限
      *
@@ -61,10 +50,8 @@ public class RequestInterceptor extends AbstractRequestInterceptor {
             return;
         }
         PermissionEntity needPermission = permissionService.getPermissionByIdentity(permissionIdentity);
-        List<RoleEntity> roleList = userRoleService.getRoleList(userId);
-        if (roleList.stream()
-                .filter(role -> !role.getIsDisabled())
-                .flatMap(role -> rolePermissionService.getPermissionList(role.getId()).stream())
+        if (existUser.getRoleList().stream()
+                .flatMap(role -> role.getPermissionList().stream())
                 .anyMatch(permission -> needPermission.getId().equals(permission.getId()))
         ) {
             return;

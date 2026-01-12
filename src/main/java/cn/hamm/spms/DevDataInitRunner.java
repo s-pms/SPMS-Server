@@ -39,8 +39,6 @@ import cn.hamm.spms.module.personnel.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.department.DepartmentService;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
-import cn.hamm.spms.module.personnel.user.department.UserDepartmentEntity;
-import cn.hamm.spms.module.personnel.user.department.UserDepartmentService;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
@@ -59,10 +57,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.*;
 
 import static cn.hamm.spms.module.iot.report.ReportConstant.*;
 
@@ -117,8 +112,6 @@ public class DevDataInitRunner implements CommandLineRunner {
     private MenuService menuService;
     @Autowired
     private RoomService roomService;
-    @Autowired
-    private UserDepartmentService userDepartmentService;
     @Autowired
     private AppConfig appConfig;
     @Autowired
@@ -211,7 +204,7 @@ public class DevDataInitRunner implements CommandLineRunner {
         DepartmentEntity department = departmentService.addAndGet(new DepartmentEntity().setCode("a1").setName("生产部"));
         departmentService.addAndGet(new DepartmentEntity().setName("材料部").setCode("aaa1").setParentId(department.getId()));
         String salt = RandomUtil.randomString(UserService.PASSWORD_SALT_LENGTH);
-        user = userService.addAndGet(new UserEntity()
+        userService.addAndGet(new UserEntity()
                 .setNickname("凌小云")
                 .setPhone("17666666666")
                 .setEmail("admin@hamm.cn")
@@ -219,15 +212,14 @@ public class DevDataInitRunner implements CommandLineRunner {
                 .setSalt(salt)
         );
         userService.addAndGet(new UserEntity()
-                .setNickname("张三")
-                .setPhone("13888888888")
-                .setEmail("admin@hamm.com")
-                .setPassword(PasswordUtil.encode("Aa123456", salt))
-                .setSalt(salt));
-        userDepartmentService.addAndGet(new UserDepartmentEntity()
-                .setUser(user)
-                .setDepartment(department)
-        );
+                        .setNickname("张三")
+                        .setPhone("13888888888")
+                        .setEmail("admin@hamm.com")
+                        .setPassword(PasswordUtil.encode("Aa123456", salt))
+                        .setSalt(salt))
+                .setDepartmentList(Set.of(department))
+
+        ;
         user = userService.getMaybeNull(1L);
 
         roomService.addAndGet(new RoomEntity()

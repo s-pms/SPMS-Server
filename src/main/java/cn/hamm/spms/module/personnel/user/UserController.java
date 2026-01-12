@@ -12,9 +12,7 @@ import cn.hamm.airpower.web.redis.RedisHelper;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginEntity;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginService;
-import cn.hamm.spms.module.personnel.user.department.UserDepartmentService;
 import cn.hamm.spms.module.personnel.user.enums.UserLoginType;
-import cn.hamm.spms.module.personnel.user.role.UserRoleService;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenEntity;
 import cn.hamm.spms.module.personnel.user.token.PersonalTokenService;
 import cn.hamm.spms.module.system.menu.MenuEntity;
@@ -60,12 +58,6 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Autowired
     private PersonalTokenService personalTokenService;
 
-    @Autowired
-    private UserRoleService userRoleService;
-
-    @Autowired
-    private UserDepartmentService userDepartmentService;
-
     @Description("获取我的信息")
     @Permission(authorize = false)
     @PostMapping("getMyInfo")
@@ -102,12 +94,6 @@ public class UserController extends BaseController<UserEntity, UserService, User
         FORBIDDEN_EDIT.whenNotEquals(exist.getUser().getId(), getCurrentUserId(), "你没有权限禁用此令牌");
         personalTokenService.disable(personalToken.getId());
         return Json.success("禁用成功");
-    }
-
-    @Override
-    protected UserEntity afterGetDetail(@NotNull UserEntity user) {
-        return user.setDepartmentList(userDepartmentService.getDepartmentList(user.getId()))
-                .setRoleList(userRoleService.getRoleList(user.getId()));
     }
 
     @Description("启用我的令牌")

@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Set;
 
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.StructureCode;
-import static jakarta.persistence.FetchType.EAGER;
 
 /**
  * <h1>生产单元实体</h1>
@@ -67,6 +66,6 @@ public class StructureEntity extends BaseEntity<StructureEntity> implements ITre
     private List<StructureEntity> children;
 
     @Description("可执行工序")
-    @ManyToMany(fetch = EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     private Set<OperationEntity> operationList;
 }

@@ -9,10 +9,7 @@ import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.personnel.user.enums.UserGender;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Null;
@@ -23,8 +20,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
@@ -110,11 +107,11 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @Transient
     private Long departmentId;
 
-    @Transient
-    private List<RoleEntity> roleList;
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<RoleEntity> roleList;
 
-    @Transient
-    private List<DepartmentEntity> departmentList;
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<DepartmentEntity> departmentList;
 
     /**
      * 获取是否超级管理员

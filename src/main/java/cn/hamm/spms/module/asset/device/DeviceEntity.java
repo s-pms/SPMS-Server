@@ -11,10 +11,7 @@ import cn.hamm.spms.module.asset.device.enums.DeviceAlarm;
 import cn.hamm.spms.module.asset.device.enums.DeviceStatus;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.report.ReportConstant;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -27,7 +24,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.util.Set;
 
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.DeviceCode;
-import static jakarta.persistence.FetchType.EAGER;
 
 /**
  * <h1>设备实体</h1>
@@ -90,6 +86,6 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAct
     private Integer rate;
 
     @Description("参数列表")
-    @ManyToMany(fetch = EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     private Set<ParameterEntity> parameters;
 }
