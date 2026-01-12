@@ -14,7 +14,7 @@ import static cn.hamm.airpower.web.curd.Curd.GetPage;
  * @author Hamm.cn
  */
 @Api("inventory")
-@Description("入库")
+@Description("库存")
 @Extends({GetDetail, GetPage})
 public class InventoryController extends BaseController<InventoryEntity, InventoryService, InventoryRepository> {
 }

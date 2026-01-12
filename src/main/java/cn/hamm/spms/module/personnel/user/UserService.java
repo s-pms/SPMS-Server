@@ -17,19 +17,14 @@ import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.personnel.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.department.DepartmentService;
-import cn.hamm.spms.module.personnel.role.menu.RoleMenuService;
-import cn.hamm.spms.module.personnel.role.permission.RolePermissionService;
-import cn.hamm.spms.module.personnel.user.department.UserDepartmentEntity;
-import cn.hamm.spms.module.personnel.user.department.UserDepartmentService;
 import cn.hamm.spms.module.personnel.user.enums.UserTokenType;
-import cn.hamm.spms.module.personnel.user.role.UserRoleEntity;
-import cn.hamm.spms.module.personnel.user.role.UserRoleService;
 import cn.hamm.spms.module.system.config.ConfigEntity;
 import cn.hamm.spms.module.system.config.ConfigService;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import cn.hamm.spms.module.system.menu.MenuEntity;
 import cn.hamm.spms.module.system.menu.MenuService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
+import cn.hamm.spms.module.system.permission.PermissionService;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Join;
@@ -88,15 +83,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     private AccessConfig accessConfig;
 
     @Autowired
-    private UserRoleService userRoleService;
+    private MenuService menuService;
 
     @Autowired
-    private RoleMenuService roleMenuService;
-
-    @Autowired
-    private RolePermissionService rolePermissionService;
-    @Autowired
-    private UserDepartmentService userDepartmentService;
+    private PermissionService permissionService;
 
     /**
      * 获取新的密码盐
@@ -148,24 +138,21 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     public List<MenuEntity> getMenuListByUserId(long userId) {
         UserEntity user = get(userId);
-        List<MenuEntity> menuList;
         if (user.isRootUser()) {
-            MenuService menuService = Services.getMenuService();
-            menuList = menuService.filter(
-                    new MenuEntity(),
-                    new Sort().setField(MenuService.ORDER_FIELD_NAME));
-        } else {
-            menuList = new ArrayList<>();
-            userRoleService.getRoleList(userId)
-                    .forEach(role -> roleMenuService.getMenuList(role.getId())
-                            .forEach(menu -> {
-                                boolean isExist = menuList.stream()
-                                        .anyMatch(existMenu -> Objects.equals(menu.getId(), existMenu.getId()));
-                                if (!isExist) {
-                                    menuList.add(menu);
-                                }
-                            }));
+            return TreeUtil.buildTreeList(
+                    menuService.filter(new MenuEntity(), new Sort().setField("orderNo"))
+            );
         }
+        List<MenuEntity> menuList = new ArrayList<>();
+        user.getRoleList().forEach(role -> role.getMenuList()
+                .forEach(menu -> {
+                    boolean isExist = menuList.stream()
+                            .anyMatch(existMenu -> Objects.equals(menu.getId(), existMenu.getId()));
+                    if (!isExist) {
+                        menuList.add(menu);
+                    }
+                })
+        );
         return TreeUtil.buildTreeList(menuList.stream().peek(item -> {
             item.excludeBaseData();
             item.setIsPublished(null);
@@ -181,18 +168,18 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     public List<PermissionEntity> getPermissionListByUserId(long userId) {
         UserEntity user = get(userId);
         if (user.isRootUser()) {
-            return Services.getPermissionService().getList(null);
+            return permissionService.getList(null);
         }
         List<PermissionEntity> permissionList = new ArrayList<>();
-        userRoleService.getRoleList(userId)
-                .forEach(role -> rolePermissionService.getPermissionList(role.getId())
-                        .forEach(permission -> {
-                            boolean isExist = permissionList.stream()
-                                    .anyMatch(existPermission -> Objects.equals(permission.getId(), existPermission.getId()));
-                            if (!isExist) {
-                                permissionList.add(permission);
-                            }
-                        }));
+        user.getRoleList().forEach(roleEntity -> roleEntity.getPermissionList()
+                .forEach(permission -> {
+                    boolean isExist = permissionList.stream()
+                            .anyMatch(existPermission -> Objects.equals(permission.getId(), existPermission.getId()));
+                    if (!isExist) {
+                        permissionList.add(permission);
+                    }
+                })
+        );
         return permissionList;
     }
 
@@ -514,39 +501,5 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         DATA_NOT_FOUND.when(userList.isEmpty(), "没有叫 " + name + " 的用户");
         userList.forEach(user -> updateToDatabase(get(user.getId()).setEmail(email)));
         return "已经将 " + userList.size() + " 个叫 " + name + " 的用户邮箱修改为 " + email;
-    }
-
-    @Override
-    protected void afterAppAdd(long id, @NotNull UserEntity source) {
-        UserEntity user = get(id);
-        if (Objects.nonNull(source.getRoleList())) {
-            source.getRoleList().forEach(role -> userRoleService.add(new UserRoleEntity()
-                    .setUser(user)
-                    .setRole(role.copyOnlyId())
-            ));
-        }
-        if (Objects.nonNull(source.getDepartmentList())) {
-            source.getDepartmentList().forEach(department -> userDepartmentService.add(new UserDepartmentEntity()
-                    .setUser(user)
-                    .setDepartment(department.copyOnlyId())
-            ));
-        }
-    }
-
-    @Override
-    protected void afterAppUpdate(long id, @NotNull UserEntity source) {
-        UserEntity user = get(id);
-        userRoleService.filter(new UserRoleEntity().setUser(user))
-                .forEach(userRole -> userRoleService.delete(userRole.getId()));
-        source.getRoleList().forEach(role -> userRoleService.add(new UserRoleEntity()
-                .setUser(user)
-                .setRole(role.copyOnlyId())
-        ));
-        userDepartmentService.filter(new UserDepartmentEntity().setUser(user))
-                .forEach(userDepartment -> userDepartmentService.delete(userDepartment.getId()));
-        source.getDepartmentList().forEach(department -> userDepartmentService.add(new UserDepartmentEntity()
-                .setUser(user)
-                .setDepartment(department.copyOnlyId())
-        ));
     }
 }
