@@ -185,6 +185,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
         List<UserThirdLoginEntity> list = userThirdLoginService.filter(new UserThirdLoginEntity().setUser(user));
         return Json.data(list.stream()
                 .map(item -> item.setUser(null))
+                .toList()
         );
     }
 
