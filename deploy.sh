@@ -20,6 +20,7 @@ for pid in $pids; do
 done
 # 启动新进程
 nohup java -jar "$JAR" --spring.profiles.active="$PROFILE" > /dev/null 2>&1 &
+echo "START"
 # 检查启动状态
 INDEX=0
 while [ $INDEX -lt $MAX ]; do
@@ -28,7 +29,7 @@ while [ $INDEX -lt $MAX ]; do
     echo "SERVER UP!"
     exit 0
   fi
-  echo "$HTTP_STATUS..."
+  echo "..."
   sleep $SECOND
   INDEX=$((INDEX + 1))
 done
