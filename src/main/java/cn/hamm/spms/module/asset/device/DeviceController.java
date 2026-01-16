@@ -52,14 +52,11 @@ public class DeviceController extends BaseController<
     public Json getDeviceConfig(@RequestBody @Validated(WhenGetDeviceConfig.class) DeviceEntity device) {
         device = service.getByUuid(device.getUuid());
         DATA_NOT_FOUND.whenNull(device);
-        device.setPartCount(null)
-                .setAlarm(null)
-                .setStatus(null)
-                .excludeBaseData();
+        device.excludeNotMeta();
         Set<ParameterEntity> parameters = new HashSet<>();
         device = service.getDeviceParameters(device);
         device.getParameters().forEach(p -> {
-            p.setId(null).excludeBaseData();
+            p.setId(null).excludeNotMeta();
             parameters.add(p);
         });
         device.setParameters(parameters);

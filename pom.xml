@@ -5,7 +5,7 @@
     <parent>
         <groupId>cn.hamm</groupId>
         <artifactId>airpower</artifactId>
-        <version>5.0.2</version>
+        <version>5.0.3</version>
     </parent>
     <groupId>cn.hamm.spms</groupId>
     <artifactId>server</artifactId>
@@ -56,12 +56,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

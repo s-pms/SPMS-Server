@@ -154,7 +154,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
                 })
         );
         return TreeUtil.buildTreeList(menuList.stream().peek(item -> {
-            item.excludeBaseData();
+            item.excludeNotMeta();
             item.setIsPublished(null);
         }).toList());
     }

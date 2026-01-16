@@ -2,7 +2,6 @@ package cn.hamm.spms.module.system.permission;
 
 import cn.hamm.airpower.core.TreeUtil;
 import cn.hamm.airpower.web.access.PermissionUtil;
-import cn.hamm.airpower.web.curd.CurdEntity;
 import cn.hamm.airpower.web.mcp.McpService;
 import cn.hamm.airpower.web.mcp.model.McpTool;
 import cn.hamm.spms.Application;
@@ -43,7 +42,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
 
     @Override
     protected @NotNull List<PermissionEntity> afterGetList(@NotNull List<PermissionEntity> list) {
-        list.forEach(CurdEntity::excludeBaseData);
+        list.forEach(PermissionEntity::excludeNotMeta);
         return list;
     }
 

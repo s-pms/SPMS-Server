@@ -80,10 +80,4 @@ public class RoomEntity extends BaseEntity<RoomEntity> implements IRoomAction {
     @Min(value = 0, message = "房间大小不小于{value}")
     @Max(value = 20 * 10000 * 10000, message = "房间大小不大于{value}")
     private Integer size;
-
-    @Override
-    public void excludeBaseData() {
-        super.excludeBaseData();
-        this.getOwner().excludeBaseData();
-    }
 }

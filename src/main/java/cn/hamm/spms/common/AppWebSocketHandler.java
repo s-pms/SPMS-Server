@@ -83,8 +83,8 @@ public class AppWebSocketHandler extends WebSocketHandler {
         }
         roomOnlineUserList.put(GROUP_PREFIX + roomId, roomUserIdList);
         MemberEntity member = memberService.getMemberWithAutoCreate(userId, roomId);
-        member.getUser().setEmail(null).excludeBaseData();
-        member.getRoom().setPassword(null).excludeBaseData();
+        member.getUser().excludeNotMeta();
+        member.getRoom().excludeNotMeta();
 
         RoomMemberEvent roomMemberEvent = new RoomMemberEvent();
         roomMemberEvent.setMember(member);
@@ -193,7 +193,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
     private @NotNull MemberEntity getCurrentMember(long userId) {
         long roomId = userService.getCurrentRoomId(userId);
         MemberEntity member = memberService.getMemberWithAutoCreate(userId, roomId);
-        member.excludeBaseData();
+        member.excludeNotMeta();
         return member;
     }
 

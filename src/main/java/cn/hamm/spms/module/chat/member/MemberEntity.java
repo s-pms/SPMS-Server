@@ -45,11 +45,4 @@ public class MemberEntity extends BaseEntity<MemberEntity> implements IMemberAct
     @Dictionary(value = MemberRole.class, groups = {WhenAdd.class, WhenUpdate.class})
     @Column(columnDefinition = "int UNSIGNED default 6 comment '类型'")
     private Integer role;
-
-    @Override
-    public void excludeBaseData() {
-        super.excludeBaseData();
-        this.getRoom().excludeBaseData();
-        this.getUser().excludeBaseData();
-    }
 }

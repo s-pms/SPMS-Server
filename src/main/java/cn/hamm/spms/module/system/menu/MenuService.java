@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.system.menu;
 
 import cn.hamm.airpower.core.TreeUtil;
-import cn.hamm.airpower.web.curd.CurdEntity;
 import cn.hamm.spms.base.BaseService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
 
     @Override
     protected @NotNull List<MenuEntity> afterGetList(@NotNull List<MenuEntity> list) {
-        list.forEach(CurdEntity::excludeBaseData);
+        list.forEach(MenuEntity::excludeNotMeta);
         return list;
     }
 

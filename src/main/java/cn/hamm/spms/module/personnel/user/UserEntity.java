@@ -123,10 +123,4 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     public final boolean isRootUser() {
         return Objects.nonNull(getId()) && getId() == 1L;
     }
-
-    @Override
-    public void excludeBaseData() {
-        super.excludeBaseData();
-        this.setRealName(null).setIdCard(null).setEmail(null).setPhone(null);
-    }
 }
