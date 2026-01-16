@@ -129,6 +129,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Description("获取我的菜单")
     @Permission(authorize = false)
     @PostMapping("getMyMenuList")
+    @ExposeAll(MenuEntity.class)
     public Json getMyMenuList() {
         String userMenuCacheKey = getUserMenuCacheKey(getCurrentUserId());
         Object object = redisHelper.get(userMenuCacheKey);

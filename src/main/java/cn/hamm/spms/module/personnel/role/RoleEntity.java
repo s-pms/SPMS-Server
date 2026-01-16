@@ -44,9 +44,9 @@ public class RoleEntity extends BaseEntity<RoleEntity> implements IRoleAction {
     @Meta
     private String code;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<MenuEntity> menuList;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<PermissionEntity> permissionList;
 }

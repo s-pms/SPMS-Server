@@ -107,10 +107,10 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @Transient
     private Long departmentId;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<RoleEntity> roleList;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<DepartmentEntity> departmentList;
 
     /**

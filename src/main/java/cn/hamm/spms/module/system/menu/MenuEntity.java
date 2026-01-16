@@ -68,5 +68,6 @@ public class MenuEntity extends BaseEntity<MenuEntity> implements ITree<MenuEnti
 
     @Description("树子集节点数组")
     @Transient
+    @Meta
     private List<MenuEntity> children;
 }

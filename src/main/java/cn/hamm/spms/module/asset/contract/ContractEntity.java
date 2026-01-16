@@ -73,10 +73,10 @@ public class ContractEntity extends BaseEntity<ContractEntity> {
     private Integer status;
 
     @Description("附件列表")
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<ContractDocumentEntity> documentList;
 
     @Description("参与方列表")
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<ParticipantEntity> participantList;
 }

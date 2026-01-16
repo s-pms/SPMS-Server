@@ -66,6 +66,6 @@ public class StructureEntity extends BaseEntity<StructureEntity> implements ITre
     private List<StructureEntity> children;
 
     @Description("可执行工序")
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<OperationEntity> operationList;
 }
