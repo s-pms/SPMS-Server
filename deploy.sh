@@ -1,6 +1,6 @@
 DOWNLOAD="/home/app.tgz"
 DIR="/home/server/"
-JAR="server-2.0.0.jar"
+JAR="server-3.0.0.jar"
 CHECK_URL="http://127.0.0.1:8080"
 MAX=100
 SECOND=2
