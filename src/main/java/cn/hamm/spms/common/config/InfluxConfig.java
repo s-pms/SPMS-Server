@@ -21,12 +21,12 @@ public class InfluxConfig {
     /**
      * 连接令牌
      */
-    private String token = "spms";
+    private String token = "GAj6AiUiiPRR9D8Nfb37S3-Jxl7yMAnPDQn6KdhnIhbNJ7wpRPwC4XjpHUkxlA_45uRLaeV8xuZ7vOdNGfppcQ==";
 
     /**
      * 使用的组织名
      */
-    private String org = "spms";
+    private String org = "influx";
 
     /**
      * 使用的数据库

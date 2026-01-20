@@ -1,6 +1,8 @@
 package cn.hamm.spms;
 
 import cn.hamm.spms.common.config.AppConfig;
+import cn.hamm.spms.module.iot.report.ReportEventListener;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,21 +26,24 @@ public class Application {
 
     private static AppConfig appConfig;
 
-    public static void main(String[] args) {
+    private static ReportEventListener reportEventListener;
+
+    public static void main(String[] args) throws MqttException {
         SpringApplication.run(Application.class, args);
         if (serverApplicationContext != null) {
             int port = serverApplicationContext.getWebServer().getPort();
             System.out.println("------------------------------------------");
             System.out.println("   Hi Guy, " + appConfig.getProjectName() + " is running at [" + port + "] !");
             System.out.println("------------------------------------------");
+            reportEventListener.listen();
         }
     }
 
     @Autowired(required = false)
-    public void autorun(ServletWebServerApplicationContext serverApplicationContext, AppConfig appConfig) {
+    public void autorun(ServletWebServerApplicationContext serverApplicationContext, AppConfig appConfig, ReportEventListener reportEventListener) {
         Application.serverApplicationContext = serverApplicationContext;
         Application.appConfig = appConfig;
-        // ReportEventListener 注入后可开启MQTT监听
+        Application.reportEventListener = reportEventListener;
     }
 }
                 

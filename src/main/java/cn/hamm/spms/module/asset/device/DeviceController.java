@@ -2,6 +2,7 @@ package cn.hamm.spms.module.asset.device;
 
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.ExposeAll;
 import cn.hamm.airpower.web.access.Permission;
 import cn.hamm.airpower.web.api.Api;
 import cn.hamm.spms.base.BaseController;
@@ -42,6 +43,7 @@ public class DeviceController extends BaseController<
     @Description("获取实时采集数据")
     @PostMapping("getCurrentReport")
     @Permission(login = false)
+    @ExposeAll({ReportPayload.class})
     public Json getCurrentReport(@RequestBody @Validated(WhenIdRequired.class) DeviceEntity device) {
         return Json.data(service.getCurrentReport(device.getId()));
     }

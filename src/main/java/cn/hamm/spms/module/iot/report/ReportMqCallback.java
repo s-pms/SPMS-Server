@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.iot.report;
 
 import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.web.redis.RedisHelper;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.helper.InfluxHelper;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
@@ -15,7 +16,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import static cn.hamm.spms.module.iot.report.ReportConstant.*;
 @Slf4j
 public class ReportMqCallback implements MqttCallback {
     @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisHelper redisHelper;
 
     @Autowired
     private InfluxHelper influxHelper;
@@ -49,6 +49,7 @@ public class ReportMqCallback implements MqttCallback {
         String reportString = new String(mqttMessage.getPayload());
         try {
             ReportData reportData = Json.parse(reportString, ReportData.class);
+            log.info("数据上报: {}", Json.toString(reportData));
             if (Objects.isNull(reportData.getPayloads())) {
                 return;
             }
@@ -56,6 +57,10 @@ public class ReportMqCallback implements MqttCallback {
             String uuid = reportData.getDeviceId();
             DeviceService deviceService = Services.getDeviceService();
             DeviceEntity device = deviceService.getByUuid(uuid);
+            if (Objects.isNull(device)) {
+                log.info("设备不存在: {}", uuid);
+                return;
+            }
             List<ReportPayload> payloadList = new ArrayList<>();
             for (ReportPayload payload : reportData.getPayloads()) {
                 String reportValue = payload.getValue();
@@ -78,30 +83,34 @@ public class ReportMqCallback implements MqttCallback {
                         .setLabel(parameter.getLabel())
                         .setDataType(parameter.getDataType()));
                 saveLastReportParameterValue(parameterCode, uuid, reportValue);
-                int intValue;
-                switch (parameterCode) {
-                    case REPORT_KEY_OF_STATUS:
-                        intValue = Integer.parseInt(reportValue);
-                        influxHelper.save(parameterCode, uuid, intValue);
-                        saveIfNotNull(device, DeviceEntity::setStatus, intValue);
-                        break;
-                    case REPORT_KEY_OF_ALARM:
-                        intValue = Integer.parseInt(reportValue);
-                        influxHelper.save(parameterCode, uuid, intValue);
-                        saveIfNotNull(device, DeviceEntity::setAlarm, intValue);
-                        break;
-                    case REPORT_KEY_OF_PART_COUNT:
-                        long longValue = Long.parseLong(reportValue);
-                        influxHelper.save(parameterCode, uuid, longValue);
-                        saveIfNotNull(device, DeviceEntity::setPartCount, longValue);
-                        break;
-                    default:
-                        influxHelper.save(parameterCode, uuid, reportValue);
+                try {
+                    int intValue;
+                    switch (parameterCode) {
+                        case REPORT_KEY_OF_STATUS:
+                            intValue = Integer.parseInt(reportValue);
+                            saveIfNotNull(device, DeviceEntity::setStatus, intValue);
+                            influxHelper.save(parameterCode, uuid, intValue);
+                            break;
+                        case REPORT_KEY_OF_ALARM:
+                            intValue = Integer.parseInt(reportValue);
+                            saveIfNotNull(device, DeviceEntity::setAlarm, intValue);
+                            influxHelper.save(parameterCode, uuid, intValue);
+                            break;
+                        case REPORT_KEY_OF_PART_COUNT:
+                            long longValue = Long.parseLong(reportValue);
+                            saveIfNotNull(device, DeviceEntity::setPartCount, longValue);
+                            influxHelper.save(parameterCode, uuid, longValue);
+                            break;
+                        default:
+                            influxHelper.save(parameterCode, uuid, reportValue);
+                    }
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
                 }
             }
-            Optional.ofNullable(device).ifPresent(deviceService::update);
+            deviceService.update(device);
             reportData.setPayloads(payloadList);
-            redisTemplate.opsForValue().set(getDeviceReportCacheKey(uuid), Json.toString(reportData));
+            redisHelper.set(getDeviceReportCacheKey(uuid), Json.toString(reportData));
         } catch (java.lang.Exception e) {
             log.error(e.getMessage());
         }
@@ -127,7 +136,7 @@ public class ReportMqCallback implements MqttCallback {
      * @param reportValue 上报的数据
      */
     private void saveLastReportParameterValue(String code, String uuid, String reportValue) {
-        redisTemplate.opsForValue().set(getDeviceReportParamCacheKey(code, uuid), reportValue);
+        redisHelper.set(getDeviceReportParamCacheKey(code, uuid), reportValue, 5);
     }
 
     /**
@@ -138,7 +147,8 @@ public class ReportMqCallback implements MqttCallback {
      * @return 上报的数据
      */
     private @Nullable String getLastDataInCache(String code, String uuid) {
-        return (String) redisTemplate.opsForValue().get(getDeviceReportParamCacheKey(code, uuid));
+        Object object = redisHelper.get(getDeviceReportParamCacheKey(code, uuid));
+        return object == null ? null : object.toString();
     }
 
     @Override

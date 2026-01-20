@@ -2,6 +2,7 @@ package cn.hamm.spms.module.asset.device;
 
 import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.web.redis.RedisHelper;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.helper.InfluxHelper;
@@ -16,7 +17,6 @@ import cn.hamm.spms.module.iot.report.enums.ReportGranularity;
 import jakarta.annotation.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -34,7 +34,7 @@ import static cn.hamm.spms.module.iot.report.ReportConstant.*;
 @Service
 public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisHelper redisHelper;
 
     @Autowired
     private InfluxHelper influxHelper;
@@ -47,7 +47,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
      */
     public List<ReportPayload> getCurrentReport(long deviceId) {
         DeviceEntity device = get(deviceId);
-        Object data = redisTemplate.opsForValue().get(ReportConstant.getDeviceReportCacheKey(device.getUuid()));
+        Object data = redisHelper.get(ReportConstant.getDeviceReportCacheKey(device.getUuid()));
         if (Objects.isNull(data)) {
             return new ArrayList<>();
         }
