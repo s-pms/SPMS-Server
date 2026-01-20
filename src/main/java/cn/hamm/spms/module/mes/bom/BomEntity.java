@@ -63,7 +63,7 @@ public class BomEntity extends BaseEntity<BomEntity> {
     private Integer type;
 
     @Description("配方明细")
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "配方明细不能为空")
     private Set<BomDetailEntity> details;
 }

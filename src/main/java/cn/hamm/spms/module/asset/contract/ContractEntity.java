@@ -77,6 +77,6 @@ public class ContractEntity extends BaseEntity<ContractEntity> {
     private Set<ContractDocumentEntity> documentList;
 
     @Description("参与方列表")
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Set<ParticipantEntity> participantList;
 }
