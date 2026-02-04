@@ -229,10 +229,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         existUser.setSalt(salt);
         existUser.setPassword(PasswordUtil.encode(user.getPassword(), salt));
         if (StringUtils.hasText(user.getEmail())) {
-            redisHelper.del(getEmailCacheKey(user.getEmail()));
+            redisHelper.delete(getEmailCacheKey(user.getEmail()));
         }
         if (StringUtils.hasText(user.getPhone())) {
-            redisHelper.del(getPhoneCodeCacheKey(user.getPhone()));
+            redisHelper.delete(getPhoneCodeCacheKey(user.getPhone()));
         }
         updateToDatabase(existUser);
     }

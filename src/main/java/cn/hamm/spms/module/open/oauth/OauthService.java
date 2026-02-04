@@ -112,7 +112,7 @@ public class OauthService {
      * @param code   Code
      */
     public void removeOauthUserCache(String appKey, String code) {
-        redisHelper.del(getUserIdCacheKey(appKey, code));
+        redisHelper.delete(getUserIdCacheKey(appKey, code));
     }
 
     /**
@@ -122,7 +122,7 @@ public class OauthService {
      * @param code   Code
      */
     public void removeOauthScopeCache(String appKey, String code) {
-        redisHelper.del(getScopeCacheKey(appKey, code));
+        redisHelper.delete(getScopeCacheKey(appKey, code));
     }
 
     /**

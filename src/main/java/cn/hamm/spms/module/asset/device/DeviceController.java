@@ -5,13 +5,13 @@ import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.annotation.ExposeAll;
 import cn.hamm.airpower.web.access.Permission;
 import cn.hamm.airpower.web.api.Api;
+import cn.hamm.airpower.web.redis.RedisHelper;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.report.IReportPayloadAction;
 import cn.hamm.spms.module.iot.report.ReportPayload;
 import jakarta.annotation.Resource;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +33,7 @@ public class DeviceController extends BaseController<
         DeviceEntity, DeviceService, DeviceRepository
         > implements IDeviceAction, IReportPayloadAction {
     @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisHelper redisHelper;
 
     @Override
     protected DeviceEntity afterGetDetail(@NotNull DeviceEntity device) {
@@ -74,7 +74,7 @@ public class DeviceController extends BaseController<
 
     @Override
     protected DeviceEntity beforeAppUpdate(@NotNull DeviceEntity device) {
-        redisTemplate.delete(getDeviceReportCacheKey(device.getUuid()));
+        redisHelper.delete(getDeviceReportCacheKey(device.getUuid()));
         return service.getDeviceParameters(device);
     }
 

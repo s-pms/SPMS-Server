@@ -264,8 +264,8 @@ public class UserController extends BaseController<UserEntity, UserService, User
             case VIA_EMAIL_CODE -> service.loginViaEmail(user);
         };
         FORBIDDEN_DISABLED.when(exist.getIsDisabled(), "登录失败，你的账号已被禁用");
-        redisHelper.del(getUserPermissionCacheKey(exist.getId()));
-        redisHelper.del(getUserMenuCacheKey(exist.getId()));
+        redisHelper.delete(getUserPermissionCacheKey(exist.getId()));
+        redisHelper.delete(getUserMenuCacheKey(exist.getId()));
         return Json.data(userService.loginWithCookieAndResponse(response, exist), "登录成功");
     }
 }

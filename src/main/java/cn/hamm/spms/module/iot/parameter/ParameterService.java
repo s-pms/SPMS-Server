@@ -45,7 +45,7 @@ public class ParameterService extends BaseService<ParameterEntity, ParameterRepo
 
     @Override
     protected ParameterEntity beforeAppSaveToDatabase(@NotNull ParameterEntity parameter) {
-        redisHelper.del(PARAM_CODE_CACHE_PREFIX + parameter.getCode());
+        redisHelper.delete(PARAM_CODE_CACHE_PREFIX + parameter.getCode());
         return parameter;
     }
 }
