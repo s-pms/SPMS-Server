@@ -6,7 +6,7 @@ import cn.hamm.airpower.core.RandomUtil;
 import cn.hamm.airpower.core.TreeUtil;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.web.access.AccessConfig;
-import cn.hamm.airpower.web.access.PasswordUtil;
+import cn.hamm.airpower.web.access.PermissionUtil;
 import cn.hamm.airpower.web.cookie.CookieHelper;
 import cn.hamm.airpower.web.curd.CurdEntity;
 import cn.hamm.airpower.web.curd.Sort;
@@ -194,13 +194,13 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         // 判断原始密码
         String oldPassword = user.getOldPassword();
         PARAM_INVALID.whenNotEqualsIgnoreCase(
-                PasswordUtil.encode(oldPassword, existUser.getSalt()),
+                PermissionUtil.encodePassword(oldPassword, existUser.getSalt()),
                 existUser.getPassword(),
                 "原密码输入错误，修改密码失败"
         );
         String salt = RandomUtil.randomString();
         existUser.setSalt(salt);
-        existUser.setPassword(PasswordUtil.encode(user.getPassword(), salt));
+        existUser.setPassword(PermissionUtil.encodePassword(user.getPassword(), salt));
         updateToDatabase(existUser);
     }
 
@@ -227,7 +227,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         // 验证通过 开始重置密码和盐
         String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
         existUser.setSalt(salt);
-        existUser.setPassword(PasswordUtil.encode(user.getPassword(), salt));
+        existUser.setPassword(PermissionUtil.encodePassword(user.getPassword(), salt));
         if (StringUtils.hasText(user.getEmail())) {
             redisHelper.delete(getEmailCacheKey(user.getEmail()));
         }
@@ -324,7 +324,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         }
         USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNull(existUser);
         // 将用户传入的密码加密与数据库存储匹配
-        String encodePassword = PasswordUtil.encode(user.getPassword(), existUser.getSalt());
+        String encodePassword = PermissionUtil.encodePassword(user.getPassword(), existUser.getSalt());
         USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNotEqualsIgnoreCase(encodePassword, existUser.getPassword());
         return existUser;
     }
@@ -369,7 +369,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         // 昵称默认为邮箱账号 @ 前面的
         String nickname = email.split("@")[0];
         String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
-        UserEntity user = new UserEntity().setPassword(PasswordUtil.encode(password, salt))
+        UserEntity user = new UserEntity().setPassword(PermissionUtil.encodePassword(password, salt))
                 .setSalt(salt)
                 .setNickname(nickname);
         long id = add(user);
@@ -423,7 +423,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         if (!StringUtils.hasLength(user.getPassword())) {
             // 创建时没有设置密码的话 随机一个密码
             String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
-            user.setPassword(PasswordUtil.encode("Aa123456", salt));
+            user.setPassword(PermissionUtil.encodePassword("Aa123456", salt));
             user.setSalt(salt);
         }
         return user;

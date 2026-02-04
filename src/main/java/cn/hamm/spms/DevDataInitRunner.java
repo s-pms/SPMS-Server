@@ -1,7 +1,7 @@
 package cn.hamm.spms;
 
 import cn.hamm.airpower.core.RandomUtil;
-import cn.hamm.airpower.web.access.PasswordUtil;
+import cn.hamm.airpower.web.access.PermissionUtil;
 import cn.hamm.airpower.web.mcp.McpService;
 import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
@@ -208,14 +208,14 @@ public class DevDataInitRunner implements CommandLineRunner {
                 .setNickname("凌小云")
                 .setPhone("17666666666")
                 .setEmail("admin@hamm.cn")
-                .setPassword(PasswordUtil.encode("Aa123456", salt))
+                .setPassword(PermissionUtil.encodePassword("Aa123456", salt))
                 .setSalt(salt)
         );
         userService.addAndGet(new UserEntity()
                         .setNickname("张三")
                         .setPhone("13888888888")
                         .setEmail("admin@hamm.com")
-                        .setPassword(PasswordUtil.encode("Aa123456", salt))
+                        .setPassword(PermissionUtil.encodePassword("Aa123456", salt))
                         .setSalt(salt))
                 .setDepartmentList(Set.of(department))
 
