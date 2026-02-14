@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.channel.purchase;
 
+import cn.hamm.airpower.ai.mcp.method.McpMethod;
 import cn.hamm.airpower.core.NumberUtil;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.interfaces.IDictionary;
-import cn.hamm.airpower.web.mcp.method.McpMethod;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.asset.material.MaterialEntity;

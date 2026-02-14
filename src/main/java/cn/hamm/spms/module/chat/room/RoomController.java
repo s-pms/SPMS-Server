@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.chat.room;
 
+import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.annotation.Description;
-import cn.hamm.airpower.web.access.Permission;
-import cn.hamm.airpower.web.api.Api;
+import cn.hamm.airpower.curd.permission.Permission;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import org.jetbrains.annotations.NotNull;

@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN_UPLOAD_MAX_SIZE;
-import static cn.hamm.airpower.web.exception.ServiceError.PARAM_INVALID;
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_UPLOAD_MAX_SIZE;
+import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
 
 /**
  * <h1>Service</h1>

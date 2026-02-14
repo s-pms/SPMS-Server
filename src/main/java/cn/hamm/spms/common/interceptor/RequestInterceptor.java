@@ -15,8 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN;
-import static cn.hamm.airpower.web.exception.ServiceError.UNAUTHORIZED;
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.exception.ServiceError.UNAUTHORIZED;
 
 /**
  * <h1>请求拦截器</h1>

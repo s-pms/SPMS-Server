@@ -1,10 +1,10 @@
 package cn.hamm.spms.module.personnel.role;
 
+import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.annotation.Description;
-import cn.hamm.airpower.web.api.Api;
-import cn.hamm.airpower.web.api.Extends;
-import cn.hamm.airpower.web.curd.Curd;
+import cn.hamm.airpower.curd.Curd;
+import cn.hamm.airpower.curd.annotation.Extends;
 import cn.hamm.spms.base.BaseController;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;

@@ -1,18 +1,18 @@
 package cn.hamm.spms.module.open.oauth;
 
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.ApiConfig;
+import cn.hamm.airpower.api.ApiController;
 import cn.hamm.airpower.core.AccessTokenUtil;
 import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.RandomUtil;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.annotation.DesensitizeIgnore;
-import cn.hamm.airpower.web.access.AccessConfig;
-import cn.hamm.airpower.web.access.Permission;
-import cn.hamm.airpower.web.api.Api;
-import cn.hamm.airpower.web.api.ApiController;
-import cn.hamm.airpower.web.cookie.CookieConfig;
-import cn.hamm.airpower.web.curd.ICurdAction;
-import cn.hamm.airpower.web.util.RequestUtil;
+import cn.hamm.airpower.curd.ICurdAction;
+import cn.hamm.airpower.curd.permission.Permission;
+import cn.hamm.airpower.http.cookie.CookieConfig;
+import cn.hamm.airpower.http.util.RequestUtil;
 import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.open.app.OpenAppEntity;
 import cn.hamm.spms.module.open.app.OpenAppService;
@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 
 import static cn.hamm.airpower.core.DateTimeUtil.SECOND_PER_DAY;
 import static cn.hamm.airpower.core.DateTimeUtil.SECOND_PER_HOUR;
-import static cn.hamm.airpower.web.exception.ServiceError.*;
+import static cn.hamm.airpower.exception.ServiceError.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -89,7 +89,7 @@ public class OauthController extends ApiController implements IOauthAction {
     private UserThirdLoginService userThirdLoginService;
 
     @Autowired
-    private AccessConfig accessConfig;
+    private ApiConfig apiConfig;
 
     @Autowired
     private AppConfig appConfig;
@@ -187,7 +187,7 @@ public class OauthController extends ApiController implements IOauthAction {
     @PostMapping("getUserInfo")
     @DesensitizeIgnore
     public Json getUserInfo(@RequestBody @Validated(WhenAccessTokenRequired.class) OauthGetUserInfoRequest request) {
-        AccessTokenUtil.VerifiedToken verify = AccessTokenUtil.create().verify(request.getAccessToken(), accessConfig.getAccessTokenSecret());
+        AccessTokenUtil.VerifiedToken verify = AccessTokenUtil.create().verify(request.getAccessToken(), apiConfig.getAccessTokenSecret());
         long userId = Long.parseLong(Objects.requireNonNull(verify.getPayload(USER_ID), "无效的 UserId").toString());
         UserEntity user = userService.get(userId);
         String appKey = Objects.requireNonNull(verify.getPayload(APP_KEY), "无效的 AppKey").toString();
@@ -263,7 +263,7 @@ public class OauthController extends ApiController implements IOauthAction {
                 .addPayload(APP_KEY, appKey)
                 .addPayload(UserTokenType.TYPE, UserTokenType.OAUTH2.getKey())
                 .setExpireSecond(expiresIn)
-                .build(accessConfig.getAccessTokenSecret());
+                .build(apiConfig.getAccessTokenSecret());
     }
 
     /**

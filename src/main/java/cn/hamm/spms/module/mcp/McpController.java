@@ -1,15 +1,15 @@
 package cn.hamm.spms.module.mcp;
 
+import cn.hamm.airpower.ai.mcp.McpService;
+import cn.hamm.airpower.ai.mcp.model.McpRequest;
+import cn.hamm.airpower.ai.mcp.model.McpResponse;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.ApiController;
 import cn.hamm.airpower.core.AccessTokenUtil;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.exception.ServiceException;
-import cn.hamm.airpower.web.access.Permission;
-import cn.hamm.airpower.web.api.Api;
-import cn.hamm.airpower.web.api.ApiController;
-import cn.hamm.airpower.web.mcp.McpService;
-import cn.hamm.airpower.web.mcp.model.McpRequest;
-import cn.hamm.airpower.web.mcp.model.McpResponse;
+import cn.hamm.airpower.curd.permission.Permission;
 import cn.hamm.spms.common.interceptor.RequestInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import static cn.hamm.airpower.web.exception.ServiceError.PARAM_MISSING;
+import static cn.hamm.airpower.exception.ServiceError.PARAM_MISSING;
 
 /**
  * <h1>MCP</h1>

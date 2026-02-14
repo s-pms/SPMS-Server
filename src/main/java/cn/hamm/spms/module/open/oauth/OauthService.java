@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.open.oauth;
 
 import cn.hamm.airpower.core.DateTimeUtil;
-import cn.hamm.airpower.web.redis.RedisHelper;
+import cn.hamm.airpower.redis.RedisHelper;
 import cn.hamm.spms.module.open.oauth.model.base.AbstractOauthCallback;
 import cn.hamm.spms.module.open.oauth.model.base.OauthUserInfo;
 import cn.hamm.spms.module.open.oauth.model.enums.OauthPlatform;
@@ -21,8 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.web.exception.ServiceError.DATA_NOT_FOUND;
-import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 
 /**
  * <h1>OauthService</h1>

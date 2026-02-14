@@ -1,11 +1,11 @@
 package cn.hamm.spms.module.iot.parameter;
 
 import cn.hamm.airpower.core.annotation.Description;
-import cn.hamm.airpower.web.api.Api;
+import cn.hamm.airpower.api.Api;
 import cn.hamm.spms.base.BaseController;
 import org.jetbrains.annotations.NotNull;
 
-import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN_DELETE;
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
 
 /**
  * <h1>Controller</h1>

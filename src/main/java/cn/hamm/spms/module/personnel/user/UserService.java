@@ -1,17 +1,18 @@
 package cn.hamm.spms.module.personnel.user;
 
+import cn.hamm.airpower.ai.mcp.method.McpMethod;
+import cn.hamm.airpower.api.ApiConfig;
 import cn.hamm.airpower.core.AccessTokenUtil;
 import cn.hamm.airpower.core.DateTimeUtil;
 import cn.hamm.airpower.core.RandomUtil;
 import cn.hamm.airpower.core.TreeUtil;
 import cn.hamm.airpower.core.annotation.Description;
-import cn.hamm.airpower.web.access.AccessConfig;
-import cn.hamm.airpower.web.access.PermissionUtil;
-import cn.hamm.airpower.web.cookie.CookieHelper;
-import cn.hamm.airpower.web.curd.CurdEntity;
-import cn.hamm.airpower.web.curd.Sort;
-import cn.hamm.airpower.web.helper.EmailHelper;
-import cn.hamm.airpower.web.mcp.method.McpMethod;
+import cn.hamm.airpower.curd.CurdEntity;
+import cn.hamm.airpower.curd.Sort;
+import cn.hamm.airpower.curd.access.AccessConfig;
+import cn.hamm.airpower.curd.permission.PermissionUtil;
+import cn.hamm.airpower.email.EmailHelper;
+import cn.hamm.airpower.http.cookie.CookieHelper;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConfig;
@@ -41,7 +42,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 
-import static cn.hamm.airpower.web.exception.ServiceError.*;
+import static cn.hamm.airpower.exception.ServiceError.*;
 import static cn.hamm.spms.common.exception.CustomError.*;
 
 /**
@@ -69,6 +70,9 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
 
     @Autowired
     private AppConfig appConfig;
+
+    @Autowired
+    private ApiConfig apiConfig;
 
     @Autowired
     private ConfigService configService;
@@ -386,7 +390,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         return AccessTokenUtil.create().setPayloadId(userId)
                 .setExpireSecond(accessConfig.getAuthorizeExpireSecond())
                 .addPayload(UserTokenType.TYPE, UserTokenType.NORMAL.getKey())
-                .build(accessConfig.getAccessTokenSecret());
+                .build(apiConfig.getAccessTokenSecret());
     }
 
     /**

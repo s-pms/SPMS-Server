@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.iot.report;
 
 import cn.hamm.airpower.core.Json;
-import cn.hamm.airpower.web.redis.RedisHelper;
+import cn.hamm.airpower.redis.RedisHelper;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.helper.InfluxHelper;
 import cn.hamm.spms.module.asset.device.DeviceEntity;

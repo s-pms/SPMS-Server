@@ -3,7 +3,7 @@ package cn.hamm.spms.module.asset.contract;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.annotation.ExposeAll;
-import cn.hamm.airpower.web.api.Api;
+import cn.hamm.airpower.api.Api;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.asset.contract.participant.ParticipantEntity;
 import org.jetbrains.annotations.NotNull;

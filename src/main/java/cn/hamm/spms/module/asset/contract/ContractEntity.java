@@ -3,7 +3,7 @@ package cn.hamm.spms.module.asset.contract;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.annotation.Dictionary;
 import cn.hamm.airpower.core.annotation.Meta;
-import cn.hamm.airpower.web.annotation.Search;
+import cn.hamm.airpower.curd.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.asset.contract.document.ContractDocumentEntity;

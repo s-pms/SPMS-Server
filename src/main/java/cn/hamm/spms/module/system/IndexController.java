@@ -1,15 +1,15 @@
 package cn.hamm.spms.module.system;
 
+import cn.hamm.airpower.ai.Ai;
+import cn.hamm.airpower.ai.AiRequest;
+import cn.hamm.airpower.ai.AiResponse;
+import cn.hamm.airpower.ai.AiStream;
+import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.ApiController;
 import cn.hamm.airpower.core.annotation.Description;
-import cn.hamm.airpower.web.ai.Ai;
-import cn.hamm.airpower.web.ai.AiRequest;
-import cn.hamm.airpower.web.ai.AiResponse;
-import cn.hamm.airpower.web.ai.AiStream;
-import cn.hamm.airpower.web.api.Api;
-import cn.hamm.airpower.web.api.ApiController;
-import cn.hamm.airpower.web.curd.Page;
-import cn.hamm.airpower.web.curd.query.PageData;
-import cn.hamm.airpower.web.redis.RedisHelper;
+import cn.hamm.airpower.curd.Page;
+import cn.hamm.airpower.curd.query.PageData;
+import cn.hamm.airpower.redis.RedisHelper;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.asset.material.MaterialService;
 import lombok.extern.slf4j.Slf4j;

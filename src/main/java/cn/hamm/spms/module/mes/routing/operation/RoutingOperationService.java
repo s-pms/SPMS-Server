@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.mes.routing.operation;
 
-import cn.hamm.airpower.web.curd.CurdEntity;
+import cn.hamm.airpower.curd.CurdEntity;
 import cn.hamm.spms.base.BaseService;
 import org.springframework.stereotype.Service;
 

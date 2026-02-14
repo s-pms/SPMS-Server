@@ -1,7 +1,7 @@
 package cn.hamm.spms;
 
 import cn.hamm.airpower.core.TaskUtil;
-import cn.hamm.airpower.web.redis.RedisHelper;
+import cn.hamm.airpower.redis.RedisHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

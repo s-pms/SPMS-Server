@@ -19,6 +19,28 @@
             <version>${airpower.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>cn.hamm</groupId>
+            <artifactId>airpower-mqtt</artifactId>
+            <version>${airpower.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hamm</groupId>
+            <artifactId>airpower-ai</artifactId>
+            <version>${airpower.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>cn.hamm</groupId>
+            <artifactId>airpower-open</artifactId>
+            <version>${airpower.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hamm</groupId>
+            <artifactId>airpower-email</artifactId>
+            <version>${airpower.version}</version>
+        </dependency>
+
         <!-- 阿里云OSS开始 -->
         <dependency>
             <groupId>com.aliyun.oss</groupId>

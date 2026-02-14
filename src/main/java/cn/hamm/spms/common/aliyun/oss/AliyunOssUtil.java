@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import static cn.hamm.airpower.web.exception.ServiceError.PARAM_INVALID;
+import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
 
 /**
  * <h1>阿里云 OSS 工具类</h1>

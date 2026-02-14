@@ -2,7 +2,7 @@ package cn.hamm.spms.base;
 
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.annotation.ReadOnly;
-import cn.hamm.airpower.web.curd.CurdEntity;
+import cn.hamm.airpower.curd.CurdEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;

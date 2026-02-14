@@ -2,8 +2,8 @@ package cn.hamm.spms.module.wms.inventory;
 
 import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.TreeUtil;
-import cn.hamm.airpower.web.curd.CurdEntity;
-import cn.hamm.airpower.web.curd.query.QueryPageRequest;
+import cn.hamm.airpower.curd.CurdEntity;
+import cn.hamm.airpower.curd.query.QueryPageRequest;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.factory.storage.StorageEntity;

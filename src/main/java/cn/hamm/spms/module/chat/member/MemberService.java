@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
-import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN_EXIST;
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EXIST;
 
 /**
  * <h1>Service</h1>

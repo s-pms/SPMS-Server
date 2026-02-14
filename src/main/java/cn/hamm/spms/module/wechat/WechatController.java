@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.wechat;
 
-import cn.hamm.airpower.web.access.Permission;
-import cn.hamm.airpower.web.api.ApiController;
+import cn.hamm.airpower.api.ApiController;
+import cn.hamm.airpower.curd.permission.Permission;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

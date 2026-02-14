@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static cn.hamm.airpower.web.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
 
 /**
  * <h1>Service</h1>
