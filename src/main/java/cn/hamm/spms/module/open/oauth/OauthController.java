@@ -1,15 +1,15 @@
 package cn.hamm.spms.module.open.oauth;
 
-import cn.hamm.airpower.api.Api;
-import cn.hamm.airpower.api.ApiConfig;
 import cn.hamm.airpower.api.ApiController;
+import cn.hamm.airpower.api.annotation.Api;
+import cn.hamm.airpower.api.config.ApiConfig;
 import cn.hamm.airpower.core.AccessTokenUtil;
 import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.RandomUtil;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.annotation.DesensitizeIgnore;
-import cn.hamm.airpower.curd.ICurdAction;
+import cn.hamm.airpower.curd.base.ICurdAction;
 import cn.hamm.airpower.curd.permission.Permission;
 import cn.hamm.airpower.http.cookie.CookieConfig;
 import cn.hamm.airpower.http.util.RequestUtil;
@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 
 import static cn.hamm.airpower.core.DateTimeUtil.SECOND_PER_DAY;
 import static cn.hamm.airpower.core.DateTimeUtil.SECOND_PER_HOUR;
-import static cn.hamm.airpower.exception.ServiceError.*;
+import static cn.hamm.airpower.exception.Errors.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**

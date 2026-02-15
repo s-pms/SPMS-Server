@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.system.coderule;
 
-import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.annotation.Description;

@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.wms.output;
 
-import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.core.annotation.Description;
-import cn.hamm.airpower.curd.Curd;
 import cn.hamm.airpower.curd.annotation.Extends;
+import cn.hamm.airpower.curd.base.Curd;
 import cn.hamm.spms.base.bill.BaseBillController;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailRepository;

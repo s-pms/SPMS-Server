@@ -21,8 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.exception.Errors.DATA_NOT_FOUND;
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 
 /**
  * <h1>OauthService</h1>

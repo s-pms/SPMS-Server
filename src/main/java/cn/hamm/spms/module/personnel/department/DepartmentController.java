@@ -1,21 +1,21 @@
 package cn.hamm.spms.module.personnel.department;
 
-import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.TreeUtil;
 import cn.hamm.airpower.core.annotation.Description;
-import cn.hamm.airpower.curd.Sort;
 import cn.hamm.airpower.curd.annotation.Extends;
+import cn.hamm.airpower.curd.model.query.QueryListRequest;
+import cn.hamm.airpower.curd.model.query.Sort;
 import cn.hamm.airpower.curd.permission.Permission;
-import cn.hamm.airpower.curd.query.QueryListRequest;
 import cn.hamm.spms.base.BaseController;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Objects;
 
-import static cn.hamm.airpower.curd.Curd.Export;
-import static cn.hamm.airpower.curd.Curd.QueryExport;
+import static cn.hamm.airpower.curd.base.Curd.Export;
+import static cn.hamm.airpower.curd.base.Curd.QueryExport;
 
 /**
  * <h1>Controller</h1>

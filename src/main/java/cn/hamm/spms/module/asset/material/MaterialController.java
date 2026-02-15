@@ -1,9 +1,9 @@
 package cn.hamm.spms.module.asset.material;
 
-import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.core.annotation.Description;
-import cn.hamm.airpower.curd.Curd;
 import cn.hamm.airpower.curd.annotation.Extends;
+import cn.hamm.airpower.curd.base.Curd;
 import cn.hamm.spms.base.BaseController;
 
 /**

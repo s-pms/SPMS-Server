@@ -40,12 +40,10 @@ spring:
     view:
       suffix: .html
       prefix: /
-
 airpower:
-  access:
-    access-token-secret: "1234567890"
   websocket:
     support: redis
-  json:
+  api:
+    access-token-secret: "1234567890"
     request-log: true
     response-log: true

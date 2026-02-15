@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 import static cn.hamm.spms.module.system.config.enums.ConfigFlag.MOVE_BILL_AUTO_AUDIT;
 
 /**

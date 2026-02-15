@@ -3,8 +3,8 @@ package cn.hamm.spms.module.mcp;
 import cn.hamm.airpower.ai.mcp.McpService;
 import cn.hamm.airpower.ai.mcp.model.McpRequest;
 import cn.hamm.airpower.ai.mcp.model.McpResponse;
-import cn.hamm.airpower.api.Api;
 import cn.hamm.airpower.api.ApiController;
+import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.core.AccessTokenUtil;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.annotation.Description;
@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import static cn.hamm.airpower.exception.ServiceError.PARAM_MISSING;
+import static cn.hamm.airpower.exception.Errors.PARAM_MISSING;
 
 /**
  * <h1>MCP</h1>

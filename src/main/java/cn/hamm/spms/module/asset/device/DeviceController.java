@@ -1,6 +1,6 @@
 package cn.hamm.spms.module.asset.device;
 
-import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.annotation.ExposeAll;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.HashSet;
 import java.util.Set;
 
-import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
+import static cn.hamm.airpower.exception.Errors.DATA_NOT_FOUND;
 import static cn.hamm.spms.module.iot.report.ReportConstant.getDeviceReportCacheKey;
 
 /**

@@ -1,12 +1,12 @@
 package cn.hamm.spms.module.system.menu;
 
-import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.TreeUtil;
 import cn.hamm.airpower.core.annotation.Description;
-import cn.hamm.airpower.curd.Sort;
+import cn.hamm.airpower.curd.model.query.QueryListRequest;
+import cn.hamm.airpower.curd.model.query.Sort;
 import cn.hamm.airpower.curd.permission.Permission;
-import cn.hamm.airpower.curd.query.QueryListRequest;
 import cn.hamm.spms.base.BaseController;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.RequestBody;

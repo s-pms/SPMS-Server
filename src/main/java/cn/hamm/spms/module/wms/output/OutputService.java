@@ -17,7 +17,7 @@ import cn.hamm.spms.module.wms.output.enums.OutputType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 import static cn.hamm.spms.module.system.config.enums.ConfigFlag.OUTPUT_BILL_AUTO_AUDIT;
 
 /**

@@ -2,9 +2,9 @@ package cn.hamm.spms.base;
 
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.annotation.Description;
-import cn.hamm.airpower.curd.Curd;
-import cn.hamm.airpower.curd.CurdController;
 import cn.hamm.airpower.curd.annotation.Extends;
+import cn.hamm.airpower.curd.base.Curd;
+import cn.hamm.airpower.curd.base.CurdController;
 import cn.hamm.airpower.curd.permission.Permission;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EDIT;
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN_EDIT;
 
 /**
  * <h1>实体控制器基类</h1>

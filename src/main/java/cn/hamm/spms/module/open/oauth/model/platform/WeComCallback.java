@@ -17,7 +17,7 @@ import java.net.http.HttpResponse;
 import java.util.Map;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 
 /**
  * <h1>企业微信回调</h1>

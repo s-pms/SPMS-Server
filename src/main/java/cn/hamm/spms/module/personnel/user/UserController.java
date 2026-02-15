@@ -1,11 +1,11 @@
 package cn.hamm.spms.module.personnel.user;
 
-import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.annotation.ExposeAll;
-import cn.hamm.airpower.curd.Curd;
 import cn.hamm.airpower.curd.annotation.Extends;
+import cn.hamm.airpower.curd.base.Curd;
 import cn.hamm.airpower.curd.permission.Permission;
 import cn.hamm.airpower.http.cookie.CookieHelper;
 import cn.hamm.airpower.redis.RedisHelper;
@@ -31,8 +31,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DISABLED;
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_EDIT;
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN_DISABLED;
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN_EDIT;
 
 /**
  * <h1>Controller</h1>

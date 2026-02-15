@@ -23,7 +23,7 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
+import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 import static cn.hamm.spms.module.iot.report.ReportConstant.*;
 
 /**

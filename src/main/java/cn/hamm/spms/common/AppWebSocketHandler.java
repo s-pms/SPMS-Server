@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
+import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 import static cn.hamm.spms.module.chat.enums.ChatEventType.*;
 
 /**

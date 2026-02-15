@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.channel.sale;
 
+import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.core.annotation.Description;
-import cn.hamm.airpower.api.Api;
 import cn.hamm.spms.base.bill.BaseBillController;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailEntity;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailRepository;

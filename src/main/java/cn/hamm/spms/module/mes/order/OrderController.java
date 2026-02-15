@@ -1,10 +1,10 @@
 package cn.hamm.spms.module.mes.order;
 
-import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.annotation.Description;
-import cn.hamm.airpower.curd.Curd;
 import cn.hamm.airpower.curd.annotation.Extends;
+import cn.hamm.airpower.curd.base.Curd;
 import cn.hamm.spms.base.bill.BaseBillController;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailEntity;
@@ -17,7 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 
 /**
  * <h1>Controller</h1>

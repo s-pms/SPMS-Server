@@ -2,7 +2,6 @@ package cn.hamm.spms.module.system.file;
 
 import cn.hamm.airpower.core.FileUtil;
 import cn.hamm.airpower.core.exception.ServiceException;
-import cn.hamm.airpower.web.file.FileConfig;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.aliyun.oss.AliyunOssUtil;
 import cn.hamm.spms.common.config.AppConfig;
@@ -18,8 +17,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_UPLOAD_MAX_SIZE;
-import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN_UPLOAD_MAX_SIZE;
+import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 
 /**
  * <h1>Service</h1>
@@ -31,9 +30,6 @@ import static cn.hamm.airpower.exception.ServiceError.PARAM_INVALID;
 public class FileService extends BaseService<FileEntity, FileRepository> {
     @Autowired
     private AppConfig appConfig;
-
-    @Autowired
-    private FileConfig fileConfig;
 
     @Autowired
     private AliyunOssUtil aliyunOssUtil;
@@ -58,7 +54,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
      */
     public FileEntity upload(@NotNull MultipartFile multipartFile, @NotNull FileCategory fileCategory) {
         // 上传文件的绝对路径
-        final String absoluteDirectory = fileConfig.getFileDirectory();
+        final String absoluteDirectory = appConfig.getFileDirectory();
         // 判断文件大小和类型
         FORBIDDEN_UPLOAD_MAX_SIZE.when(multipartFile.getSize() > appConfig.getUploadMaxSize());
         String originalFilename = multipartFile.getOriginalFilename();
@@ -68,7 +64,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
         PARAM_INVALID.when(!Arrays.stream(fileCategory.getExtensions()).toList().contains(extension), "文件类型不允许上传");
 
         // 存储的相对路径目录
-        String relativeDirectory = fileConfig.getUploadDirectory() + fileCategory.name().toLowerCase() + "/" + FileUtil.getTodayDirectory();
+        String relativeDirectory = appConfig.getUploadDirectory() + fileCategory.name().toLowerCase() + "/" + FileUtil.getTodayDirectory();
 
         try {
             // 获取文件的MD5

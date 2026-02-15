@@ -1,14 +1,14 @@
 package cn.hamm.spms.module.system;
 
 import cn.hamm.airpower.ai.Ai;
-import cn.hamm.airpower.ai.AiRequest;
-import cn.hamm.airpower.ai.AiResponse;
-import cn.hamm.airpower.ai.AiStream;
-import cn.hamm.airpower.api.Api;
+import cn.hamm.airpower.ai.model.AiRequest;
+import cn.hamm.airpower.ai.model.AiResponse;
+import cn.hamm.airpower.ai.model.AiStream;
 import cn.hamm.airpower.api.ApiController;
+import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.core.annotation.Description;
-import cn.hamm.airpower.curd.Page;
-import cn.hamm.airpower.curd.query.PageData;
+import cn.hamm.airpower.curd.model.query.Page;
+import cn.hamm.airpower.curd.model.query.PageData;
 import cn.hamm.airpower.redis.RedisHelper;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.asset.material.MaterialService;

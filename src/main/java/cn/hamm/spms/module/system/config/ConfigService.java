@@ -7,8 +7,8 @@ import cn.hamm.spms.module.system.config.enums.ConfigType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import static cn.hamm.airpower.exception.ServiceError.DATA_NOT_FOUND;
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN_DELETE;
+import static cn.hamm.airpower.exception.Errors.DATA_NOT_FOUND;
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN_DELETE;
 
 /**
  * <h1>Service</h1>

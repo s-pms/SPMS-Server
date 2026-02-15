@@ -17,7 +17,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.ServiceError.SERVICE_ERROR;
+import static cn.hamm.airpower.exception.Errors.SERVICE_ERROR;
 
 /**
  * <h1>Service</h1>

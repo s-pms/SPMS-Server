@@ -2,7 +2,7 @@ package cn.hamm.spms.common.interceptor;
 
 import cn.hamm.airpower.core.AccessTokenUtil;
 import cn.hamm.airpower.core.DictionaryUtil;
-import cn.hamm.airpower.web.interceptor.AbstractRequestInterceptor;
+import cn.hamm.airpower.curd.interceptor.CurdRequestInterceptor;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
 import cn.hamm.spms.module.personnel.user.enums.UserTokenType;
@@ -15,8 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static cn.hamm.airpower.exception.ServiceError.FORBIDDEN;
-import static cn.hamm.airpower.exception.ServiceError.UNAUTHORIZED;
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
+import static cn.hamm.airpower.exception.Errors.UNAUTHORIZED;
 
 /**
  * <h1>请求拦截器</h1>
@@ -24,7 +24,7 @@ import static cn.hamm.airpower.exception.ServiceError.UNAUTHORIZED;
  * @author Hamm.cn
  */
 @Component
-public class RequestInterceptor extends AbstractRequestInterceptor {
+public class RequestInterceptor extends CurdRequestInterceptor {
     @Autowired
     private PermissionService permissionService;
 

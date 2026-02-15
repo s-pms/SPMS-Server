@@ -2,7 +2,7 @@ package cn.hamm.spms.module.iot.report;
 
 import cn.hamm.airpower.core.RootModel;
 import cn.hamm.airpower.core.annotation.Dictionary;
-import cn.hamm.airpower.curd.ICurdAction;
+import cn.hamm.airpower.curd.base.ICurdAction;
 import cn.hamm.spms.module.iot.report.enums.ReportGranularity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
