@@ -1,13 +1,13 @@
 package cn.hamm.spms.module.personnel.user;
 
 import cn.hamm.airpower.api.annotation.Api;
+import cn.hamm.airpower.cookie.CookieHelper;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.annotation.ExposeAll;
 import cn.hamm.airpower.curd.annotation.Extends;
 import cn.hamm.airpower.curd.base.Curd;
 import cn.hamm.airpower.curd.permission.Permission;
-import cn.hamm.airpower.http.cookie.CookieHelper;
 import cn.hamm.airpower.redis.RedisHelper;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.open.thirdlogin.UserThirdLoginEntity;

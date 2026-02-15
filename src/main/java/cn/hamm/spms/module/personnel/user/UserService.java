@@ -2,6 +2,7 @@ package cn.hamm.spms.module.personnel.user;
 
 import cn.hamm.airpower.ai.mcp.method.McpMethod;
 import cn.hamm.airpower.api.config.ApiConfig;
+import cn.hamm.airpower.cookie.CookieHelper;
 import cn.hamm.airpower.core.AccessTokenUtil;
 import cn.hamm.airpower.core.DateTimeUtil;
 import cn.hamm.airpower.core.RandomUtil;
@@ -12,7 +13,6 @@ import cn.hamm.airpower.curd.config.AccessConfig;
 import cn.hamm.airpower.curd.model.query.Sort;
 import cn.hamm.airpower.curd.permission.PermissionUtil;
 import cn.hamm.airpower.email.helper.EmailHelper;
-import cn.hamm.airpower.http.cookie.CookieHelper;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConfig;

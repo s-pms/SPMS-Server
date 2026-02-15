@@ -1,8 +1,10 @@
 package cn.hamm.spms.module.open.oauth;
 
 import cn.hamm.airpower.api.ApiController;
+import cn.hamm.airpower.api.RequestUtil;
 import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.api.config.ApiConfig;
+import cn.hamm.airpower.cookie.CookieConfig;
 import cn.hamm.airpower.core.AccessTokenUtil;
 import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.Json;
@@ -11,8 +13,6 @@ import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.annotation.DesensitizeIgnore;
 import cn.hamm.airpower.curd.base.ICurdAction;
 import cn.hamm.airpower.curd.permission.Permission;
-import cn.hamm.airpower.http.cookie.CookieConfig;
-import cn.hamm.airpower.http.util.RequestUtil;
 import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.module.open.app.OpenAppEntity;
 import cn.hamm.spms.module.open.app.OpenAppService;
