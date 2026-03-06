@@ -68,9 +68,10 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
      */
     public final void resetKeyPair(@NotNull OpenAppEntity openApp) {
         try {
-            KeyPair keyPair = RsaUtil.generateKeyPair();
-            openApp.setPrivateKey(RsaUtil.convertPrivateKeyToPem(keyPair.getPrivate()));
-            openApp.setPublicKey(RsaUtil.convertPublicKeyToPem(keyPair.getPublic()));
+            RsaUtil rsaUtil = RsaUtil.create();
+            KeyPair keyPair = rsaUtil.generateKeyPair();
+            openApp.setPrivateKey(rsaUtil.getPemPrivateKey(keyPair));
+            openApp.setPublicKey(rsaUtil.getPemPublicKey(keyPair));
         } catch (NoSuchAlgorithmException e) {
             throw new ServiceException("重置密钥对失败，" + e.getMessage());
         }
