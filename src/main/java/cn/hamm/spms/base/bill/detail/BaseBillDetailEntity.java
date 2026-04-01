@@ -5,6 +5,7 @@ import cn.hamm.airpower.core.annotation.ReadOnly;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 /**
@@ -56,6 +57,7 @@ public abstract class BaseBillDetailEntity<
      *
      * @return 数量
      */
+    @NotNull(groups = {WhenAddFinish.class}, message = "数量不能为空")
     public abstract Double getQuantity();
 
     /**

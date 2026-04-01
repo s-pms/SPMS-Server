@@ -62,10 +62,10 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
     @Override
     protected void afterDetailFinishAdded(long detailId, @NotNull OutputDetailEntity outputDetail) {
         // 出库来源库存信息
-        InventoryEntity inventory = outputDetail.getInventory();
-        FORBIDDEN.whenNull(inventory, "请传入库存信息");
-
+        Long inventoryId = outputDetail.getInventory().getId();
         InventoryService inventoryService = Services.getInventoryService();
+        InventoryEntity inventory = inventoryService.get(inventoryId);
+
 
         OutputDetailEntity existDetail = detailService.get(outputDetail.getId());
         MaterialEntity material = existDetail.getMaterial();

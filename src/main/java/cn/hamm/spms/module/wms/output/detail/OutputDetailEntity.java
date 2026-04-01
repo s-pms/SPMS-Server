@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.wms.output.detail;
 
-import cn.hamm.airpower.core.annotation.Meta;
 import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Meta;
 import cn.hamm.airpower.core.annotation.ReadOnly;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
@@ -35,7 +35,7 @@ import static jakarta.persistence.FetchType.EAGER;
 public class OutputDetailEntity extends BaseBillDetailEntity<OutputDetailEntity> {
     @Description("库存信息")
     @ManyToOne(fetch = EAGER)
-    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "库存信息")
+    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "库存信息不能为空")
     private InventoryEntity inventory;
 
     @Description("物料信息")

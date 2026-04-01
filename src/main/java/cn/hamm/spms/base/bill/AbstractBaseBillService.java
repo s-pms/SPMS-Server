@@ -107,7 +107,7 @@ public abstract class AbstractBaseBillService<
      * @param sourceDetail 提交明细
      */
     public final void addDetailFinishQuantity(@NotNull D sourceDetail) {
-        log.info("添加明细完成数量 {}，单据ID:{}, 明细数量:{}, 完成数量:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), sourceDetail.getBillId(), sourceDetail.getId(), sourceDetail.getQuantity());
+        log.info("添加明细数量 {}，单据ID:{}, 明细数量:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), sourceDetail.getBillId(), sourceDetail.getQuantity());
         transactionHelper.run(() -> {
             // 查保存的明细
             D savedDetail = detailService.getForUpdate(sourceDetail.getId());
