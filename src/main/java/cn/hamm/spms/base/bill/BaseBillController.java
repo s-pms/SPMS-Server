@@ -63,10 +63,9 @@ public class BaseBillController<
         return Json.success("添加完成数量成功");
     }
 
-    @Contract("_ -> param1")
+    @Contract("_, _ -> param1")
     @Override
-    protected final @NotNull E beforeAppUpdate(@NotNull E bill) {
-        E exist = service.get(bill.getId());
+    protected final @NotNull E beforeAppUpdate(@NotNull E bill, @NotNull E exist) {
         FORBIDDEN.when(!service.canEdit(exist), "该单据状态下无法编辑");
         service.setAuditing(bill);
         beforeBillUpdate(bill);

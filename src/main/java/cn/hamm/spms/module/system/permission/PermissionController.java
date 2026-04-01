@@ -23,7 +23,7 @@ public class PermissionController extends BaseController<PermissionEntity, Permi
     }
 
     @Override
-    protected PermissionEntity beforeAppUpdate(@NotNull PermissionEntity permission) {
+    protected PermissionEntity beforeAppUpdate(@NotNull PermissionEntity permission, @NotNull PermissionEntity exist) {
         return permission.setIsSystem(null);
     }
 

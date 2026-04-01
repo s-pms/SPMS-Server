@@ -34,11 +34,11 @@ public class BaseController<
     protected final E beforeUpdate(@NotNull E entity) {
         E exist = service.get(entity.getId());
         FORBIDDEN_EDIT.when(exist.getIsPublished(), "无法修改已经发布的数据");
-        entity = beforeAppUpdate(entity);
+        entity = beforeAppUpdate(entity, exist);
         return entity;
     }
 
-    protected E beforeAppUpdate(@NotNull E entity) {
+    protected E beforeAppUpdate(@NotNull E entity, @NotNull E exist) {
         log.info("修改数据，ID:{}", entity.getId());
         return entity;
     }

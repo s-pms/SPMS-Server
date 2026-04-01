@@ -73,7 +73,7 @@ public class DeviceController extends BaseController<
     }
 
     @Override
-    protected DeviceEntity beforeAppUpdate(@NotNull DeviceEntity device) {
+    protected DeviceEntity beforeAppUpdate(@NotNull DeviceEntity device, @NotNull DeviceEntity exist) {
         redisHelper.delete(getDeviceReportCacheKey(device.getUuid()));
         return service.getDeviceParameters(device);
     }

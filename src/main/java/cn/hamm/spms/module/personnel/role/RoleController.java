@@ -37,13 +37,11 @@ public class RoleController extends BaseController<RoleEntity, RoleService, Role
 
     @Override
     protected RoleEntity afterGetDetail(@NotNull RoleEntity role) {
-//        role.getMenuList().size();
-//        role.getPermissionList().size();
         return role;
     }
 
     @Override
-    protected RoleEntity beforeAppUpdate(@NotNull RoleEntity role) {
+    protected RoleEntity beforeAppUpdate(@NotNull RoleEntity role, @NotNull RoleEntity exist) {
         return role.setMenuList(null).setPermissionList(null);
     }
 }
