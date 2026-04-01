@@ -1,10 +1,10 @@
 package cn.hamm.spms.module.wms.move;
 
-import cn.hamm.airpower.core.NumberUtil;
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
+import cn.hamm.spms.module.factory.storage.StorageEntity;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import cn.hamm.spms.module.wms.input.InputEntity;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 import static cn.hamm.spms.module.system.config.enums.ConfigFlag.MOVE_BILL_AUTO_AUDIT;
 
 /**
@@ -62,42 +61,42 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
     protected void afterDetailFinishAdded(long detailId, @NotNull MoveDetailEntity moveDetail) {
         moveDetail = detailService.get(detailId);
 
+        // 查询移库单
+        MoveEntity bill = get(moveDetail.getBillId());
+
+        // 目标存储文字
+        StorageEntity storage = bill.getStorage();
+
         // 本次移动数量
         Double moveDetailQuantity = moveDetail.getQuantity();
 
+        InventoryService inventoryService = Services.getInventoryService();
+
         // 来源库存信息
         InventoryEntity from = moveDetail.getInventory();
-        if (from.getQuantity() < moveDetailQuantity) {
-            // 判断来源库存
-            FORBIDDEN.show("库存信息不足" + moveDetailQuantity);
-        }
-
-        // 扣除来源库存
-        from.setQuantity(NumberUtil.subtract(from.getQuantity(), moveDetailQuantity));
-        InventoryService inventoryService = Services.getInventoryService();
-        inventoryService.updateToDatabase(from);
 
         // 物料信息
         MaterialEntity material = from.getMaterial();
 
-        // 查询移库单
-        MoveEntity bill = get(moveDetail.getBillId());
+        transactionHelper.run(() -> {
+            // 扣除来源库存
+            inventoryService.reduceInventoryQuantity(from.getId(), moveDetailQuantity);
 
-        // 查询目标库信息
-        InventoryEntity to = inventoryService.getByMaterialIdAndStorageId(material.getId(), bill.getStorage().getId());
-        if (Objects.nonNull(to)) {
-            // 更新目标库存
-            to.setQuantity(NumberUtil.add(to.getQuantity(), moveDetailQuantity));
-            inventoryService.updateToDatabase(to);
-            return;
-        }
-        // 创建目标库存
-        to = new InventoryEntity()
-                .setQuantity(moveDetailQuantity)
-                .setMaterial(material)
-                .setStorage(bill.getStorage())
-                .setType(InventoryType.STORAGE.getKey());
-        inventoryService.add(to);
+            // 查询目标库信息
+            InventoryEntity to = inventoryService.getByMaterialIdAndStorageId(material.getId(), storage.getId());
+            if (Objects.nonNull(to)) {
+                // 更新目标库存
+                inventoryService.addInventoryQuantity(to.getId(), moveDetailQuantity);
+                return;
+            }
+            // 创建目标库存
+            to = new InventoryEntity()
+                    .setQuantity(moveDetailQuantity)
+                    .setMaterial(material)
+                    .setStorage(storage)
+                    .setType(InventoryType.STORAGE.getKey());
+            inventoryService.add(to);
+        });
     }
 
     @Override

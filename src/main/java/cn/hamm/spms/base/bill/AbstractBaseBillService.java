@@ -1,6 +1,5 @@
 package cn.hamm.spms.base.bill;
 
-import cn.hamm.airpower.core.NumberUtil;
 import cn.hamm.airpower.core.ReflectUtil;
 import cn.hamm.airpower.core.TaskUtil;
 import cn.hamm.airpower.core.interfaces.IDictionary;
@@ -107,23 +106,18 @@ public abstract class AbstractBaseBillService<
      * @param sourceDetail 提交明细
      */
     public final void addDetailFinishQuantity(@NotNull D sourceDetail) {
-        log.info("添加明细数量 {}，单据ID:{}, 明细数量:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), sourceDetail.getBillId(), sourceDetail.getQuantity());
+        Long billId = sourceDetail.getBillId();
+        log.info("添加明细数量 {}，单据ID:{}, 明细数量:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId, sourceDetail.getQuantity());
+
+        Long detailId = sourceDetail.getId();
         transactionHelper.run(() -> {
-            // 查保存的明细
-            D savedDetail = detailService.getForUpdate(sourceDetail.getId());
-            FORBIDDEN.when(savedDetail.getIsFinished(), "该明细已标记完成，无法再添加明细完成数量");
-            // 更新保存明细完成数量 = 保存明细完成数量 + 提交完成数量
-            double finishQuantity = NumberUtil.add(savedDetail.getFinishQuantity(), sourceDetail.getQuantity());
-            // 如果完成数量 >= 数量 则标记明细完成
-            savedDetail.setFinishQuantity(finishQuantity).setIsFinished(finishQuantity >= savedDetail.getQuantity());
-            detailService.update(savedDetail);
-            log.info("修改明细完成 数量:{} 是否完成:{}", finishQuantity, savedDetail.getIsFinished());
+            detailService.addFinishQuantity(detailId, sourceDetail.getQuantity());
 
             // 明细添加成功后置方法
-            afterDetailFinishAdded(savedDetail.getId(), sourceDetail);
+            afterDetailFinishAdded(detailId, sourceDetail);
 
             // 开始判断是否整个单据数量已超标
-            List<D> details = detailService.getAllByBillId(savedDetail.getBillId());
+            List<D> details = detailService.getAllByBillId(billId);
             // 判断所有明细是否完成
             boolean isAllFinished = details.stream()
                     .allMatch(BaseBillDetailEntity::getIsFinished);
@@ -131,7 +125,7 @@ public abstract class AbstractBaseBillService<
             if (!isAllFinished) {
                 return;
             }
-            setBillDetailsAllFinished(savedDetail.getBillId());
+            setBillDetailsAllFinished(billId);
         });
     }
 

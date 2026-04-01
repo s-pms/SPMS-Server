@@ -1,9 +1,11 @@
 package cn.hamm.spms.module.wms.inventory;
 
 import cn.hamm.airpower.core.DictionaryUtil;
+import cn.hamm.airpower.core.NumberUtil;
 import cn.hamm.airpower.core.TreeUtil;
 import cn.hamm.airpower.curd.base.CurdEntity;
 import cn.hamm.airpower.curd.model.query.QueryPageRequest;
+import cn.hamm.airpower.exception.Errors;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
@@ -140,5 +142,29 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
         Predicate inPredicate = join.get(CurdEntity.STRING_ID).in(idList);
         predicateList.add(inPredicate);
         search.setStorage(null);
+    }
+
+    /**
+     * 添加库存数量
+     *
+     * @param inventoryId 库存ID
+     * @param quantity    数量
+     */
+    public void addInventoryQuantity(long inventoryId, double quantity) {
+        updateWithLock(inventoryId, exist -> exist.setQuantity(NumberUtil.add(exist.getQuantity(), quantity)));
+    }
+
+    /**
+     * 减少库存数量
+     *
+     * @param inventoryId 库存ID
+     * @param quantity    数量
+     */
+    public void reduceInventoryQuantity(long inventoryId, double quantity) {
+        updateWithLock(inventoryId, exist -> {
+            double subtract = NumberUtil.subtract(exist.getQuantity(), quantity);
+            Errors.FORBIDDEN_EDIT.when(subtract < 0, "库存数量不足");
+            exist.setQuantity(subtract);
+        });
     }
 }

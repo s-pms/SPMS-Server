@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.wms.input;
 
 import cn.hamm.airpower.core.DictionaryUtil;
-import cn.hamm.airpower.core.NumberUtil;
 import cn.hamm.airpower.core.ReflectUtil;
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
@@ -89,8 +88,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
         Double inputDetailQuantity = inputDetail.getQuantity();
 
         if (Objects.nonNull(inventory)) {
-            inventory.setQuantity(NumberUtil.add(inventory.getQuantity(), inputDetailQuantity));
-            inventoryService.updateToDatabase(inventory);
+            inventoryService.addInventoryQuantity(inventory.getId(), inputDetailQuantity);
             log.info("入库单明细更新库存完毕，单据ID: {}", inputDetail.getId());
             return;
         }

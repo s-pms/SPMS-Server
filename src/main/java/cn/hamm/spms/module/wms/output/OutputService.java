@@ -1,11 +1,9 @@
 package cn.hamm.spms.module.wms.output;
 
 import cn.hamm.airpower.core.DictionaryUtil;
-import cn.hamm.airpower.core.NumberUtil;
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
-import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryService;
@@ -61,32 +59,25 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
 
     @Override
     protected void afterDetailFinishAdded(long detailId, @NotNull OutputDetailEntity outputDetail) {
-        // 出库来源库存信息
-        Long inventoryId = outputDetail.getInventory().getId();
         InventoryService inventoryService = Services.getInventoryService();
-        InventoryEntity inventory = inventoryService.get(inventoryId);
 
-
+        // 出库明细
         OutputDetailEntity existDetail = detailService.get(outputDetail.getId());
-        MaterialEntity material = existDetail.getMaterial();
-        FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), material.getId(), "物料信息不匹配");
 
+        // 物料 ID
+        Long materialId = existDetail.getMaterial().getId();
+
+        // 出库单
         OutputEntity bill = get(existDetail.getBillId());
-        // 获取出库单类型
-        OutputType outputType = DictionaryUtil.getDictionary(OutputType.class, bill.getType());
 
-        inventoryService.updateWithLock(inventory.getId(), existInventory -> {
-            // 库存数量
-            Double inventoryQuantity = inventory.getQuantity();
-
-            // 出库数量
+        // 库存信息
+        InventoryEntity inventory = inventoryService.get(outputDetail.getInventory().getId());
+        FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), materialId, "物料信息不匹配");
+        transactionHelper.run(() -> {
             Double outputDetailQuantity = outputDetail.getQuantity();
-            FORBIDDEN.when(inventoryQuantity < outputDetailQuantity, "库存信息不足" + outputDetailQuantity);
-
-            // 更新库存
-            inventory.setQuantity(NumberUtil.subtract(inventoryQuantity, outputDetailQuantity));
-            inventoryService.updateToDatabase(inventory);
-
+            inventoryService.reduceInventoryQuantity(inventory.getId(), outputDetailQuantity);
+            // 获取出库单类型
+            OutputType outputType = DictionaryUtil.getDictionary(OutputType.class, bill.getType());
             switch (outputType) {
                 case SALE -> Services.getSaleDetailService().updateDetailQuantity(
                         bill.getSale().getId(),
@@ -94,14 +85,14 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
                         Services.getSaleService(),
                         detail -> FORBIDDEN.whenNotEquals(
                                 detail.getMaterial().getId(),
-                                material.getId(),
+                                materialId,
                                 "物料信息不匹配"));
                 case PICKING -> Services.getPickingDetailService().updateDetailQuantity(
                         bill.getPicking().getId(),
                         outputDetailQuantity,
                         Services.getPickingService(), detail -> FORBIDDEN.whenNotEquals(
                                 detail.getMaterial().getId(),
-                                material.getId(),
+                                materialId,
                                 "物料信息不匹配"));
                 default -> {
                 }

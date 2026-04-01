@@ -67,6 +67,9 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         ConfigService configService = Services.getConfigService();
         ConfigEntity config = configService.get(ConfigFlag.ORDER_ENABLE_SUBMIT_WORK);
         FORBIDDEN.when(!config.booleanConfig(), "未开启订单报工模式");
+
+        //todo 需要加锁更新
+        
         // 更新明细数量和状态
         orderDetail.setQuantity(orderDetail.getFinishQuantity()).setIsFinished(true);
         OrderDetailService orderDetailService = Services.getOrderDetailService();
