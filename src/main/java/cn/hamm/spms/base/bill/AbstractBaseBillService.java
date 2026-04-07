@@ -286,7 +286,7 @@ public abstract class AbstractBaseBillService<
         E bill = get(billId);
         FORBIDDEN.when(!canReject(bill), "该单据状态无法驳回");
         bill = getEntityInstance(billId);
-        setAudited(bill);
+        setReject(bill);
         bill.setRejectReason(bill.getRejectReason());
         updateToDatabase(getEntityInstance(billId));
     }
