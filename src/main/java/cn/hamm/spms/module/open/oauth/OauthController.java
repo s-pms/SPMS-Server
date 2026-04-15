@@ -307,7 +307,7 @@ public class OauthController extends ApiController implements IOauthAction {
         try {
             response.sendRedirect(url);
         } catch (IOException e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 

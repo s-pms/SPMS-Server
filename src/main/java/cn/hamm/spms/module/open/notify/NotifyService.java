@@ -77,8 +77,8 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
                     doRequest(notify, requestData);
                 });
             });
-        } catch (Exception exception) {
-            log.error(exception.getMessage(), exception);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
     }
 

@@ -97,9 +97,9 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
                     .setHashMd5(hashMd5)
                     .setUrl(relativeFilePath);
             return addAndGet(file);
-        } catch (Exception exception) {
-            log.error(exception.getMessage(), exception);
-            throw new ServiceException("上传文件失败，" + exception.getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ServiceException("上传文件失败，" + e.getMessage());
         }
     }
 }

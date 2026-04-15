@@ -112,7 +112,7 @@ public class ReportMqCallback implements MqttCallback {
             reportData.setPayloads(payloadList);
             redisHelper.set(getDeviceReportCacheKey(uuid), Json.toString(reportData));
         } catch (java.lang.Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
