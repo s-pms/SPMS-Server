@@ -79,7 +79,12 @@ public class BaseBillDetailService<
      * @param billService 单据 Service
      * @param detailCheck 明细检查函数
      */
-    public <B extends AbstractBaseBillEntity<B, ?>, BS extends AbstractBaseBillService<B, ?, ?, ?, ?>> void updateDetailQuantity(long billId, double quantity, @NotNull BS billService, Consumer<E> detailCheck) {
+    public <B extends AbstractBaseBillEntity<B, ?>, BS extends AbstractBaseBillService<B, ?, ?, ?, ?>> void updateDetailQuantity(
+            long billId,
+            double quantity,
+            @NotNull BS billService,
+            Consumer<E> detailCheck
+    ) {
         List<E> details = getAllByBillId(billId);
         for (E detail : details) {
             if (quantity <= 0) {
