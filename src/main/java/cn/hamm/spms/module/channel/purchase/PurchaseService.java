@@ -1,12 +1,9 @@
 package cn.hamm.spms.module.channel.purchase;
 
-import cn.hamm.airpower.ai.mcp.method.McpMethod;
 import cn.hamm.airpower.core.NumberUtil;
-import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.common.Services;
-import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailEntity;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailRepository;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailService;
@@ -21,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static cn.hamm.spms.module.system.config.enums.ConfigFlag.PURCHASE_BILL_AUTO_AUDIT;
 
@@ -100,37 +96,5 @@ public class PurchaseService extends AbstractBaseBillService<
     @Override
     protected ConfigFlag getAutoAuditConfigFlag() {
         return PURCHASE_BILL_AUTO_AUDIT;
-    }
-
-    @McpMethod
-    @Description("create purchase bill, includes reason/name/count")
-    public String createPurchaseBill(
-            @Description("purchase reason, required.")
-            String reason,
-            @Description("purchase name, required.")
-            String name,
-            @Description("purchase count, required.")
-            Integer count) {
-        List<MaterialEntity> materials = Services.getMaterialService().filter(new MaterialEntity().setName(name));
-        if (materials.isEmpty()) {
-            return "未找到该物料";
-        } else if (materials.size() > 1) {
-            return "找到多个该物料，" + materials.stream()
-                    .map(MaterialEntity::getName)
-                    .collect(Collectors.joining("/")) + "选哪一个采购？";
-        }
-        MaterialEntity material = materials.get(0);
-        List<PurchaseDetailEntity> details = new ArrayList<>();
-        details.add(new PurchaseDetailEntity()
-                .setMaterial(material)
-                .setQuantity(Double.valueOf(count))
-                .setPrice(material.getPurchasePrice())
-        );
-        PurchaseEntity purchaseBill = new PurchaseEntity()
-                .setReason(reason)
-                .setDetails(details)
-                .setStatus(PurchaseStatus.AUDITING.getKey());
-        PurchaseEntity purchase = addAndGet(purchaseBill);
-        return "采购单已经创建成功，单号为 " + purchase.getBillCode();
     }
 }
