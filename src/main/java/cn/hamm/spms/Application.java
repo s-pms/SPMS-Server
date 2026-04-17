@@ -40,7 +40,11 @@ public class Application {
     }
 
     @Autowired(required = false)
-    public void autorun(ServletWebServerApplicationContext serverApplicationContext, AppConfig appConfig, ReportEventListener reportEventListener) {
+    public void autorun(
+            ServletWebServerApplicationContext serverApplicationContext,
+            AppConfig appConfig,
+            ReportEventListener reportEventListener
+    ) {
         Application.serverApplicationContext = serverApplicationContext;
         Application.appConfig = appConfig;
         Application.reportEventListener = reportEventListener;

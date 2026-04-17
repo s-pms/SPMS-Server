@@ -43,7 +43,11 @@ public class RequestInterceptor extends CurdRequestInterceptor {
      * @apiNote 抛出异常则为拦截
      */
     @Override
-    public void checkUserPermission(AccessTokenUtil.@NotNull VerifiedToken verifiedToken, String permissionIdentity, HttpServletRequest request) {
+    public void checkUserPermission(
+            AccessTokenUtil.@NotNull VerifiedToken verifiedToken,
+            String permissionIdentity,
+            HttpServletRequest request
+    ) {
         long userId = verifiedToken.getPayloadId();
         UserEntity existUser = userService.getWithEnable(userId);
         if (existUser.isRootUser()) {
