@@ -1,17 +1,10 @@
 package cn.hamm.spms.base;
 
-import cn.hamm.airpower.core.ReflectUtil;
 import cn.hamm.airpower.curd.base.CurdService;
 import cn.hamm.spms.common.Services;
-import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.util.StringUtils;
-
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * <h1>基础服务类</h1>
@@ -25,6 +18,7 @@ public class BaseService<
         E extends BaseEntity<E>,
         R extends BaseRepository<E>
         > extends CurdService<E, R> {
+
     /**
      * 当前服务的数据库最后一次确认
      *
@@ -37,21 +31,8 @@ public class BaseService<
 
     @Override
     protected final @NotNull E beforeSaveToDatabase(@NotNull E entity) {
-        List<Field> fields = ReflectUtil.getFieldList(entity.getClass());
         CodeRuleService codeRuleService = Services.getCodeRuleService();
-        for (Field field : fields) {
-            AutoGenerateCode autoGenerateCode = ReflectUtil.getAnnotation(AutoGenerateCode.class, field);
-            if (Objects.isNull(autoGenerateCode)) {
-                continue;
-            }
-            Object value = ReflectUtil.getFieldValue(entity, field);
-            if (!Objects.isNull(value) && StringUtils.hasText(value.toString())) {
-                continue;
-            }
-            String code = codeRuleService.createCode(autoGenerateCode.value());
-            ReflectUtil.setFieldValue(entity, field, code);
-            break;
-        }
+        codeRuleService.fillFieldAutoCode(entity);
         return beforeAppSaveToDatabase(entity);
     }
 
