@@ -1,6 +1,9 @@
 #file: noinspection SpellCheckingInspection
 logging:
-  config: classpath:logback-spring.xml
+  config: "classpath:logback-spring.xml"
+  level:
+    org.springframework.beans: debug
+    org.springframework.context: debug
 server:
   port: 8080
 spring:
@@ -12,12 +15,12 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database-platform: "org.hibernate.dialect.MySQL8Dialect"
     hibernate:
       ddl-auto: validate
     properties:
       hibernate:
-        column_ordering_strategy: legacy
+        column_ordering_strategy: "legacy"
   mail:
     properties:
       mail:
@@ -28,7 +31,7 @@ spring:
             # 启用SSL加密传输
             enable: true
           # 使用SSL Socket Factory
-          socketFactory-class: javax.net.ssl.SSLSocketFactory
+          socketFactory-class: "javax.net.ssl.SSLSocketFactory"
           socketFactory-fallback: false
           starttls:
             # 不需要StartTLS
@@ -38,7 +41,7 @@ spring:
       add-mappings: false
   mvc:
     view:
-      suffix: .html
+      suffix: ".html"
       prefix: /
 airpower:
   websocket:

@@ -1,9 +1,9 @@
 package cn.hamm.spms.common;
 
 import cn.hamm.airpower.curd.config.CurdConfig;
+import cn.hamm.airpower.websocket.WebSocketConfig;
 import cn.hamm.spms.common.config.AppConfig;
 import cn.hamm.spms.common.config.InfluxConfig;
-import cn.hamm.spms.common.config.WebSocketConfig;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
