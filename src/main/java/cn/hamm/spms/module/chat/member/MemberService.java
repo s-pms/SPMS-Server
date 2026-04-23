@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.chat.member;
 
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.common.Services;
+import cn.hamm.spms.module.chat.ChatServices;
 import cn.hamm.spms.module.chat.member.enums.MemberRole;
 import cn.hamm.spms.module.chat.room.RoomEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
@@ -40,7 +40,7 @@ public class MemberService extends BaseService<MemberEntity, MemberRepository> {
         MemberEntity member = getMember(userId, roomId);
         FORBIDDEN_EXIST.whenNotNull(member);
         // 没有查到成员信息
-        RoomEntity room = Services.getRoomService().get(roomId);
+        RoomEntity room = ChatServices.getRoomService().get(roomId);
         member = new MemberEntity()
                 .setUser(new UserEntity().setId(userId))
                 .setRoom(new RoomEntity().setId(roomId));

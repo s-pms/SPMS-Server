@@ -3,11 +3,14 @@ package cn.hamm.spms.module.personnel.department;
 import cn.hamm.airpower.core.TreeUtil;
 import cn.hamm.spms.base.BaseService;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN_EXIST;
 
@@ -46,5 +49,31 @@ public class DepartmentService extends BaseService<DepartmentEntity, DepartmentR
             FORBIDDEN_EXIST.when(!exists.isEmpty(), "同级别下部门已有同名部门");
         }
         return department;
+    }
+
+    /**
+     * 递归获取子部门
+     *
+     * @param parentId      父级ID
+     * @param departmentIds 子部门列表
+     * @return 子部门列表
+     */
+    @Contract("_, _ -> param2")
+    private Set<Long> getListByParentId(long parentId, @NotNull Set<Long> departmentIds) {
+        DepartmentEntity parent = get(parentId);
+        List<DepartmentEntity> children = filter(new DepartmentEntity().setParentId(parent.getId()));
+        children.forEach(child -> getListByParentId(child.getId(), departmentIds));
+        return departmentIds;
+    }
+
+    /**
+     * 递归获取子部门
+     *
+     * @param parentId 父级ID
+     * @return 子部门列表
+     */
+    @Contract("_ -> new")
+    public @NotNull Set<Long> getListByParentId(long parentId) {
+        return getListByParentId(parentId, new HashSet<>());
     }
 }

@@ -4,9 +4,11 @@ import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.ReflectUtil;
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
-import cn.hamm.spms.common.Services;
+import cn.hamm.spms.module.channel.ChannelServices;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
+import cn.hamm.spms.module.mes.MesServices;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
+import cn.hamm.spms.module.wms.WmsServices;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.input.detail.InputDetailRepository;
 import cn.hamm.spms.module.wms.input.detail.InputDetailService;
@@ -63,8 +65,8 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
                 inputType.getLabel()
         );
         switch (inputType) {
-            case PURCHASE -> Services.getPurchaseService().setBillFinished(inputBill.getPurchase().getId());
-            case PRODUCTION -> Services.getOrderService().setBillFinished(inputBill.getOrder().getId());
+            case PURCHASE -> ChannelServices.getPurchaseService().setBillFinished(inputBill.getPurchase().getId());
+            case PRODUCTION -> MesServices.getOrderService().setBillFinished(inputBill.getOrder().getId());
             default -> {
             }
         }
@@ -79,7 +81,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
             return;
         }
         InputDetailEntity existDetail = detailService.get(inputDetail.getId());
-        InventoryService inventoryService = Services.getInventoryService();
+        InventoryService inventoryService = WmsServices.getInventoryService();
 
         // 查询库存信息
         InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(existDetail.getMaterial().getId(), storage.getId());

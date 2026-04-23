@@ -1,5 +1,6 @@
 package cn.hamm.spms.common.helper;
 
+import cn.hamm.spms.common.Configs;
 import cn.hamm.spms.common.config.InfluxConfig;
 import cn.hamm.spms.module.iot.report.ReportConstant;
 import cn.hamm.spms.module.iot.report.ReportInfluxPayload;
@@ -16,7 +17,6 @@ import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
@@ -37,9 +37,6 @@ public class InfluxHelper {
     private static final String INFLUX_TAG_UUID = "uuid";
     private static final String INFLUX_SQL_SPLIT = " |> ";
     private static final String INFLUX_RECORD_VALUE_KEY = "_value";
-
-    @Autowired
-    private InfluxConfig influxConfig;
 
     private InfluxDBClient influxDbClient;
 
@@ -64,6 +61,7 @@ public class InfluxHelper {
             } else {
                 throw new RuntimeException("不支持的数据类型");
             }
+            InfluxConfig influxConfig = Configs.getInfluxConfig();
             writeApi.writePoint(influxConfig.getBucket(), influxConfig.getOrg(), point);
         }
     }
@@ -177,6 +175,7 @@ public class InfluxHelper {
      */
     private void initInfluxDbClient() {
         if (Objects.isNull(influxDbClient)) {
+            InfluxConfig influxConfig = Configs.getInfluxConfig();
             influxDbClient = InfluxDBClientFactory.create(
                     influxConfig.getUrl(),
                     influxConfig.getToken().toCharArray(),
@@ -196,6 +195,7 @@ public class InfluxHelper {
      */
     private @NotNull List<String> getFluxQuery(@NotNull ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
         List<String> queryParams = new ArrayList<>();
+        InfluxConfig influxConfig = Configs.getInfluxConfig();
         queryParams.add(String.format("from(bucket:\"%s\")", influxConfig.getBucket()));
         queryParams.add(String.format("range(start: %s, stop: %s)", Integer.parseInt(String.valueOf(reportPayload.getStartTime() / 1000)), Integer.parseInt(String.valueOf(reportPayload.getEndTime() / 1000))));
         queryParams.add(String.format("filter(fn: (r) => r._measurement == \"%s\" and r.uuid == \"%s\")", ReportConstant.CACHE_PREFIX + reportPayload.getCode(), reportPayload.getUuid()));

@@ -2,7 +2,7 @@ package cn.hamm.spms.module.mes.routing;
 
 import cn.hamm.airpower.curd.model.query.Sort;
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.common.Services;
+import cn.hamm.spms.module.mes.MesServices;
 import cn.hamm.spms.module.mes.routing.operation.RoutingOperationEntity;
 import cn.hamm.spms.module.mes.routing.operation.RoutingOperationService;
 import org.jetbrains.annotations.NotNull;
@@ -29,14 +29,14 @@ public class RoutingService extends BaseService<RoutingEntity, RoutingRepository
 
     @Override
     protected void afterAppUpdate(long id, @NotNull RoutingEntity source) {
-        Services.getRoutingOperationService().deleteByRoutingId(id);
+        MesServices.getRoutingOperationService().deleteByRoutingId(id);
         afterAdd(id, source);
     }
 
     @Override
     protected void afterAppAdd(long id, @NotNull RoutingEntity source) {
         List<RoutingOperationEntity> routingOperationList = source.getDetails();
-        RoutingOperationService routingOperationService = Services.getRoutingOperationService();
+        RoutingOperationService routingOperationService = MesServices.getRoutingOperationService();
         for (RoutingOperationEntity routingOperation : routingOperationList) {
             routingOperation.setRoutingId(id);
             routingOperationService.add(routingOperation);
@@ -46,7 +46,7 @@ public class RoutingService extends BaseService<RoutingEntity, RoutingRepository
     @Override
     protected RoutingEntity afterAppGet(@NotNull RoutingEntity routing) {
         RoutingOperationEntity filter = new RoutingOperationEntity().setRoutingId(routing.getId());
-        List<RoutingOperationEntity> details = Services.getRoutingOperationService().filter(filter, new Sort()
+        List<RoutingOperationEntity> details = MesServices.getRoutingOperationService().filter(filter, new Sort()
                 .setField(ORDER_FIELD_NAME)
                 .setDirection(Sort.ASC)
         );

@@ -5,7 +5,6 @@ import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.ReflectUtil;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
 import cn.hamm.spms.module.system.coderule.enums.CodeRuleParam;
@@ -145,7 +144,6 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
      * @param entity 实体
      */
     public <E extends BaseEntity<E>> void fillFieldAutoCode(@NotNull E entity) {
-        CodeRuleService codeRuleService = Services.getCodeRuleService();
         List<Field> fields = ReflectUtil.getFieldList(entity.getClass());
         for (Field field : fields) {
             AutoGenerateCode autoGenerateCode = ReflectUtil.getAnnotation(AutoGenerateCode.class, field);
@@ -156,7 +154,7 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
             if (!Objects.isNull(value) && StringUtils.hasText(value.toString())) {
                 continue;
             }
-            String code = codeRuleService.createCode(autoGenerateCode.value());
+            String code = createCode(autoGenerateCode.value());
             ReflectUtil.setFieldValue(entity, field, code);
             break;
         }

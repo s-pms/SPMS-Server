@@ -3,9 +3,9 @@ package cn.hamm.spms.module.chat.room;
 import cn.hamm.airpower.core.RandomUtil;
 import cn.hamm.airpower.curd.model.query.Sort;
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.chat.member.MemberEntity;
 import cn.hamm.spms.module.chat.member.enums.MemberRole;
+import cn.hamm.spms.module.personnel.PersonnelServices;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import io.micrometer.common.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -59,7 +59,7 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
         }
         // code 没有被使用
         room.setCode(code);
-        UserEntity me = Services.getUserService().get(userId);
+        UserEntity me = PersonnelServices.getUserService().get(userId);
         room.setOwner(me);
         room.setIsHot(false).setOrderNumber(0).setIsOfficial(false);
         return add(room);

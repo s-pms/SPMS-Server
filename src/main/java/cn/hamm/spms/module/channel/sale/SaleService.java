@@ -3,12 +3,12 @@ package cn.hamm.spms.module.channel.sale;
 import cn.hamm.airpower.core.NumberUtil;
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
-import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailEntity;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailRepository;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailService;
 import cn.hamm.spms.module.channel.sale.enums.SaleStatus;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
+import cn.hamm.spms.module.wms.WmsServices;
 import cn.hamm.spms.module.wms.output.OutputEntity;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
 import cn.hamm.spms.module.wms.output.enums.OutputStatus;
@@ -80,6 +80,6 @@ public class SaleService extends AbstractBaseBillService<SaleEntity, SaleReposit
                         .setQuantity(detail.getQuantity()))
                 .collect(Collectors.toList());
         outputBill.setDetails(outputDetails);
-        Services.getOutputService().add(outputBill);
+        WmsServices.getOutputService().add(outputBill);
     }
 }

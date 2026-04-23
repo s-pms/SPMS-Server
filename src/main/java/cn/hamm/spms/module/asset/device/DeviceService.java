@@ -4,8 +4,8 @@ import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.redis.RedisHelper;
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.helper.InfluxHelper;
+import cn.hamm.spms.module.iot.IotServices;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
 import cn.hamm.spms.module.iot.report.ReportConstant;
@@ -71,7 +71,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
      * @return 查询历史
      */
     public List<ReportInfluxPayload> getDevicePayloadHistory(@NotNull ReportPayload reportPayload) {
-        ParameterEntity parameter = Services.getParameterService().getByCode(reportPayload.getCode());
+        ParameterEntity parameter = IotServices.getParameterService().getByCode(reportPayload.getCode());
         PARAM_INVALID.whenNull(parameter, "不支持的参数");
         ReportGranularity reportGranularity = DictionaryUtil.getDictionary(ReportGranularity.class, reportPayload.getReportGranularity());
         ReportDataType reportDataType = DictionaryUtil.getDictionary(ReportDataType.class, parameter.getDataType());
@@ -91,7 +91,7 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
      */
     public DeviceEntity getDeviceParameters(@NotNull DeviceEntity device) {
         Set<ParameterEntity> parameters = new HashSet<>();
-        ParameterService parameterService = Services.getParameterService();
+        ParameterService parameterService = IotServices.getParameterService();
         if (Objects.nonNull(device.getParameters())) {
             parameters = device.getParameters().stream()
                     .map(parameter -> parameterService.get(parameter.getId()))

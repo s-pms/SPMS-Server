@@ -2,10 +2,10 @@ package cn.hamm.spms.module.wms.move;
 
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
-import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
+import cn.hamm.spms.module.wms.WmsServices;
 import cn.hamm.spms.module.wms.input.InputEntity;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.input.enums.InputStatus;
@@ -70,7 +70,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
         // 本次移动数量
         Double moveDetailQuantity = moveDetail.getQuantity();
 
-        InventoryService inventoryService = Services.getInventoryService();
+        InventoryService inventoryService = WmsServices.getInventoryService();
 
         // 来源库存信息
         InventoryEntity from = moveDetail.getInventory();
@@ -127,7 +127,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
                 .setMove(moveBill)
                 .setStatus(InputStatus.DONE.getKey());
         inputBill.setDetails(inputDetails);
-        Services.getInputService().add(inputBill);
+        WmsServices.getInputService().add(inputBill);
 
         // 添加出库单
         OutputEntity outputBill = new OutputEntity()
@@ -135,7 +135,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
                 .setMove(moveBill)
                 .setStatus(OutputStatus.DONE.getKey());
         outputBill.setDetails(outputDetails);
-        Services.getOutputService().add(outputBill);
+        WmsServices.getOutputService().add(outputBill);
     }
 
     @Override

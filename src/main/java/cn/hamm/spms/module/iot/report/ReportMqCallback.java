@@ -2,10 +2,11 @@ package cn.hamm.spms.module.iot.report;
 
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.redis.RedisHelper;
-import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.helper.InfluxHelper;
+import cn.hamm.spms.module.asset.AssetServices;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.asset.device.DeviceService;
+import cn.hamm.spms.module.iot.IotServices;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
 import jakarta.annotation.Resource;
@@ -53,9 +54,9 @@ public class ReportMqCallback implements MqttCallback {
             if (Objects.isNull(reportData.getPayloads())) {
                 return;
             }
-            ParameterService parameterService = Services.getParameterService();
+            ParameterService parameterService = IotServices.getParameterService();
             String uuid = reportData.getDeviceId();
-            DeviceService deviceService = Services.getDeviceService();
+            DeviceService deviceService = AssetServices.getDeviceService();
             DeviceEntity device = deviceService.getByUuid(uuid);
             if (Objects.isNull(device)) {
                 log.info("设备不存在: {}", uuid);

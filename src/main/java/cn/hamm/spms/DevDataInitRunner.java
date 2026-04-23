@@ -204,7 +204,7 @@ public class DevDataInitRunner implements CommandLineRunner {
         DepartmentEntity department = departmentService.addAndGet(new DepartmentEntity().setCode("a1").setName("生产部"));
         departmentService.addAndGet(new DepartmentEntity().setName("材料部").setCode("aaa1").setParentId(department.getId()));
         String salt = RandomUtil.randomString(UserService.PASSWORD_SALT_LENGTH);
-        userService.addAndGet(new UserEntity()
+        userService.add(new UserEntity()
                 .setNickname("凌小云")
                 .setPhone("17666666666")
                 .setEmail("admin@hamm.cn")
@@ -222,7 +222,7 @@ public class DevDataInitRunner implements CommandLineRunner {
         ;
         user = userService.getMaybeNull(1L);
 
-        roomService.addAndGet(new RoomEntity()
+        roomService.add(new RoomEntity()
                 .setName("广场")
                 .setCode(666)
                 .setIsOfficial(true)

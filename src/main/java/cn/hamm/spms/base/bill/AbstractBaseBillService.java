@@ -10,7 +10,7 @@ import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailService;
-import cn.hamm.spms.common.Services;
+import cn.hamm.spms.module.system.SystemServices;
 import cn.hamm.spms.module.system.config.ConfigEntity;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import lombok.extern.slf4j.Slf4j;
@@ -207,7 +207,7 @@ public abstract class AbstractBaseBillService<
         saveDetails(billId, source.getDetails());
         ConfigFlag configFlag = getAutoAuditConfigFlag();
         if (Objects.nonNull(configFlag)) {
-            ConfigEntity config = Services.getConfigService().get(configFlag);
+            ConfigEntity config = SystemServices.getConfigService().get(configFlag);
             if (config.booleanConfig()) {
                 audit(bill.getId());
             }

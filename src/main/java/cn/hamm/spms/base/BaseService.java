@@ -1,7 +1,7 @@
 package cn.hamm.spms.base;
 
 import cn.hamm.airpower.curd.base.CurdService;
-import cn.hamm.spms.common.Services;
+import cn.hamm.spms.module.system.SystemServices;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +31,7 @@ public class BaseService<
 
     @Override
     protected final @NotNull E beforeSaveToDatabase(@NotNull E entity) {
-        CodeRuleService codeRuleService = Services.getCodeRuleService();
+        CodeRuleService codeRuleService = SystemServices.getCodeRuleService();
         codeRuleService.fillFieldAutoCode(entity);
         return beforeAppSaveToDatabase(entity);
     }

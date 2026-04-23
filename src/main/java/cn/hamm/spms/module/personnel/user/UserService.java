@@ -12,18 +12,15 @@ import cn.hamm.airpower.curd.model.query.Sort;
 import cn.hamm.airpower.curd.permission.PermissionUtil;
 import cn.hamm.airpower.email.helper.EmailHelper;
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.common.Services;
 import cn.hamm.spms.common.config.AppConfig;
+import cn.hamm.spms.module.personnel.PersonnelServices;
 import cn.hamm.spms.module.personnel.department.DepartmentEntity;
-import cn.hamm.spms.module.personnel.department.DepartmentService;
 import cn.hamm.spms.module.personnel.user.enums.UserTokenType;
+import cn.hamm.spms.module.system.SystemServices;
 import cn.hamm.spms.module.system.config.ConfigEntity;
-import cn.hamm.spms.module.system.config.ConfigService;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import cn.hamm.spms.module.system.menu.MenuEntity;
-import cn.hamm.spms.module.system.menu.MenuService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
-import cn.hamm.spms.module.system.permission.PermissionService;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Join;
@@ -38,7 +35,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import static cn.hamm.airpower.exception.Errors.*;
 import static cn.hamm.spms.common.exception.CustomError.*;
@@ -73,9 +73,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     private ApiConfig apiConfig;
 
     @Autowired
-    private ConfigService configService;
-
-    @Autowired
     private EmailHelper emailHelper;
 
     @Autowired
@@ -84,18 +81,12 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     @Autowired
     private AccessConfig accessConfig;
 
-    @Autowired
-    private MenuService menuService;
-
-    @Autowired
-    private PermissionService permissionService;
-
     /**
      * 获取新的密码盐
      *
      * @return 密码盐
      */
-    private static @NotNull String getNewSalt() {
+    private static @NotNull String getRandomValidateCode() {
         return RandomUtil.randomNumbers(6);
     }
 
@@ -133,6 +124,19 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
+     * 重置密码
+     *
+     * @param user        待修改密码的用户
+     * @param newPassword 新密码
+     */
+    private void resetPassword(@NotNull UserEntity user, String newPassword) {
+        String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
+        user.setSalt(salt);
+        user.setPassword(PermissionUtil.encodePassword(newPassword, salt));
+        updateToDatabase(user);
+    }
+
+    /**
      * 获取登录用户的菜单列表
      *
      * @param userId 用户 ID
@@ -142,7 +146,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         UserEntity user = get(userId);
         if (user.isRootUser()) {
             return TreeUtil.buildTreeList(
-                    menuService.filter(new MenuEntity(), new Sort().setField("orderNo"))
+                    SystemServices.getMenuService().filter(new MenuEntity(), new Sort().setField("orderNo"))
             );
         }
         List<MenuEntity> menuList = new ArrayList<>();
@@ -170,7 +174,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     public List<PermissionEntity> getPermissionListByUserId(long userId) {
         UserEntity user = get(userId);
         if (user.isRootUser()) {
-            return permissionService.getList(null);
+            return SystemServices.getPermissionService().getList(null);
         }
         List<PermissionEntity> permissionList = new ArrayList<>();
         user.getRoleList().forEach(roleEntity -> roleEntity.getPermissionList()
@@ -188,13 +192,14 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * 修改密码
      *
-     * @param user 用户信息
+     * @param userId      用户ID
+     * @param oldPassword 原密码
+     * @param newPassword 新密码
      */
-    public void modifyMyPassword(@NotNull UserEntity user) {
-        UserEntity existUser = get(user.getId());
+    public void modifyPassword(long userId, String oldPassword, String newPassword) {
+        UserEntity existUser = get(userId);
 
         // 判断原始密码
-        String oldPassword = user.getOldPassword();
         PARAM_INVALID.whenNotEqualsIgnoreCase(
                 PermissionUtil.encodePassword(oldPassword, existUser.getSalt()),
                 existUser.getPassword(),
@@ -202,41 +207,42 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         );
         String salt = RandomUtil.randomString();
         existUser.setSalt(salt);
-        existUser.setPassword(PermissionUtil.encodePassword(user.getPassword(), salt));
+        existUser.setPassword(PermissionUtil.encodePassword(newPassword, salt));
         updateToDatabase(existUser);
     }
 
     /**
-     * 重置密码
+     * 通过手机重置密码
      *
-     * @param user 用户实体
+     * @param phone       手机号
+     * @param code        验证码
+     * @param newPassword 新密码
      */
-    public void resetMyPassword(@NotNull UserEntity user) {
-        String code = null;
-        UserEntity existUser = null;
-        if (StringUtils.hasText(user.getPhone())) {
-            existUser = repository.getByPhone(user.getPhone());
-            code = getSmsCode(user.getPhone());
-        } else if (StringUtils.hasText(user.getEmail())) {
-            existUser = repository.getByEmail(user.getEmail());
-            code = getEmailCode(user.getEmail());
-        } else {
-            PARAM_MISSING.show("请传入邮箱或手机号");
-        }
-        PARAM_INVALID.whenNotEqualsIgnoreCase(code, user.getCode(), "验证码不正确，请重新获取");
-        PARAM_INVALID.whenNull(existUser, "重置密码失败，用户信息异常");
+    public void resetPasswordViaPhone(String phone, String code, String newPassword) {
+        PARAM_INVALID.whenNull(phone, "手机号不能为空");
+        String cacheCode = getSmsCacheCode(phone);
+        UserEntity user = repository.getByPhone(phone);
+        PARAM_INVALID.whenNull(user, "重置密码失败，用户信息异常");
+        PARAM_INVALID.whenNotEqualsIgnoreCase(cacheCode, code, "验证码不正确，请重新获取");
+        resetPassword(user, newPassword);
+        redisHelper.delete(getPhoneCodeCacheKey(phone));
+    }
 
-        // 验证通过 开始重置密码和盐
-        String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
-        existUser.setSalt(salt);
-        existUser.setPassword(PermissionUtil.encodePassword(user.getPassword(), salt));
-        if (StringUtils.hasText(user.getEmail())) {
-            redisHelper.delete(getEmailCacheKey(user.getEmail()));
-        }
-        if (StringUtils.hasText(user.getPhone())) {
-            redisHelper.delete(getPhoneCodeCacheKey(user.getPhone()));
-        }
-        updateToDatabase(existUser);
+    /**
+     * 通过手机重置密码
+     *
+     * @param email       邮箱
+     * @param code        验证码
+     * @param newPassword 新密码
+     */
+    public void resetPasswordViaEmail(String email, String code, String newPassword) {
+        PARAM_INVALID.whenNull(email, "邮箱不能为空");
+        String cacheCode = getEmailCacheCode(email);
+        UserEntity user = repository.getByEmail(email);
+        PARAM_INVALID.whenNull(user, "重置密码失败，用户信息异常");
+        PARAM_INVALID.whenNotEqualsIgnoreCase(cacheCode, code, "验证码不正确，请重新获取");
+        resetPassword(user, newPassword);
+        redisHelper.delete(getEmailCacheKey(email));
     }
 
     /**
@@ -244,9 +250,9 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      *
      * @param email 邮箱
      */
-    public void sendMail(String email) throws MessagingException {
+    public void sendEmailCode(String email) throws MessagingException {
         EMAIL_SEND_BUSY.when(redisHelper.hasKey(getEmailCacheKey(email)));
-        String code = getNewSalt();
+        String code = getRandomValidateCode();
         redisHelper.set(getEmailCacheKey(email), code, CACHE_CODE_EXPIRE_SECOND);
         emailHelper.sendCode(email, "你收到一个邮箱验证码", code, appConfig.getProjectName());
     }
@@ -254,9 +260,9 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * 发送短信验证码
      */
-    public void sendSms(String phone) {
+    public void sendSmsCode(String phone) {
         SMS_SEND_BUSY.when(redisHelper.hasKey(getPhoneCodeCacheKey(phone)));
-        String code = getNewSalt();
+        String code = getRandomValidateCode();
         redisHelper.set(getPhoneCodeCacheKey(phone), code, CACHE_CODE_EXPIRE_SECOND);
         log.info("短信验证码：{}", code);
         //todo 发送验证码
@@ -308,25 +314,19 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * ID+密码 账号+密码
+     * 账号密码登录
      *
-     * @param user 用户实体
+     * @param email    邮箱
+     * @param password 密码
      * @return 登录成功的用户
      */
-    public UserEntity login(@NotNull UserEntity user) {
-        UserEntity existUser = null;
-        if (Objects.nonNull(user.getId())) {
-            // ID 登录
-            existUser = getMaybeNull(user.getId());
-        } else if (Objects.nonNull(user.getEmail())) {
-            // 邮箱登录
-            existUser = repository.getByEmail(user.getEmail());
-        } else {
-            PARAM_INVALID.show("ID或邮箱不能为空，请确认是否传入");
-        }
+    public UserEntity loginViaEmailAndPassword(String email, String password) {
+        PARAM_INVALID.whenEmpty(email, "请确认传入有效的邮箱");
+        PARAM_INVALID.whenEmpty(password, "请确认传入有效的密码");
+        UserEntity existUser = repository.getByEmail(email);
         USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNull(existUser);
         // 将用户传入的密码加密与数据库存储匹配
-        String encodePassword = PermissionUtil.encodePassword(user.getPassword(), existUser.getSalt());
+        String encodePassword = PermissionUtil.encodePassword(password, existUser.getSalt());
         USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNotEqualsIgnoreCase(encodePassword, existUser.getPassword());
         return existUser;
     }
@@ -334,24 +334,27 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * 邮箱验证码登录
      *
-     * @param user 用户实体
+     * @param email 邮箱
+     * @param code  验证码
      * @return 登录成功的用户
      */
-    public UserEntity loginViaEmail(@NotNull UserEntity user) {
-        String code = getEmailCode(user.getEmail());
-        PARAM_INVALID.whenNotEquals(code, user.getCode(), "邮箱验证码不正确");
-        UserEntity existUser = repository.getByEmail(user.getEmail());
-        ConfigEntity configuration = configService.get(ConfigFlag.AUTO_REGISTER_EMAIL_LOGIN);
+    public UserEntity loginViaEmailAndCode(String email, String code) {
+        PARAM_INVALID.whenEmpty(email, "请确认传入有效的邮箱");
+        PARAM_INVALID.whenEmpty(code, "请确认传入有效的验证码");
+        String cacheCode = getEmailCacheCode(email);
+        PARAM_INVALID.whenNotEquals(cacheCode, code, "邮箱验证码不正确");
+        UserEntity existUser = repository.getByEmail(email);
+        ConfigEntity configuration = SystemServices.getConfigService().get(ConfigFlag.AUTO_REGISTER_EMAIL_LOGIN);
         if (configuration.booleanConfig()) {
             // 注册一个用户
-            existUser = registerUserViaEmail(user.getEmail());
+            existUser = registerUserViaEmail(email);
         }
         PARAM_INVALID.whenNull(existUser, "登录的邮箱账户不存在");
         return existUser;
     }
 
     /**
-     * 邮箱注册
+     * 邮箱和随机密码注册
      *
      * @param email 邮箱
      * @return 注册的用户
@@ -361,7 +364,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 邮箱注册
+     * 邮箱和指定密码注册
      *
      * @param email    邮箱
      * @param password 密码
@@ -397,7 +400,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param email 邮箱
      * @return 验证码
      */
-    private String getEmailCode(String email) {
+    private String getEmailCacheCode(String email) {
         Object code = redisHelper.get(getEmailCacheKey(email));
         return Objects.isNull(code) ? "" : code.toString();
     }
@@ -408,7 +411,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param phone 手机
      * @return 验证码
      */
-    private String getSmsCode(String phone) {
+    private String getSmsCacheCode(String phone) {
         Object code = redisHelper.get(getPhoneCodeCacheKey(phone));
         return Objects.isNull(code) ? "" : code.toString();
     }
@@ -425,7 +428,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         if (!StringUtils.hasLength(user.getPassword())) {
             // 创建时没有设置密码的话 随机一个密码
             String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
-            user.setPassword(PermissionUtil.encodePassword("Aa123456", salt));
+            user.setPassword(PermissionUtil.encodePassword(RandomUtil.randomString(), salt));
             user.setSalt(salt);
         }
         return user;
@@ -443,28 +446,12 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             return new ArrayList<>();
         }
         List<Predicate> predicateList = new ArrayList<>();
-        Set<Long> departmentIdList = getDepartmentListByParentId(departmentId);
-        if (!departmentIdList.isEmpty()) {
-            Join<UserEntity, DepartmentEntity> departmentJoin = root.join("departmentList");
-            Predicate inPredicate = departmentJoin.get(CurdEntity.STRING_ID).in(departmentIdList);
-            predicateList.add(inPredicate);
-        }
+        Set<Long> departmentIdList = PersonnelServices.getDepartmentService().getListByParentId(departmentId);
+        departmentIdList.add(departmentId);
+        Join<UserEntity, DepartmentEntity> departmentJoin = root.join("departmentList");
+        Predicate inPredicate = departmentJoin.get(CurdEntity.STRING_ID).in(departmentIdList);
+        predicateList.add(inPredicate);
         return predicateList;
-    }
-
-    @Contract("_ -> new")
-    private @NotNull Set<Long> getDepartmentListByParentId(long parentId) {
-        Set<Long> departmentList = new HashSet<>();
-        getDepartmentListByParentId(parentId, departmentList);
-        return departmentList;
-    }
-
-    private void getDepartmentListByParentId(long parentId, @NotNull Set<Long> departmentIds) {
-        DepartmentService departmentService = Services.getDepartmentService();
-        DepartmentEntity parent = departmentService.get(parentId);
-        departmentIds.add(parent.getId());
-        List<DepartmentEntity> children = departmentService.filter(new DepartmentEntity().setParentId(parent.getId()));
-        children.forEach(child -> getDepartmentListByParentId(child.getId(), departmentIds));
     }
 
     /**

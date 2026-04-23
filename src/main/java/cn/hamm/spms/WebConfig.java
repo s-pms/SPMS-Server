@@ -6,6 +6,7 @@ import cn.hamm.airpower.websocket.WebSocketConfig;
 import cn.hamm.airpower.websocket.WebSocketHandler;
 import cn.hamm.airpower.websocket.WebSocketSupport;
 import cn.hamm.spms.common.AppWebSocketHandler;
+import cn.hamm.spms.common.Configs;
 import cn.hamm.spms.common.interceptor.RequestInterceptor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,6 @@ import java.util.Objects;
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer, WebSocketConfigurer {
-    @Autowired
-    protected WebSocketConfig webSocketConfig;
     @Autowired
     private RequestInterceptor requestInterceptor;
     @Autowired
@@ -69,6 +68,7 @@ public class WebConfig implements WebMvcConfigurer, WebSocketConfigurer {
      */
     @Override
     public final void registerWebSocketHandlers(@NotNull WebSocketHandlerRegistry registry) {
+        WebSocketConfig webSocketConfig = Configs.getWebSocketConfig();
         if (Objects.equals(webSocketConfig.getSupport(), WebSocketSupport.NO)) {
             return;
         }

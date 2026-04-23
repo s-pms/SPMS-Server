@@ -4,15 +4,17 @@ import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.NumberUtil;
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
-import cn.hamm.spms.common.Services;
+import cn.hamm.spms.module.mes.MesServices;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailEntity;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailRepository;
 import cn.hamm.spms.module.mes.order.detail.OrderDetailService;
 import cn.hamm.spms.module.mes.order.enums.OrderStatus;
 import cn.hamm.spms.module.mes.order.enums.OrderType;
+import cn.hamm.spms.module.system.SystemServices;
 import cn.hamm.spms.module.system.config.ConfigEntity;
 import cn.hamm.spms.module.system.config.ConfigService;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
+import cn.hamm.spms.module.wms.WmsServices;
 import cn.hamm.spms.module.wms.input.InputEntity;
 import cn.hamm.spms.module.wms.input.InputService;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
@@ -64,15 +66,15 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
      * @param orderDetail 订单明细
      */
     public void addOrderDetail(@NotNull OrderDetailEntity orderDetail) {
-        ConfigService configService = Services.getConfigService();
+        ConfigService configService = SystemServices.getConfigService();
         ConfigEntity config = configService.get(ConfigFlag.ORDER_ENABLE_SUBMIT_WORK);
         FORBIDDEN.when(!config.booleanConfig(), "未开启订单报工模式");
 
         //todo 需要加锁更新
-        
+
         // 更新明细数量和状态
         orderDetail.setQuantity(orderDetail.getFinishQuantity()).setIsFinished(true);
-        OrderDetailService orderDetailService = Services.getOrderDetailService();
+        OrderDetailService orderDetailService = MesServices.getOrderDetailService();
         orderDetailService.add(orderDetail);
 
         // 更新订单数量
@@ -115,10 +117,10 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
 
         if (OrderType.PLAN.equalsKey(orderBill.getType())) {
             // 更新计划单
-            Services.getPlanDetailService().updateDetailQuantity(
+            MesServices.getPlanDetailService().updateDetailQuantity(
                     orderBill.getPlan().getId(),
                     orderBill.getFinishQuantity(),
-                    Services.getPlanService(),
+                    MesServices.getPlanService(),
                     detail -> FORBIDDEN.whenNotEquals(
                             detail.getMaterial().getId(),
                             orderBill.getMaterial().getId(),
@@ -135,7 +137,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
      * @param order 订单
      */
     private void addInputBill(OrderEntity order) {
-        InputService inputService = Services.getInputService();
+        InputService inputService = WmsServices.getInputService();
         InputEntity input = new InputEntity();
         input.setType(InputType.PRODUCTION.getKey());
         input.setOrder(order);
@@ -160,7 +162,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
 
     @Override
     protected void afterBillAudited(long billId) {
-        ConfigEntity config = Services.getConfigService().get(ConfigFlag.ORDER_AUTO_START_AFTER_AUDIT);
+        ConfigEntity config = SystemServices.getConfigService().get(ConfigFlag.ORDER_AUTO_START_AFTER_AUDIT);
         if (config.booleanConfig()) {
             start(billId);
         }

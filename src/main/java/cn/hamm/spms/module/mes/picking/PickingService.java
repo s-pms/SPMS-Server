@@ -3,12 +3,12 @@ package cn.hamm.spms.module.mes.picking;
 import cn.hamm.airpower.core.NumberUtil;
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
-import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.mes.picking.detail.PickingDetailEntity;
 import cn.hamm.spms.module.mes.picking.detail.PickingDetailRepository;
 import cn.hamm.spms.module.mes.picking.detail.PickingDetailService;
 import cn.hamm.spms.module.mes.picking.enums.PickingStatus;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
+import cn.hamm.spms.module.wms.WmsServices;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryService;
 import cn.hamm.spms.module.wms.inventory.enums.InventoryType;
@@ -72,7 +72,7 @@ public class PickingService extends AbstractBaseBillService<PickingEntity, Picki
                 .setPicking(get(billId))
                 .setType(OutputType.PICKING.getKey())
                 .setDetails(details);
-        Services.getOutputService().add(outputBill);
+        WmsServices.getOutputService().add(outputBill);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class PickingService extends AbstractBaseBillService<PickingEntity, Picki
         PickingEntity pickingBill = get(billId);
         // 添加线边库存
         List<PickingDetailEntity> details = detailService.getAllByBillId(pickingBill.getId());
-        InventoryService inventoryService = Services.getInventoryService();
+        InventoryService inventoryService = WmsServices.getInventoryService();
         details.forEach(detail -> {
             // 查询库存信息
             InventoryEntity inventory = inventoryService.getByMaterialIdAndStructureId(detail.getMaterial().getId(), pickingBill.getStructure().getId());

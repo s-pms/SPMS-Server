@@ -3,8 +3,10 @@ package cn.hamm.spms.module.wms.output;
 import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
-import cn.hamm.spms.common.Services;
+import cn.hamm.spms.module.channel.ChannelServices;
+import cn.hamm.spms.module.mes.MesServices;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
+import cn.hamm.spms.module.wms.WmsServices;
 import cn.hamm.spms.module.wms.inventory.InventoryEntity;
 import cn.hamm.spms.module.wms.inventory.InventoryService;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
@@ -50,8 +52,8 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
         OutputEntity outputBill = get(billId);
         OutputType outputType = DictionaryUtil.getDictionary(OutputType.class, outputBill.getType());
         switch (outputType) {
-            case SALE -> Services.getSaleService().setBillFinished(outputBill.getSale().getId());
-            case PICKING -> Services.getPickingService().setBillFinished(outputBill.getPicking().getId());
+            case SALE -> ChannelServices.getSaleService().setBillFinished(outputBill.getSale().getId());
+            case PICKING -> MesServices.getPickingService().setBillFinished(outputBill.getPicking().getId());
             default -> {
             }
         }
@@ -59,7 +61,7 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
 
     @Override
     protected void afterDetailFinishAdded(long detailId, @NotNull OutputDetailEntity outputDetail) {
-        InventoryService inventoryService = Services.getInventoryService();
+        InventoryService inventoryService = WmsServices.getInventoryService();
 
         // 出库明细
         OutputDetailEntity existDetail = detailService.get(outputDetail.getId());
@@ -79,18 +81,18 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
             // 获取出库单类型
             OutputType outputType = DictionaryUtil.getDictionary(OutputType.class, bill.getType());
             switch (outputType) {
-                case SALE -> Services.getSaleDetailService().updateDetailQuantity(
+                case SALE -> ChannelServices.getSaleDetailService().updateDetailQuantity(
                         bill.getSale().getId(),
                         outputDetailQuantity,
-                        Services.getSaleService(),
+                        ChannelServices.getSaleService(),
                         detail -> FORBIDDEN.whenNotEquals(
                                 detail.getMaterial().getId(),
                                 materialId,
                                 "物料信息不匹配"));
-                case PICKING -> Services.getPickingDetailService().updateDetailQuantity(
+                case PICKING -> MesServices.getPickingDetailService().updateDetailQuantity(
                         bill.getPicking().getId(),
                         outputDetailQuantity,
-                        Services.getPickingService(), detail -> FORBIDDEN.whenNotEquals(
+                        MesServices.getPickingService(), detail -> FORBIDDEN.whenNotEquals(
                                 detail.getMaterial().getId(),
                                 materialId,
                                 "物料信息不匹配"));

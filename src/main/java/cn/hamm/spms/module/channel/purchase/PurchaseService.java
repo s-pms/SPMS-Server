@@ -3,12 +3,12 @@ package cn.hamm.spms.module.channel.purchase;
 import cn.hamm.airpower.core.NumberUtil;
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
-import cn.hamm.spms.common.Services;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailEntity;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailRepository;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailService;
 import cn.hamm.spms.module.channel.purchase.enums.PurchaseStatus;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
+import cn.hamm.spms.module.wms.WmsServices;
 import cn.hamm.spms.module.wms.input.InputEntity;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.input.enums.InputStatus;
@@ -80,7 +80,7 @@ public class PurchaseService extends AbstractBaseBillService<
                 .setPurchase(purchaseBill)
                 .setType(InputType.PURCHASE.getKey())
                 .setDetails(inputDetails);
-        Services.getInputService().add(inputBill);
+        WmsServices.getInputService().add(inputBill);
         log.info("创建采购入库单：{}", inputBill);
     }
 

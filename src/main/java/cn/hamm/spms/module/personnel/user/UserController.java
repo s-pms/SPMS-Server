@@ -3,6 +3,7 @@ package cn.hamm.spms.module.personnel.user;
 import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.cookie.CookieHelper;
 import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.core.StringUtil;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.annotation.ExposeAll;
 import cn.hamm.airpower.curd.annotation.Extends;
@@ -31,8 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static cn.hamm.airpower.exception.Errors.FORBIDDEN_DISABLED;
-import static cn.hamm.airpower.exception.Errors.FORBIDDEN_EDIT;
+import static cn.hamm.airpower.exception.Errors.*;
 
 /**
  * <h1>Controller</h1>
@@ -194,8 +194,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Permission(authorize = false)
     @PostMapping("updateMyPassword")
     public Json updateMyPassword(@RequestBody @Validated(WhenUpdateMyPassword.class) UserEntity user) {
-        user.setId(getCurrentUserId());
-        service.modifyMyPassword(user);
+        service.modifyPassword(getCurrentUserId(), user.getOldPassword(), user.getPassword());
         return Json.success("密码修改成功");
     }
 
@@ -203,7 +202,17 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Permission(login = false)
     @PostMapping("resetMyPassword")
     public Json resetMyPassword(@RequestBody @Validated(WhenResetMyPassword.class) UserEntity user) {
-        service.resetMyPassword(user);
+        String phone = user.getPhone();
+        String email = user.getEmail();
+        String code = user.getCode();
+        String newPassword = user.getPassword();
+        if (StringUtil.hasText(phone)) {
+            service.resetPasswordViaPhone(phone, code, newPassword);
+        } else if (StringUtil.hasText(email)) {
+            service.resetPasswordViaEmail(email, code, newPassword);
+        } else {
+            PARAM_INVALID.show("请传入邮箱或手机号码");
+        }
         return Json.success("密码重置成功");
     }
 
@@ -211,7 +220,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Permission(login = false)
     @PostMapping("login")
     public Json login(@RequestBody @Validated(WhenLogin.class) UserEntity user, HttpServletResponse httpServletResponse) {
-        return doLogin(UserLoginType.VIA_ACCOUNT_PASSWORD, user, httpServletResponse);
+        return handleLoginRequest(UserLoginType.VIA_ACCOUNT_PASSWORD, user, httpServletResponse);
     }
 
     @Description("退出登录")
@@ -231,14 +240,14 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Permission(login = false)
     @PostMapping("loginViaEmail")
     public Json loginViaEmail(@RequestBody @Validated(WhenLoginViaEmail.class) UserEntity user, HttpServletResponse httpServletResponse) {
-        return doLogin(UserLoginType.VIA_EMAIL_CODE, user, httpServletResponse);
+        return handleLoginRequest(UserLoginType.VIA_EMAIL_CODE, user, httpServletResponse);
     }
 
     @Description("发送邮件")
     @Permission(login = false)
     @PostMapping("sendEmail")
     public Json sendEmail(@RequestBody @Validated(WhenSendEmail.class) UserEntity user) throws MessagingException {
-        service.sendMail(user.getEmail());
+        service.sendEmailCode(user.getEmail());
         return Json.success("发送成功");
     }
 
@@ -246,7 +255,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Permission(login = false)
     @PostMapping("sendSms")
     public Json sendSms(@RequestBody @Validated(WhenSendSms.class) UserEntity user) {
-        service.sendSms(user.getPhone());
+        service.sendSmsCode(user.getPhone());
         return Json.success("发送成功");
     }
 
@@ -258,10 +267,10 @@ public class UserController extends BaseController<UserEntity, UserService, User
      * @param response      响应的请求
      * @return JsonData
      */
-    private Json doLogin(@NotNull UserLoginType userLoginType, UserEntity user, HttpServletResponse response) {
+    private Json handleLoginRequest(@NotNull UserLoginType userLoginType, UserEntity user, HttpServletResponse response) {
         UserEntity exist = switch (userLoginType) {
-            case VIA_ACCOUNT_PASSWORD -> service.login(user);
-            case VIA_EMAIL_CODE -> service.loginViaEmail(user);
+            case VIA_ACCOUNT_PASSWORD -> service.loginViaEmailAndPassword(user.getEmail(), user.getPassword());
+            case VIA_EMAIL_CODE -> service.loginViaEmailAndCode(user.getEmail(), user.getCode());
         };
         FORBIDDEN_DISABLED.when(exist.getIsDisabled(), "登录失败，你的账号已被禁用");
         redisHelper.delete(getUserPermissionCacheKey(exist.getId()));
