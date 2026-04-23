@@ -2,11 +2,11 @@ package cn.hamm.spms;
 
 import cn.hamm.airpower.core.exception.ServiceException;
 import cn.hamm.airpower.curd.interceptor.filter.RequestFilter;
-import cn.hamm.airpower.websocket.WebSocketConfig;
 import cn.hamm.airpower.websocket.WebSocketHandler;
 import cn.hamm.airpower.websocket.WebSocketSupport;
 import cn.hamm.spms.common.AppWebSocketHandler;
 import cn.hamm.spms.common.Configs;
+import cn.hamm.spms.common.config.WebSocketConfig;
 import cn.hamm.spms.common.interceptor.RequestInterceptor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
