@@ -3,12 +3,15 @@ package cn.hamm.spms;
 import cn.hamm.airpower.ai.mcp.McpService;
 import cn.hamm.airpower.core.RandomUtil;
 import cn.hamm.airpower.curd.permission.PermissionUtil;
+import cn.hamm.spms.common.Configs;
 import cn.hamm.spms.common.config.AppConfig;
+import cn.hamm.spms.module.asset.AssetServices;
 import cn.hamm.spms.module.asset.device.DeviceEntity;
 import cn.hamm.spms.module.asset.device.DeviceService;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.asset.material.MaterialService;
 import cn.hamm.spms.module.asset.material.enums.MaterialType;
+import cn.hamm.spms.module.channel.ChannelServices;
 import cn.hamm.spms.module.channel.customer.CustomerEntity;
 import cn.hamm.spms.module.channel.customer.CustomerService;
 import cn.hamm.spms.module.channel.purchaseprice.PurchasePriceEntity;
@@ -17,15 +20,19 @@ import cn.hamm.spms.module.channel.saleprice.SalePriceEntity;
 import cn.hamm.spms.module.channel.saleprice.SalePriceService;
 import cn.hamm.spms.module.channel.supplier.SupplierEntity;
 import cn.hamm.spms.module.channel.supplier.SupplierService;
+import cn.hamm.spms.module.chat.ChatServices;
 import cn.hamm.spms.module.chat.room.RoomEntity;
 import cn.hamm.spms.module.chat.room.RoomService;
+import cn.hamm.spms.module.factory.FactoryServices;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
 import cn.hamm.spms.module.factory.storage.StorageService;
 import cn.hamm.spms.module.factory.structure.StructureEntity;
 import cn.hamm.spms.module.factory.structure.StructureService;
+import cn.hamm.spms.module.iot.IotServices;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterService;
 import cn.hamm.spms.module.iot.report.enums.ReportDataType;
+import cn.hamm.spms.module.mes.MesServices;
 import cn.hamm.spms.module.mes.bom.BomEntity;
 import cn.hamm.spms.module.mes.bom.BomService;
 import cn.hamm.spms.module.mes.bom.detail.BomDetailEntity;
@@ -35,10 +42,12 @@ import cn.hamm.spms.module.mes.operation.OperationService;
 import cn.hamm.spms.module.mes.routing.RoutingEntity;
 import cn.hamm.spms.module.mes.routing.RoutingService;
 import cn.hamm.spms.module.mes.routing.operation.RoutingOperationEntity;
+import cn.hamm.spms.module.personnel.PersonnelServices;
 import cn.hamm.spms.module.personnel.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.department.DepartmentService;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
+import cn.hamm.spms.module.system.SystemServices;
 import cn.hamm.spms.module.system.coderule.CodeRuleEntity;
 import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
@@ -72,53 +81,15 @@ public class DevDataInitRunner implements CommandLineRunner {
     public static final int TWO = 2;
     private static final String CREATE_DROP = "create-drop";
     private static final String LOCK_FILE = "init.lock";
-    @Autowired
-    private ParameterService parameterService;
-    @Autowired
-    private CodeRuleService codeRuleService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private DeviceService deviceService;
-    @Autowired
-    private UnitService unitService;
-    @Autowired
-    private MaterialService materialService;
-    @Autowired
-    private CustomerService customerService;
-    @Autowired
-    private SupplierService supplierService;
-    @Autowired
-    private SalePriceService salePriceService;
-    @Autowired
-    private PurchasePriceService purchasePriceService;
-    @Autowired
-    private StorageService storageService;
-    @Autowired
-    private DepartmentService departmentService;
-    @Autowired
-    private ConfigService configService;
-    @Autowired
-    private OperationService operationService;
-    @Autowired
-    private BomService bomService;
-    @Autowired
-    private RoutingService routingService;
-    @Autowired
-    private StructureService structureService;
-    @Autowired
-    private PermissionService permissionService;
-    @Autowired
-    private MenuService menuService;
-    @Autowired
-    private RoomService roomService;
-    @Autowired
-    private AppConfig appConfig;
+
     @Autowired
     private Environment environment;
 
     @Override
     public void run(String... args) {
+        AppConfig appConfig = Configs.getAppConfig();
+        PermissionService permissionService = SystemServices.getPermissionService();
+        MenuService menuService = SystemServices.getMenuService();
         McpService.scanMcpMethods("cn.hamm.spms", "cn.hamm.airpower");
         if (!appConfig.getIsDevMode()) {
             log.info("非开发者模式，无需初始化数据");
@@ -147,6 +118,7 @@ public class DevDataInitRunner implements CommandLineRunner {
     }
 
     private void initParameters() {
+        ParameterService parameterService = IotServices.getParameterService();
         ParameterEntity parameter;
 
         parameter = parameterService.getByCode(REPORT_KEY_OF_STATUS);
@@ -179,6 +151,7 @@ public class DevDataInitRunner implements CommandLineRunner {
     }
 
     private void initCodeRules() {
+        CodeRuleService codeRuleService = SystemServices.getCodeRuleService();
         CodeRuleField[] codeRuleFields = CodeRuleField.class.getEnumConstants();
         for (CodeRuleField codeRuleField : codeRuleFields) {
             CodeRuleEntity codeRule = codeRuleService.getByRuleField(codeRuleField.getKey());
@@ -196,6 +169,10 @@ public class DevDataInitRunner implements CommandLineRunner {
     }
 
     private void initRootUser() {
+        UserService userService = PersonnelServices.getUserService();
+        DepartmentService departmentService = PersonnelServices.getDepartmentService();
+        RoomService roomService = ChatServices.getRoomService();
+
         // 初始化用户
         UserEntity user = userService.getMaybeNull(1L);
         if (Objects.nonNull(user)) {
@@ -237,6 +214,7 @@ public class DevDataInitRunner implements CommandLineRunner {
     }
 
     private void initConfigs() {
+        ConfigService configService = SystemServices.getConfigService();
         ConfigFlag[] configFlags = ConfigFlag.class.getEnumConstants();
         for (ConfigFlag configFlag : configFlags) {
             try {
@@ -259,6 +237,21 @@ public class DevDataInitRunner implements CommandLineRunner {
 
     @SuppressWarnings("AlibabaMethodTooLong")
     private void initDevData() {
+        DeviceService deviceService = AssetServices.getDeviceService();
+        MaterialService materialService = AssetServices.getMaterialService();
+        UnitService unitService = SystemServices.getUnitService();
+        CustomerService customerService = ChannelServices.getCustomerService();
+        SalePriceService salePriceService = ChannelServices.getSalePriceService();
+        SupplierService supplierService = ChannelServices.getSupplierService();
+        PurchasePriceService purchasePriceService = ChannelServices.getPurchasePriceService();
+
+        StorageService storageService = FactoryServices.getStorageService();
+        StructureService structureService = FactoryServices.getStructureService();
+
+        OperationService operationService = MesServices.getOperationService();
+        BomService bomService = MesServices.getBomService();
+        RoutingService routingService = MesServices.getRoutingService();
+
         int deviceCount = 2;
         for (int i = 0; i < deviceCount; i++) {
             deviceService.addAndGet(new DeviceEntity().setCode("Simulator00" + (i + 1)).setName("设备" + (i + 1)));
