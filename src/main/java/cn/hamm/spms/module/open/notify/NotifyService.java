@@ -176,7 +176,7 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
      */
     @Contract(pure = true)
     protected final @NotNull String getEmailBody(@NotNull String content) {
-        return content.replaceAll("\n", "<br/>");
+        return content.replace("\n", "<br/>");
     }
 
     /**
