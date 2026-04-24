@@ -48,7 +48,7 @@ public class BaseController<
     }
 
     @Override
-    protected void beforeDelete(@NotNull E entity) {
+    protected final void beforeDelete(@NotNull E entity) {
         FORBIDDEN_EDIT.when(entity.getIsPublished(), "无法删除已经发布的数据");
         beforeAppDelete(entity);
     }
