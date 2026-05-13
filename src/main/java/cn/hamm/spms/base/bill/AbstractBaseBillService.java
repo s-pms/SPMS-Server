@@ -106,12 +106,13 @@ public abstract class AbstractBaseBillService<
      * @param sourceDetail 提交明细
      */
     public final void addDetailFinishQuantity(@NotNull D sourceDetail) {
-        Long billId = sourceDetail.getBillId();
-        log.info("添加明细数量 {}，单据ID:{}, 明细数量:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId, sourceDetail.getQuantity());
-
         Long detailId = sourceDetail.getId();
+        D detail = detailService.get(detailId);
+        Long billId = detail.getBillId();
+        Double finishQuantity = sourceDetail.getQuantity();
+        log.info("添加明细数量 {}，单据ID:{}, 明细数量:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId, finishQuantity);
         transactionHelper.run(() -> {
-            detailService.addFinishQuantity(detailId, sourceDetail.getQuantity());
+            detailService.addFinishQuantity(detailId, finishQuantity);
 
             // 明细添加成功后置方法
             afterDetailFinishAdded(detailId, sourceDetail);
@@ -136,7 +137,7 @@ public abstract class AbstractBaseBillService<
      * @param sourceDetail 提交明细
      */
     protected void afterDetailFinishAdded(long detailId, @NotNull D sourceDetail) {
-        log.info("添加完成数量成功后 {}，单据ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), sourceDetail.getBillId());
+        log.info("添加完成数量成功后 {}，明细ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), detailId);
     }
 
     /**
