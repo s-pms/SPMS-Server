@@ -118,6 +118,8 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
             updateToDatabase(orderBill);
             return;
         }
+        // 添加入库单
+        addInputBill(orderBill);
 
         if (OrderType.PLAN.equalsKey(orderBill.getType())) {
             // 更新计划单
@@ -131,8 +133,6 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
                             "物料信息不匹配")
             );
         }
-        // 添加入库单
-        addInputBill(orderBill);
     }
 
     /**
