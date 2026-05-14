@@ -73,21 +73,26 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         //todo 需要加锁更新
 
         // 更新明细数量和状态
-        orderDetail.setQuantity(orderDetail.getFinishQuantity()).setIsFinished(true);
+        Double quantity = orderDetail.getQuantity();
+        Double ngQuantity = orderDetail.getNgQuantity();
+        orderDetail.setQuantity(quantity)
+                .setFinishQuantity(quantity)
+                .setNgQuantity(ngQuantity)
+                .setIsFinished(true);
         OrderDetailService orderDetailService = MesServices.getOrderDetailService();
         orderDetailService.add(orderDetail);
 
         // 更新订单数量
         OrderEntity order = get(orderDetail.getBillId());
         List<OrderDetailEntity> details = orderDetailService.getAllByBillId(order.getId());
-        double finishQuantity = 0D;
-        double ngQuantity = 0D;
+        double totalFinishQuantity = 0D;
+        double tatalNgQuantity = 0D;
         for (OrderDetailEntity detail : details) {
-            finishQuantity = NumberUtil.add(finishQuantity, detail.getFinishQuantity());
-            ngQuantity = NumberUtil.add(ngQuantity, detail.getNgQuantity());
+            totalFinishQuantity = NumberUtil.add(totalFinishQuantity, detail.getFinishQuantity());
+            tatalNgQuantity = NumberUtil.add(tatalNgQuantity, detail.getNgQuantity());
         }
-        order.setFinishQuantity(finishQuantity)
-                .setNgQuantity(ngQuantity)
+        order.setFinishQuantity(totalFinishQuantity)
+                .setNgQuantity(tatalNgQuantity)
         ;
         updateToDatabase(order);
 
