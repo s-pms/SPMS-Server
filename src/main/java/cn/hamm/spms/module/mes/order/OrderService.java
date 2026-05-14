@@ -16,7 +16,6 @@ import cn.hamm.spms.module.system.config.ConfigService;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
 import cn.hamm.spms.module.wms.WmsServices;
 import cn.hamm.spms.module.wms.input.InputEntity;
-import cn.hamm.spms.module.wms.input.InputService;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.input.enums.InputType;
 import org.jetbrains.annotations.NotNull;
@@ -142,21 +141,15 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
      * @param order 订单
      */
     private void addInputBill(OrderEntity order) {
-        InputService inputService = WmsServices.getInputService();
         InputEntity input = new InputEntity();
         input.setType(InputType.PRODUCTION.getKey());
         input.setOrder(order);
-        InputEntity inputSaved = inputService.addAndGet(input);
-
-
-        List<InputDetailEntity> details = new ArrayList<>();
-        details.add(new InputDetailEntity()
+        InputEntity inputSaved = WmsServices.getInputService().addAndGet(input);
+        WmsServices.getInputDetailService().add(new InputDetailEntity()
                 .setQuantity(order.getFinishQuantity())
                 .setBillId(inputSaved.getId())
                 .setMaterial(order.getMaterial())
         );
-        inputSaved.setDetails(details);
-        inputService.updateToDatabase(inputSaved);
     }
 
     @Override
