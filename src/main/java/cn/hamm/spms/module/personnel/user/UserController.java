@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -203,6 +204,26 @@ public class UserController extends BaseController<UserEntity, UserService, User
     public Json sendSms(@RequestBody @Validated(WhenSendSms.class) UserEntity user) {
         service.sendSmsCode(user.getPhone());
         return Json.success("发送成功");
+    }
+
+    @Description("获取 WebAuthn 断言选项")
+    @Permission(login = false)
+    @PostMapping("getWebAuthnAssertionOptions")
+    public Json getWebAuthnAssertionOptions() {
+        // 这里需要根据实际情况获取用户的凭证信息
+        // 目前先返回一个示例配置
+        try {
+            return Json.data(com.yubico.webauthn.data.PublicKeyCredentialRequestOptions.builder()
+                .challenge(com.yubico.webauthn.data.ByteArray.fromBase64Url("test-challenge"))
+                .timeout(60000L)
+                .rpId("spms.hamm.cn")
+                .userVerification(com.yubico.webauthn.data.UserVerificationRequirement.PREFERRED)
+                .allowCredentials(Collections.emptyList())
+                .build(), "获取成功");
+        } catch (com.yubico.webauthn.data.exception.Base64UrlException e) {
+            e.printStackTrace();
+            return Json.error("获取 WebAuthn 断言选项失败");
+        }
     }
 
     /**

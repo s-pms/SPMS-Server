@@ -45,6 +45,17 @@
             <artifactId>airpower-websocket</artifactId>
             <version>${airpower.version}</version>
         </dependency>
+        <!-- WebAuthn 相关依赖 -->
+        <dependency>
+            <groupId>com.yubico</groupId>
+            <artifactId>webauthn-server-core</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.yubico</groupId>
+            <artifactId>webauthn-server-attestation</artifactId>
+            <version>2.6.0</version>
+        </dependency>
 
         <!-- 阿里云OSS开始 -->
         <dependency>
