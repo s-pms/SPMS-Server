@@ -5,13 +5,13 @@ spring:
       # 生产模式请严格使用 validate
       ddl-auto: update
   datasource:
-    url: "jdbc:mysql://localhost:3306/dev_spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false"
-    username: "root"
-    password: "asdfew12345"
+    url: "jdbc:mysql://mysql:13306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false"
+    username: "spms"
+    password: "spms"
   data:
     redis:
       host: "redis"
-      port: 6379
+      port: 16379
       database: 5
 app:
   upload-platform: local
