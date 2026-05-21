@@ -5,7 +5,7 @@ spring:
       # 生产模式请严格使用 validate
       ddl-auto: update
   datasource:
-    url: "jdbc:mysql://127.0.0.1:3306/dev_spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false"
+    url: "jdbc:mysql://localhost:3306/dev_spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false"
     username: "root"
     password: "asdfew12345"
   data:
