@@ -4,12 +4,13 @@ FROM maven:3.9.6-amazoncorretto-17 AS build
 # 设置工作目录
 WORKDIR /app
 
-# 复制pom.xml和源代码
+# 复制pom.xml、settings.xml和源代码
 COPY pom.xml .
+COPY settings.xml .
 COPY src ./src
 
 # 构建应用
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -s settings.xml
 
 # 使用轻量级OpenJDK运行时镜像
 FROM amazoncorretto:17-alpine
