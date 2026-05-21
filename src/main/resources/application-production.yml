@@ -5,9 +5,9 @@ spring:
       # 生产模式请严格使用 validate
       ddl-auto: update
   datasource:
-    url: "jdbc:mysql://mysql:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false"
-    username: "spms"
-    password: "spms"
+    url: "jdbc:mysql://mysql:3306/dev_spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false"
+    username: "root"
+    password: "asdfew12345"
   data:
     redis:
       host: "redis"
