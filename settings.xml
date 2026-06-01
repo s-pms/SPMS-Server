@@ -1,13 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                              http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+    <!-- ================== 镜像 ================== -->
     <mirrors>
+        <!-- 阿里云镜像（不拦截 central） -->
         <mirror>
             <id>aliyunmaven</id>
-            <mirrorOf>*</mirrorOf>
-            <name>阿里云公共仓库</name>
+            <!-- 关键：*,!central -->
+            <mirrorOf>*,!central</mirrorOf>
+            <name>Aliyun Maven</name>
             <url>https://maven.aliyun.com/repository/public</url>
         </mirror>
     </mirrors>
+
+    <!-- ================== Profile ================== -->
+    <profiles>
+        <profile>
+            <id>default</id>
+            <repositories>
+                <!-- 中央仓库（cn.hamm 会走这里） -->
+                <repository>
+                    <id>central</id>
+                    <url>https://repo.maven.apache.org/maven2</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+
+    <!-- ================== 激活 ================== -->
+    <activeProfiles>
+        <activeProfile>default</activeProfile>
+    </activeProfiles>
 </settings>
