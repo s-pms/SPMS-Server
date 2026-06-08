@@ -3,8 +3,8 @@ package cn.hamm.spms.module.system.file;
 import cn.hamm.airpower.core.FileUtil;
 import cn.hamm.airpower.core.exception.ServiceException;
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.common.aliyun.oss.AliyunOssUtil;
-import cn.hamm.spms.common.config.AppConfig;
+import cn.hamm.spms.common.AppConfig;
+import cn.hamm.spms.common.aliyun.oss.AliyunOssHelper;
 import cn.hamm.spms.module.system.file.enums.FileCategory;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +32,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
     private AppConfig appConfig;
 
     @Autowired
-    private AliyunOssUtil aliyunOssUtil;
+    private AliyunOssHelper aliyunOssHelper;
 
     /**
      * 上传到阿里云 OSS
@@ -42,7 +42,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
      * @throws IOException 文件写入失败
      */
     private void saveToAliyunOss(@NotNull MultipartFile multipartFile, @NotNull String savedFilePath) throws IOException {
-        aliyunOssUtil.upload(savedFilePath, multipartFile.getInputStream().readAllBytes());
+        aliyunOssHelper.upload(savedFilePath, multipartFile.getInputStream().readAllBytes());
     }
 
     /**

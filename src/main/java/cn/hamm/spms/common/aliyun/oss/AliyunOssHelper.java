@@ -21,7 +21,7 @@ import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
  * @author zhoul
  */
 @Component
-public class AliyunOssUtil {
+public class AliyunOssHelper {
     @Autowired
     private AliyunConfig aliyunConfig;
 

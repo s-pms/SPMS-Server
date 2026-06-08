@@ -1,4 +1,4 @@
-package cn.hamm.spms.common.config;
+package cn.hamm.spms.common.influx;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

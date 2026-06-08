@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.system.file.enums;
 
 import cn.hamm.airpower.core.interfaces.IDictionary;
-import cn.hamm.spms.common.config.AppConstant;
+import cn.hamm.spms.common.AppConstant;
 import lombok.Getter;
 import org.jetbrains.annotations.Contract;
 

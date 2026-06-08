@@ -13,7 +13,7 @@ import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.annotation.DesensitizeIgnore;
 import cn.hamm.airpower.curd.base.ICurdAction;
 import cn.hamm.airpower.curd.permission.Permission;
-import cn.hamm.spms.common.config.AppConfig;
+import cn.hamm.spms.common.AppConfig;
 import cn.hamm.spms.module.open.app.OpenAppEntity;
 import cn.hamm.spms.module.open.app.OpenAppService;
 import cn.hamm.spms.module.open.oauth.model.enums.OauthScope;

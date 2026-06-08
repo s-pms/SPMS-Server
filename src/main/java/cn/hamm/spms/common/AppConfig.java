@@ -1,4 +1,4 @@
-package cn.hamm.spms.common.config;
+package cn.hamm.spms.common;
 
 import cn.hamm.airpower.core.FileUtil;
 import cn.hamm.spms.module.system.file.enums.FileUploadPlatform;

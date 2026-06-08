@@ -4,7 +4,7 @@ import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.redis.RedisHelper;
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.common.helper.InfluxHelper;
+import cn.hamm.spms.common.influx.InfluxHelper;
 import cn.hamm.spms.module.iot.IotServices;
 import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.parameter.ParameterService;

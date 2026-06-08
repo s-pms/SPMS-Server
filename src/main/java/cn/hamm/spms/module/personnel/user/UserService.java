@@ -12,7 +12,7 @@ import cn.hamm.airpower.curd.model.query.Sort;
 import cn.hamm.airpower.curd.permission.PermissionUtil;
 import cn.hamm.airpower.email.helper.EmailHelper;
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.common.config.AppConfig;
+import cn.hamm.spms.common.AppConfig;
 import cn.hamm.spms.module.personnel.PersonnelServices;
 import cn.hamm.spms.module.personnel.department.DepartmentEntity;
 import cn.hamm.spms.module.personnel.user.enums.UserTokenType;

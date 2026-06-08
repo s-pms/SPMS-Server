@@ -1,4 +1,4 @@
-package cn.hamm.spms.common.config;
+package cn.hamm.spms.common;
 
 /**
  * <h1>系统常量</h1>

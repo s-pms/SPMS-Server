@@ -1,7 +1,6 @@
-package cn.hamm.spms.common.helper;
+package cn.hamm.spms.common.influx;
 
 import cn.hamm.spms.common.Configs;
-import cn.hamm.spms.common.config.InfluxConfig;
 import cn.hamm.spms.module.iot.report.ReportConstant;
 import cn.hamm.spms.module.iot.report.ReportInfluxPayload;
 import cn.hamm.spms.module.iot.report.ReportPayload;
