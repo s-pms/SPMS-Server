@@ -14,6 +14,13 @@ spring:
       fail-on-unknown-properties: false
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 30
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      leak-detection-threshold: 60000
   jpa:
     database-platform: "org.hibernate.dialect.MySQL8Dialect"
     hibernate:
