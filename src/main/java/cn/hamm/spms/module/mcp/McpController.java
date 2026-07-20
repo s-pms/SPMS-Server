@@ -17,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import static cn.hamm.airpower.exception.Errors.PARAM_MISSING;
-
 /**
  * <h1>MCP</h1>
  *
@@ -37,10 +35,8 @@ public class McpController extends ApiController {
     @PostMapping("")
     public McpResponse messages(HttpServletRequest request, @RequestBody McpRequest mcpRequest) {
         try {
-            String accessToken = request.getParameter("token");
-            PARAM_MISSING.whenNull(accessToken, "accessToken is required");
-            AccessTokenUtil.VerifiedToken verifiedToken = requestInterceptor.getVerifiedToken(accessToken);
-            return mcpService.run(mcpRequest, (mcpTool -> requestInterceptor.checkUserPermission(
+            AccessTokenUtil.VerifiedToken verifiedToken = getCurrentUserVerifiedToken();
+            return mcpService.run(verifiedToken, mcpRequest, (mcpTool -> requestInterceptor.checkUserPermission(
                     verifiedToken, McpService.getPermissionIdentity(mcpTool), request
             )));
         } catch (ServiceException e) {

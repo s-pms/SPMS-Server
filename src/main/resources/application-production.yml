@@ -14,5 +14,4 @@ spring:
       port: 6379
       database: 5
 app:
-  upload-platform: local
   login-url: "https://spms.hamm.cn/login"

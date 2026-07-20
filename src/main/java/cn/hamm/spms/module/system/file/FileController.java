@@ -7,11 +7,14 @@ import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.curd.permission.Permission;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.system.file.enums.FileCategory;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Objects;
 
 /**
@@ -29,5 +32,12 @@ public class FileController extends BaseController<FileEntity, FileService, File
         category = Objects.requireNonNullElse(category, FileCategory.NORMAL.getKey());
         FileCategory fileCategory = DictionaryUtil.getDictionary(FileCategory.class, category);
         return Json.data(service.upload(file, fileCategory), "文件上传成功");
+    }
+
+    @RequestMapping("")
+    @Description("获取文件")
+    @Permission(login = false)
+    public void getFileUrl(@NotNull(message = "文件不能为空") @RequestParam("url") String url, HttpServletResponse response) throws IOException {
+        response.sendRedirect(service.getUrl(url));
     }
 }
