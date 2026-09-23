@@ -1,144 +1,329 @@
-<p align="center">
-<img src="https://cdn.hamm.cn/svg/spms/logo.svg"/>
-</p>
+<div align="center">
 
-<p align="center">
-  <img src="https://svg.hamm.cn?key=Core&value=AirPower4J"/>
-  <img src="https://svg.hamm.cn?key=Lang&value=Java17&bg=green"/>
-  <img src="https://svg.hamm.cn?key=Base&value=SpringBoot3"/>
-  <img src="https://svg.hamm.cn?key=Data&value=MySQL8"/>
-  <img src="https://svg.hamm.cn?key=ORM.&value=JPA"/>
-</p>
-<p align="center">
-<a href="https://github.com/s-pms/SPMS-Server">@Github</a> <a href="https://gitee.com/s-pms/SPMS-Server">@Gitee</a>
-</p>
+<img src="https://cdn.hamm.cn/svg/spms/logo.svg" alt="SPMS Logo"/>
 
-## 非常重要
+# S-PMS Server
+
+**智能生产管理系统 · 后端服务（Smart Production Management System）**
+
+[![Core](https://svg.hamm.cn?key=Core&value=AirPower4J)](https://github.com/AirPowerTeam/AirPower4J)
+[![Lang](https://svg.hamm.cn?key=Lang&value=Java17&bg=green)](https://www.java.com)
+[![Base](https://svg.hamm.cn?key=Base&value=SpringBoot3)](https://spring.io/projects/spring-boot)
+[![Data](https://svg.hamm.cn?key=Data&value=MySQL8)](https://www.mysql.com)
+[![ORM.](https://svg.hamm.cn?key=ORM.&value=JPA)](https://spring.io/projects/spring-data-jpa)
+[![License](https://svg.hamm.cn?key=License&value=MIT&bg=red)](./LICENSE)
+
+一个集成 **MES / WMS / ERP / QMS / IoT** 一体的企业级智能生产管理平台后端。
+
+[在线 Demo](https://spms.hamm.cn) · [开发者指南](https://github.com/s-pms/SPMS-Docs) · [Docker 部署](https://github.com/s-pms/SPMS-Docker)
+
+</div>
+
+---
+
+## ⚠️ 非常重要
 
 > [!IMPORTANT]
 >
-> **🔥 请仔细阅读本文档了解项目后再进行下一步。**
->
-> **🔥 作者是为爱发电，没有过多精力进行无偿问题解答和技术支持。**
+> - 🔥 **请仔细阅读本文档了解项目后再进行下一步**
+> - 🔥 **作者是为爱发电，没有过多精力进行无偿问题解答和技术支持**
+> - 📖 使用 AI 辅助开发前，请让 AI 先阅读 [AGENTS.md](./AGENTS.md)，保证代码风格一致
+> - 🌟 觉得项目不错？点击右上角 **Star** 支持一下！
 
-## Docker 一键部署
+---
 
-如果你想通过 **Docker**
-进行一键部署体验，你可以查看我们的一键部署仓库：[Github](https://github.com/s-pms/SPMS-Docker) | [Gitee](https://gitee.com/s-pms/SPMS-Docker)
+## 📖 项目简介
 
-## 在线交流群
+**S-PMS（Smart Production Management System）** 是一个面向中小型制造企业的智能生产管理系统后端，基于 **AirPower4J**
+框架构建，将多个核心生产管理模块一体化整合在同一个应用中：
 
-我们开通了QQ群 **773726377**，如果你对本项目有任何疑问，或者是在智能制造、工业互联网、物联网行业进行交流，欢迎加入我们的交流群。
+| 模块    | 全称             | 核心职责                                         |
+|---------|------------------|--------------------------------------------------|
+| **MES** | 制造执行系统     | 车间生产活动优化管理，实时监控订单到成品的全流程 |
+| **WMS** | 仓库管理系统     | 入库 / 出库 / 移库 / 库存的全流程管控            |
+| **ERP** | 企业资源计划系统 | 整合财务、采购、销售、生产、库存等环节信息       |
+| **QMS** | 质量管理系统     | 质量策划 / 控制 / 保证 / 改进的全周期管理        |
+| **IoT** | 物联网管理系统   | 设备数据采集、远程监控、预防性维护               |
 
-## S-PMS介绍（后端项目）
+通过将这些系统一体化整合，帮助企业实现 **采购 → 生产 → 仓储 → 销售** 全流程的信息化、精细化、智能化管理。
 
-**S-PMS** `(Smart Production Management System)` **智能生产管理系统** ，是一个集成化、智能化的企业级应用软件，它集成了多个核心的生产管理模块，包括
-**制造执行系统** `(MES, Manufacturing Execution System)`、**仓库管理系统** `(WMS, Warehouse Management System)`、*
-*企业资源计划系统** `(ERP, Enterprise Resource Planning)`、**质量管理系统** `(QMS, Quality Management System)` 以及 *
-*物联网管理系统** `(IoTS,Internet of Things System)` 等。
+---
 
-- **MES (Manufacturing Execution System) 制造执行系统**
-  ，主要用于车间层的生产活动优化管理，实时监控从订单下达到产品完成的整个生产过程，实现对生产数据的实时采集和分析，以提高生产效率、产品质量和资源利用率。
+## ✨ 核心特性
 
-- **WMS (Warehouse Management System) 仓库管理系统**，用于全面管理和控制仓库业务流程，包括入库、出库、库存、盘点、批次管理等，实现仓库作业高效、准确、透明。
+### 🏭 业务能力
 
-- **ERP (Enterprise Resource Planning) 企业资源计划系统**，整合了企业的所有资源，包括财务、采购、销售、生产、库存等各个环节的信息，为企业决策提供及时、准确的数据支持。
+- **单据流引擎**：所有单据（生产计划/订单/领料/入出库/移库/采购/销售）共享一套状态机（审核中 → 已驳回 → 准备中 → 执行中 →
+  已完成）
+- **业务编码规则**：22 类业务编码，支持 `[yyyy] [yy] [mm] [dd] [hh]` 模板及日/月/年三种流水号重置策略
+- **RBAC 权限模型**：用户 ↔ 角色 ↔ 权限 ↔ 菜单，超管（`id=1L`）自动放行
+- **生产执行闭环**：BOM → 工艺路线 → 生产订单 → 工序报工 → 成品入库，全链路贯通
+- **价格管理**：物料多供应商采购价、多客户销售价统一管理
 
-- **QMS (Quality Management System) 质量管理系统**，主要用于质量管理与控制，确保产品和服务满足规定以及客户期望的质量要求，包括质量策划、质量控制、质量保证及质量改进等活动。
+### 🤖 AI 与扩展
 
-- **IoTS（Internet of Things System) 物联网管理系统**，通过连接各种生产设备和传感器，收集海量实时数据，实现设备远程监控、预防性维护、生产过程智能化控制等功能。
+- **MCP 工具中心**：自动扫描 `@McpMethod` 注解方法，注册为 AI 可调用的工具
+- **OAuth2 授权**：支持企业微信、Gitee 等多平台扩展（`AbstractOauthCallback` 适配器）
 
-通过将这些系统功能一体化整合在 **S-PMS** 中，企业可以实现从采购、生产、仓储到销售全流程的信息化、精细化、智能化管理，有效提升企业的整体运营效率和市场竞争力。
+### 📡 IoT 集成
 
-## 产品截图
+- **MQTT 设备接入**：订阅 `sys/msg/v1` 主题，自动解析设备上报
+- **时序数据存储**：Redis 缓存最新值（5s TTL）+ InfluxDB 持久化
+- **内置系统参数**：`Status / Alarm / PartCnt` 三个开箱即用的设备参数
+- **设备配置下发**：`POST /device/getDeviceConfig` 返回设备所需的参数列表与采集频率
+
+### 🛠️ 工程能力
+
+- **发布锁定**：`isPublished` 字段，已发布数据自动禁止修改和删除
+- **数据脱敏**：`@Desensitize` 注解支持中文姓名、身份证号等自动脱敏
+- **国际化字典**：所有枚举实现 `IDictionary`，前端可反查标签
+- **代码自动生成**：单据号、合同号等通过 `@AutoGenerateCode` 自动填充
+- **多端登录**：账号密码、邮箱验证码、第三方 OAuth2
+
+---
+
+## 🧱 技术栈
+
+| 类别          | 技术 / 版本                                                  |
+|---------------|--------------------------------------------------------------|
+| 语言 / 运行时 | **Java 17**                                                  |
+| Web 框架      | **Spring Boot 3**（由 `cn.hamm:airpower:8.0.0` 父 POM 锁定） |
+| ORM           | **Spring Data JPA + Hibernate**（MySQL8Dialect）             |
+| 数据库        | **MySQL 8**                                                  |
+| 缓存          | **Redis**（Spring Data Redis，统一前缀 `spms:`）             |
+| 时序数据库    | **InfluxDB 6.5.0**（设备数据上报）                           |
+| 物联网        | **Eclipse Paho MQTT**                                        |
+| 实时通信      | **WebSocket**（基于 `airpower-websocket`，Redis 集群广播）   |
+| 邮件          | **Spring Mail** + 阿里云企业邮箱                             |
+| AI 工具       | **MCP**（Model Context Protocol，`airpower-ai`）             |
+| 构建          | **Maven**、Spring Boot Maven Plugin                          |
+| 容器          | **Docker**（`amazoncorretto:17-alpine`）                     |
+
+---
+
+## 📦 业务模块
+
+> 每个业务模块都以 `cn.hamm.spms.module.<module>` 为根包，对应一个 `XxxServices` 服务定位类。
+
+| 模块        | 包路径             | 主要业务                                                              |
+|-------------|--------------------|-----------------------------------------------------------------------|
+| `system`    | `module.system`    | 菜单 / 权限 / 编码规则 / 系统配置 / 单位 / 文件 / 索引 / 企业微信回调 |
+| `personnel` | `module.personnel` | 用户（登录、验证码、个人令牌）/ 角色 / 部门                           |
+| `asset`     | `module.asset`     | 物料 / 设备 / 合同（含合同参与方、附件）                              |
+| `channel`   | `module.channel`   | 客户 / 供应商 / 采购 / 销售 / 采购单价 / 销售单价                     |
+| `factory`   | `module.factory`   | 仓库（Storage）/ 生产单元（Structure，树形结构）                      |
+| `mes`       | `module.mes`       | 生产计划 / 生产订单 / 领料单 / BOM / 工序 / 工艺路线                  |
+| `wms`       | `module.wms`       | 入库单 / 出库单 / 移库单 / 库存（均为单据模型）                       |
+| `iot`       | `module.iot`       | 参数管理 + 设备数据上报（MQTT + Redis + InfluxDB）                    |
+| `chat`      | `module.chat`      | 房间（广场/官方房）+ 成员 + WebSocket 实时聊天事件                    |
+| `open`      | `module.open`      | OAuth2 / 第三方登录 / 通知钩子 / 开放应用管理                         |
+| `mcp`       | `module.mcp`       | AI 工具（MCP）注册中心                                                |
+| `wechat`    | `module.wechat`    | 微信相关（占位/扩展）                                                 |
+
+---
+
+## 🏗️ 系统架构
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                       客户端 / 第三方应用                       │
+│    Web SPA · Mobile App · 设备 MQTT 客户端 · OAuth2 回调       │
+└──────────────────┬───────────────────────────────┬───────────┘
+                   │ HTTP/JSON                     │ MQTT
+                   │ WebSocket                     │
+┌──────────────────▼───────────────────────────────▼───────────┐
+│                  SPMS Server（本项目）                        │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Controller 层（@Permission RBAC + Extends 过滤）     │  │
+│  ├──────────────────────────────────────────────────────┤  │
+│  │  Service 层（BaseService 钩子 + 单据状态机）          │  │
+│  ├──────────────────────────────────────────────────────┤  │
+│  │  Repository 层（JPA + Hibernate · MySQL8Dialect）    │  │
+│  └──────────────────────────────────────────────────────┘  │
+│  ┌──────────┬──────────┬──────────┬──────────┬────────────┐ │
+│  │ 系统模块 │ 人员模块 │ 资产模块 │ 渠道模块 │ MES/WMS/...│ │
+│  └──────────┴──────────┴──────────┴──────────┴────────────┘ │
+└────┬────────────┬────────────┬─────────────┬────────────────┘
+     │            │            │             │
+┌────▼────┐  ┌────▼────┐  ┌────▼────┐   ┌───▼─────┐
+│  MySQL  │  │  Redis  │  │InfluxDB │   │  MQTT   │
+│   主库  │  │ 缓存集群 │  │ 时序数据 │   │ Broker  │
+└─────────┘  └─────────┘  └─────────┘   └─────────┘
+```
+
+---
+
+## 🖼️ 产品截图
 
 <p align="center">
-<img src="/docs/img/1.png" width="18%"/>
-<img src="/docs/img/2.png" width="18%"/>
-<img src="/docs/img/3.png" width="18%"/>
-<img src="/docs/img/4.png" width="18%"/>
-<img src="/docs/img/5.png" width="18%"/>
-<img src="/docs/img/6.png" width="18%"/>
-<img src="/docs/img/7.png" width="18%"/>
-<img src="/docs/img/8.png" width="18%"/>
-<img src="/docs/img/9.png" width="18%"/>
-<img src="/docs/img/10.png" width="18%"/>
-<img src="/docs/img/11.png" width="18%"/>
-<img src="/docs/img/12.png" width="18%"/>
-<img src="/docs/img/13.png" width="18%"/>
-<img src="/docs/img/14.png" width="18%"/>
-<img src="/docs/img/15.png" width="18%"/>
-<img src="/docs/img/16.png" width="18%"/>
-<img src="/docs/img/17.png" width="18%"/>
-<img src="/docs/img/18.png" width="18%"/>
-<img src="/docs/img/19.png" width="18%"/>
-<img src="/docs/img/20.png" width="18%"/>
+<img src="/docs/img/1.png" width="24%"/>
+<img src="/docs/img/2.png" width="24%"/>
+<img src="/docs/img/3.png" width="24%"/>
+<img src="/docs/img/4.png" width="24%"/>
+<br/>
+<img src="/docs/img/5.png" width="24%"/>
+<img src="/docs/img/6.png" width="24%"/>
+<img src="/docs/img/7.png" width="24%"/>
+<img src="/docs/img/8.png" width="24%"/>
+<br/>
+<img src="/docs/img/9.png" width="24%"/>
+<img src="/docs/img/10.png" width="24%"/>
+<img src="/docs/img/11.png" width="24%"/>
+<img src="/docs/img/12.png" width="24%"/>
+<br/>
+<img src="/docs/img/13.png" width="24%"/>
+<img src="/docs/img/14.png" width="24%"/>
+<img src="/docs/img/15.png" width="24%"/>
+<img src="/docs/img/16.png" width="24%"/>
+<br/>
+<img src="/docs/img/17.png" width="24%"/>
+<img src="/docs/img/18.png" width="24%"/>
+<img src="/docs/img/19.png" width="24%"/>
+<img src="/docs/img/20.png" width="24%"/>
 </p>
 
-## 开发者指南
+---
 
-本仓库为 **S-PMS**
-Server后端项目仓库，你可以查看 [开发者指南@Github](https://github.com/s-pms/SPMS-Docs)、[开发者指南@Gitee](https://gitee.com/s-pms/SPMS-Docs)
-等帮助文档。
+## 🚀 快速开始
 
-如果你使用 AI 辅助开发（如 Qwen Code、Cursor、GitHub Copilot 等），请让 AI 参考 **[AGENT.md](./AGENT.md)**
-文档，其中详细约定了项目的开发规范、目录结构、编码风格等，保证 AI 生成的代码与项目现有风格一致。
+### 方式一：Docker 一键部署（推荐）
 
-项目示例站点：[DEMO](https://spms.hamm.cn)
+查看我们的 Docker 一键部署仓库：[SPMS-Docker](https://github.com/s-pms/SPMS-Docker)，最快速体验完整服务。
 
-> 请注意，示例项目可能不是最新代码，建议自行部署后体验。
+### 方式二：本地源码运行
 
-## 快速入门
+#### 技能前提
 
-本项目依赖了我们另一个基础核心包：
-**`AirPower4J`**
-（[Github](https://github.com/AirPowerTeam/AirPower4J)/[Gitee](https://gitee.com/air-power/AirPower4J)），欢迎关注并给我们一个大大的
-**🌟🌟🌟Star**
+需要熟悉以下技术： **Java 17** · **Spring Boot 3** · **Maven** · **IDEA** · **MySQL** · **Redis**
 
-### 技能前提要求
+#### 1. 创建数据库
 
-本项目依赖 **Java17** **SpringBoot3** **IDEA** **MySQL** **Redis** 等技术和工具，请先确认是否了解和熟悉前序要求的技能。
+```sql
+CREATE DATABASE spms DEFAULT CHARSET utf8mb4;
+```
 
-### 创建项目文件夹
+#### 2. 克隆源代码
 
-创建项目文件夹， 如 `SPMS`，然后使用 **Git** 将源代码 clone 至此目录。
+```shell
+# Github
+git clone https://github.com/s-pms/SPMS-Server.git
 
-### 下载源代码
+# 或 Gitee（国内推荐）
+git clone https://gitee.com/s-pms/SPMS-Server.git
+```
 
-- 通过 **Github** 代码仓库初始化
+#### 3. 初始化配置
 
-  ```shell
-  git clone https://github.com/s-pms/SPMS-Server.git
-  ```
+```bash
+cp src/main/resources/application-template.yml src/main/resources/application-local.yml
+```
 
-- 通过 **Gitee** 代码仓库初始化(推荐)
+编辑 `application-local.yml`，至少填入：
 
-  ```shell
-  git clone https://gitee.com/s-pms/SPMS-Server.git
-  ```
+```yaml
+spring:
+  datasource:
+    url: "jdbc:mysql://localhost:3306/spms?allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false"
+    username: "root"
+    password: "<你的密码>"
+app:
+  is-dev-mode: true        # 启用开发者模式，首次启动自动初始化
+```
 
-### 运行项目
+#### 4. 启动应用
 
-- 加载依赖
+- IDEA 打开 `pom.xml`，等待 Maven 依赖同步
+- 运行 `cn.hamm.spms.SpmsApplication`，Profile 选择 `local`
+- 控制台看到 `Hi Guy, SPMS is running at [8080] !` 即启动成功
+- 自动建表（`ddl-auto: create-drop`），初始化完成后生成 `init.lock`
 
-  > 使用 IDEA 打开 `SPMS-Server` 目录，刷新项目的 `maven` 依赖，等待依赖安装完成即可。
+#### 5. 默认账号
 
-- 修改环境变量
+```
+用户名：admin@hamm.cn
+密  码：Aa123456
+```
 
-  > 复制 `resources/application-template.yml` 为你运行环境的配置文件，如 `application-local.yml`
-  ，然后使用这个配置文件启动即可。（IDEA编辑启动有效配置文件为对应的 `local`）
+> 系统内置超级管理员（`id = 1`），拥有所有权限。
 
-- 无数据库脚本?
+#### 6. 数据库怎么办？
 
-  > 我们使用了 **JPA** 进行自动数据库操作，环境变量配置文件中的 `ddl-auto: create-drop`
-  即可自动完成。如果你测试完毕计划部署生产，可以将测试完毕之后的数据库导出，然后在配置文件中修改 `ddl-auto: validate`
-  ，再将导出的数据库文件重新导入数据库即可。
+使用 **JPA** 自动管理，无需手动建表。`ddl-auto: create-drop` 自动建表。 **生产部署前**：导出数据库结构 → 修改
+`ddl-auto: validate` → 重新导入。
 
-## 联系我们
+---
 
-**S-PMS** 所有代码均在 **MIT** 开源协议规范下免费提供，你可以放心使用。
+## 📚 文档导航
 
-如果有定制需求，欢迎联系我们：
+| 文档                                                | 适合谁                                         | 内容                                       |
+|-----------------------------------------------------|------------------------------------------------|--------------------------------------------|
+| [README.md](./README.md)                            | GitHub 访客                                    | 项目概览、快速体验                         |
+| [AGENTS.md](./AGENTS.md)                            | AI Agent（Copilot/Cursor/Claude/Qwen Code 等） | 开发规范、目录结构、编码风格约定           |
+| [docs/DEV.md](./docs/DEV.md)                        | 人类开发者                                     | 完整开发指南、单据开发、IoT 接入、调试排错 |
+| [SPMS-Docs](https://github.com/s-pms/SPMS-Docs)     | 前端开发者                                     | 配套前端开发指南                           |
+| [SPMS-Docker](https://github.com/s-pms/SPMS-Docker) | 运维 / 部署者                                  | Docker 一键部署方案                        |
 
-Email: admin@hamm.cn
+---
 
+## 🤝 贡献指南
+
+欢迎各种形式的贡献：
+
+- 🐛 **报告 Bug**：提交 [Issue](https://github.com/s-pms/SPMS-Server/issues)
+- 💡 **功能建议**：告诉我们你的需求场景
+- 🔧 **提交代码**：Fork → 修改 → Pull Request
+- 📖 **完善文档**：文档同样重要
+
+### 提交规范
+
+```
+feat: 新增 xxx 功能
+fix: 修复 xxx 问题
+refactor: 重构 xxx 模块
+docs: 更新文档
+chore: 杂项修改（构建/工具/配置）
+```
+
+---
+
+## 💬 社区交流
+
+- **QQ 群**：773726377（智能制造、工业互联网、物联网交流）
+- **在线 Demo**：[https://spms.hamm.cn](https://spms.hamm.cn)
+
+> ⚠️ 示例项目可能不是最新代码，建议自行部署后体验。
+
+---
+
+## 🌟 相关项目
+
+- **[AirPower4J](https://github.com/AirPowerTeam/AirPower4J)** — 基础核心框架
+- **[SPMS-Docs](https://github.com/s-pms/SPMS-Docs)** — 开发者指南
+- **[SPMS-Docker](https://github.com/s-pms/SPMS-Docker)** — Docker 一键部署
+- **[在线 Demo](https://spms.hamm.cn)** — 项目示例站点
+
+如果本项目对你有帮助，欢迎给 **AirPower4J** 也点一个 ⭐️，基础框架的迭代速度决定了这个项目的上限。
+
+---
+
+## 📜 许可证
+
+本项目基于 [MIT License](./LICENSE) 开源，你可以放心使用于商业项目。
+
+---
+
+## 📮 联系我们
+
+- **作者邮箱**：admin@hamm.cn
+- **GitHub**：[s-pms/SPMS-Server](https://github.com/s-pms/SPMS-Server)
+- **Gitee**：[s-pms/SPMS-Server](https://gitee.com/s-pms/SPMS-Server)
+
+---
+
+<div align="center">
+
+**如果觉得项目对你有帮助，请点一个 ⭐️ Star 支持我们！**
+
+Made with ❤️ by [Hamm](https://github.com/s-pms)
+
+</div>
