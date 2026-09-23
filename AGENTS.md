@@ -197,7 +197,7 @@ private Integer type;
 - 业务异常用 `Errors.FORBIDDEN_xxx.when(条件, "提示")`， **不要抛 `RuntimeException`**：
 
   ```java
-  Errors.FORBIDDEN_EDIT.when(subtract < 0, "库存数量不足");
+  //  Errors.FORBIDDEN_EDIT.when(subtract < 0, "库存数量不足");
   ```
 
 - 依赖注入：`@Autowired` 直接打在字段上（如 `private StorageService storageService;`），不强制构造器注入。
