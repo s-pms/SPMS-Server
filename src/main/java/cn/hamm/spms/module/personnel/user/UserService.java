@@ -6,6 +6,7 @@ import cn.hamm.airpower.core.AccessTokenUtil;
 import cn.hamm.airpower.core.DateTimeUtil;
 import cn.hamm.airpower.core.RandomUtil;
 import cn.hamm.airpower.core.TreeUtil;
+import cn.hamm.airpower.core.exception.ServiceException;
 import cn.hamm.airpower.curd.base.CurdEntity;
 import cn.hamm.airpower.curd.config.AccessConfig;
 import cn.hamm.airpower.curd.model.query.Sort;
@@ -57,6 +58,11 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     public static final int PASSWORD_SALT_LENGTH = 4;
 
     /**
+     * 邮箱最大错误次数
+     */
+    public static final int EMAIL_MAX_ERROR_COUNT = 5;
+
+    /**
      * Code 缓存秒数
      */
     private static final int CACHE_CODE_EXPIRE_SECOND = DateTimeUtil.SECOND_PER_MINUTE * 5;
@@ -64,7 +70,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * 缓存房间用户
      */
-    private final String CACHE_ROOM_KEY = "ROOM_USER_";
+    private final String CACHE_ROOM_KEY = "room:user:";
 
     @Autowired
     private AppConfig appConfig;
@@ -98,7 +104,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     @Contract(pure = true)
     private static @NotNull String getPhoneCodeCacheKey(String phone) {
-        return "sms_code_" + phone;
+        return "phone:" + phone + ":code";
     }
 
     /**
@@ -108,8 +114,8 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return 缓存 Key
      */
     @Contract(pure = true)
-    private static @NotNull String getEmailCacheKey(String email) {
-        return "email_code_" + email;
+    private static @NotNull String getEmailCodeCacheKey(String email) {
+        return "email:" + email + ":code:";
     }
 
     /**
@@ -119,8 +125,8 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return 缓存 Key
      */
     @Contract(pure = true)
-    private static @NotNull String getCookieCodeKey(String cookie) {
-        return "cookie_code_" + cookie;
+    private static @NotNull String getCookieUserKey(String cookie) {
+        return "cookie:" + cookie + ":user";
     }
 
     /**
@@ -242,7 +248,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         PARAM_INVALID.whenNull(user, "重置密码失败，用户信息异常");
         PARAM_INVALID.whenNotEqualsIgnoreCase(cacheCode, code, "验证码不正确，请重新获取");
         resetPassword(user, newPassword);
-        redisHelper.delete(getEmailCacheKey(email));
+        redisHelper.delete(getEmailCodeCacheKey(email));
     }
 
     /**
@@ -251,9 +257,9 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param email 邮箱
      */
     public void sendEmailCode(String email) throws MessagingException {
-        EMAIL_SEND_BUSY.when(redisHelper.hasKey(getEmailCacheKey(email)));
+        EMAIL_SEND_BUSY.when(redisHelper.hasKey(getEmailCodeCacheKey(email)));
         String code = getRandomValidateCode();
-        redisHelper.set(getEmailCacheKey(email), code, CACHE_CODE_EXPIRE_SECOND);
+        redisHelper.set(getEmailCodeCacheKey(email), code, CACHE_CODE_EXPIRE_SECOND);
         emailHelper.sendCode(email, "你收到一个邮箱验证码", code, appConfig.getProjectName());
     }
 
@@ -296,7 +302,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param cookie Cookie
      */
     public void saveCookie(Long userId, String cookie) {
-        redisHelper.set(getCookieCodeKey(cookie), userId, DateTimeUtil.SECOND_PER_DAY);
+        redisHelper.set(getCookieUserKey(cookie), userId, DateTimeUtil.SECOND_PER_DAY);
     }
 
     /**
@@ -306,7 +312,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return UserId
      */
     public Long getUserIdByCookie(String cookie) {
-        Object userId = redisHelper.get(getCookieCodeKey(cookie));
+        Object userId = redisHelper.get(getCookieUserKey(cookie));
         if (Objects.isNull(userId)) {
             return null;
         }
@@ -324,11 +330,30 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         PARAM_INVALID.whenEmpty(email, "请确认传入有效的邮箱");
         PARAM_INVALID.whenEmpty(password, "请确认传入有效的密码");
         UserEntity existUser = repository.getByEmail(email);
-        USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNull(existUser);
+        USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNull(existUser, "邮箱或密码错误");
         // 将用户传入的密码加密与数据库存储匹配
         String encodePassword = PermissionUtil.encodePassword(password, existUser.getSalt());
-        USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNotEqualsIgnoreCase(encodePassword, existUser.getPassword());
+        if (!encodePassword.equals(existUser.getPassword())) {
+            addEmailFailCount(email);
+            throw new ServiceException("邮箱或密码错误");
+        }
+        resetEmailFailCount(email);
         return existUser;
+    }
+
+    @Contract(pure = true)
+    private void addEmailFailCount(String email) {
+        String key = getEmailFailKey(email);
+        Object o = redisHelper.get(key);
+        if (Objects.isNull(o)) {
+            redisHelper.set(key, 1, DateTimeUtil.SECOND_PER_HOUR);
+            return;
+        }
+        int count = Integer.parseInt(o.toString());
+        redisHelper.set(key, count + 1, DateTimeUtil.SECOND_PER_HOUR);
+        if (count >= EMAIL_MAX_ERROR_COUNT) {
+            throw new ServiceException("操作过于频繁，请一小时后重试");
+        }
     }
 
     /**
@@ -342,7 +367,10 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         PARAM_INVALID.whenEmpty(email, "请确认传入有效的邮箱");
         PARAM_INVALID.whenEmpty(code, "请确认传入有效的验证码");
         String cacheCode = getEmailCacheCode(email);
-        PARAM_INVALID.whenNotEquals(cacheCode, code, "邮箱验证码不正确");
+        if (!code.equalsIgnoreCase(cacheCode)) {
+            addEmailFailCount(email);
+            throw new ServiceException(PARAM_INVALID, "邮箱验证码不正确");
+        }
         UserEntity existUser = repository.getByEmail(email);
         ConfigEntity configuration = SystemServices.getConfigService().get(ConfigFlag.AUTO_REGISTER_EMAIL_LOGIN);
         if (configuration.booleanConfig()) {
@@ -350,7 +378,28 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             existUser = registerUserViaEmail(email);
         }
         PARAM_INVALID.whenNull(existUser, "登录的邮箱账户不存在");
+        resetEmailFailCount(email);
         return existUser;
+    }
+
+    /**
+     * 获取邮箱失败次数的缓存 Key
+     *
+     * @param email 邮箱
+     * @return 缓存 Key
+     */
+    @Contract(pure = true)
+    private @NotNull String getEmailFailKey(String email) {
+        return "email:" + email + ":fail";
+    }
+
+    /**
+     * 重置邮箱失败次数
+     *
+     * @param email 邮箱
+     */
+    private void resetEmailFailCount(String email) {
+        redisHelper.delete(getEmailFailKey(email));
     }
 
     /**
@@ -401,7 +450,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return 验证码
      */
     private String getEmailCacheCode(String email) {
-        Object code = redisHelper.get(getEmailCacheKey(email));
+        Object code = redisHelper.get(getEmailCodeCacheKey(email));
         return Objects.isNull(code) ? "" : code.toString();
     }
 

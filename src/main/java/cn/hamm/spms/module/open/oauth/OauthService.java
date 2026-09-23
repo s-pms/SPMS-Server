@@ -55,7 +55,7 @@ public class OauthService {
      */
     @Contract(pure = true)
     public static @NotNull String getUserIdCacheKey(String appKey, String code) {
-        return "oauth_user_" + appKey + "_" + code;
+        return "oauth:" + appKey + ":" + code + ":user:";
     }
 
     /**
@@ -67,7 +67,7 @@ public class OauthService {
      */
     @Contract(pure = true)
     public static @NotNull String getScopeCacheKey(String appKey, String code) {
-        return "oauth_scope_" + appKey + "_" + code;
+        return "oauth:" + appKey + ":" + code + ":scope:";
     }
 
     private static OauthPlatform getOauthPlatform(String platform) {

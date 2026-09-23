@@ -5,10 +5,12 @@ import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.curd.permission.Permission;
+import cn.hamm.airpower.file.FileHelper;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.system.file.enums.FileCategory;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +27,9 @@ import java.util.Objects;
 @Api("file")
 @Description("文件")
 public class FileController extends BaseController<FileEntity, FileService, FileRepository> {
+    @Autowired
+    private FileHelper fileHelper;
+
     @PostMapping("upload")
     @Description("文件上传")
     @Permission(authorize = false)
@@ -38,6 +43,6 @@ public class FileController extends BaseController<FileEntity, FileService, File
     @Description("获取文件")
     @Permission(login = false)
     public void getFileUrl(@NotNull(message = "文件不能为空") @RequestParam("url") String url, HttpServletResponse response) throws IOException {
-        response.sendRedirect(service.getUrl(url));
+        response.sendRedirect(fileHelper.getPlatform().getUrl(url, 3000));
     }
 }

@@ -37,7 +37,7 @@ public class ReportConstant {
     /**
      * Redis 存 IOT采集数据的前缀
      */
-    public final static String CACHE_PREFIX = "iot_report_";
+    public final static String CACHE_PREFIX = "iot:device:";
 
     /**
      * 获取设备报告缓存的 key
@@ -47,7 +47,7 @@ public class ReportConstant {
      */
     @Contract(pure = true)
     public static @NotNull String getDeviceReportCacheKey(String uuid) {
-        return CACHE_PREFIX + uuid;
+        return CACHE_PREFIX + uuid + ":report:";
     }
 
     /**
@@ -59,6 +59,6 @@ public class ReportConstant {
      */
     @Contract(pure = true)
     static @NotNull String getDeviceReportParamCacheKey(String code, String uuid) {
-        return CACHE_PREFIX + code + "_" + uuid;
+        return CACHE_PREFIX + uuid + ":code:" + code;
     }
 }

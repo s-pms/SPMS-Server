@@ -26,8 +26,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -112,7 +112,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
      */
     @Contract(pure = true)
     private @NotNull String getUserPermissionCacheKey(long userId) {
-        return "user_permission_" + userId;
+        return "user:" + userId + ":permission";
     }
 
     /**
@@ -122,7 +122,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
      */
     @Contract(pure = true)
     private @NotNull String getUserMenuCacheKey(long userId) {
-        return "user_menu_" + userId;
+        return "user:" + userId + ":menu";
     }
 
     @Description("获取我绑定的社交账号")
@@ -214,12 +214,12 @@ public class UserController extends BaseController<UserEntity, UserService, User
         // 目前先返回一个示例配置
         try {
             return Json.data(com.yubico.webauthn.data.PublicKeyCredentialRequestOptions.builder()
-                .challenge(com.yubico.webauthn.data.ByteArray.fromBase64Url("test-challenge"))
-                .timeout(60000L)
-                .rpId("spms.hamm.cn")
-                .userVerification(com.yubico.webauthn.data.UserVerificationRequirement.PREFERRED)
-                .allowCredentials(Collections.emptyList())
-                .build(), "获取成功");
+                    .challenge(com.yubico.webauthn.data.ByteArray.fromBase64Url("test-challenge"))
+                    .timeout(60000L)
+                    .rpId("spms.hamm.cn")
+                    .userVerification(com.yubico.webauthn.data.UserVerificationRequirement.PREFERRED)
+                    .allowCredentials(Collections.emptyList())
+                    .build(), "获取成功");
         } catch (com.yubico.webauthn.data.exception.Base64UrlException e) {
             e.printStackTrace();
             return Json.error("获取 WebAuthn 断言选项失败");

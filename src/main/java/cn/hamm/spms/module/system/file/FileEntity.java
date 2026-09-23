@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.system.file;
 
-import cn.hamm.airpower.core.annotation.Meta;
 import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Meta;
 import cn.hamm.airpower.curd.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
@@ -45,8 +45,8 @@ public class FileEntity extends BaseEntity<FileEntity> {
     private String url;
 
     @Description("存储平台")
-    @Column(columnDefinition = "int UNSIGNED default 0 comment '存储平台'")
-    private Integer platform;
+    @Column(columnDefinition = "varchar(255) default 'LOCAL' comment '存储平台'")
+    private String platform;
 
     @Description("文件类别")
     @Column(columnDefinition = "int UNSIGNED default 1 comment '文件类别'")

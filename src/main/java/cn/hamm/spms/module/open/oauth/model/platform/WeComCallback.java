@@ -27,7 +27,7 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 @Slf4j
 @Component
 public class WeComCallback extends AbstractOauthCallback {
-    private static final String ACCESS_TOKEN_CACHE_KEY = "wecom_token_";
+    private static final String ACCESS_TOKEN_CACHE_KEY = "third:wecom:token:";
     private static final String ACCESS_TOKEN_URL = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=%s&corpsecret=%s";
     private static final String USER_INFO_URL = "https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=%s&code=%s";
     @Autowired
