@@ -31,8 +31,10 @@ public class BaseBillDetailService<
      * @param billId 单据 ID
      */
     public final void deleteAllByBillId(Long billId) {
-        List<E> details = getAllByBillId(billId);
-        details.forEach(detail -> repository.deleteById(detail.getId()));
+        transactionHelper.run(() -> {
+            List<E> details = getAllByBillId(billId);
+            details.forEach(detail -> repository.deleteById(detail.getId()));
+        });
     }
 
     /**
@@ -52,8 +54,10 @@ public class BaseBillDetailService<
      * @param details 明细
      */
     public final void saveDetails(long billId, @NotNull List<E> details) {
-        deleteAllByBillId(billId);
-        details.forEach(detail -> add(detail.setBillId(billId)));
+        transactionHelper.run(() -> {
+            deleteAllByBillId(billId);
+            details.forEach(detail -> add(detail.setBillId(billId)));
+        });
     }
 
     /**
@@ -63,12 +67,12 @@ public class BaseBillDetailService<
      * @param quantity 完成数量
      */
     public final void addFinishQuantity(long detailId, double quantity) {
-        updateWithLock(detailId, detail -> {
+        transactionHelper.run(() -> updateWithLock(detailId, detail -> {
             FORBIDDEN.when(detail.getIsFinished(), "该明细已标记完成，无法再添加明细完成数量");
             double finishQuantity = NumberUtil.add(detail.getFinishQuantity(), quantity);
             detail.setFinishQuantity(finishQuantity).setIsFinished(finishQuantity >= detail.getQuantity());
             log.info("添加完成数量:{} 是否完成:{}", finishQuantity, detail.getIsFinished());
-        });
+        }));
     }
 
     /**
@@ -85,37 +89,38 @@ public class BaseBillDetailService<
             @NotNull BS billService,
             Consumer<E> detailCheck
     ) {
-        List<E> details = getAllByBillId(billId);
-        for (E detail : details) {
-            if (quantity <= 0) {
-                break;
-            }
-            try {
-                detailCheck.accept(detail);
-            } catch (Exception e) {
-                continue;
-            }
-            if (detail.getIsFinished()) {
-                continue;
-            }
+        final double finalQuantity = quantity;
+        transactionHelper.run(() -> {
+            List<E> details = getAllByBillId(billId);
+            for (E detail : details) {
+                if (finalQuantity <= 0) {
+                    break;
+                }
+                try {
+                    detailCheck.accept(detail);
+                } catch (Exception e) {
+                    continue;
+                }
+                if (detail.getIsFinished()) {
+                    continue;
+                }
 
-            // 还需要完成的数量
-            double detailNeedQuantity = NumberUtil.subtract(detail.getQuantity(), detail.getFinishQuantity());
-            if (quantity < detailNeedQuantity) {
+                // 还需要完成的数量
+                double detailNeedQuantity = NumberUtil.subtract(detail.getQuantity(), detail.getFinishQuantity());
                 // 添加单据完成数量
-                detail.setFinishQuantity(quantity);
-            } else {
-                quantity = NumberUtil.subtract(quantity, detailNeedQuantity);
-                detail.setFinishQuantity(detail.getQuantity()).setIsFinished(true);
+                detail.setFinishQuantity(finalQuantity);
+                if (finalQuantity >= detailNeedQuantity) {
+                    detail.setIsFinished(true);
+                }
+                updateToDatabase(detail);
             }
-            updateToDatabase(detail);
-        }
-        // 判断所有明细是否完成
-        details = getAllByBillId(billId);
-        boolean isAllFinished = details.stream().allMatch(BaseBillDetailEntity::getIsFinished);
-        if (isAllFinished) {
-            // 明细已全部完成
-            billService.setBillDetailsAllFinished(billId);
-        }
+            // 判断所有明细是否完成
+            details = getAllByBillId(billId);
+            boolean isAllFinished = details.stream().allMatch(BaseBillDetailEntity::getIsFinished);
+            if (isAllFinished) {
+                // 明细已全部完成
+                billService.setBillDetailsAllFinished(billId);
+            }
+        });
     }
 }

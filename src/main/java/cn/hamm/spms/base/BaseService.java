@@ -42,9 +42,11 @@ public class BaseService<
      * @param id ID
      */
     public final void publish(long id) {
-        E entity = get(id);
-        beforePublish(entity);
-        updateToDatabase(getEntityInstance(id).setIsPublished(true));
+        transactionHelper.run(() -> {
+            E entity = get(id);
+            beforePublish(entity);
+            updateToDatabase(getEntityInstance(id).setIsPublished(true));
+        });
     }
 
     /**
