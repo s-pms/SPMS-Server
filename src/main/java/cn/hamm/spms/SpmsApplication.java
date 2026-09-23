@@ -18,7 +18,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 @SpringBootApplication
 @EnableWebSocket
 @EnableScheduling
-public class Application {
+public class SpmsApplication {
     /**
      * 服务器上下文对象
      */
@@ -27,7 +27,7 @@ public class Application {
     private static ReportEventListener reportEventListener;
 
     public static void main(String[] args) throws MqttException {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(SpmsApplication.class, args);
         if (serverApplicationContext != null) {
             int port = serverApplicationContext.getWebServer().getPort();
             System.out.println("------------------------------------------");
@@ -42,8 +42,8 @@ public class Application {
             ServletWebServerApplicationContext serverApplicationContext,
             ReportEventListener reportEventListener
     ) {
-        Application.serverApplicationContext = serverApplicationContext;
-        Application.reportEventListener = reportEventListener;
+        SpmsApplication.serverApplicationContext = serverApplicationContext;
+        SpmsApplication.reportEventListener = reportEventListener;
     }
 }
                 

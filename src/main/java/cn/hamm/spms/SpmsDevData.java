@@ -77,7 +77,7 @@ import static cn.hamm.spms.module.iot.report.ReportConstant.*;
  */
 @Component
 @Slf4j
-public class DevDataInitRunner implements CommandLineRunner {
+public class SpmsDevData implements CommandLineRunner {
     public static final int TWO = 2;
     private static final String CREATE_DROP = "create-drop";
     private static final String LOCK_FILE = "init.lock";

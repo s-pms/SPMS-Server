@@ -4,7 +4,7 @@ import cn.hamm.airpower.ai.mcp.McpService;
 import cn.hamm.airpower.ai.mcp.model.McpTool;
 import cn.hamm.airpower.core.TreeUtil;
 import cn.hamm.airpower.curd.permission.PermissionUtil;
-import cn.hamm.spms.Application;
+import cn.hamm.spms.SpmsApplication;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.module.system.permission.enums.PermissionType;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +64,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     }
 
     public void loadPermission() {
-        List<PermissionEntity> permissions = PermissionUtil.scanPermission(Application.class.getPackageName(), PermissionEntity.class);
+        List<PermissionEntity> permissions = PermissionUtil.scanPermission(SpmsApplication.class.getPackageName(), PermissionEntity.class);
         for (var permission : permissions) {
             PermissionEntity exist = getPermissionByIdentity(permission.getIdentity());
             long existId;

@@ -11,7 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 @Slf4j
 @SpringBootTest
 @ActiveProfiles("local-hamm")
-public class ApplicationTest {
+public class SpmsApplicationTest {
     @Autowired
     private RedisHelper redisHelper;
 

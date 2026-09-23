@@ -27,7 +27,7 @@ import java.util.Objects;
  * @author Hamm.cn
  */
 @Configuration
-public class WebConfig implements WebMvcConfigurer, WebSocketConfigurer {
+public class SpmsWebConfig implements WebMvcConfigurer, WebSocketConfigurer {
     @Autowired
     private RequestInterceptor requestInterceptor;
     @Autowired

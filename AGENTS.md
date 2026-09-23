@@ -53,7 +53,7 @@ docker build -t spms-server .                       # Dockerfile 已含 COPY set
   `RedisHelper`，所以：
     - 跑 `./mvnw test` **必须** 保证 `application-local-hamm.yml` 在 classpath（默认就在 `src/main/resources/` 下）。
     - 跑测试需要本地 Redis 在线。
-- **`DevDataInitRunner`**：实现 `CommandLineRunner`，仅当 `app.is-dev-mode: true` 且（无 `init.lock` 或
+- **`SpmsDevData`**：实现 `CommandLineRunner`，仅当 `app.is-dev-mode: true` 且（无 `init.lock` 或
   `ddl-auto=create-drop`）时执行种子数据（用户、权限、菜单、demo 物料/仓库/BOM 等）。`init.lock` 写在 **仓库根目录**，已被
   `.gitignore`；首次启动后即存在，再次启动不会重跑种子。删 `init.lock` + 重启可强制重跑。
 
@@ -61,7 +61,7 @@ docker build -t spms-server .                       # Dockerfile 已含 COPY set
 
 ```
 src/main/java/cn/hamm/spms/
-├── Application.java              # 启动类（cn.hamm.spms.Application），含 MQTT report listener 初始化
+├── Application.java              # 启动类（cn.hamm.spms.SpmsApplication），含 MQTT report listener 初始化
 ├── DevDataInitRunner.java        # 种子数据
 ├── WebConfig.java                # WebSocket / 拦截器 / 过滤器注册
 ├── base/                         # BaseEntity / BaseService / BaseRepository / BaseController + bill/
@@ -231,15 +231,15 @@ private Integer type;
 
 ## 11. AirPower4J 框架用法
 
-| 场景           | API                                                                                                |
-|----------------|----------------------------------------------------------------------------------------------------|
-| CURD 接口暴露  | `@Extends({GetDetail, GetPage, Add, Update, Delete})`                                              |
-| 自定义查询条件 | Service 重写 `beforeGetPage` / `beforeCreatePredicate` / `addSearchPredicate`                      |
-| 字典取值       | `DictionaryUtil.getDictionary(EnumClass, value)`                                                   |
-| 树形子节点     | `TreeUtil.getChildrenIdList(id, supplier)`                                                         |
-| 精确数字运算   | `NumberUtil.add(a, b)` / `NumberUtil.subtract(a, b)`（**不要直接 `+/- double`**）                  |
-| 并发安全更新   | `service.updateWithLock(id, consumer)`                                                             |
-| MCP 扫描       | `McpService.scanMcpMethods("cn.hamm.spms", "cn.hamm.airpower")`（已在 `DevDataInitRunner` 中调用） |
+| 场景           | API                                                                                          |
+|----------------|----------------------------------------------------------------------------------------------|
+| CURD 接口暴露  | `@Extends({GetDetail, GetPage, Add, Update, Delete})`                                        |
+| 自定义查询条件 | Service 重写 `beforeGetPage` / `beforeCreatePredicate` / `addSearchPredicate`                |
+| 字典取值       | `DictionaryUtil.getDictionary(EnumClass, value)`                                             |
+| 树形子节点     | `TreeUtil.getChildrenIdList(id, supplier)`                                                   |
+| 精确数字运算   | `NumberUtil.add(a, b)` / `NumberUtil.subtract(a, b)`（**不要直接 `+/- double`**）            |
+| 并发安全更新   | `service.updateWithLock(id, consumer)`                                                       |
+| MCP 扫描       | `McpService.scanMcpMethods("cn.hamm.spms", "cn.hamm.airpower")`（已在 `SpmsDevData` 中调用） |
 
 ## 12. 依赖新增原则
 

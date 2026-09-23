@@ -111,7 +111,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${springboot.version}</version>
                 <configuration>
-                    <mainClass>cn.hamm.spms.Application</mainClass>
+                    <mainClass>cn.hamm.spms.SpmsApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
