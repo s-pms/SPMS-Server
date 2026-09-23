@@ -40,3 +40,5 @@ application-local-**.yml
 
 *.log
 init.lock
+
+.agent

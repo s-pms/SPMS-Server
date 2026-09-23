@@ -1,7 +1,6 @@
 package cn.hamm.spms.base.bill;
 
 import cn.hamm.airpower.core.ReflectUtil;
-import cn.hamm.airpower.core.TaskUtil;
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.airpower.curd.base.CurdEntity;
 import cn.hamm.airpower.curd.helper.TransactionHelper;
@@ -63,15 +62,17 @@ public abstract class AbstractBaseBillService<
      * @param billId 单据 ID
      */
     public final void setBillDetailsAllFinished(long billId) {
-        log.info("标记明细已全部完成 {}，单据ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId);
-        IDictionary status = getBillDetailsFinishStatus();
-        FORBIDDEN.whenNull(status, "没有找到单据的所有明细完成状态");
-        updateToDatabase(getEntityInstance(billId).setStatus(status.getKey()));
-        afterAllBillDetailFinished(billId);
-        if (status.equals(getFinishedStatus())) {
-            log.info("明细完成状态是终态");
-            setBillFinished(billId);
-        }
+        transactionHelper.run(() -> {
+            log.info("标记明细已全部完成 {}，单据ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId);
+            IDictionary status = getBillDetailsFinishStatus();
+            FORBIDDEN.whenNull(status, "没有找到单据的所有明细完成状态");
+            updateToDatabase(getEntityInstance(billId).setStatus(status.getKey()));
+            afterAllBillDetailFinished(billId);
+            if (status.equals(getFinishedStatus())) {
+                log.info("明细完成状态是终态");
+                setBillFinished(billId);
+            }
+        });
     }
 
     /**
@@ -80,12 +81,14 @@ public abstract class AbstractBaseBillService<
      * @param billId 单据 ID
      */
     public final void setBillFinished(long billId) {
-        log.info("标记单据已完成 {}，单据ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId);
-        IDictionary status = getFinishedStatus();
-        FORBIDDEN.whenNull(status, "标记完成失败，没有找到完成状态");
-        beforeBillFinish(billId);
-        updateToDatabase(getEntityInstance(billId).setStatus(status.getKey()));
-        afterBillFinished(billId);
+        transactionHelper.run(() -> {
+            log.info("标记单据已完成 {}，单据ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId);
+            IDictionary status = getFinishedStatus();
+            FORBIDDEN.whenNull(status, "标记完成失败，没有找到完成状态");
+            beforeBillFinish(billId);
+            updateToDatabase(getEntityInstance(billId).setStatus(status.getKey()));
+            afterBillFinished(billId);
+        });
     }
 
     /**
@@ -106,12 +109,12 @@ public abstract class AbstractBaseBillService<
      * @param sourceDetail 提交明细
      */
     public final void addDetailFinishQuantity(@NotNull D sourceDetail) {
-        Long detailId = sourceDetail.getId();
-        D detail = detailService.get(detailId);
-        Long billId = detail.getBillId();
-        Double finishQuantity = sourceDetail.getQuantity();
-        log.info("添加明细数量 {}，单据ID:{}, 明细数量:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId, finishQuantity);
         transactionHelper.run(() -> {
+            Long detailId = sourceDetail.getId();
+            D detail = detailService.get(detailId);
+            Long billId = detail.getBillId();
+            Double finishQuantity = sourceDetail.getQuantity();
+            log.info("添加明细数量 {}，单据ID:{}, 明细数量:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId, finishQuantity);
             detailService.addFinishQuantity(detailId, finishQuantity);
 
             // 明细添加成功后置方法
@@ -213,7 +216,7 @@ public abstract class AbstractBaseBillService<
                 audit(bill.getId());
             }
         }
-        TaskUtil.run(() -> afterBillAdd(bill.getId()));
+        afterBillAdd(bill.getId());
     }
 
     /**
@@ -270,12 +273,14 @@ public abstract class AbstractBaseBillService<
      * @param billId 单据 ID
      */
     protected final void audit(long billId) {
-        E bill = get(billId);
-        FORBIDDEN.when(!canAudit(bill), "该单据状态无法审核");
-        bill = getEntityInstance(billId);
-        setAudited(bill);
-        updateToDatabase(bill);
-        TaskUtil.run(() -> afterBillAudited(billId));
+        transactionHelper.run(() -> {
+            E bill = get(billId);
+            FORBIDDEN.when(!canAudit(bill), "该单据状态无法审核");
+            bill = getEntityInstance(billId);
+            setAudited(bill);
+            updateToDatabase(bill);
+            afterBillAudited(billId);
+        });
     }
 
     /**
@@ -284,12 +289,14 @@ public abstract class AbstractBaseBillService<
      * @param billId 单据 ID
      */
     protected final void reject(long billId) {
-        E bill = get(billId);
-        FORBIDDEN.when(!canReject(bill), "该单据状态无法驳回");
-        bill = getEntityInstance(billId);
-        setReject(bill);
-        bill.setRejectReason(bill.getRejectReason());
-        updateToDatabase(getEntityInstance(billId));
+        transactionHelper.run(() -> {
+            E bill = get(billId);
+            FORBIDDEN.when(!canReject(bill), "该单据状态无法驳回");
+            bill = getEntityInstance(billId);
+            setReject(bill);
+            bill.setRejectReason(bill.getRejectReason());
+            updateToDatabase(getEntityInstance(billId));
+        });
     }
 
     /**
