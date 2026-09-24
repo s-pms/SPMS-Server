@@ -7,30 +7,30 @@
 
 ## 0. 必读铁律（违反任意一条都视为不合格的产出）
 
-| #   | 规则                                                   | 原因                                                   |
-|-----|--------------------------------------------------------|--------------------------------------------------------|
-| 0.1 | **不要修改 `base/` 包下的任何基类**                    | 基类是整个系统的骨架，扩展请通过继承                   |
-| 0.2 | **不要绕过 `BaseService / BaseController` 自己写接口** | 所有权限、发布锁定、代码生成等能力都依赖基类           |
-| 0.3 | **不要在 Controller 里 `try/catch` 业务异常**          | 统一由 `RequestInterceptor` 处理                       |
-| 0.4 | **不要新增硬编码异常码**                               | 一律添加到 `cn.hamm.spms.common.exception.CustomError` |
-| 0.5 | **不要写新的 `@SpringBootApplication` 入口**           | 入口只有一个：`cn.hamm.spms.SpmsApplication`           |
-| 0.6 | **不要在 Service 中持有 Bean 引用之外的实例变量**      | 否则 `@Scheduled` 任务会出现线程安全与状态污染         |
-| 0.7 | **不要空注释**，除非用户明确要求                       | 用户偏好（默认为方法添加标准的 JavaDoc）               |
-| 0.8 | **不要提交敏感信息**（密码、token、连接串等）          | 默认配置模板中所有值都应被替换                         |
+| #   | 规则                                            | 原因                                                |
+|-----|-----------------------------------------------|---------------------------------------------------|
+| 0.1 | **不要修改 `base/` 包下的任何基类**                      | 基类是整个系统的骨架，扩展请通过继承                                |
+| 0.2 | **不要绕过 `BaseService / BaseController` 自己写接口** | 所有权限、发布锁定、代码生成等能力都依赖基类                            |
+| 0.3 | **不要在 Controller 里 `try/catch` 业务异常**         | 统一由 `RequestInterceptor` 处理                       |
+| 0.4 | **不要新增硬编码异常码**                                | 一律添加到 `cn.hamm.spms.common.exception.CustomError` |
+| 0.5 | **不要写新的 `@SpringBootApplication` 入口**         | 入口只有一个：`cn.hamm.spms.SpmsApplication`             |
+| 0.6 | **不要在 Service 中持有 Bean 引用之外的实例变量**            | 否则 `@Scheduled` 任务会出现线程安全与状态污染                    |
+| 0.7 | **不要空注释**，除非用户明确要求                            | 用户偏好（默认为方法添加标准的 JavaDoc）                          |
+| 0.8 | **不要提交敏感信息**（密码、token、连接串等）                   | 默认配置模板中所有值都应被替换                                   |
 
 ---
 
 ## 1. 项目快速画像
 
-| 维度     | 值                                                                            |
-|----------|-------------------------------------------------------------------------------|
-| 项目名   | `cn.hamm.spms` / artifactId `server` / version `4.0.0`                        |
-| 父框架   | `cn.hamm:airpower:8.0.0`（**不要绕过 AirPower 自己造轮子**）                  |
-| 技术栈   | Java 17 + Spring Boot 3 + JPA + Hibernate + MySQL 8 + Redis + InfluxDB + MQTT |
-| 构建工具 | Maven（项目自带 `mvnw`）                                                      |
-| 容器     | Docker（`amazoncorretto:17-alpine`）                                          |
-| 包前缀   | `cn.hamm.spms`                                                                |
-| 启动类   | `cn.hamm.spms.SpmsApplication`                                                |
+| 维度   | 值                                                                             |
+|------|-------------------------------------------------------------------------------|
+| 项目名  | `cn.hamm.spms` / artifactId `server` / version `4.0.0`                        |
+| 父框架  | `cn.hamm:airpower:8.0.0`（**不要绕过 AirPower 自己造轮子**）                             |
+| 技术栈  | Java 17 + Spring Boot 3 + JPA + Hibernate + MySQL 8 + Redis + InfluxDB + MQTT |
+| 构建工具 | Maven（项目自带 `mvnw`）                                                            |
+| 容器   | Docker（`amazoncorretto:17-alpine`）                                            |
+| 包前缀  | `cn.hamm.spms`                                                                |
+| 启动类  | `cn.hamm.spms.SpmsApplication`                                                |
 | 默认端口 | `8080`                                                                        |
 
 启动成功标志：控制台输出 `Hi Guy, SPMS is running at [8080] !`（`SpmsApplication.java:34`）
@@ -191,13 +191,13 @@ src/main/java/cn/hamm/spms/
 
 > 涉及明细、有状态流转、数量进度的业务，必须使用单据抽象。
 
-| 角色       | 基类                                                                                            |
-|------------|-------------------------------------------------------------------------------------------------|
-| Entity     | `AbstractBaseBillEntity<E, D>`                                                                  |
+| 角色         | 基类                                                                                          |
+|------------|---------------------------------------------------------------------------------------------|
+| Entity     | `AbstractBaseBillEntity<E, D>`                                                              |
 | Detail     | `BaseBillDetailEntity<D>`（实现 `getQuantity/setQuantity/getFinishQuantity/setFinishQuantity`） |
-| Service    | `AbstractBaseBillService<E, R, D, DS, DR>`                                                      |
-| Repository | `BaseBillRepository<E, D>`                                                                      |
-| Controller | `BaseBillController<E, S, R, D, DS, DR>`                                                        |
+| Service    | `AbstractBaseBillService<E, R, D, DS, DR>`                                                  |
+| Repository | `BaseBillRepository<E, D>`                                                                  |
+| Controller | `BaseBillController<E, S, R, D, DS, DR>`                                                    |
 
 **状态机**：
 
@@ -293,20 +293,20 @@ public enum OauthPlatform {
 
 ## 8. 重要文件速查
 
-| 文件                                              | 行号                                                              | 作用 |
-|---------------------------------------------------|-------------------------------------------------------------------|------|
-| `SpmsApplication.java:34`                         | 启动成功标志输出                                                  |
-| `SpmsDevData.java:88`                             | dev 模式初始化入口                                                |
+| 文件                                                | 行号                                                             | 作用 |
+|---------------------------------------------------|----------------------------------------------------------------|----|
+| `SpmsApplication.java:34`                         | 启动成功标志输出                                                       |
+| `SpmsDevData.java:88`                             | dev 模式初始化入口                                                    |
 | `base/BaseService.java:33`                        | `beforeSaveToDatabase` 自动调 `CodeRuleService.fillFieldAutoCode` |
-| `base/BaseService.java:44`                        | `publish()` 已 final，禁止重写                                    |
-| `base/BaseController.java:34-54`                  | 发布后拒绝修改/删除                                               |
-| `base/BaseController.java:58`                     | `POST /publish` 接口                                              |
-| `base/bill/AbstractBaseBillService.java`          | 单据状态机 / 钩子全集                                             |
-| `common/exception/CustomError.java`               | 自定义异常码（基址 200000）                                       |
-| `common/AppConstant.java:12`                      | `BASE_CUSTOM_ERROR = 200000`                                      |
-| `common/interceptor/RequestInterceptor.java:46`   | 超管判定 + 个人令牌校验                                           |
-| `module/system/coderule/enums/CodeRuleField.java` | 22 类业务编码枚举                                                 |
-| `module/iot/report/ReportEventListener.java:31`   | MQTT 订阅启动入口                                                 |
+| `base/BaseService.java:44`                        | `publish()` 已 final，禁止重写                                       |
+| `base/BaseController.java:34-54`                  | 发布后拒绝修改/删除                                                     |
+| `base/BaseController.java:58`                     | `POST /publish` 接口                                             |
+| `base/bill/AbstractBaseBillService.java`          | 单据状态机 / 钩子全集                                                   |
+| `common/exception/CustomError.java`               | 自定义异常码（基址 200000）                                              |
+| `common/AppConstant.java:12`                      | `BASE_CUSTOM_ERROR = 200000`                                   |
+| `common/interceptor/RequestInterceptor.java:46`   | 超管判定 + 个人令牌校验                                                  |
+| `module/system/coderule/enums/CodeRuleField.java` | 22 类业务编码枚举                                                     |
+| `module/iot/report/ReportEventListener.java:31`   | MQTT 订阅启动入口                                                    |
 
 ---
 
