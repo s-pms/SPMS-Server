@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.asset.contract.participant;
 
 import cn.hamm.spms.base.BaseRepository;
-import cn.hamm.spms.module.asset.contract.ContractEntity;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * @author Hamm.cn
  */
 @Repository
-public interface ParticipantRepository extends BaseRepository<ContractEntity> {
+public interface ParticipantRepository extends BaseRepository<ParticipantEntity> {
 }
