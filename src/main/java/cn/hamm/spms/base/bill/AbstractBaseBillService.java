@@ -298,7 +298,7 @@ public abstract class AbstractBaseBillService<
             bill = getEntityInstance(billId);
             setReject(bill);
             bill.setRejectReason(bill.getRejectReason());
-            updateToDatabase(getEntityInstance(billId));
+            updateToDatabase(bill);
         });
     }
 

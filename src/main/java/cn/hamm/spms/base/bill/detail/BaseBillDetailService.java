@@ -89,6 +89,7 @@ public class BaseBillDetailService<
             @NotNull BS billService,
             Consumer<E> detailCheck
     ) {
+        //todo 需要优化为添加完成数量，而非覆盖
         final double finalQuantity = quantity;
         transactionHelper.run(() -> {
             List<E> details = getAllByBillId(billId);
