@@ -67,7 +67,13 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @PostMapping("updateMyInfo")
     public Json updateMyInfo(@RequestBody @Validated(WhenUpdateMyInfo.class) UserEntity user) {
         user.setId(getCurrentUserId());
-        user.setPhone(null).setEmail(null).setRealName(null).setIdCard(null);
+        user.setPhone(null)
+                .setEmail(null)
+                .setRealName(null)
+                .setIdCard(null)
+                .setRoleList(null)
+                .setDepartmentList(null)
+        ;
         service.update(user);
         return Json.success("资料修改成功");
     }
