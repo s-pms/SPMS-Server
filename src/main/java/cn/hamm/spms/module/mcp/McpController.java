@@ -36,6 +36,7 @@ public class McpController extends ApiController {
     public McpResponse messages(HttpServletRequest request, @RequestBody McpRequest mcpRequest) {
         try {
             AccessTokenUtil.VerifiedToken verifiedToken = getCurrentUserVerifiedToken();
+            request.setAttribute(CURRENT_USER_ID, verifiedToken.getPayloadId());
             return mcpService.run(verifiedToken, mcpRequest, (mcpTool -> requestInterceptor.checkUserPermission(
                     verifiedToken, McpService.getPermissionIdentity(mcpTool), request
             )));
