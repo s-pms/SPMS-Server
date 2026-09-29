@@ -1,7 +1,6 @@
 package cn.hamm.spms.module.channel.sale;
 
 import cn.hamm.airpower.core.NumberUtil;
-import cn.hamm.airpower.core.exception.ServiceException;
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailEntity;
@@ -57,11 +56,5 @@ public class SaleService extends AbstractBaseBillService<SaleEntity, SaleReposit
     @Override
     protected ConfigFlag getAutoAuditConfigFlag() {
         return SALE_BILL_AUTO_AUDIT;
-    }
-
-
-    @Override
-    protected void afterBillAudited(long billId) {
-        throw new ServiceException("测试异常");
     }
 }
