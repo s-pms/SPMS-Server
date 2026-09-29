@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -36,7 +37,7 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 public class RoomEntity extends BaseEntity<RoomEntity> implements IRoomAction {
     @Description("房间号")
     @Column(nullable = false, columnDefinition = "int UNSIGNED comment '房间号'", unique = true)
-    @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "房间号不能为空")
+    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "房间号不能为空")
     private Integer code;
 
     @Description("房间名称")
@@ -50,7 +51,7 @@ public class RoomEntity extends BaseEntity<RoomEntity> implements IRoomAction {
 
     @Description("房间排序")
     @Column(nullable = false, columnDefinition = "int UNSIGNED default 0 comment '房间排序'")
-    @NotBlank(groups = {WhenUpdate.class, WhenAdd.class}, message = "房间排序不能为空")
+    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "房间排序不能为空")
     private Integer orderNumber;
 
     @Description("是否热门")
