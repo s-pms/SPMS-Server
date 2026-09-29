@@ -113,6 +113,9 @@ public abstract class AbstractBaseBillService<
             Long detailId = sourceDetail.getId();
             D detail = detailService.get(detailId);
             Long billId = detail.getBillId();
+            E bill = get(billId);
+            FORBIDDEN.when(!bill.getIsPublished(), "添加明细完成数量失败，单据未审核");
+            FORBIDDEN.when(getFinishedStatus().equalsKey(bill.getStatus()), "添加明细完成数量失败，单据已完成");
             Double finishQuantity = sourceDetail.getQuantity();
             log.info("添加明细数量 {}，单据ID:{}, 明细数量:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId, finishQuantity);
             detailService.addFinishQuantity(detailId, finishQuantity);
