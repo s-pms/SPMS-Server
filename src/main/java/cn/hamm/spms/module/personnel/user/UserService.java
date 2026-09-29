@@ -42,7 +42,8 @@ import java.util.Objects;
 import java.util.Set;
 
 import static cn.hamm.airpower.exception.Errors.*;
-import static cn.hamm.spms.common.exception.CustomError.*;
+import static cn.hamm.spms.common.exception.CustomError.EMAIL_SEND_BUSY;
+import static cn.hamm.spms.common.exception.CustomError.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID;
 
 /**
  * <h1>Service</h1>
@@ -94,17 +95,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     private static @NotNull String getRandomValidateCode() {
         return RandomUtil.randomNumbers(6);
-    }
-
-    /**
-     * 获取短信验证码的缓存 key
-     *
-     * @param phone 手机号
-     * @return 缓存 Key
-     */
-    @Contract(pure = true)
-    private static @NotNull String getPhoneCodeCacheKey(String phone) {
-        return "phone:" + phone + ":code";
     }
 
     /**
@@ -218,37 +208,18 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 通过手机重置密码
-     *
-     * @param phone       手机号
-     * @param code        验证码
-     * @param newPassword 新密码
-     */
-    public void resetPasswordViaPhone(String phone, String code, String newPassword) {
-        PARAM_INVALID.whenNull(phone, "手机号不能为空");
-        String cacheCode = getSmsCacheCode(phone);
-        UserEntity user = repository.getByPhone(phone);
-        PARAM_INVALID.whenNull(user, "重置密码失败，用户信息异常");
-        PARAM_INVALID.whenNotEqualsIgnoreCase(cacheCode, code, "验证码不正确，请重新获取");
-        resetPassword(user, newPassword);
-        redisHelper.delete(getPhoneCodeCacheKey(phone));
-    }
-
-    /**
-     * 通过手机重置密码
+     * 通过邮箱重置密码
      *
      * @param email       邮箱
      * @param code        验证码
      * @param newPassword 新密码
      */
     public void resetPasswordViaEmail(String email, String code, String newPassword) {
-        PARAM_INVALID.whenNull(email, "邮箱不能为空");
-        String cacheCode = getEmailCacheCode(email);
+        validEmailAndCode(email, code);
         UserEntity user = repository.getByEmail(email);
         PARAM_INVALID.whenNull(user, "重置密码失败，用户信息异常");
-        PARAM_INVALID.whenNotEqualsIgnoreCase(cacheCode, code, "验证码不正确，请重新获取");
         resetPassword(user, newPassword);
-        redisHelper.delete(getEmailCodeCacheKey(email));
+        deleteEmailCode(email);
     }
 
     /**
@@ -261,17 +232,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         String code = getRandomValidateCode();
         redisHelper.set(getEmailCodeCacheKey(email), code, CACHE_CODE_EXPIRE_SECOND);
         emailHelper.sendCode(email, "你收到一个邮箱验证码", code, appConfig.getProjectName());
-    }
-
-    /**
-     * 发送短信验证码
-     */
-    public void sendSmsCode(String phone) {
-        SMS_SEND_BUSY.when(redisHelper.hasKey(getPhoneCodeCacheKey(phone)));
-        String code = getRandomValidateCode();
-        redisHelper.set(getPhoneCodeCacheKey(phone), code, CACHE_CODE_EXPIRE_SECOND);
-        log.info("短信验证码：{}", code);
-        //todo 发送验证码
     }
 
     /**
@@ -338,6 +298,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             throw new ServiceException("邮箱或密码错误");
         }
         resetEmailFailCount(email);
+        deleteEmailCode(email);
         return existUser;
     }
 
@@ -352,9 +313,13 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         int count = Integer.parseInt(o.toString());
         redisHelper.set(key, count + 1, DateTimeUtil.SECOND_PER_HOUR);
         if (count >= EMAIL_MAX_ERROR_COUNT) {
-            redisHelper.delete(getEmailCodeCacheKey(email));
+            deleteEmailCode(email);
             throw new ServiceException("操作过于频繁，请一小时后重试");
         }
+    }
+
+    private void deleteEmailCode(String email) {
+        redisHelper.delete(getEmailCodeCacheKey(email));
     }
 
     /**
@@ -365,13 +330,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return 登录成功的用户
      */
     public UserEntity loginViaEmailAndCode(String email, String code) {
-        PARAM_INVALID.whenEmpty(email, "请确认传入有效的邮箱");
-        PARAM_INVALID.whenEmpty(code, "请确认传入有效的验证码");
-        String cacheCode = getEmailCacheCode(email);
-        if (!code.equalsIgnoreCase(cacheCode)) {
-            addEmailFailCount(email);
-            throw new ServiceException(PARAM_INVALID, "邮箱验证码不正确");
-        }
+        validEmailAndCode(email, code);
         UserEntity existUser = repository.getByEmail(email);
         ConfigEntity configuration = SystemServices.getConfigService().get(ConfigFlag.AUTO_REGISTER_EMAIL_LOGIN);
         if (configuration.booleanConfig()) {
@@ -381,6 +340,22 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         PARAM_INVALID.whenNull(existUser, "登录的邮箱账户不存在");
         resetEmailFailCount(email);
         return existUser;
+    }
+
+    /**
+     * 验证邮箱和验证码
+     *
+     * @param email 邮箱
+     * @param code  验证码
+     */
+    private void validEmailAndCode(String email, String code) {
+        PARAM_INVALID.whenEmpty(email, "请确认传入有效的邮箱");
+        PARAM_INVALID.whenEmpty(code, "请确认传入有效的验证码");
+        String cacheCode = getEmailCacheCode(email);
+        if (!code.equalsIgnoreCase(cacheCode)) {
+            addEmailFailCount(email);
+            throw new ServiceException(PARAM_INVALID, "邮箱验证码不正确");
+        }
     }
 
     /**
@@ -452,17 +427,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     private String getEmailCacheCode(String email) {
         Object code = redisHelper.get(getEmailCodeCacheKey(email));
-        return Objects.isNull(code) ? "" : code.toString();
-    }
-
-    /**
-     * 获取指定手机缓存的验证码
-     *
-     * @param phone 手机
-     * @return 验证码
-     */
-    private String getSmsCacheCode(String phone) {
-        Object code = redisHelper.get(getPhoneCodeCacheKey(phone));
         return Objects.isNull(code) ? "" : code.toString();
     }
 

@@ -7,10 +7,7 @@ import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
 import cn.hamm.spms.module.factory.structure.StructureEntity;
 import cn.hamm.spms.module.wms.inventory.enums.InventoryType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -30,7 +27,11 @@ import static jakarta.persistence.FetchType.EAGER;
 @Data
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "inventory")
+@Table(name = "inventory",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_inv_storage", columnNames = {"material_id", "storage_id"}),
+                @UniqueConstraint(name = "uk_inv_structure", columnNames = {"material_id", "structure_id"})
+        })
 @Description("库存")
 public class InventoryEntity extends BaseEntity<InventoryEntity> {
     @Description("物料信息")

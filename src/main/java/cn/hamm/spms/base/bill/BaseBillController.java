@@ -2,6 +2,7 @@ package cn.hamm.spms.base.bill;
 
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.airpower.curd.annotation.Extends;
 import cn.hamm.airpower.curd.base.Curd;
 import cn.hamm.airpower.curd.permission.Permission;
@@ -79,5 +80,17 @@ public class BaseBillController<
      */
     protected void beforeBillUpdate(@NotNull E bill) {
         log.info("单据更新，单据ID：{}", bill.getId());
+    }
+
+    @Override
+    protected E beforeAdd(@NotNull E entity) {
+        IDictionary auditingStatus = service.getAuditingStatus();
+        beforeBillAdd(entity);
+        entity.setStatus(auditingStatus.getKey());
+        return entity;
+    }
+
+    protected void beforeBillAdd(@NotNull E bill) {
+        log.info("单据添加，单据ID：{}", bill.getId());
     }
 }

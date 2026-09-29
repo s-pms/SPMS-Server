@@ -63,6 +63,13 @@ public class UserController extends BaseController<UserEntity, UserService, User
         return Json.data(service.get(getCurrentUserId()));
     }
 
+    @Description("获取其他用户信息")
+    @Permission(authorize = false)
+    @PostMapping("getUserInfo")
+    public Json getUserInfo(@RequestBody @Validated(WhenIdRequired.class) UserEntity user) {
+        return Json.data(service.get(user.getId()));
+    }
+
     @Description("修改我的信息")
     @Permission(authorize = false)
     @PostMapping("updateMyInfo")
@@ -155,13 +162,10 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Permission(login = false)
     @PostMapping("resetMyPassword")
     public Json resetMyPassword(@RequestBody @Validated(WhenResetMyPassword.class) UserEntity user) {
-        String phone = user.getPhone();
         String email = user.getEmail();
         String code = user.getCode();
         String newPassword = user.getPassword();
-        if (StringUtil.hasText(phone)) {
-            service.resetPasswordViaPhone(phone, code, newPassword);
-        } else if (StringUtil.hasText(email)) {
+        if (StringUtil.hasText(email)) {
             service.resetPasswordViaEmail(email, code, newPassword);
         } else {
             PARAM_INVALID.show("请传入邮箱或手机号码");
@@ -201,14 +205,6 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @PostMapping("sendEmail")
     public Json sendEmail(@RequestBody @Validated(WhenSendEmail.class) UserEntity user) throws MessagingException {
         service.sendEmailCode(user.getEmail());
-        return Json.success("发送成功");
-    }
-
-    @Description("发送短信")
-    @Permission(login = false)
-    @PostMapping("sendSms")
-    public Json sendSms(@RequestBody @Validated(WhenSendSms.class) UserEntity user) {
-        service.sendSmsCode(user.getPhone());
         return Json.success("发送成功");
     }
 
