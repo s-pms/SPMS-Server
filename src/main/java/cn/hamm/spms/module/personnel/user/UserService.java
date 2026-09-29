@@ -352,6 +352,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         int count = Integer.parseInt(o.toString());
         redisHelper.set(key, count + 1, DateTimeUtil.SECOND_PER_HOUR);
         if (count >= EMAIL_MAX_ERROR_COUNT) {
+            redisHelper.delete(getEmailCodeCacheKey(email));
             throw new ServiceException("操作过于频繁，请一小时后重试");
         }
     }
