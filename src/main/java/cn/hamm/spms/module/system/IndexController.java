@@ -5,10 +5,10 @@ import cn.hamm.airpower.ai.model.AiRequest;
 import cn.hamm.airpower.ai.model.AiResponse;
 import cn.hamm.airpower.ai.model.AiStream;
 import cn.hamm.airpower.api.ApiController;
+import cn.hamm.airpower.api.RequestUtil;
 import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.redis.RedisHelper;
-import cn.hamm.spms.module.asset.material.MaterialService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,8 +30,6 @@ public class IndexController extends ApiController {
     private Ai ai;
     @Autowired
     private RedisHelper redisHelper;
-    @Autowired
-    private MaterialService materialService;
 
     @GetMapping("")
     public String index() {
@@ -39,6 +37,14 @@ public class IndexController extends ApiController {
         return "<h1>Server running! " + index + "</h1>";
     }
 
+    @GetMapping("ip")
+    public String ip() {
+        return "<h1>" + RequestUtil.getIpAddress(request) + "</h1>";
+    }
+
+    /**
+     * 仅供测试，后续会删除，安全围栏忽略
+     */
     @GetMapping("ai")
     public String ai() {
         AiResponse response = ai.request(
