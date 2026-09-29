@@ -2,6 +2,7 @@ package cn.hamm.spms.module.personnel.user;
 
 import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.cookie.CookieHelper;
+import cn.hamm.airpower.core.DateTimeUtil;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.StringUtil;
 import cn.hamm.airpower.core.annotation.Description;
@@ -89,7 +90,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
             return Json.data(Json.parseList(object.toString(), MenuEntity[].class), "获取成功");
         }
         List<MenuEntity> menuListByUserId = service.getMenuListByUserId(getCurrentUserId());
-        redisHelper.set(userMenuCacheKey, Json.toString(menuListByUserId));
+        redisHelper.set(userMenuCacheKey, Json.toString(menuListByUserId), DateTimeUtil.SECOND_PER_HOUR);
         return Json.data(menuListByUserId, "查询成功");
     }
 
@@ -106,7 +107,7 @@ public class UserController extends BaseController<UserEntity, UserService, User
         List<String> permissions = permissionList.stream()
                 .map(PermissionEntity::getIdentity)
                 .collect(Collectors.toList());
-        redisHelper.set(userPermissionCacheKey, Json.toString(permissions));
+        redisHelper.set(userPermissionCacheKey, Json.toString(permissions), DateTimeUtil.SECOND_PER_HOUR);
         return Json.data(permissions, "查询成功");
     }
 
