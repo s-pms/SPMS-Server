@@ -63,17 +63,71 @@ public abstract class AbstractBaseBillService<
      * @param billId 单据 ID
      */
     public final void setBillDetailsAllFinished(long billId) {
-        transactionHelper.run(() -> {
-            log.info("标记明细已全部完成 {}，单据ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId);
-            IDictionary status = getBillDetailsFinishStatus();
-            FORBIDDEN.whenNull(status, "没有找到单据的所有明细完成状态");
-            updateToDatabase(getEntityInstance(billId).setStatus(status.getKey()));
-            afterAllBillDetailFinished(billId);
-            if (status.equals(getFinishedStatus())) {
-                log.info("明细完成状态是终态");
-                setBillFinished(billId);
-            }
-        });
+        transactionHelper.run(() -> setBillDetailsAllFinished(get(billId)));
+    }
+
+    /**
+     * 设置单据所有明细都已完成（使用已加载的单据实例）
+     * <p>
+     * 与 {@link #setBillDetailsAllFinished(long)} 的区别：不再重复 {@code get(billId)}。
+     * {@code afterAppGet} 每次都会重查一遍全部明细，而调用链
+     * {@code addDetailFinishQuantity -> setBillDetailsAllFinished -> setBillFinished}
+     * 里有多处 {@code get}，实测一次报工会重复查 4~5 次相同的明细 SQL。
+     * 传入已加锁的实例即可省掉这些重复查询。
+     * </p>
+     *
+     * @param bill 已加载的单据
+     */
+    private void setBillDetailsAllFinished(@NotNull E bill) {
+        long billId = bill.getId();
+        IDictionary status = getBillDetailsFinishStatus();
+        FORBIDDEN.whenNull(status, "没有找到单据的所有明细完成状态");
+        log.info("标记明细已全部完成 {}，单据ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId);
+        // 状态守卫：修复前这里不做任何检查，任何能调到该方法的路径
+        // 都能把单据从任意状态（例如「审核中」）直接推到终态。
+        // 只允许「已审核」进入，其余状态一律拒绝。
+        // 订单因业务需要支持「任意状态强制完成」，由 isForceFinishAllowed() 豁免。
+        if (!isForceFinishAllowed()) {
+            FORBIDDEN.when(!getAuditedStatus().equalsKey(bill.getStatus()),
+                    "单据当前状态不允许标记明细完成");
+        }
+        // ⚠️ 这里<b>不能</b>加「已是目标状态就 return」的幂等判断。
+        // 销售单、入库单等单据的 getAuditedStatus() 与 getBillDetailsFinishStatus()
+        // 是同一个状态（如均为 OUTPUTTING），首次调用时该条件就已成立，
+        // 提前返回会导致「审核完的单据永远推进不到完成态」，
+        // afterAllBillDetailFinished 不执行、下游单据（出库单/入库单）也不会生成。
+        //
+        // ⚠️ P2-4（并发报工导致单据永久卡死）在本轮<b>未能安全修复</b>，
+        // 两种方案均实测失败，详见 12-P2修复报告-第三批.md 的「暂缓项」一节：
+        //   ① getForUpdate(billId) 锁单据行 —— 持排他锁后，
+        //      afterAllBillDetailFinished 里 INSERT output 的外键检查
+        //      还要对该行加共享锁，同事务自死锁（Lock wait timeout 50s）。
+        //   ② 单条 UPDATE 的条件更新（CAS）—— bulk update 同样持行锁
+        //      直到事务提交，问题相同；实测 remove 后 10/10 通过、
+        //      加回即 50s 超时。
+        // 结论：在当前「推进状态与生成下游单据在同一调用链」的结构下，
+        // 任何对单据行的写锁都会与下游单据的外键检查冲突。
+        // 需要先解耦这两步（例如下游单据延后生成，或改为先插下游单据再推状态）。
+        updateToDatabase(getEntityInstance(billId).setStatus(status.getKey()));
+        afterAllBillDetailFinished(billId);
+        if (status.equals(getFinishedStatus())) {
+            log.info("明细完成状态是终态");
+            setBillFinished(billId);
+        }
+    }
+
+
+    /**
+     * 是否允许绕过状态守卫强制完成单据
+     * <p>
+     * 默认不允许。订单存在「允许在任何情况下手动完成订单」的业务需求
+     * （见 {@code ConfigFlag} 说明），由 {@code OrderService} 重写为 {@code true}。
+     * </p>
+     *
+     * @return true 表示跳过状态守卫
+     */
+    protected boolean isForceFinishAllowed() {
+        return false;
     }
 
     /**
@@ -83,11 +137,20 @@ public abstract class AbstractBaseBillService<
      */
     public final void setBillFinished(long billId) {
         transactionHelper.run(() -> {
-            log.info("标记单据已完成 {}，单据ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId);
             IDictionary status = getFinishedStatus();
             FORBIDDEN.whenNull(status, "标记完成失败，没有找到完成状态");
-            beforeBillFinish(billId);
+            E bill = get(billId);
+            log.info("标记单据已完成 {}，单据ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId);
+            if (!isForceFinishAllowed()) {
+                // 允许「已审核」「明细已完成」进入，其余状态拒绝
+                FORBIDDEN.when(!getAuditedStatus().equalsKey(bill.getStatus())
+                                && !getBillDetailsFinishStatus().equalsKey(bill.getStatus()),
+                        "单据当前状态不允许标记完成");
+            }
+            // 与 setBillDetailsAllFinished 同理：用条件更新保证并发下只有一个请求
+            // 推进到终态、从而只执行一次 afterBillFinished
             updateToDatabase(getEntityInstance(billId).setStatus(status.getKey()));
+            beforeBillFinish(billId);
             afterBillFinished(billId);
         });
     }
@@ -127,16 +190,26 @@ public abstract class AbstractBaseBillService<
             // 明细添加成功后置方法
             afterDetailFinishAdded(detailId, sourceDetail);
 
-            // 开始判断是否整个单据数量已超标
+            // 重新判断是否整个单据的明细都已完成。
+            // 修复前这一步没有互斥：两个报工请求并发打在同一单据的不同明细上时，
+            // 双方快照都早于对方提交，于是都判 allMatch=false，
+            // 谁都不会去调 setBillDetailsAllFinished，单据永久卡在「明细完成前」。
+            // 8 种单据里只有订单有手动完结接口可救。
+            //
+            // 这里<b>不能</b>用 getForUpdate(billId) 加锁：持有单据行的排他锁后，
+            // afterAllBillDetailFinished 里 INSERT 下游单据（如 output）因外键检查
+            // 还要对该行加共享锁，同事务内自死锁（Lock wait timeout）。
+            // 并发安全改由 setBillDetailsAllFinished 内的条件更新（CAS）保证。
             List<D> details = detailService.getAllByBillId(billId);
-            // 判断所有明细是否完成
-            boolean isAllFinished = details.stream()
-                    .allMatch(BaseBillDetailEntity::getIsFinished);
+            // 空集合的 allMatch 返回 true，会让「明细被清空」的单据被判定为全部完成，
+            // 连锁触发下游生成 0 明细的单据。这里必须先排除空集合
+            boolean isAllFinished = !details.isEmpty()
+                    && details.stream().allMatch(BaseBillDetailEntity::getIsFinished);
             log.info("所有明细是否已完成: {}", isAllFinished);
             if (!isAllFinished) {
                 return;
             }
-            setBillDetailsAllFinished(billId);
+            setBillDetailsAllFinished(get(billId));
         });
     }
 
@@ -188,6 +261,24 @@ public abstract class AbstractBaseBillService<
                 ReflectUtil.getDescription(getFirstParameterizedTypeClass()),
                 billId
         );
+    }
+
+    /**
+     * 单据不支持发布
+     * <p>
+     * {@code Curd} 枚举里没有 {@code Publish}，所以 {@code @Extends(exclude = ...)}
+     * 排除不掉它，只能在这里拦。
+     * <p>
+     * 原因：发布会把 {@code isPublished} 置 true，之后 {@code BaseController}
+     * 会拒绝该数据的<b>一切修改与删除</b>，而单据的 {@code Delete} 接口本就
+     * 被 {@code BaseBillController} 排除 —— 于是这张单据永久卡死，没有任何自愈手段。
+     * </p>
+     *
+     * @param bill 单据
+     */
+    @Override
+    protected void beforePublish(@NotNull E bill) {
+        throw new UnsupportedOperationException("单据不支持发布操作");
     }
 
     @Override

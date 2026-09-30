@@ -33,10 +33,7 @@ public class BaseBillDetailService<
      * @param billId 单据 ID
      */
     public final void deleteAllByBillId(Long billId) {
-        transactionHelper.run(() -> {
-            List<E> details = getAllByBillId(billId);
-            details.forEach(detail -> repository.deleteById(detail.getId()));
-        });
+        transactionHelper.run(() -> repository.deleteByBillId(billId));
     }
 
     /**
@@ -128,7 +125,10 @@ public class BaseBillDetailService<
             }
             // 判断所有明细是否完成
             List<E> details = getAllByBillId(billId);
-            boolean isAllFinished = details.stream().allMatch(BaseBillDetailEntity::getIsFinished);
+            // 空集合的 allMatch 返回 true，会让「明细被清空」的单据被直接判定为全部完成，
+            // 连锁触发下游生成 0 明细的单据。这里必须先排除空集合
+            boolean isAllFinished = !details.isEmpty()
+                    && details.stream().allMatch(BaseBillDetailEntity::getIsFinished);
             if (isAllFinished) {
                 // 明细已全部完成
                 billService.setBillDetailsAllFinished(billId);

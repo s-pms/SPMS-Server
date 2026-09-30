@@ -120,6 +120,14 @@ public class P1DetailQuantityVerifyTest {
         SaleEntity sale = saleWithTwoSameMaterialRows(10D);
         var detailService = cn.hamm.spms.module.channel.ChannelServices.getSaleDetailService();
 
+        // 必须先审核：P2-1 修复后 setBillDetailsAllFinished 有了状态守卫，
+        // 「审核中」的单据不再能被直接推到完成态。修复前这里不审核也能过，
+        // 恰恰说明状态机是形同虚设的
+        SaleEntity auditing = saleService.get(sale.getId());
+        saleService.setAudited(auditing);
+        saleService.updateToDatabase(auditing);
+        log.info("审核后单据状态 = {}", saleService.get(sale.getId()).getStatus());
+
         detailService.updateDetailQuantity(sale.getId(), 10D, saleService, d -> {
         });
         detailService.updateDetailQuantity(sale.getId(), 10D, saleService, d -> {
