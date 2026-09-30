@@ -1,5 +1,6 @@
 package cn.hamm.spms.module.personnel.user;
 
+import cn.hamm.airpower.api.RequestUtil;
 import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.cookie.CookieHelper;
 import cn.hamm.airpower.core.DateTimeUtil;
@@ -19,7 +20,9 @@ import cn.hamm.spms.module.system.menu.MenuEntity;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +45,7 @@ import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 @Api("user")
 @Description("用户")
 @Extends({Curd.Disable, Curd.Enable})
+@Slf4j
 public class UserController extends BaseController<UserEntity, UserService, UserRepository> implements IUserAction {
     @Autowired
     private CookieHelper cookieHelper;
@@ -63,20 +67,12 @@ public class UserController extends BaseController<UserEntity, UserService, User
         return Json.data(service.get(getCurrentUserId()));
     }
 
-    @Description("获取其他用户信息")
-    @Permission(authorize = false)
-    @PostMapping("getUserInfo")
-    public Json getUserInfo(@RequestBody @Validated(WhenIdRequired.class) UserEntity user) {
-        return Json.data(service.get(user.getId()));
-    }
-
     @Description("修改我的信息")
     @Permission(authorize = false)
     @PostMapping("updateMyInfo")
     public Json updateMyInfo(@RequestBody @Validated(WhenUpdateMyInfo.class) UserEntity user) {
         user.setId(getCurrentUserId());
-        user.setPhone(null)
-                .setEmail(null)
+        user.setEmail(null)
                 .setRealName(null)
                 .setIdCard(null)
                 .setRoleList(null)
@@ -161,12 +157,13 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Description("找回密码")
     @Permission(login = false)
     @PostMapping("resetMyPassword")
-    public Json resetMyPassword(@RequestBody @Validated(WhenResetMyPassword.class) UserEntity user) {
+    public Json resetMyPassword(@RequestBody @Validated(WhenResetMyPassword.class) UserEntity user,
+                                HttpServletRequest request) {
         String email = user.getEmail();
         String code = user.getCode();
         String newPassword = user.getPassword();
         if (StringUtil.hasText(email)) {
-            service.resetPasswordViaEmail(email, code, newPassword);
+            service.resetPasswordViaEmail(email, code, newPassword, getClientIp(request));
         } else {
             PARAM_INVALID.show("请传入邮箱或手机号码");
         }
@@ -176,8 +173,9 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Description("账号密码登录")
     @Permission(login = false)
     @PostMapping("login")
-    public Json login(@RequestBody @Validated(WhenLogin.class) UserEntity user, HttpServletResponse httpServletResponse) {
-        return handleLoginRequest(UserLoginType.VIA_ACCOUNT_PASSWORD, user, httpServletResponse);
+    public Json login(@RequestBody @Validated(WhenLogin.class) UserEntity user,
+                      HttpServletResponse httpServletResponse, HttpServletRequest request) {
+        return handleLoginRequest(UserLoginType.VIA_ACCOUNT_PASSWORD, user, httpServletResponse, getClientIp(request));
     }
 
     @Description("退出登录")
@@ -196,15 +194,17 @@ public class UserController extends BaseController<UserEntity, UserService, User
     @Description("邮箱验证码登录")
     @Permission(login = false)
     @PostMapping("loginViaEmail")
-    public Json loginViaEmail(@RequestBody @Validated(WhenLoginViaEmail.class) UserEntity user, HttpServletResponse httpServletResponse) {
-        return handleLoginRequest(UserLoginType.VIA_EMAIL_CODE, user, httpServletResponse);
+    public Json loginViaEmail(@RequestBody @Validated(WhenLoginViaEmail.class) UserEntity user,
+                              HttpServletResponse httpServletResponse, HttpServletRequest request) {
+        return handleLoginRequest(UserLoginType.VIA_EMAIL_CODE, user, httpServletResponse, getClientIp(request));
     }
 
     @Description("发送邮件")
     @Permission(login = false)
     @PostMapping("sendEmail")
-    public Json sendEmail(@RequestBody @Validated(WhenSendEmail.class) UserEntity user) throws MessagingException {
-        service.sendEmailCode(user.getEmail());
+    public Json sendEmail(@RequestBody @Validated(WhenSendEmail.class) UserEntity user,
+                          HttpServletRequest request) throws MessagingException {
+        service.sendEmailCode(user.getEmail(), getClientIp(request));
         return Json.success("发送成功");
     }
 
@@ -216,10 +216,26 @@ public class UserController extends BaseController<UserEntity, UserService, User
      * @param response      响应的请求
      * @return JsonData
      */
-    private Json handleLoginRequest(@NotNull UserLoginType userLoginType, UserEntity user, HttpServletResponse response) {
+    /**
+     * 获取客户端 IP，用于登录与发邮件的频率限流
+     *
+     * @param request 当前请求
+     * @return 客户端 IP，取不到时返回 unknown
+     */
+    private @NotNull String getClientIp(@NotNull HttpServletRequest request) {
+        try {
+            return RequestUtil.getIpAddress(request);
+        } catch (Exception e) {
+            log.warn("获取客户端 IP 失败，按 unknown 处理", e);
+            return "unknown";
+        }
+    }
+
+    private Json handleLoginRequest(@NotNull UserLoginType userLoginType, UserEntity user,
+                                    HttpServletResponse response, String clientIp) {
         UserEntity exist = switch (userLoginType) {
             case VIA_ACCOUNT_PASSWORD -> service.loginViaEmailAndPassword(user.getEmail(), user.getPassword());
-            case VIA_EMAIL_CODE -> service.loginViaEmailAndCode(user.getEmail(), user.getCode());
+            case VIA_EMAIL_CODE -> service.loginViaEmailAndCode(user.getEmail(), user.getCode(), clientIp);
         };
         FORBIDDEN_DISABLED.when(exist.getIsDisabled(), "登录失败，你的账号已被禁用");
         redisHelper.delete(getUserPermissionCacheKey(exist.getId()));

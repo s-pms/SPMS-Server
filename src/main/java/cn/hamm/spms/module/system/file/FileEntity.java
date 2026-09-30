@@ -4,14 +4,18 @@ import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.core.annotation.Meta;
 import cn.hamm.airpower.curd.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
+import cn.hamm.spms.module.personnel.user.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import static jakarta.persistence.FetchType.EAGER;
 
 /**
  * <h1>文件实体</h1>
@@ -61,4 +65,8 @@ public class FileEntity extends BaseEntity<FileEntity> {
     @Column(columnDefinition = "bigint UNSIGNED default 0 comment '文件大小'")
     @Meta
     private Long size;
+
+    @Description("上传人")
+    @ManyToOne(fetch = EAGER)
+    private UserEntity uploader;
 }

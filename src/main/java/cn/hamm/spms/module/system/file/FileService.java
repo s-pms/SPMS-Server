@@ -6,6 +6,7 @@ import cn.hamm.airpower.file.AbstractFilePlatformFactory;
 import cn.hamm.airpower.file.FileConfig;
 import cn.hamm.airpower.file.FileHelper;
 import cn.hamm.spms.base.BaseService;
+import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.system.file.enums.FileCategory;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -37,9 +38,20 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
      * @return 存储的文件信息
      */
     public FileEntity upload(@NotNull MultipartFile multipartFile, @NotNull FileCategory fileCategory) {
-        return upload(fileConfig.getDefaultPlatform(), multipartFile, fileCategory);
+        return upload(fileConfig.getDefaultPlatform(), multipartFile, fileCategory, null);
     }
 
+    /**
+     * 文件上传
+     *
+     * @param multipartFile 文件
+     * @param fileCategory  文件类别
+     * @param uploaderId    上传人 ID，用于受保护文件的归属校验
+     * @return 存储的文件信息
+     */
+    public FileEntity upload(@NotNull MultipartFile multipartFile, @NotNull FileCategory fileCategory, Long uploaderId) {
+        return upload(fileConfig.getDefaultPlatform(), multipartFile, fileCategory, uploaderId);
+    }
 
     /**
      * 文件上传
@@ -49,6 +61,20 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
      * @return 存储的文件信息
      */
     public FileEntity upload(String platform, @NotNull MultipartFile multipartFile, @NotNull FileCategory fileCategory) {
+        return upload(platform, multipartFile, fileCategory, null);
+    }
+
+    /**
+     * 文件上传
+     *
+     * @param platform      存储平台
+     * @param multipartFile 文件
+     * @param fileCategory  文件类别
+     * @param uploaderId    上传人 ID，用于受保护文件的归属校验
+     * @return 存储的文件信息
+     */
+    public FileEntity upload(String platform, @NotNull MultipartFile multipartFile,
+                             @NotNull FileCategory fileCategory, Long uploaderId) {
         // 获取文件的MD5
         AbstractFilePlatformFactory filePlatform = fileHelper.getPlatform(platform);
         String fileHash = filePlatform.getFileHash(multipartFile);
@@ -76,6 +102,9 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
                     .setName(multipartFile.getOriginalFilename())
                     .setHashMd5(fileHash)
                     .setUrl(fileUrl);
+            if (Objects.nonNull(uploaderId)) {
+                file.setUploader(new UserEntity().setId(uploaderId));
+            }
             return addAndGet(file);
         } catch (Exception e) {
             log.error(e.getMessage(), e);

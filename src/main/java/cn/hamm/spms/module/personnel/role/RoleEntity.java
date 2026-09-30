@@ -8,6 +8,7 @@ import cn.hamm.spms.module.system.menu.MenuEntity;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -45,8 +46,10 @@ public class RoleEntity extends BaseEntity<RoleEntity> implements IRoleAction {
     private String code;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @NotNull(groups = {WhenAuthorizeMenu.class}, message = "授权菜单不能为空")
     private Set<MenuEntity> menuList;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @NotNull(groups = {WhenAuthorizePermission.class}, message = "授权权限不能为空")
     private Set<PermissionEntity> permissionList;
 }

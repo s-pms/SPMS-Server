@@ -3,6 +3,7 @@ package cn.hamm.spms.common.interceptor;
 import cn.hamm.airpower.core.AccessTokenUtil;
 import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.curd.interceptor.CurdRequestInterceptor;
+import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.personnel.user.UserService;
 import cn.hamm.spms.module.personnel.user.enums.UserTokenType;
@@ -11,9 +12,15 @@ import cn.hamm.spms.module.personnel.user.token.PersonalTokenService;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import cn.hamm.spms.module.system.permission.PermissionService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 import static cn.hamm.airpower.exception.Errors.UNAUTHORIZED;
@@ -24,6 +31,7 @@ import static cn.hamm.airpower.exception.Errors.UNAUTHORIZED;
  * @author Hamm.cn
  */
 @Component
+@Slf4j
 public class RequestInterceptor extends CurdRequestInterceptor {
     @Autowired
     private PermissionService permissionService;
@@ -48,15 +56,22 @@ public class RequestInterceptor extends CurdRequestInterceptor {
             String permissionIdentity,
             HttpServletRequest request
     ) {
-        PermissionEntity needPermission = permissionService.getPermissionByIdentity(permissionIdentity);
         long userId = verifiedToken.getPayloadId();
         UserEntity currentUser = userService.getWithEnable(userId);
         if (currentUser.isRootUser()) {
             return;
         }
-
-        if (currentUser.getRoleList().stream()
-                .flatMap(role -> role.getPermissionList().stream())
+        PermissionEntity needPermission = permissionService.getPermissionByIdentity(permissionIdentity);
+        if (Objects.isNull(needPermission)) {
+            log.warn("权限标识在权限表中不存在，请检查权限是否已对账: {}", permissionIdentity);
+            FORBIDDEN.show("接口权限配置缺失，请联系管理员: " + permissionIdentity);
+        }
+        Set<PermissionEntity> ownedPermissions = currentUser.getRoleList().stream()
+                .map(RoleEntity::getPermissionList)
+                .filter(Objects::nonNull)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
+        if (ownedPermissions.stream()
                 .anyMatch(permission -> needPermission.getId().equals(permission.getId()))
         ) {
             return;

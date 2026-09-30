@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -69,6 +70,7 @@ public class OauthController extends ApiController implements IOauthAction {
     private static final String APP_NOT_FOUND = "App(%s) not found!";
     private static final String REDIRECT_URI = "redirectUri";
     private static final String REDIRECT_URI_MISSING = "RedirectUri missing!";
+    private static final String REDIRECT_URI_MISMATCH = "回调地址与应用注册地址不匹配!";
     private static final String INVALID_APPKEY = "Invalid appKey!";
     private static final String APP_KEY = "appKey";
     private static final String SCOPE = "scope";
@@ -112,6 +114,14 @@ public class OauthController extends ApiController implements IOauthAction {
         String redirectUri = request.getParameter(REDIRECT_URI);
         if (!StringUtils.hasText(redirectUri)) {
             return showError(REDIRECT_URI_MISSING);
+        }
+        // 回调地址必须与该应用注册时填写的地址一致。
+        // 否则攻击者只要构造一个 redirectUri=evil.com 的链接，
+        // 受害者点开并已登录时，授权码会被直接 302 送到攻击者站点，账号被接管。
+        if (!isRedirectUriAllowed(redirectUri, openApp.getUrl())) {
+            log.warn("回调地址与应用注册地址不匹配，已拒绝。appKey:{} 请求地址:{} 注册地址:{}",
+                    appKey, redirectUri, openApp.getUrl());
+            return showError(REDIRECT_URI_MISMATCH);
         }
         String scope = getScopeFromRequest(request);
         Long userId = getUserIdFromCookie();
@@ -182,6 +192,9 @@ public class OauthController extends ApiController implements IOauthAction {
     @PostMapping("unBindThird")
     @Permission(authorize = false)
     public Json unBindThird(@RequestBody @Validated(ICurdAction.WhenIdRequired.class) UserThirdLoginEntity userThirdLogin) {
+        UserThirdLoginEntity exist = userThirdLoginService.get(userThirdLogin.getId());
+        DATA_NOT_FOUND.whenNull(exist, "解绑失败，数据不存在");
+        FORBIDDEN.whenNotEquals(exist.getUser().getId(), getCurrentUserId(), "解绑失败, 你无权操作");
         userThirdLoginService.delete(userThirdLogin.getId());
         return Json.success("解绑成功");
     }
@@ -206,7 +219,7 @@ public class OauthController extends ApiController implements IOauthAction {
                 continue;
             }
             if (OauthScope.CONTACT.equals(oauthScope)) {
-                user.setPhone(null).setEmail(null);
+                user.setEmail(null);
             }
             if (OauthScope.PRIVACY.equals(oauthScope)) {
                 user.setGender(null).setCreateTime(null).setUpdateTime(null).setIsDisabled(null);
@@ -357,6 +370,86 @@ public class OauthController extends ApiController implements IOauthAction {
                     .collect(Collectors.joining(SCOPE_DELIMITER));
         }
         return scope;
+    }
+
+    /**
+     * 校验回调地址是否与该应用注册时填写的地址匹配
+     * <p>
+     * 协议、主机、端口必须完全一致；路径按注册路径做前缀匹配，
+     * 因此注册 {@code https://a.com/callback} 时允许 {@code https://a.com/callback/x}，
+     * 但不允许 {@code https://a.com/other}，也不允许 {@code https://evil.com/callback}。
+     * </p>
+     *
+     * @param redirectUri  本次请求携带的回调地址
+     * @param registeredUrl 应用注册时填写的地址
+     * @return 是否允许
+     */
+    private boolean isRedirectUriAllowed(@Nullable String redirectUri, @Nullable String registeredUrl) {
+        if (!StringUtils.hasText(redirectUri) || !StringUtils.hasText(registeredUrl)) {
+            return false;
+        }
+        URI requested = parseUri(redirectUri);
+        URI registered = parseUri(registeredUrl);
+        if (Objects.isNull(requested) || Objects.isNull(registered)) {
+            return false;
+        }
+        // RFC 6454：redirect_uri 不得包含用户信息段。
+        // 形如 https://a.com@evil.com/cb 的地址极易在人工审阅时看错真实主机
+        if (Objects.nonNull(requested.getUserInfo()) || Objects.nonNull(registered.getUserInfo())) {
+            log.warn("回调地址包含用户信息段，已拒绝。请求地址:{} 注册地址:{}", redirectUri, registeredUrl);
+            return false;
+        }
+        if (!Objects.equals(registered.getScheme(), requested.getScheme())
+                || !Objects.equals(registered.getHost(), requested.getHost())
+                || registered.getPort() != requested.getPort()) {
+            return false;
+        }
+        // 归一化末尾斜杠，避免注册 /cb 而请求 /cb/ 这类同一路径被误拒
+        String registeredPath = normalizePath(registered.getPath());
+        String requestedPath = normalizePath(requested.getPath());
+        if ("/".equals(registeredPath)) {
+            return true;
+        }
+        // 必须逐段匹配，避免 /callback 匹配上 /callback-evil
+        return requestedPath.equals(registeredPath)
+                || requestedPath.startsWith(registeredPath + "/");
+    }
+
+    /**
+     * 归一化路径：空值视为根路径，去掉末尾多余的斜杠
+     *
+     * @param path 原始路径
+     * @return 归一化后的路径
+     */
+    private @NotNull String normalizePath(@Nullable String path) {
+        if (!StringUtils.hasText(path)) {
+            return "/";
+        }
+        String result = path.trim();
+        while (result.length() > 1 && result.endsWith("/")) {
+            result = result.substring(0, result.length() - 1);
+        }
+        return result;
+    }
+
+    /**
+     * 解析 URL，非法格式一律返回 null
+     *
+     * @param url URL 字符串
+     * @return 解析结果
+     */
+    private @Nullable URI parseUri(@NotNull String url) {
+        try {
+            URI uri = URI.create(url.trim());
+            // 必须是绝对地址且带主机，否则形如 /path 的相对地址会被误判为合法
+            if (!StringUtils.hasText(uri.getScheme()) || !StringUtils.hasText(uri.getHost())) {
+                return null;
+            }
+            return uri;
+        } catch (IllegalArgumentException e) {
+            log.warn("回调地址格式非法：{}", url);
+            return null;
+        }
     }
 
     /**

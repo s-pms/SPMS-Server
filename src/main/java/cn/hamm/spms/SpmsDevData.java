@@ -180,14 +180,12 @@ public class SpmsDevData implements CommandLineRunner {
         String salt = RandomUtil.randomString(UserService.PASSWORD_SALT_LENGTH);
         userService.add(new UserEntity()
                 .setNickname("凌小云")
-                .setPhone("17666666666")
                 .setEmail("admin@hamm.cn")
                 .setPassword(PermissionUtil.encodePassword("Aa123456", salt))
                 .setSalt(salt)
         );
         userService.addAndGet(new UserEntity()
                         .setNickname("张三")
-                        .setPhone("13888888888")
                         .setEmail("admin@hamm.com")
                         .setPassword(PermissionUtil.encodePassword("Aa123456", salt))
                         .setSalt(salt))

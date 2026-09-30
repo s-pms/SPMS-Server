@@ -12,6 +12,11 @@ public class AppConstant {
     public static final int BASE_CUSTOM_ERROR = 200000;
 
     /**
+     * 超级管理员用户 ID
+     */
+    public static final long ROOT_USER_ID = 1L;
+
+    /**
      * 默认允许上传的文件后缀
      */
     public static final String[] DEFAULT_EXTENSIONS = new String[]{

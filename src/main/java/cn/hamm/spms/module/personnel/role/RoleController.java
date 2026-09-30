@@ -11,6 +11,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Objects;
+
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
+
 /**
  * <h1>Controller</h1>
  *
@@ -24,19 +28,22 @@ public class RoleController extends BaseController<RoleEntity, RoleService, Role
     @Description("授权菜单")
     @PostMapping("authorizeMenu")
     public Json authorizeMenu(@RequestBody @Validated({WhenAuthorizeMenu.class, WhenIdRequired.class}) RoleEntity role) {
-        service.update(role);
+        service.authorizeMenu(role, role.getMenuList());
         return Json.success("授权菜单成功");
     }
 
     @Description("授权权限")
     @PostMapping("authorizePermission")
     public Json authorizePermission(@RequestBody @Validated({WhenAuthorizePermission.class, WhenIdRequired.class}) RoleEntity role) {
-        service.update(role);
-        return Json.success("授权菜单成功");
+        service.authorizePermission(role, role.getPermissionList());
+        return Json.success("授权权限成功");
     }
 
     @Override
     protected RoleEntity beforeAppUpdate(@NotNull RoleEntity role, @NotNull RoleEntity exist) {
-        return role.setMenuList(null).setPermissionList(null);
+        if (Objects.nonNull(role.getMenuList()) || Objects.nonNull(role.getPermissionList())) {
+            FORBIDDEN.show("请使用「授权菜单」/「授权权限」接口修改角色的菜单与权限");
+        }
+        return role;
     }
 }

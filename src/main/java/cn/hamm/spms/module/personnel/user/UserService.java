@@ -32,6 +32,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -62,6 +63,14 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * 邮箱最大错误次数
      */
     public static final int EMAIL_MAX_ERROR_COUNT = 5;
+    /**
+     * 同一 IP 每分钟最多触发的发信次数（全局维度兜底）
+     */
+    private static final int EMAIL_MAX_SEND_PER_IP = 20;
+    /**
+     * 无法获取客户端 IP 时的占位值
+     */
+    private static final String UNKNOWN_IP = "unknown";
 
     /**
      * Code 缓存秒数
@@ -215,7 +224,19 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param newPassword 新密码
      */
     public void resetPasswordViaEmail(String email, String code, String newPassword) {
-        validEmailAndCode(email, code);
+        resetPasswordViaEmail(email, code, newPassword, UNKNOWN_IP);
+    }
+
+    /**
+     * 通过邮箱验证码重置密码
+     *
+     * @param email     邮箱
+     * @param code      验证码
+     * @param newPassword 新密码
+     * @param clientIp  客户端 IP，用于失败次数限流
+     */
+    public void resetPasswordViaEmail(String email, String code, String newPassword, @NotNull String clientIp) {
+        validEmailAndCode(email, code, clientIp);
         UserEntity user = repository.getByEmail(email);
         PARAM_INVALID.whenNull(user, "重置密码失败，用户信息异常");
         resetPassword(user, newPassword);
@@ -228,10 +249,55 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param email 邮箱
      */
     public void sendEmailCode(String email) throws MessagingException {
+        sendEmailCode(email, UNKNOWN_IP);
+    }
+
+    /**
+     * 发送邮箱验证码
+     * <p>
+     * 限流分三个维度，缺一不可：
+     * <ul>
+     *     <li>目标邮箱：防止单账号被刷验证码</li>
+     *     <li>客户端 IP：防止循环不同邮箱把服务器当邮件中继</li>
+     *     <li>全局：兜底，防止大量 IP 各自发起</li>
+     * </ul>
+     * </p>
+     *
+     * @param email    邮箱
+     * @param clientIp 客户端 IP
+     */
+    public void sendEmailCode(String email, @NotNull String clientIp) throws MessagingException {
         EMAIL_SEND_BUSY.when(redisHelper.hasKey(getEmailCodeCacheKey(email)));
+        // IP 维度：同一 IP 两分钟内只能发一次，无论目标是哪个邮箱
+        String ipKey = getEmailIpSendKey(clientIp);
+        EMAIL_SEND_BUSY.when(redisHelper.hasKey(ipKey), "发送过于频繁，请两分钟后再试");
+        // 全局维度：无论来源 IP，一分钟内最多放行 20 次
+        String globalKey = getEmailGlobalSendKey();
+        int sentThisMinute = Objects.requireNonNullElse(parseIntQuietly(redisHelper.get(globalKey)), 0);
+        EMAIL_SEND_BUSY.when(sentThisMinute >= EMAIL_MAX_SEND_PER_IP, "服务器邮件发送繁忙，请稍后再试");
+
         String code = getRandomValidateCode();
         redisHelper.set(getEmailCodeCacheKey(email), code, CACHE_CODE_EXPIRE_SECOND);
+        redisHelper.set(ipKey, 1, DateTimeUtil.SECOND_PER_MINUTE * 2);
+        redisHelper.set(globalKey, sentThisMinute + 1, DateTimeUtil.SECOND_PER_MINUTE);
         emailHelper.sendCode(email, "你收到一个邮箱验证码", code, appConfig.getProjectName());
+    }
+
+    /**
+     * 读取并安全解析缓存中的计数
+     *
+     * @param value 缓存值
+     * @return 整数值，解析失败按 0 处理
+     */
+    private @Nullable Integer parseIntQuietly(@Nullable Object value) {
+        if (Objects.isNull(value)) {
+            return 0;
+        }
+        try {
+            return Integer.parseInt(value.toString());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     /**
@@ -294,7 +360,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         // 将用户传入的密码加密与数据库存储匹配
         String encodePassword = PermissionUtil.encodePassword(password, existUser.getSalt());
         if (!encodePassword.equals(existUser.getPassword())) {
-            addEmailFailCount(email);
+            addEmailFailCount(email, UNKNOWN_IP);
             throw new ServiceException(USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID, "邮箱或密码错误");
         }
         resetEmailFailCount(email);
@@ -302,18 +368,27 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         return existUser;
     }
 
-    @Contract(pure = true)
-    private void addEmailFailCount(String email) {
-        String key = getEmailFailKey(email);
-        Object o = redisHelper.get(key);
-        if (Objects.isNull(o)) {
-            redisHelper.set(key, 1, DateTimeUtil.SECOND_PER_HOUR);
-            return;
-        }
-        int count = Integer.parseInt(o.toString());
-        redisHelper.set(key, count + 1, DateTimeUtil.SECOND_PER_HOUR);
+    /**
+     * 累加邮箱验证码失败次数
+     * <p>
+     * 计数键包含客户端 IP：同一 IP 对同一邮箱连续输错只锁定这个 IP 的后续尝试，
+     * 不会因为一个人的错误操作而让该邮箱的真正持有者无法登录。
+     * <b>达阈值时也不再删除验证码</b> —— 旧实现会顺手删掉受害者已经收到的验证码，
+     * 等于给了攻击者一个远程锁死他人账号的手段。
+     * </p>
+     *
+     * @param email    邮箱
+     * @param clientIp 客户端 IP
+     */
+    private void addEmailFailCount(String email, @NotNull String clientIp) {
+        String key = getEmailFailKey(email, clientIp);
+        int count = Objects.requireNonNullElse(parseIntQuietly(redisHelper.get(key)), 0) + 1;
+        redisHelper.set(key, count, DateTimeUtil.SECOND_PER_HOUR);
         if (count >= EMAIL_MAX_ERROR_COUNT) {
-            deleteEmailCode(email);
+            // 顺带封禁该 IP 对所有邮箱的尝试，挡住换邮箱继续试
+            String ipKey = getEmailIpFailKey(clientIp);
+            int ipCount = Objects.requireNonNullElse(parseIntQuietly(redisHelper.get(ipKey)), 0) + 1;
+            redisHelper.set(ipKey, ipCount, DateTimeUtil.SECOND_PER_HOUR);
             throw new ServiceException("操作过于频繁，请一小时后重试");
         }
     }
@@ -330,8 +405,24 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return 登录成功的用户
      */
     public UserEntity loginViaEmailAndCode(String email, String code) {
-        validEmailAndCode(email, code);
+        return loginViaEmailAndCode(email, code, UNKNOWN_IP);
+    }
+
+    /**
+     * 邮箱验证码登录
+     *
+     * @param email    邮箱
+     * @param code     验证码
+     * @param clientIp 客户端 IP，用于失败次数限流
+     * @return 登录成功的用户
+     */
+    public UserEntity loginViaEmailAndCode(String email, String code, @NotNull String clientIp) {
+        validEmailAndCode(email, code, clientIp);
         UserEntity existUser = repository.getByEmail(email);
+        if (Objects.nonNull(existUser)) {
+            resetEmailFailCount(email);
+            return existUser;
+        }
         ConfigEntity configuration = SystemServices.getConfigService().get(ConfigFlag.AUTO_REGISTER_EMAIL_LOGIN);
         if (configuration.booleanConfig()) {
             // 注册一个用户
@@ -349,11 +440,15 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @param code  验证码
      */
     private void validEmailAndCode(String email, String code) {
+        validEmailAndCode(email, code, UNKNOWN_IP);
+    }
+
+    private void validEmailAndCode(String email, String code, @NotNull String clientIp) {
         PARAM_INVALID.whenEmpty(email, "请确认传入有效的邮箱");
         PARAM_INVALID.whenEmpty(code, "请确认传入有效的验证码");
         String cacheCode = getEmailCacheCode(email);
         if (!code.equalsIgnoreCase(cacheCode)) {
-            addEmailFailCount(email);
+            addEmailFailCount(email, clientIp);
             throw new ServiceException(PARAM_INVALID, "邮箱验证码不正确");
         }
     }
@@ -366,7 +461,48 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     @Contract(pure = true)
     private @NotNull String getEmailFailKey(String email) {
-        return "email:" + email + ":fail";
+        return getEmailFailKey(email, UNKNOWN_IP);
+    }
+
+    /**
+     * 获取指定 IP 对指定邮箱的失败次数缓存 Key
+     *
+     * @param email    邮箱
+     * @param clientIp 客户端 IP
+     * @return 缓存 Key
+     */
+    private @NotNull String getEmailFailKey(String email, @NotNull String clientIp) {
+        return "email:" + email + ":fail:" + clientIp;
+    }
+
+    /**
+     * 获取指定 IP 的失败总次数缓存 Key（用于封禁换邮箱继续尝试）
+     *
+     * @param clientIp 客户端 IP
+     * @return 缓存 Key
+     */
+    private @NotNull String getEmailIpFailKey(@NotNull String clientIp) {
+        return "email:ip:" + clientIp + ":fail";
+    }
+
+    /**
+     * 获取指定 IP 的发信频率缓存 Key
+     *
+     * @param clientIp 客户端 IP
+     * @return 缓存 Key
+     */
+    private @NotNull String getEmailIpSendKey(@NotNull String clientIp) {
+        return "email:ip:" + clientIp + ":send";
+    }
+
+    /**
+     * 获取全局发信频率缓存 Key
+     *
+     * @return 缓存 Key
+     */
+    @Contract(pure = true)
+    private @NotNull String getEmailGlobalSendKey() {
+        return "email:global:send";
     }
 
     /**
@@ -399,7 +535,9 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         // 昵称默认为邮箱账号 @ 前面的
         String nickname = email.split("@")[0];
         String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
-        UserEntity user = new UserEntity().setPassword(PermissionUtil.encodePassword(password, salt))
+        UserEntity user = new UserEntity()
+                .setEmail(email)
+                .setPassword(PermissionUtil.encodePassword(password, salt))
                 .setSalt(salt)
                 .setNickname(nickname);
         long id = add(user);
