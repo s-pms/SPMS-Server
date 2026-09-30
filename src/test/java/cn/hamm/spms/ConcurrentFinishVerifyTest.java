@@ -94,8 +94,9 @@ public class ConcurrentFinishVerifyTest {
             pool.submit(() -> {
                 try {
                     startGate.await(5, TimeUnit.SECONDS);
+                    // 带上 billId，走生产路径（锁单据行作为第一个数据库操作）
                     saleService.addDetailFinishQuantity(new SaleDetailEntity()
-                            .setId(detail.getId()).setQuantity(10D));
+                            .setId(detail.getId()).setBillId(sale.getId()).setQuantity(10D));
                     success.incrementAndGet();
                 } catch (Exception e) {
                     failed.incrementAndGet();

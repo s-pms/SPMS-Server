@@ -44,7 +44,8 @@ public class RoutingOperationService extends BaseService<RoutingOperationEntity,
      */
     public void deleteByRoutingId(long id) {
         List<RoutingOperationEntity> exists = filter(new RoutingOperationEntity().setRoutingId(id));
-        deleteAll(exists);
+        // 走 service.delete 保证前后置钩子被触发
+        exists.forEach(entity -> delete(entity.getId()));
         log.info("工艺 {} 的 {} 条工序已删除", id, exists.size());
     }
 }

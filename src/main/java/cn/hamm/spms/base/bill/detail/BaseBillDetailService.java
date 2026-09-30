@@ -53,7 +53,8 @@ public class BaseBillDetailService<
     public final void deleteAllByBillId(Long billId) {
         transactionHelper.run(() -> {
             List<E> exists = getAllByBillId(billId);
-            deleteAll(exists);
+            // 走 service.delete 保证前后置钩子被触发
+            exists.forEach(detail -> delete(detail.getId()));
             log.info("已删除单据 {} 的 {} 条明细", billId, exists.size());
         });
     }
@@ -68,55 +69,16 @@ public class BaseBillDetailService<
         return repository.getAllByBillId(billId);
     }
 
-    /**
-     * <b>加写锁</b>查询单据的全部明细
-     * <p>
-     * {@code SELECT ... FOR UPDATE} 是<b>当前读</b>：绕开 {@code REPEATABLE_READ}
-     * 的读视图，直接读最新已提交版本。这是 P2-4 修复的核心 ——
-     * 并发报工时若用普通读，两个请求各锁各的明细行、在单据行上排队，
-     * 排到队的那个事务仍持有排队之前的读视图，双方都判「明细未全部完成」，
-     * 谁都不推进单据，单据永久卡死。
-     * </p>
-     * <p>
-     * <b>必须一次锁全部明细行，不能逐行加锁。</b>逐行加锁会锁到另一个请求
-     * 已持有的行上：两个请求各持一条明细锁，锁全部时互相等对方的行，
-     * 形成死锁（实测 {@code Deadlock found when trying to get lock}）。
-     * 一次锁全部则是「先到者锁住全部、后来者阻塞在第一行」，不会死锁。
-     * </p>
-     * <p>
-     * <b>为什么用 {@code entityManager} 而不是给 8 个 Repository 各加一个方法</b>：
-     * JPQL 里的实体名必须是具体实体名（{@code PurchaseDetailEntity} 等），
-     * 而这里是泛型基类，编译期拿不到具体类型只能在运行时从泛型实参取；
-     * 而方法名派生也走不通 —— 加 {@code ForUpdate} 之类的后缀会被 Spring Data
-     * 当成属性路径解析（首字母大写被视作 head）而启动失败。
-     * 8 个 Repository 各写一遍 {@code @Query} 只是把同一段逻辑复制 8 份。
-     * </p>
-     * <p>
-     * 加锁顺序：{@code addDetailFinishQuantity} 里是「先锁本行明细 → 再锁单据 →
-     * 再锁全部明细」，本方法是第三步；跨请求顺序完全一致，不会交叉等待。
-     * </p>
-     *
-     * @param billId 单据 ID
-     * @return 加锁后的明细
-     */
-    public final List<E> getAllByBillIdForUpdate(Long billId) {
-        return transactionHelper.run(() -> {
-            // 泛型基类里拿不到具体实体名，JPQL 只能用运行时拼出来的实际实体名
-            Class<E> entityClass = getFirstParameterizedTypeClass();
-            return entityManager.createQuery(
-                            "select e from " + entityClass.getSimpleName() + " e where e.billId = :billId", entityClass)
-                    .setParameter("billId", billId)
-                    .setLockMode(LockModeType.PESSIMISTIC_WRITE)
-                    .getResultList();
-        });
-    }
 
     /**
      * 判断单据的全部明细是否都已完成
      * <p>
-     * 用 {@link #getAllByBillIdForUpdate} 加锁读，不受影响视图影响；
-     * 调用方需已持有单据行锁（{@code addDetailFinishQuantity} 会先锁），
-     * 保证同一单据的并发报工被串行化。
+     * 用普通读即可，但<b>调用方必须已持有单据行锁</b>：
+     * {@code addDetailFinishQuantity} 会先锁单据行，把对同一单据的并发报工串行化；
+     * 本方法里的普通读是对同一张单据的<b>第一次一致性读</b>，
+     * 读视图建立于锁等待结束之后，因此读到的就是最新已提交数据。
+     * 换句话说「读视图建立得晚」是靠前面那次锁等待保证的，
+     * 若这里提前到加锁之前读，就会固定住旧视图导致单据卡死（P2-4）。
      * </p>
      * <p>
      * 空集合直接判否：{@code allMatch} 在空集合上返回 true，
@@ -127,7 +89,7 @@ public class BaseBillDetailService<
      * @return true 表示全部明细都已完成
      */
     public final boolean isAllDetailFinished(Long billId) {
-        List<E> details = getAllByBillIdForUpdate(billId);
+        List<E> details = getAllByBillId(billId);
         if (details.isEmpty()) {
             log.info("单据 {} 没有明细，不算全部完成", billId);
             return false;
@@ -181,10 +143,10 @@ public class BaseBillDetailService<
     ) {
         PARAM_INVALID.when(quantity < 0, "完成数量不能为负数");
         transactionHelper.run(() -> {
-            // 加锁顺序与 addDetailFinishQuantity 一致：先一次性锁全部明细行，
-            // 再由 billService.setBillDetailsAllFinished 锁单据行。
-            // 一次锁全部而不是逐行锁，避免与并发请求形成反向等待而死锁
-            getAllByBillIdForUpdate(billId);
+            // 先锁单据行：把对同一单据的并发数量分配串行化。
+            // 与 addDetailFinishQuantity 的加锁顺序一致（单据行 → 明细行），
+            // 不会与并发请求交叉等待
+            billService.getBillForUpdate(billId);
             // 本次待分配的数量，逐行递减分配，避免同一单据多行相同物料时重复计入
             double remain = quantity;
             for (E detail : getAllByBillId(billId)) {

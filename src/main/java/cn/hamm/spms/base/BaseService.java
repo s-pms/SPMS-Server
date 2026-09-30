@@ -6,10 +6,27 @@ import cn.hamm.spms.module.system.coderule.CodeRuleService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 
 /**
  * <h1>基础服务类</h1>
+ * <p>
+ * <b>删除一律走 {@code delete(long id)}</b>，它会触发
+ * {@code beforeDelete} / {@code afterDelete} 钩子。
+ * </p>
+ * <p>
+ * 不要用 {@code repository.deleteAll(...)} + {@code repository.flush()}：
+ * 那是直接拼的批量 SQL，不触发 JPA 实体生命周期回调、不走钩子、不做级联，
+ * 实体上若挂了需要清理的关联会静默留下脏数据。
+ * </p>
+ * <p>
+ * 也不要写 {@code ids.forEach(this::delete)}。
+ * 这个写法曾经会导致「删 N 条只删掉最后 1 条」：
+ * {@code delete(long id)} 第一步是 {@code get(id)}，而当时的
+ * {@code CurdService.getById} 第一行是 {@code entityManager.clear()}，
+ * 循环里每删一条都先 {@code get} 一次，{@code clear()} 把上一条已标记删除的
+ * 实体从持久化上下文丢弃，那条删除再也不会执行。
+ * 该 {@code clear()} 已从框架移除，此处保留说明以免后人重新引入。
+ * </p>
  *
  * @param <E> 实体
  * @param <R> 数据源
@@ -83,43 +100,5 @@ public class BaseService<
     }
 
     protected void afterAppUpdate(long id, @NotNull E source) {
-    }
-
-    /**
-     * 批量删除指定实体，逐条保留前后置钩子
-     * <p>
-     * <b>不要写成 {@code forEach(this::delete)}</b>，那样会静默漏删。
-     * {@code CurdService.delete(long id)} 的第一步是 {@code get(id)}，
-     * 而 {@code CurdService.getById} 的第一行是 {@code entityManager.clear()} ——
-     * 循环里每删一条都会先 {@code get} 一次，{@code clear()} 把上一条
-     * 已经标记为删除的实体从持久化上下文里丢弃，那条删除就再也不会执行。
-     * 实测「批量删除 2 条，只删掉最后 1 条」，另一条永久残留。
-     * </p>
-     * <p>
-     * 也<b>不要</b>用 {@code repository.deleteAll(...)} +
-     * {@code repository.flush()}：那是直接拼批量 SQL，
-     * <b>不触发</b> JPA 实体生命周期回调、<b>不走</b> {@code beforeDelete}
-     * 与 {@code afterDelete} 钩子，将来给实体挂上需要清理的关联时会静默留下脏数据。
-     * </p>
-     * <p>
-     * 本方法的做法：调用方已把实体查出来（通常来自 {@code filter} 或
-     * {@code findByXxx}），这里只对已加载的实体逐个 {@code repository.delete}。
-     * 该方法内部只做 {@code em.find} + {@code em.remove}，<b>不会</b>
-     * {@code clear()} 持久化上下文，因此循环里所有删除标记都能保留到事务提交时执行。
-     * 循环体内也刻意不调用任何 {@code get}，避免触发 auto-flush 打断删除标记。
-     * </p>
-     *
-     * @param entities 待删除的实体集合
-     */
-    public final void deleteAll(@NotNull Collection<E> entities) {
-        if (entities.isEmpty()) {
-            return;
-        }
-        for (E entity : entities) {
-            beforeDelete(entity);
-            repository.delete(entity);
-            afterDelete(entity.getId());
-        }
-        log.info("已删除 {} 条明细记录", entities.size());
     }
 }

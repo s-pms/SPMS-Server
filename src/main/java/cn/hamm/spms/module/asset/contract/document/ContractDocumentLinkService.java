@@ -77,7 +77,8 @@ public class ContractDocumentLinkService extends BaseService<ContractDocumentLin
                 kept.add(documentId);
             }
         }
-        deleteAll(stale);
+        // 走 service.delete 保证前后置钩子被触发
+        stale.forEach(entity -> delete(entity.getId()));
         for (ContractDocumentEntity document : targets) {
             if (kept.contains(document.getId())) {
                 continue;

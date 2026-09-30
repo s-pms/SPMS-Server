@@ -69,7 +69,8 @@ public class UserRoleLinkService extends BaseService<UserRoleLinkEntity, UserRol
                 kept.add(roleId);
             }
         }
-        deleteAll(stale);
+        // 走 service.delete 保证前后置钩子被触发
+        stale.forEach(entity -> delete(entity.getId()));
         roles.stream()
                 .filter(Objects::nonNull)
                 .filter(role -> Objects.nonNull(role.getId()))

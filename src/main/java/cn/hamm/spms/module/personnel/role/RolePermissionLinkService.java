@@ -79,7 +79,8 @@ public class RolePermissionLinkService extends BaseService<RolePermissionLinkEnt
                 kept.add(permissionId);
             }
         }
-        deleteAll(stale);
+        // 走 service.delete 保证前后置钩子被触发
+        stale.forEach(entity -> delete(entity.getId()));
         permissions.stream()
                 .filter(Objects::nonNull)
                 .filter(permission -> Objects.nonNull(permission.getId()))

@@ -75,7 +75,8 @@ public class RoleMenuLinkService extends BaseService<RoleMenuLinkEntity, RoleMen
                 kept.add(menuId);
             }
         }
-        deleteAll(stale);
+        // 走 service.delete 保证前后置钩子被触发
+        stale.forEach(entity -> delete(entity.getId()));
         menus.stream()
                 .filter(Objects::nonNull)
                 .filter(menu -> Objects.nonNull(menu.getId()))

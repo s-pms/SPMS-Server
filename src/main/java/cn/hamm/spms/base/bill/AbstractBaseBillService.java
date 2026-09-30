@@ -83,9 +83,9 @@ public abstract class AbstractBaseBillService<
      * </p>
      * <p>
      * <b>解法是加锁，把并发请求串行化。</b>调用方
-     * {@link #addDetailFinishQuantity} 已加锁本单据的全部明细行与单据行，
-     * 这里直接复用已加锁的实例；对外的 {@code setBillDetailsAllFinished(long)}
-     * 会自行加锁单据行。加锁顺序对所有入口一致，不会交叉等待。
+     * {@link #addDetailFinishQuantity} 已锁住单据行，这里直接复用已加锁的实例；
+     * 对外的 {@code setBillDetailsAllFinished(long)} 会自行加锁单据行。
+     * 加锁顺序对所有入口一致，不会交叉等待。
      * </p>
      * <p>
      * 锁住单据行之后，生成下游单据（{@code INSERT INTO output}）的外键检查
@@ -188,52 +188,76 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
+     * 加锁读取单据，供明细 Service 在改动明细前串行化
+     * <p>
+     * 明细归属单据，对同一单据的并发改动必须先拿到单据行锁。
+     * 暴露成 {@code public} 是因为 {@code BaseBillDetailService} 拿不到本类的
+     * {@code protected getForUpdate}。
+     * </p>
+     *
+     * @param billId 单据 ID
+     * @return 加锁后的单据
+     */
+    public final E getBillForUpdate(long billId) {
+        return getForUpdate(billId);
+    }
+
+    /**
      * 添加明细完成数量
      * <p>
-     * 全流程在<b>同一个事务</b>内完成：加锁 → 更新明细 → 库存增减 → 推进单据
+     * 取单据 ID 时优先用请求里带来的 {@code billId}，这样
+     * {@link #addDetailFinishQuantity(long, D)} 里<b>锁单据行就是第一个数据库操作</b>。
+     * </p>
+     *
+     * @param sourceDetail 提交明细（需带上 billId）
+     */
+    public final void addDetailFinishQuantity(@NotNull D sourceDetail) {
+        Long billId = sourceDetail.getBillId();
+        if (Objects.isNull(billId)) {
+            // 兜底：前端没带 billId 时只能先查一次。
+            // 注意这会让「一致性读」提前发生、读视图提前固定，
+            // 并发下的判断可能读到旧快照 —— 所以正常路径务必由前端带上 billId
+            log.warn("提交明细未携带单据ID，退化为查库获取，并发判断可能不准，detailId:{}", sourceDetail.getId());
+            billId = detailService.get(sourceDetail.getId()).getBillId();
+        }
+        addDetailFinishQuantity(billId, sourceDetail);
+    }
+
+    /**
+     * 添加明细完成数量
+     * <p>
+     * 全流程在<b>同一个事务</b>内完成：锁单据行 → 更新明细 → 库存增减 → 推进单据
      * → 生成下游单据。中途任何一步失败都整体回滚，不会出现
      * 「明细已更新但单据没推进」或「状态已推进但下游单据没生成」的中间态。
      * </p>
      * <p>
-     * <b>并发安全（P2-4）靠加锁，把对同一单据的报工请求串行化。</b>
-     * 加锁分三步，顺序不能变：
-     * <ol>
-     *   <li><b>普通读</b>明细拿到单据 ID —— 单据 ID 只存在明细上，必须先读到才知道锁哪张单据</li>
-     *   <li>一次性加写锁<b>本单据的全部明细行</b>（{@code getAllByBillIdForUpdate}）—— 并发报工在这里排队</li>
-     *   <li>加写锁<b>单据行</b></li>
-     * </ol>
+     * <b>并发安全（P2-4）只靠锁单据行这一处，明细不加锁。</b>
+     * 对同一张单据的并发报工全部在单据行上排队，先到的请求整个事务提交后，
+     * 后到的才能继续。加锁顺序「单据行 → 本行明细 → 库存行」对所有请求一致，
+     * 不会交叉等待。
      * </p>
      * <p>
-     * <b>为什么第 2 步必须一次锁全部，不能先锁本行再逐行锁</b>：
-     * 逐行加锁会形成死锁环 —— 线程 A 锁住明细 1、线程 B 锁住明细 2，
-     * B 先拿到单据锁后去「锁全部明细」就会等 A 手里的明细 1，
-     * 而 A 正在等 B 手里的单据锁。实测
-     * {@code Deadlock found when trying to get lock}。
-     * 一次锁全部则是「先到者锁住全部、后来者阻塞在第一行」，不会死锁。
-     * </p>
-     * <p>
-     * <b>为什么必须用加锁读而不是普通读</b>：MySQL 在 {@code REPEATABLE_READ} 下，
-     * 普通 SELECT 读的是「第一次一致性读时固定下来的读视图」，此后本事务再也看不到
-     * 别人的提交。第二个请求虽然排到了队，它的事务里却仍持有排队之前的读视图，
-     * 于是两个请求都判「明细未全部完成」，谁都不推进单据，单据永久卡死。
-     * {@code SELECT ... FOR UPDATE} 是<b>当前读</b>，绕开读视图直接读最新已提交版本。
+     * <b>锁单据行必须���事务里的第一个数据库操作</b>，这是整个修复成立的前提。
+     * MySQL 在 {@code REPEATABLE_READ} 下，普通 SELECT 是快照读，
+     * 读视图在<b>第一次一致性读</b>时固定，此后本事务再也看不到别人的提交。
+     * 如果在加锁之前先做过任何普通读（哪怕是 {@code getForUpdate} 顺带加载
+     * EAGER 关联产生的查询），读视图就会在<b>排队等待单据锁之前</b>被固定下来，
+     * 等排到队时仍看不到前一个请求的提交，于是又会出现
+     * 「双方都判明细未全部完成、单据永久卡死」。
+     * 把加锁放在最前面，读视图就建立于锁等待结束之后，读到的自然是最新已提交数据。
      * </p>
      * <p>
      * 同事务内生成下游单据（{@code INSERT INTO output}）的外键检查也要读单据行，
      * 但<b>同一事务内重复加锁 InnoDB 直接放行</b>，不会自死锁。
      * </p>
      *
+     * @param billId      单据 ID
      * @param sourceDetail 提交明细
      */
-    public final void addDetailFinishQuantity(@NotNull D sourceDetail) {
+    public final void addDetailFinishQuantity(long billId, @NotNull D sourceDetail) {
         transactionHelper.run(() -> {
             Long detailId = sourceDetail.getId();
-            // ① 普通读明细拿单据 ID。这里刻意不加锁：加锁会形成
-            //    「本行锁 → 单据锁 → 全部明细锁」的反向等待，死锁
-            Long billId = detailService.get(detailId).getBillId();
-            // ② 一次性加写锁全部明细行：并发报工在这里排队
-            detailService.getAllByBillIdForUpdate(billId);
-            // ③ 锁单据行
+            // ① 锁单据行 —— 全流程第一个数据库操作，串行化点
             E bill = getForUpdate(billId);
             FORBIDDEN.when(!getAuditedStatus().equalsKey(bill.getStatus()), "添加明细完成数量失败，单据未审核");
             FORBIDDEN.when(getFinishedStatus().equalsKey(bill.getStatus()), "添加明细完成数量失败，单据已完成");
@@ -247,8 +271,8 @@ public abstract class AbstractBaseBillService<
             // 明细添加成功后置方法（库存增减等）
             afterDetailFinishAdded(detailId, sourceDetail);
 
-            // ④ 判断是否全部完成：加锁读，能看到并发请求刚提交的数据。
-            //    本事务已持有全部明细行锁，这次加锁是同事务重复加锁，直接放行
+            // ② 此刻才第一次普通读明细：读视图建立于锁等待结束之后，
+            //    读到的就是最新已提交数据
             if (!detailService.isAllDetailFinished(billId)) {
                 return;
             }

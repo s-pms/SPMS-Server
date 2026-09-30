@@ -95,7 +95,8 @@ public class ContractParticipantLinkService extends BaseService<ContractParticip
                 kept.add(participantId);
             }
         }
-        deleteAll(stale);
+        // 走 service.delete 保证前后置钩子被触发
+        stale.forEach(entity -> delete(entity.getId()));
         for (ParticipantEntity participant : targets) {
             if (kept.contains(participant.getId())) {
                 continue;
