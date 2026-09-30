@@ -140,7 +140,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         add(secondMenu);
         secondMenu = new MenuEntity().setName("通知管理").setPath("/console/open/notify/list").setParentId(firstMenu.getId());
         add(secondMenu);
-        secondMenu = new MenuEntity().setName("MCP工具").setPath("/console/system/mcp/tools").setParentId(firstMenu.getId());
-        add(secondMenu);
+        // 原先这里还有一条「MCP工具」菜单，但 MCP 模块已整体下线，
+        // 留着只会让管理员点进一个空白页
     }
 }

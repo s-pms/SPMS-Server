@@ -19,8 +19,11 @@ public enum OauthScope implements IDictionary {
 
     /**
      * 隐私信息
+     * <p>
+     * 包含性别、注册时间等个人隐私，以及所属部门与角色等公司内部组织信息
+     * </p>
      */
-    PRIVACY(2, "隐私信息", false, "生日/性别/注册时间等隐私信息"),
+    PRIVACY(2, "隐私信息", false, "性别/注册时间/所属部门/角色等隐私与组织信息"),
 
     /**
      * 联系方式

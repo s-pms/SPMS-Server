@@ -629,4 +629,36 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     public void saveCurrentRoomId(long userId, long roomId) {
         redisHelper.set(CACHE_ROOM_KEY + userId, roomId, DateTimeUtil.SECOND_PER_DAY * 30);
     }
+
+    /**
+     * 判断用户当前是否确实在指定房间
+     * <p>
+     * 与 {@link #getCurrentRoomId(long)} 的区别：后者在 Redis 无缓存时会返回
+     * 默认房间 ID（{@code app.chat.defaultRoomId}，一般为 1），
+     * 并不代表用户真的在那里。判断「是否在房间里」必须用本方法。
+     * </p>
+     *
+     * @param userId 用户 ID
+     * @param roomId 房间 ID
+     * @return 缓存存在且指向该房间才返回 true
+     */
+    public boolean isInRoom(long userId, long roomId) {
+        if (roomId <= 0) {
+            return false;
+        }
+        Object data = redisHelper.get(CACHE_ROOM_KEY + userId);
+        if (Objects.isNull(data)) {
+            return false;
+        }
+        return Integer.parseInt(data.toString()) == roomId;
+    }
+
+    /**
+     * 清除用户当前所在房间的缓存
+     *
+     * @param userId 用户 ID
+     */
+    public void clearCurrentRoomId(long userId) {
+        redisHelper.delete(CACHE_ROOM_KEY + userId);
+    }
 }

@@ -223,6 +223,9 @@ public class OauthController extends ApiController implements IOauthAction {
             }
             if (OauthScope.PRIVACY.equals(oauthScope)) {
                 user.setGender(null).setCreateTime(null).setUpdateTime(null).setIsDisabled(null);
+                // 所属部门与角色属于公司内部组织信息，修复前 scope 过滤完全没覆盖这两个字段，
+                // 任何拿到 access token 的第三方应用都能拿到完整组织架构
+                user.setRoleList(null).setDepartmentList(null);
             }
             if (OauthScope.REAL_NAME.equals(oauthScope)) {
                 user.setIdCard(null).setRealName(null);
