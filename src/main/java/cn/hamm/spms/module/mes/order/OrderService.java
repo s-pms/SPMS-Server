@@ -18,6 +18,7 @@ import cn.hamm.spms.module.wms.WmsServices;
 import cn.hamm.spms.module.wms.input.InputEntity;
 import cn.hamm.spms.module.wms.input.detail.InputDetailEntity;
 import cn.hamm.spms.module.wms.input.enums.InputType;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,7 @@ import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
  *
  * @author Hamm.cn
  */
+@Slf4j
 @Service
 public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepository, OrderDetailEntity, OrderDetailService, OrderDetailRepository> {
     @Override
@@ -180,18 +182,21 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         // 添加入库单
         addInputBill(orderBill);
 
-        if (OrderType.PLAN.equalsKey(orderBill.getType())) {
-            // 更新计划单
-            MesServices.getPlanDetailService().updateDetailQuantity(
-                    orderBill.getPlan().getId(),
-                    orderBill.getFinishQuantity(),
-                    MesServices.getPlanService(),
-                    detail -> FORBIDDEN.whenNotEquals(
-                            detail.getMaterial().getId(),
-                            orderBill.getMaterial().getId(),
-                            "物料信息不匹配")
-            );
+        // 以 plan 是否存在为准，不看 type：两者本是同一件事的两个副本，
+        // 历史数据里存在 type=计划订单 而 plan 为空，在此处空指针。
+        if (Objects.isNull(orderBill.getPlan())) {
+            return;
         }
+        // 更新计划单
+        MesServices.getPlanDetailService().updateDetailQuantity(
+                orderBill.getPlan().getId(),
+                orderBill.getFinishQuantity(),
+                MesServices.getPlanService(),
+                detail -> FORBIDDEN.whenNotEquals(
+                        detail.getMaterial().getId(),
+                        orderBill.getMaterial().getId(),
+                        "物料信息不匹配")
+        );
     }
 
     /**
@@ -214,6 +219,33 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     @Override
     protected @NotNull OrderEntity beforeAdd(@NotNull OrderEntity order) {
         order.setDetails(new ArrayList<>());
+        return syncTypeWithPlan(order);
+    }
+
+    @Override
+    protected @NotNull OrderEntity beforeUpdate(@NotNull OrderEntity order) {
+        return syncTypeWithPlan(order);
+    }
+
+    /**
+     * 让订单类型与计划单保持一致
+     * <p>
+     * 「是不是计划订单」就是「有没有挂计划单」，不该由两个字段各存一份，
+     * 否则会出现 type=计划订单、plan=null 的自相矛盾数据。
+     * </p>
+     *
+     * @param order 订单
+     * @return 处理后的订单
+     */
+    private @NotNull OrderEntity syncTypeWithPlan(@NotNull OrderEntity order) {
+        boolean hasPlan = Objects.nonNull(order.getPlan());
+        int expected = hasPlan ? OrderType.PLAN.getKey() : OrderType.OTHER.getKey();
+        if (!Objects.equals(order.getType(), expected)) {
+            log.info("订单 {} 的类型与计划单不一致，按 plan={} 纠正为「{}」",
+                    order.getId(), hasPlan ? order.getPlan().getId() : null,
+                    DictionaryUtil.getDictionary(OrderType.class, expected).getLabel());
+            order.setType(expected);
+        }
         return order;
     }
 

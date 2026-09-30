@@ -54,7 +54,9 @@ public class OrderEntity extends AbstractBaseBillEntity<OrderEntity, OrderDetail
     private Integer status;
 
     @Description("订单类型")
-    @Column(columnDefinition = "int UNSIGNED default 1 comment '订单类型'")
+    // 默认值取 2（其他订单）而非 1（计划订单）：本字段由 plan 推导，
+    // 没有计划单的订单若默认成「计划订单」，会与 plan 为空自相矛盾。
+    @Column(columnDefinition = "int UNSIGNED default 2 comment '订单类型'")
     @Dictionary(value = OrderType.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer type;
 
