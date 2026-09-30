@@ -5,7 +5,7 @@
     <parent>
         <groupId>cn.hamm</groupId>
         <artifactId>airpower</artifactId>
-        <version>8.0.1</version>
+        <version>9.0.0</version>
     </parent>
     <groupId>cn.hamm.spms</groupId>
     <artifactId>server</artifactId>
@@ -27,12 +27,6 @@
             <groupId>cn.hamm</groupId>
             <artifactId>airpower-mqtt</artifactId>
             <version>${airpower.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.hamm</groupId>
-            <artifactId>airpower-ai</artifactId>
-            <version>${airpower.version}</version>
-
         </dependency>
         <dependency>
             <groupId>cn.hamm</groupId>
