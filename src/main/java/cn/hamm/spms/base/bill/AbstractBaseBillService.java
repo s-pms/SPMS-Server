@@ -211,8 +211,10 @@ public abstract class AbstractBaseBillService<
             Long detailId = sourceDetail.getId();
             // 锁单据行：全流程第一个数据库操作，并发报工在这里排队
             E bill = getForUpdate(billId);
-            FORBIDDEN.when(!getAuditedStatus().equalsKey(bill.getStatus()), "添加明细完成数量失败，单据未审核");
+            // 「已完成」要先判：已完成的单据同样不满足「已审核」，
+            // 顺序反了会让它报「单据未审核」，与实际状态不符
             FORBIDDEN.when(getFinishedStatus().equalsKey(bill.getStatus()), "添加明细完成数量失败，单据已完成");
+            FORBIDDEN.when(!getAuditedStatus().equalsKey(bill.getStatus()), "添加明细完成数量失败，单据未审核");
             Double finishQuantity = sourceDetail.getQuantity();
             // 数量允许超过单据计划（业务上可能多发/多报），但不允许负数：
             // 负数会让已完成数量被"修回来"，把库存和金额一起污染

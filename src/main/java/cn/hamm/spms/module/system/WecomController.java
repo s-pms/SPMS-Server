@@ -3,6 +3,7 @@ package cn.hamm.spms.module.system;
 import cn.hamm.airpower.api.ApiController;
 import cn.hamm.airpower.api.annotation.Api;
 import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.curd.permission.Permission;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * @author Hamm.cn
  */
 @Slf4j
+@Permission(login = false)
 @Api("wecom")
 @Description("企业微信")
 public class WecomController extends ApiController {
