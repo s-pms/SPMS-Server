@@ -1,9 +1,12 @@
 package cn.hamm.spms.module.asset.contract;
 
 import cn.hamm.spms.base.BaseService;
+import cn.hamm.spms.module.asset.AssetServices;
 import cn.hamm.spms.module.asset.contract.enums.ContractStatus;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 
@@ -50,6 +53,81 @@ public class ContractService extends BaseService<ContractEntity, ContractReposit
         ContractEntity exist = get(source.getId());
         source.setStatus(exist.getStatus());
         return source;
+    }
+
+    /**
+     * 读取合同时组装参与方与附件
+     * <p>
+     * 这两个集合已改为 {@code @Transient}（关联由中间表实体承载），
+     * 因此不再随实体自动加载，必须显式组装后回填，否则前端拿不到数据。
+     * </p>
+     *
+     * @param contract 合同
+     * @return 组装后的合同
+     */
+    @Override
+    protected @NotNull ContractEntity afterAppGet(@NotNull ContractEntity contract) {
+        fillLinks(contract);
+        return contract;
+    }
+
+    /**
+     * 批量读取时同样需要组装
+     *
+     * @param list 合同列表
+     * @return 处理后的列表
+     */
+    @Override
+    protected @NotNull List<ContractEntity> afterGetList(@NotNull List<ContractEntity> list) {
+        list.forEach(this::fillLinks);
+        return list;
+    }
+
+    /**
+     * 填充参与方与附件
+     *
+     * @param contract 合同
+     */
+    private void fillLinks(@NotNull ContractEntity contract) {
+        contract.setParticipantList(
+                AssetServices.getContractParticipantLinkService().getParticipants(contract.getId()));
+        contract.setDocumentList(
+                AssetServices.getContractDocumentLinkService().getDocuments(contract.getId()));
+    }
+
+    /**
+     * 新建后同步参与方与附件到中间表
+     *
+     * @param id     合同 ID
+     * @param source 客户端提交的合同
+     */
+    @Override
+    protected void afterAppAdd(long id, @NotNull ContractEntity source) {
+        syncLinks(id, source);
+    }
+
+    /**
+     * 修改后同步参与方与附件到中间表
+     *
+     * @param id     合同 ID
+     * @param source 客户端提交的合同
+     */
+    @Override
+    protected void afterAppUpdate(long id, @NotNull ContractEntity source) {
+        syncLinks(id, source);
+    }
+
+    /**
+     * 把参与方与附件同步到中间表
+     *
+     * @param contractId 合同 ID
+     * @param source     客户端提交的合同
+     */
+    private void syncLinks(long contractId, @NotNull ContractEntity source) {
+        AssetServices.getContractParticipantLinkService()
+                .syncByContractId(contractId, source.getParticipantList());
+        AssetServices.getContractDocumentLinkService()
+                .syncByContractId(contractId, source.getDocumentList());
     }
 
     /**

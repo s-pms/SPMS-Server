@@ -19,6 +19,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -72,11 +73,30 @@ public class ContractEntity extends BaseEntity<ContractEntity> {
     @Dictionary(value = ContractStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
     private Integer status;
 
+    /**
+     * 附件列表
+     * <p>
+     * 关联关系由 {@code contract_document_link} 中间表承载
+     * （见 {@code ContractDocumentLinkEntity}），本字段仅用于承接前端提交的
+     * JSON 与回传读取结果，不参与持久化。
+     * </p>
+     * <p>
+     * 读取时由 {@code ContractService} 组装，写入时由其同步中间表。
+     * </p>
+     */
     @Description("附件列表")
-    @ManyToMany(fetch = FetchType.LAZY)
-    private Set<ContractDocumentEntity> documentList;
+    @Transient
+    private Set<ContractDocumentEntity> documentList = new LinkedHashSet<>();
 
+    /**
+     * 参与方列表
+     * <p>
+     * 关联关系由 {@code contract_participant_link} 中间表承载
+     * （见 {@code ContractParticipantLinkEntity}），本字段仅用于承接前端提交的
+     * JSON 与回传读取结果，不参与持久化。
+     * </p>
+     */
     @Description("参与方列表")
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private Set<ParticipantEntity> participantList;
+    @Transient
+    private Set<ParticipantEntity> participantList = new LinkedHashSet<>();
 }

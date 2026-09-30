@@ -104,10 +104,11 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @Transient
     private Long departmentId;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    // 用户角色/部门：登录后前端必拉，RBAC 鉴权也要读，open-in-view 已关闭故必须 EAGER
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<RoleEntity> roleList;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<DepartmentEntity> departmentList;
 
     /**

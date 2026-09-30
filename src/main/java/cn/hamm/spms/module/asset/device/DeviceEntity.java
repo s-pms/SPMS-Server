@@ -86,6 +86,6 @@ public class DeviceEntity extends BaseEntity<DeviceEntity> implements IDeviceAct
     private Integer rate;
 
     @Description("参数列表")
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<ParameterEntity> parameters;
 }

@@ -62,11 +62,31 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     /**
+     * 订单豁免基类的完成状态守卫
+     * <p>
+     * {@code ORDER_MANUAL_FINISH} 配置的说明写着「允许在任何情况下手动完成订单」，
+     * 因此订单的 {@code PRODUCING} / {@code PAUSED} 状态都允许被标记完成，
+     * 而基类的守卫只放行「已审核」与「明细已完成」两种状态。
+     * <p>
+     * 这里返回配置值而不是硬编码 {@code true}：管理员把这个开关关掉后，
+     * 订单就重新受基类守卫约束，语义与配置描述一致。
+     * <p>
+     * 注意本钩子只放开<b>基类</b>的守卫，真正的状态校验在
+     * {@link #setOrderFinishedManually(long)} 里（只允许准备中/生产中/暂停中）。
+     * </p>
+     *
+     * @return true 表示跳过基类状态守卫
+     */
+    @Override
+    protected boolean isForceFinishAllowed() {
+        return SystemServices.getConfigService().get(ConfigFlag.ORDER_MANUAL_FINISH).booleanConfig();
+    }
+
+    /**
      * <h1>手动标记订单生产完成</h1>
      * <p>
-     * {@code setBillDetailsAllFinished} 是 {@code final} 且不带任何状态校验，
-     * 重复调用会重复执行 {@code afterAllBillDetailFinished} 生成入库单，导致库存凭空翻倍；
-     * 对「审核中 / 已驳回」的单据调用同样会被接受。
+     * {@code setBillDetailsAllFinished} 是 {@code final}，重复调用会重复执行
+     * {@code afterAllBillDetailFinished} 生成入库单，导致库存凭空翻倍；
      * 这里补上状态守卫，同时起到幂等保护的作用。
      * </p>
      *

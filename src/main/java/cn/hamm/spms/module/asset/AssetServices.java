@@ -1,6 +1,9 @@
 package cn.hamm.spms.module.asset;
 
 import cn.hamm.spms.module.asset.contract.ContractService;
+import cn.hamm.spms.module.asset.contract.document.ContractDocumentLinkService;
+import cn.hamm.spms.module.asset.contract.document.ContractDocumentService;
+import cn.hamm.spms.module.asset.contract.participant.ContractParticipantLinkService;
 import cn.hamm.spms.module.asset.contract.participant.ParticipantService;
 import cn.hamm.spms.module.asset.device.DeviceService;
 import cn.hamm.spms.module.asset.material.MaterialService;
@@ -22,6 +25,15 @@ public class AssetServices {
     private static ParticipantService participantService;
 
     @Getter
+    private static ContractParticipantLinkService contractParticipantLinkService;
+
+    @Getter
+    private static ContractDocumentService contractDocumentService;
+
+    @Getter
+    private static ContractDocumentLinkService contractDocumentLinkService;
+
+    @Getter
     private static DeviceService deviceService;
 
     @Getter
@@ -31,11 +43,17 @@ public class AssetServices {
     private void initService(
             ContractService contractService,
             ParticipantService participantService,
+            ContractParticipantLinkService contractParticipantLinkService,
+            ContractDocumentService contractDocumentService,
+            ContractDocumentLinkService contractDocumentLinkService,
             DeviceService deviceService,
             MaterialService materialService
     ) {
         AssetServices.contractService = contractService;
         AssetServices.participantService = participantService;
+        AssetServices.contractParticipantLinkService = contractParticipantLinkService;
+        AssetServices.contractDocumentService = contractDocumentService;
+        AssetServices.contractDocumentLinkService = contractDocumentLinkService;
         AssetServices.deviceService = deviceService;
         AssetServices.materialService = materialService;
     }

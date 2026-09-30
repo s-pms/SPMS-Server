@@ -64,6 +64,23 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!--
+                      每个测试类使用独立的 JVM。
+                      原因：单据测试会在数据库上留下未释放的行锁（详见
+                      12-P2修复报告-第三批.md 的「重大发现」一节），
+                      同 JVM 内跨测试类累积会导致后续测试类出现
+                      Lock wait timeout exceeded（表现为 insert into output 超时 50s）。
+                      独立 JVM 同时也让 create-drop 的建表在每个类之前真正执行一次，
+                      避免测试之间数据互相污染。
+                    -->
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${springboot.version}</version>
