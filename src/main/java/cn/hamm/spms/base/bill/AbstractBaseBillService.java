@@ -25,11 +25,11 @@ import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 /**
  * <h1>单据服务基类</h1>
  *
- * @param <E>   单据实体
- * @param <R>   单据数据源
- * @param <D>   明细实体
- * @param <DS>  明细 Service
- * @param <DR>  明细数据源
+ * @param <E>  单据实体
+ * @param <R>  单据数据源
+ * @param <D>  明细实体
+ * @param <DS> 明细 Service
+ * @param <DR> 明细数据源
  * @author Hamm.cn
  * @apiNote 所有状态推进都在同一事务内完成，并且以锁单据行（{@code SELECT ... FOR UPDATE}）作为
  * 第一个数据库操作。InnoDB 的读视图在第一条查询时就已固定，锁排在查询之后等于没排
@@ -106,6 +106,7 @@ public abstract class AbstractBaseBillService<
      * @return true 表示跳过状态守卫
      * @apiNote 默认不允许；订单因「允许任意状态手动完成」的业务需求重写为 true
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     protected boolean isForceFinishAllowed() {
         return false;
     }
@@ -157,17 +158,6 @@ public abstract class AbstractBaseBillService<
                 ReflectUtil.getDescription(getFirstParameterizedTypeClass()),
                 billId
         );
-    }
-
-    /**
-     * 加锁读取单据，供明细 Service 在改动明细前串行化
-     *
-     * @param billId 单据 ID
-     * @return 加锁后的单据
-     * @apiNote {@code SELECT ... FOR UPDATE} 必须在事务内调用，事务一结束锁就释放
-     */
-    public final E getBillForUpdate(long billId) {
-        return getForUpdate(billId);
     }
 
     /**

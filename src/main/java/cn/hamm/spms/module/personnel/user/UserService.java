@@ -33,7 +33,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -219,17 +218,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 通过邮箱重置密码
-     *
-     * @param email       邮箱
-     * @param code        验证码
-     * @param newPassword 新密码
-     */
-    public void resetPasswordViaEmail(String email, String code, String newPassword) {
-        resetPasswordViaEmail(email, code, newPassword, UNKNOWN_IP);
-    }
-
-    /**
      * 通过邮箱验证码重置密码
      *
      * @param email       邮箱
@@ -249,15 +237,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * 发送邮箱验证码
      *
-     * @param email 邮箱
-     */
-    public void sendEmailCode(String email) throws MessagingException {
-        sendEmailCode(email, UNKNOWN_IP);
-    }
-
-    /**
-     * 发送邮箱验证码
-     *
      * @param email    邮箱
      * @param clientIp 客户端 IP
      * @apiNote 限流分目标邮箱、客户端 IP、全局三个维度，缺一不可：
@@ -268,7 +247,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         String ipKey = getEmailIpSendKey(clientIp);
         EMAIL_SEND_BUSY.when(redisHelper.hasKey(ipKey), "发送过于频繁，请两分钟后再试");
         String globalKey = getEmailGlobalSendKey();
-        int sentThisMinute = Objects.requireNonNullElse(parseIntQuietly(redisHelper.get(globalKey)), 0);
+        int sentThisMinute = parseIntQuietly(redisHelper.get(globalKey));
         EMAIL_SEND_BUSY.when(sentThisMinute >= EMAIL_MAX_SEND_PER_IP, "服务器邮件发送繁忙，请稍后再试");
 
         String code = getRandomValidateCode();
@@ -285,7 +264,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return 整数值，解析失败按 0 处理
      * @apiNote 缓存被外部改写时不能因类型异常让整个登录/发信流程失败
      */
-    private @Nullable Integer parseIntQuietly(@Nullable Object value) {
+    private int parseIntQuietly(Object value) {
         if (Objects.isNull(value)) {
             return 0;
         }
@@ -373,11 +352,11 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     private void addEmailFailCount(String email, @NotNull String clientIp) {
         String key = getEmailFailKey(email, clientIp);
-        int count = Objects.requireNonNullElse(parseIntQuietly(redisHelper.get(key)), 0) + 1;
+        int count = parseIntQuietly(redisHelper.get(key)) + 1;
         redisHelper.set(key, count, DateTimeUtil.SECOND_PER_HOUR);
         if (count >= EMAIL_MAX_ERROR_COUNT) {
             String ipKey = getEmailIpFailKey(clientIp);
-            int ipCount = Objects.requireNonNullElse(parseIntQuietly(redisHelper.get(ipKey)), 0) + 1;
+            int ipCount = parseIntQuietly(redisHelper.get(ipKey)) + 1;
             redisHelper.set(ipKey, ipCount, DateTimeUtil.SECOND_PER_HOUR);
             throw new ServiceException("操作过于频繁，请一小时后重试");
         }
@@ -390,17 +369,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      */
     private void deleteEmailCode(String email) {
         redisHelper.delete(getEmailCodeCacheKey(email));
-    }
-
-    /**
-     * 邮箱验证码登录
-     *
-     * @param email 邮箱
-     * @param code  验证码
-     * @return 登录成功的用户
-     */
-    public UserEntity loginViaEmailAndCode(String email, String code) {
-        return loginViaEmailAndCode(email, code, UNKNOWN_IP);
     }
 
     /**
@@ -426,16 +394,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         PARAM_INVALID.whenNull(existUser, "登录的邮箱账户不存在");
         resetEmailFailCount(email);
         return existUser;
-    }
-
-    /**
-     * 验证邮箱和验证码
-     *
-     * @param email 邮箱
-     * @param code  验证码
-     */
-    private void validEmailAndCode(String email, String code) {
-        validEmailAndCode(email, code, UNKNOWN_IP);
     }
 
     /**

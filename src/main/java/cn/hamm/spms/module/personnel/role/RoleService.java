@@ -63,15 +63,14 @@ public class RoleService extends BaseService<RoleEntity, RoleRepository> {
      * 批量组装一组角色的授权（一次查询，避免逐个角色查造成 N+1）
      *
      * @param roles 角色集合
-     * @return 组装后的角色集合
      */
-    public @NotNull Set<RoleEntity> fillLinksForRoles(@NotNull Set<RoleEntity> roles) {
+    public void fillLinksForRoles(@NotNull Set<RoleEntity> roles) {
         List<Long> roleIds = roles.stream()
                 .map(RoleEntity::getId)
                 .filter(Objects::nonNull)
                 .toList();
         if (roleIds.isEmpty()) {
-            return roles;
+            return;
         }
         Map<Long, Set<MenuEntity>> menuMap = PersonnelServices.getRoleMenuLinkService()
                 .mapMenusByRoleIds(roleIds);
@@ -84,7 +83,6 @@ public class RoleService extends BaseService<RoleEntity, RoleRepository> {
             role.setMenuList(new LinkedHashSet<>(menuMap.getOrDefault(role.getId(), Set.of())));
             role.setPermissionList(new LinkedHashSet<>(permissionMap.getOrDefault(role.getId(), Set.of())));
         });
-        return roles;
     }
 
     /**

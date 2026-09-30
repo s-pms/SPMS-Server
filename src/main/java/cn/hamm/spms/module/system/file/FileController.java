@@ -7,7 +7,6 @@ import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.curd.permission.Permission;
 import cn.hamm.airpower.file.FileHelper;
 import cn.hamm.spms.base.BaseController;
-import cn.hamm.spms.common.AppConstant;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import cn.hamm.spms.module.system.file.enums.FileCategory;
 import jakarta.servlet.http.HttpServletResponse;

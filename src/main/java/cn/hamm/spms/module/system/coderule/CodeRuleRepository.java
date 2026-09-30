@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.system.coderule;
 
 import cn.hamm.spms.base.BaseRepository;
+import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
 import org.springframework.stereotype.Repository;
 
 /**

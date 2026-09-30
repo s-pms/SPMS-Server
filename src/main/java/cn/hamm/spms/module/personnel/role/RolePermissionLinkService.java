@@ -84,7 +84,7 @@ public class RolePermissionLinkService extends BaseService<RolePermissionLinkEnt
      */
     public @NotNull Set<PermissionEntity> collectPermissions(@NotNull Collection<RoleEntity> roles) {
         return roles.stream()
-                .map(role -> role.getPermissionList())
+                .map(RoleEntity::getPermissionList)
                 .filter(Objects::nonNull)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toCollection(LinkedHashSet::new));

@@ -124,7 +124,7 @@ public class BaseBillDetailService<
         PARAM_INVALID.when(quantity < 0, "完成数量不能为负数");
         transactionHelper.run(() -> {
             // 先锁单据行，与 addDetailFinishQuantity 的加锁顺序一致
-            billService.getBillForUpdate(billId);
+            billService.getForUpdate(billId);
             // 本次待分配的数量，逐行递减分配，避免同一单据多行相同物料时重复计入
             double remain = quantity;
             for (E detail : getAllByBillId(billId)) {

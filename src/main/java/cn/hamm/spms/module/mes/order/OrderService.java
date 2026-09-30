@@ -137,15 +137,15 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
             // 更新订单数量
             List<OrderDetailEntity> details = orderDetailService.getAllByBillId(order.getId());
             double totalFinishQuantity = 0D;
-            double tatalNgQuantity = 0D;
+            double totalNgQuantity = 0D;
             for (OrderDetailEntity detail : details) {
                 totalFinishQuantity = NumberUtil.add(totalFinishQuantity,
                         Objects.requireNonNullElse(detail.getFinishQuantity(), 0D));
-                tatalNgQuantity = NumberUtil.add(tatalNgQuantity,
+                totalNgQuantity = NumberUtil.add(totalNgQuantity,
                         Objects.requireNonNullElse(detail.getNgQuantity(), 0D));
             }
             order.setFinishQuantity(totalFinishQuantity)
-                    .setNgQuantity(tatalNgQuantity)
+                    .setNgQuantity(totalNgQuantity)
             ;
             updateToDatabase(order);
 
