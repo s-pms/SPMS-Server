@@ -104,10 +104,29 @@ public class UserEntity extends BaseEntity<UserEntity> implements IUserAction {
     @Transient
     private Long departmentId;
 
-    // 用户角色/部门：登录后前端必拉，RBAC 鉴权也要读，open-in-view 已关闭故必须 EAGER
-    @ManyToMany(fetch = FetchType.EAGER)
+    /**
+     * 用户的角色
+     * <p>
+     * 关联关系由 {@code user_role_link} 中间表承载（见 {@code UserRoleLinkEntity}），
+     * 本字段仅用于承接前端提交的 JSON 与回传读取结果，不参与持久化。
+     * 读取由 {@code UserService} 组装（并级联组装每个角色的菜单与权限，
+     * 因为 RBAC 鉴权链路 {@code RequestInterceptor} 会一路读到
+     * {@code role.getPermissionList()}），写入由其同步中间表。
+     * </p>
+     */
+    @Description("角色列表")
+    @Transient
     private Set<RoleEntity> roleList;
 
+    /**
+     * 用户所属的部门
+     * <p>
+     * 仍保留 {@code @ManyToMany}：{@code UserService.addSearchPredicate} 用
+     * {@code root.join("departmentList")} 做按部门筛选的 Criteria 查询，
+     * 改为中间表实体需要同步重写该查询。已在 P2 报告中记录为待改造项。
+     * </p>
+     */
+    @Description("部门列表")
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<DepartmentEntity> departmentList;
 

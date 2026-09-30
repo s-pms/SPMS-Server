@@ -13,6 +13,7 @@ import cn.hamm.airpower.curd.model.query.Sort;
 import cn.hamm.airpower.curd.permission.PermissionUtil;
 import cn.hamm.airpower.email.helper.EmailHelper;
 import cn.hamm.spms.base.BaseService;
+import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.common.AppConfig;
 import cn.hamm.spms.module.personnel.PersonnelServices;
 import cn.hamm.spms.module.personnel.department.DepartmentEntity;
@@ -38,6 +39,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -584,6 +586,73 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             user.setSalt(salt);
         }
         return user;
+    }
+
+    /**
+     * 读取用户时组装角色（并级联组装角色的菜单与权限）
+     * <p>
+     * {@code roleList} 已改为 {@code @Transient}（关联由 {@code user_role_link}
+     * 中间表承载），必须显式组装。级联组装是必需的：RBAC 鉴权链路
+     * {@code RequestInterceptor.checkUserPermission} 会一路读到
+     * {@code role.getPermissionList()}，而 open-in-view 已关闭，
+     * 事务外拿到的关联对象无法再触发懒加载。
+     * </p>
+     *
+     * @param user 用户
+     * @return 组装后的用户
+     */
+    @Override
+    protected @NotNull UserEntity afterAppGet(@NotNull UserEntity user) {
+        fillRoleList(user);
+        return user;
+    }
+
+    @Override
+    protected @NotNull List<UserEntity> afterGetList(@NotNull List<UserEntity> list) {
+        list.forEach(this::fillRoleList);
+        return list;
+    }
+
+    /**
+     * 组装单个用户的角色（含角色的菜单与权限）
+     *
+     * @param user 用户
+     */
+    private void fillRoleList(@NotNull UserEntity user) {
+        if (Objects.isNull(user.getId())) {
+            return;
+        }
+        Set<RoleEntity> roles = PersonnelServices.getUserRoleLinkService().getRoles(user.getId());
+        // 批量组装角色的菜单与权限：两次查询搞定，不逐个角色查
+        PersonnelServices.getRoleService().fillLinksForRoles(roles);
+        user.setRoleList(new LinkedHashSet<>(roles));
+    }
+
+    @Override
+    protected void afterAppAdd(long id, @NotNull UserEntity source) {
+        if (Objects.isNull(source.getRoleList())) {
+            return;
+        }
+        PersonnelServices.getUserRoleLinkService().syncByUserId(id, source.getRoleList());
+    }
+
+    /**
+     * 修改后同步角色
+     * <p>
+     * 必须判空：前端编辑用户基本信息时通常<b>不传</b> roleList，
+     * Jackson 反序列化后该字段是 null。若不区分「未传」与「传空集」，
+     * 一次普通的信息修改就会把用户的角色全部清空。
+     * </p>
+     *
+     * @param id     用户 ID
+     * @param source 客户端提交的用户
+     */
+    @Override
+    protected void afterAppUpdate(long id, @NotNull UserEntity source) {
+        if (Objects.isNull(source.getRoleList())) {
+            return;
+        }
+        PersonnelServices.getUserRoleLinkService().syncByUserId(id, source.getRoleList());
     }
 
     @Override

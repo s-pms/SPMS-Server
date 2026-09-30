@@ -45,11 +45,27 @@ public class RoleEntity extends BaseEntity<RoleEntity> implements IRoleAction {
     @Meta
     private String code;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    /**
+     * 授权的菜单
+     * <p>
+     * 关联关系由 {@code role_menu_link} 中间表承载（见 {@code RoleMenuLinkEntity}），
+     * 本字段仅用于承接前端提交的 JSON 与回传读取结果，不参与持久化。
+     * 读取由 {@code RoleService} 组装，写入由其同步中间表。
+     * </p>
+     */
+    @Description("授权菜单")
+    @Transient
     @NotNull(groups = {WhenAuthorizeMenu.class}, message = "授权菜单不能为空")
     private Set<MenuEntity> menuList;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    /**
+     * 授权的权限
+     * <p>
+     * 关联关系由 {@code role_permission_link} 中间表承载（见 {@code RolePermissionLinkEntity}）。
+     * </p>
+     */
+    @Description("授权权限")
+    @Transient
     @NotNull(groups = {WhenAuthorizePermission.class}, message = "授权权限不能为空")
     private Set<PermissionEntity> permissionList;
 }
