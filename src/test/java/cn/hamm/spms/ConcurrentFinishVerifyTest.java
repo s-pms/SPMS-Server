@@ -43,8 +43,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ConcurrentFinishVerifyTest {
 
     @Autowired
-    private cn.hamm.spms.base.bill.NewTransactionHelper newTransactionHelper;
-    @Autowired
     private SaleService saleService;
     @Autowired
     private MaterialService materialService;
@@ -122,12 +120,9 @@ public class ConcurrentFinishVerifyTest {
         assertNotEquals(cn.hamm.spms.module.channel.sale.enums.SaleStatus.OUTPUTTING.getKey(), finalStatus,
                 "单据卡在「出库中」未被推进，这正是 P2-4 描述的永久卡死");
 
-        // 注意：并发测试的外层事务尚未提交（报工在 transactionHelper.run 内），
-        // 必须用独立事务查询才能看到已提交的出库单
-        Long outputCount = newTransactionHelper.run(() ->
-                WmsServices.getOutputService().filter(null).stream()
-                        .filter(o -> o.getSale() != null && o.getSale().getId().equals(sale.getId()))
-                        .count());
+        long outputCount = WmsServices.getOutputService().filter(null).stream()
+                .filter(o -> o.getSale() != null && o.getSale().getId().equals(sale.getId()))
+                .count();
         log.info("生成的出库单数 = {}", outputCount);
         assertEquals(1, outputCount, "应且仅应生成 1 张出库单（0 张=卡死，多张=重复）");
     }

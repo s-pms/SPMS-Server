@@ -1,16 +1,19 @@
 package cn.hamm.spms.module.asset.contract.participant;
 
 import cn.hamm.spms.base.BaseService;
+import lombok.extern.slf4j.Slf4j;
 import cn.hamm.spms.module.asset.contract.ContractEntity;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * <h1>合同参与方关联服务</h1>
@@ -22,6 +25,7 @@ import java.util.Set;
  *
  * @author Hamm.cn
  */
+@Slf4j
 @Service
 public class ContractParticipantLinkService extends BaseService<ContractParticipantLinkEntity, ContractParticipantLinkRepository> {
 
@@ -41,10 +45,17 @@ public class ContractParticipantLinkService extends BaseService<ContractParticip
     }
 
     /**
-     * 把合同的参与方同步到中间表（全量覆盖）
+     * 把合同的参与方同步到中间表（增量同步）
      * <p>
-     * 采用「先删后建」而非增量 diff：合同的参与方数量有限（个位数），
-     * 全量覆盖实现简单且不会漏删；关联实体自带主键，也便于追溯历史。
+     * 只解绑「本次提交里已不存在」的参与方、只建立「本次新增」的关联，
+     * 不动没有变化的那些行。
+     * </p>
+     * <p>
+     * 不使用 {@code repository.deleteAll} + {@code flush} 这类语句：
+     * 它们直接拼批量 SQL，<b>不触发</b> JPA 实体生命周期回调、<b>不走</b>
+     * {@code beforeAppDelete} 之类的业务钩子，也不做级联处理 ——
+     * 将来给关联实体挂上需要清理的关联时，会静默留下脏数据。
+     * 删除一律走框架标准的 {@code delete(id)}。
      * </p>
      * <p>
      * 提交的参与方若没有 ID（前端新增的行），先落库拿到 ID 再建关联，
@@ -55,35 +66,44 @@ public class ContractParticipantLinkService extends BaseService<ContractParticip
      * @param participants 前端提交的参与方
      */
     public void syncByContractId(long contractId, @NotNull Collection<ParticipantEntity> participants) {
-        // 先清掉旧关联。
-        // 必须用 deleteAll + flush，不能写成 forEach(this::delete)：
-        // CurdService.delete(long) 走的是 TransactionHelper.run(Function)，
-        // 而该重载没有 @Transactional（只有 run(Supplier) 有），循环里下一条的
-        // get(id) 查询会触发 auto-flush，把上一条刷进库，
-        // **最后一条的删除标记永远丢失**。曾因此漏删关联行。
-        List<ContractParticipantLinkEntity> exists = filter(
-                new ContractParticipantLinkEntity().setContract(new ContractEntity().setId(contractId)));
-        if (!exists.isEmpty()) {
-            repository.deleteAll(exists);
-            repository.flush();
-        }
-
-        if (participants.isEmpty()) {
-            return;
-        }
         var participantService = cn.hamm.spms.module.asset.AssetServices.getParticipantService();
-        ContractEntity contract = new ContractEntity().setId(contractId);
+        // 本次要保留的关联：没有 ID 的先落库拿到 ID
+        List<ParticipantEntity> targets = new ArrayList<>();
         for (ParticipantEntity participant : participants) {
             if (Objects.isNull(participant)) {
                 continue;
             }
-            // 没有 ID 说明是本次新增的，先落库拿到 ID
             if (Objects.isNull(participant.getId())) {
                 participant = participantService.addAndGet(participant);
+            }
+            targets.add(participant);
+        }
+        Set<Long> targetIds = targets.stream()
+                .map(ParticipantEntity::getId)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        List<ContractParticipantLinkEntity> exists = filter(
+                new ContractParticipantLinkEntity().setContract(new ContractEntity().setId(contractId)));
+        ContractEntity contract = new ContractEntity().setId(contractId);
+        Set<Long> kept = new LinkedHashSet<>();
+        List<ContractParticipantLinkEntity> stale = new ArrayList<>();
+        for (ContractParticipantLinkEntity link : exists) {
+            Long participantId = Objects.isNull(link.getParticipant()) ? null : link.getParticipant().getId();
+            if (Objects.isNull(participantId) || !targetIds.contains(participantId)) {
+                stale.add(link);
+            } else {
+                kept.add(participantId);
+            }
+        }
+        deleteAll(stale);
+        for (ParticipantEntity participant : targets) {
+            if (kept.contains(participant.getId())) {
+                continue;
             }
             addAndGet(new ContractParticipantLinkEntity()
                     .setContract(contract)
                     .setParticipant(participant));
         }
+        log.info("合同 {} 参与方同步完成：原有 {} 个，现 {} 个", contractId, exists.size(), targetIds.size());
     }
 }

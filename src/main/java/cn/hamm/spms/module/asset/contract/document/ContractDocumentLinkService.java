@@ -1,10 +1,12 @@
 package cn.hamm.spms.module.asset.contract.document;
 
 import cn.hamm.spms.base.BaseService;
+import lombok.extern.slf4j.Slf4j;
 import cn.hamm.spms.module.asset.contract.ContractEntity;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
  *
  * @author Hamm.cn
  */
+@Slf4j
 @Service
 public class ContractDocumentLinkService extends BaseService<ContractDocumentLinkEntity, ContractDocumentLinkRepository> {
 
@@ -45,24 +48,9 @@ public class ContractDocumentLinkService extends BaseService<ContractDocumentLin
      * @param documents  前端提交的附件
      */
     public void syncByContractId(long contractId, @NotNull Collection<ContractDocumentEntity> documents) {
-        // 先清掉旧关联。
-        // 必须用 deleteAll + flush，不能写成 forEach(this::delete)：
-        // CurdService.delete(long) 走的是 TransactionHelper.run(Function)，
-        // 而该重载没有 @Transactional（只有 run(Supplier) 有），
-        // 循环里下一条的 get(id) 查询会触发 auto-flush 把上一条刷进库，
-        // **最后一条的删除标记永远丢失**。
-        List<ContractDocumentLinkEntity> exists = filter(
-                new ContractDocumentLinkEntity().setContract(new ContractEntity().setId(contractId)));
-        if (!exists.isEmpty()) {
-            repository.deleteAll(exists);
-            repository.flush();
-        }
-
-        if (documents.isEmpty()) {
-            return;
-        }
         var documentService = cn.hamm.spms.module.asset.AssetServices.getContractDocumentService();
-        ContractEntity contract = new ContractEntity().setId(contractId);
+        // 本次要保留的关联：没有 ID 的先落库拿到 ID
+        List<ContractDocumentEntity> targets = new ArrayList<>();
         for (ContractDocumentEntity document : documents) {
             if (Objects.isNull(document)) {
                 continue;
@@ -70,9 +58,34 @@ public class ContractDocumentLinkService extends BaseService<ContractDocumentLin
             if (Objects.isNull(document.getId())) {
                 document = documentService.addAndGet(document);
             }
+            targets.add(document);
+        }
+        Set<Long> targetIds = targets.stream()
+                .map(ContractDocumentEntity::getId)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        List<ContractDocumentLinkEntity> exists = filter(
+                new ContractDocumentLinkEntity().setContract(new ContractEntity().setId(contractId)));
+        ContractEntity contract = new ContractEntity().setId(contractId);
+        Set<Long> kept = new LinkedHashSet<>();
+        List<ContractDocumentLinkEntity> stale = new ArrayList<>();
+        for (ContractDocumentLinkEntity link : exists) {
+            Long documentId = Objects.isNull(link.getDocument()) ? null : link.getDocument().getId();
+            if (Objects.isNull(documentId) || !targetIds.contains(documentId)) {
+                stale.add(link);
+            } else {
+                kept.add(documentId);
+            }
+        }
+        deleteAll(stale);
+        for (ContractDocumentEntity document : targets) {
+            if (kept.contains(document.getId())) {
+                continue;
+            }
             addAndGet(new ContractDocumentLinkEntity()
                     .setContract(contract)
                     .setDocument(document));
         }
+        log.info("合同 {} 附件同步完成：原有 {} 个，现 {} 个", contractId, exists.size(), targetIds.size());
     }
 }

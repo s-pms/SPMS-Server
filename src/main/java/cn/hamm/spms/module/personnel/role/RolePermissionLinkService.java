@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.personnel.role;
 
 import cn.hamm.spms.base.BaseService;
+import lombok.extern.slf4j.Slf4j;
 import cn.hamm.spms.module.system.permission.PermissionEntity;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
  *
  * @author Hamm.cn
  */
+@Slf4j
 @Service
 public class RolePermissionLinkService extends BaseService<RolePermissionLinkEntity, RolePermissionLinkRepository> {
 
@@ -45,31 +47,46 @@ public class RolePermissionLinkService extends BaseService<RolePermissionLinkEnt
     }
 
     /**
-     * 同步某个角色的授权（先删后建）
+     * 同步某个角色的授权（增量同步）
      * <p>
-     * 必须用 {@code deleteAll} + {@code flush}，不能写成
-     * {@code forEach(this::delete)}：逐条删除时，循环里下一条的
-     * {@code get(id)} 查询会触发 auto-flush，最后一条的删除标记容易丢失。
+     * 只解绑「本次提交里已不存在」的权限、只建立「本次新增」的授权。
+     * </p>
+     * <p>
+     * 不使用 {@code repository.deleteAll} + {@code flush}：它们直接拼批量 SQL，
+     * <b>不触发</b> JPA 实体生命周期回调、<b>不走</b> {@code beforeAppDelete}
+     * 之类的业务钩子，也不做级联处理。删除一律走框架标准的 {@code delete(id)}。
      * </p>
      *
      * @param roleId      角色 ID
      * @param permissions 授权的权限
      */
     public void syncByRoleId(long roleId, @NotNull Collection<PermissionEntity> permissions) {
+        Set<Long> targetIds = permissions.stream()
+                .filter(Objects::nonNull)
+                .map(PermissionEntity::getId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
         List<RolePermissionLinkEntity> exists = repository.findByRoleId(roleId);
-        if (!exists.isEmpty()) {
-            repository.deleteAll(exists);
-            repository.flush();
-        }
-        if (permissions.isEmpty()) {
-            return;
-        }
         RoleEntity role = new RoleEntity().setId(roleId);
-        for (PermissionEntity permission : permissions) {
-            if (Objects.nonNull(permission) && Objects.nonNull(permission.getId())) {
-                addAndGet(new RolePermissionLinkEntity().setRole(role).setPermission(permission));
+        Set<Long> kept = new LinkedHashSet<>();
+        List<RolePermissionLinkEntity> stale = new ArrayList<>();
+        for (RolePermissionLinkEntity link : exists) {
+            Long permissionId = Objects.isNull(link.getPermission()) ? null : link.getPermission().getId();
+            if (Objects.isNull(permissionId) || !targetIds.contains(permissionId)) {
+                stale.add(link);
+            } else {
+                kept.add(permissionId);
             }
         }
+        deleteAll(stale);
+        permissions.stream()
+                .filter(Objects::nonNull)
+                .filter(permission -> Objects.nonNull(permission.getId()))
+                .filter(permission -> !kept.contains(permission.getId()))
+                .forEach(permission -> addAndGet(
+                        new RolePermissionLinkEntity().setRole(role).setPermission(permission)));
+        log.info("角色 {} 权限同步完成：原有 {} 个，现 {} 个", roleId, exists.size(), targetIds.size());
     }
 
     /**

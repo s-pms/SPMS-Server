@@ -1,6 +1,7 @@
 package cn.hamm.spms.module.personnel.role;
 
 import cn.hamm.spms.base.BaseService;
+import lombok.extern.slf4j.Slf4j;
 import cn.hamm.spms.module.system.menu.MenuEntity;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
  *
  * @author Hamm.cn
  */
+@Slf4j
 @Service
 public class RoleMenuLinkService extends BaseService<RoleMenuLinkEntity, RoleMenuLinkRepository> {
 
@@ -44,26 +46,42 @@ public class RoleMenuLinkService extends BaseService<RoleMenuLinkEntity, RoleMen
     }
 
     /**
-     * 同步某个角色的授权（先删后建）
+     * 同步某个角色的授权（增量同步）
+     * <p>
+     * 只解绑「本次提交里已不存在」的菜单、只建立「本次新增」的授权。
+     * 不使用 {@code repository.deleteAll} + {@code flush}（绕开钩子的批量 SQL），
+     * 删除一律走框架标准的 {@code delete(id)}。
+     * </p>
      *
      * @param roleId 角色 ID
      * @param menus  授权的菜单
      */
     public void syncByRoleId(long roleId, @NotNull Collection<MenuEntity> menus) {
+        Set<Long> targetIds = menus.stream()
+                .filter(Objects::nonNull)
+                .map(MenuEntity::getId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
         List<RoleMenuLinkEntity> exists = repository.findByRoleId(roleId);
-        if (!exists.isEmpty()) {
-            repository.deleteAll(exists);
-            repository.flush();
-        }
-        if (menus.isEmpty()) {
-            return;
-        }
         RoleEntity role = new RoleEntity().setId(roleId);
-        for (MenuEntity menu : menus) {
-            if (Objects.nonNull(menu) && Objects.nonNull(menu.getId())) {
-                addAndGet(new RoleMenuLinkEntity().setRole(role).setMenu(menu));
+        Set<Long> kept = new LinkedHashSet<>();
+        List<RoleMenuLinkEntity> stale = new ArrayList<>();
+        for (RoleMenuLinkEntity link : exists) {
+            Long menuId = Objects.isNull(link.getMenu()) ? null : link.getMenu().getId();
+            if (Objects.isNull(menuId) || !targetIds.contains(menuId)) {
+                stale.add(link);
+            } else {
+                kept.add(menuId);
             }
         }
+        deleteAll(stale);
+        menus.stream()
+                .filter(Objects::nonNull)
+                .filter(menu -> Objects.nonNull(menu.getId()))
+                .filter(menu -> !kept.contains(menu.getId()))
+                .forEach(menu -> addAndGet(new RoleMenuLinkEntity().setRole(role).setMenu(menu)));
+        log.info("角色 {} 菜单同步完成：原有 {} 个，现 {} 个", roleId, exists.size(), targetIds.size());
     }
 
     /**

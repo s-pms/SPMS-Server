@@ -1,10 +1,12 @@
 package cn.hamm.spms.module.personnel.user;
 
 import cn.hamm.spms.base.BaseService;
+import lombok.extern.slf4j.Slf4j;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
  *
  * @author Hamm.cn
  */
+@Slf4j
 @Service
 public class UserRoleLinkService extends BaseService<UserRoleLinkEntity, UserRoleLinkRepository> {
 
@@ -37,25 +40,41 @@ public class UserRoleLinkService extends BaseService<UserRoleLinkEntity, UserRol
     }
 
     /**
-     * 同步用户的角色（先删后建）
+     * 同步用户的角色（增量同步）
+     * <p>
+     * 只解绑「本次提交里已不存在」的角色、只建立「本次新增」的关联。
+     * 不使用 {@code repository.deleteAll} + {@code flush}（绕开钩子的批量 SQL），
+     * 删除一律走框架标准的 {@code delete(id)}。
+     * </p>
      *
      * @param userId 用户 ID
      * @param roles  角色集合
      */
     public void syncByUserId(long userId, @NotNull Collection<RoleEntity> roles) {
+        Set<Long> targetIds = roles.stream()
+                .filter(Objects::nonNull)
+                .map(RoleEntity::getId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
         List<UserRoleLinkEntity> exists = repository.findByUserId(userId);
-        if (!exists.isEmpty()) {
-            repository.deleteAll(exists);
-            repository.flush();
-        }
-        if (roles.isEmpty()) {
-            return;
-        }
         UserEntity user = new UserEntity().setId(userId);
-        for (RoleEntity role : roles) {
-            if (Objects.nonNull(role) && Objects.nonNull(role.getId())) {
-                addAndGet(new UserRoleLinkEntity().setUser(user).setRole(role));
+        Set<Long> kept = new LinkedHashSet<>();
+        List<UserRoleLinkEntity> stale = new ArrayList<>();
+        for (UserRoleLinkEntity link : exists) {
+            Long roleId = Objects.isNull(link.getRole()) ? null : link.getRole().getId();
+            if (Objects.isNull(roleId) || !targetIds.contains(roleId)) {
+                stale.add(link);
+            } else {
+                kept.add(roleId);
             }
         }
+        deleteAll(stale);
+        roles.stream()
+                .filter(Objects::nonNull)
+                .filter(role -> Objects.nonNull(role.getId()))
+                .filter(role -> !kept.contains(role.getId()))
+                .forEach(role -> addAndGet(new UserRoleLinkEntity().setUser(user).setRole(role)));
+        log.info("用户 {} 角色同步完成：原有 {} 个，现 {} 个", userId, exists.size(), targetIds.size());
     }
 }

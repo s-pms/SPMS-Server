@@ -48,27 +48,6 @@ public abstract class AbstractBaseBillService<
     protected TransactionHelper transactionHelper;
 
     /**
-     * 独立事务助手，用于「先提交状态推进、再执行后置钩子」的拆分
-     */
-    @Autowired
-    protected NewTransactionHelper newTransactionHelper;
-
-    /**
-     * 判断「明细是否全部完成」的最大重试次数
-     * <p>
-     * 并发报工时，两个请求可能<b>同时</b>进入独立事务，此刻彼此的明细更新都还没提交，
-     * 会同时读到「未全部完成」。先完成的线程提交后，后一个重试即可看到最新数据。
-     * 取 3 是权衡：足以覆盖实际的并发报工场景，又不会在明细确实未完成时空转。
-     * </p>
-     */
-    private static final int ALL_FINISHED_RETRY = 6;
-
-    /**
-     * 重试间隔（毫秒）
-     */
-    private static final long ALL_FINISHED_RETRY_INTERVAL_MS = 200L;
-
-    /**
      * 获取自动审核配置
      *
      * @return 配置标识
@@ -80,104 +59,70 @@ public abstract class AbstractBaseBillService<
 
     /**
      * 设置单据所有明细都已完成
+     * <p>
+     * 整体在<b>同一个事务</b>内完成：加锁单据行 → 推进状态 → 生成下游单据 → 推进终态。
+     * 不拆事务，中途失败会整体回滚，不会出现「状态已推进但下游单据没生成」的中间态。
+     * </p>
      *
      * @param billId 单据 ID
      */
     public final void setBillDetailsAllFinished(long billId) {
-        // 整段「推进状态 + 生成下游单据」放进独立事务。
-        //
-        // 为什么必须独立：调用方（addDetailFinishQuantity）所在的事务
-        // 已经在更新明细，若下游单据生成（INSERT output）失败或等锁超时，
-        // 整个调用方事务回滚，明细更新随之丢失、状态也回退。
-        // 实测两个并发请求时会出现 Lock wait timeout，导致出库单生成后又被回滚。
-        //
-        // 独立事务里只有一次 CAS + 一次下游单据生成，不与其他请求的行锁竞争；
-        // 且 CAS 抢不到推进权的请求不会执行后置钩子，因此不会重复生成下游单据。
-        // 【关键设计】必须拆成两个独立事务，中间不留任何行锁：
-        //   事务 A：CAS 推进状态。抢到推进权就提交，**行锁立即释放**。
-        //   事务 B：生成下游单据。此时已无本单据行的锁，
-        //          INSERT output 的外键检查不会与事务 A 自死锁。
-        // 合并在一个事务里会自死锁：CAS 拿到的 sale 行排他锁会一直持有到提交，
-        // 而下游单据的 INSERT 因外键检查还要对同一行加共享锁。
-        Boolean claimed = newTransactionHelper.run(() -> tryClaimBillDetailsFinished(billId));
-        if (Boolean.FALSE.equals(claimed)) {
-            // 并发的另一个请求已抢到推进权并会自行生成下游单据，这里直接结束
-            return;
-        }
-        // 事务 B：生成下游单据并推进终态。
-        // 这里<b>不吞异常</b>：后置钩子失败（如销售单未指定发货仓库）属于业务/数据错误，
-        // 必须让调用方看到并给出明确提示。
-        // 注意它与事务 A 已分离 —— 即使这里抛异常，事务 A 提交的状态推进也不会回滚，
-        // 单据会停在「明细已完成」等待重推，而不是「永久卡在明细完成前」。
-        newTransactionHelper.run(() -> {
-            afterAllBillDetailFinished(billId);
-            if (Objects.equals(getBillDetailsFinishStatus(), getFinishedStatus())) {
-                log.info("明细完成状态是终态");
-                setBillFinished(billId);
-            }
-            return true;
-        });
+        transactionHelper.run(() -> applyBillDetailsFinished(getForUpdate(billId)));
     }
 
     /**
-     * 尝试抢占「推进本单据到明细完成态」的权利
+     * 推进单据到「明细已完成」并执行后置钩子（使用已加锁的单据实例）
      * <p>
-     * <b>这是 P2-4（并发报工导致单据永久卡死）的修复。</b>
+     * <b>这是 P2-4「并发报工导致单据永久卡死」的修复。</b>
+     * </p>
      * <p>
-     * 问题：两个报工请求并发打在同一单据的不同明细上，各自只锁自己那一行
-     * （{@code FOR UPDATE} 不锁行范围），双方的事务快照都早于对方提交，
-     * 于是都判「明细未全部完成」，谁都不调用 {@code setBillDetailsAllFinished}，
-     * 单据永久卡在明细完成前 —— 8 种单据里只有订单有手动完结接口可救。
+     * 问题：两个报工请求并发打在同一单据的不同明细上，各自只锁自己那一行明细，
+     * 双方的事务快照都早于对方提交，于是都判「明细未全部完成」，
+     * 谁都不推进单据，单据永久卡在明细完成前 ——
+     * 8 种单据里只有订单有手动完结接口可救。
+     * </p>
      * <p>
-     * <b>为什么不能简单地锁单据行</b>：试过 {@code getForUpdate(billId)}，
-     * 会<b>自死锁</b> —— 持有 sale 表该行的排他锁之后，
-     * {@code afterAllBillDetailFinished} 里 {@code INSERT INTO output} 的外键检查
-     * 还要对同一行加共享锁，同一事务内互相等待，实测 Lock wait timeout 50s。
-     * CAS（{@code UPDATE ... WHERE status = :expected}）同样持行锁到事务提交，问题一样。
+     * <b>解法是加锁，把并发请求串行化。</b>调用方
+     * {@link #addDetailFinishQuantity} 已加锁本单据的全部明细行与单据行，
+     * 这里直接复用已加锁的实例；对外的 {@code setBillDetailsAllFinished(long)}
+     * 会自行加锁单据行。加锁顺序对所有入口一致，不会交叉等待。
+     * </p>
      * <p>
-     * <b>本方法的解法</b>：把「推进状态」与「生成下游单据」拆到<b>两个事务</b>。
-     * 这里只做一次带状态守卫的推进并<b>立即提交</b>，行锁随之释放；
-     * 只有一个抢到推进权的请求（状态确实还是它读到的那个值）才会返回 true，
-     * 随后才去执行后置钩子。这样既避免了自死锁，又保证后置钩子只执行一次。
-     * <p>
-     * 代价：推进状态与生成下游单据不再是同一事务 —— 若后置钩子失败，
-     * 单据会停在「明细已完成」而下游单据未生成。
-     * 但这比「单据永久卡死」好得多，且可通过重推该状态位来补偿。
+     * 锁住单据行之后，生成下游单据（{@code INSERT INTO output}）的外键检查
+     * 虽然也要读这一行，但<b>同一事务内重复加锁 InnoSQL 直接放行</b>，不会自死锁。
+     * 真正会超时的场景是<b>两个不同事务</b>争抢同一行 —— 串行化之后就不存在了。
+     * </p>
      *
-     * @param billId 单据 ID
-     * @return true 表示本请求抢到了推进权，应当继续执行后置钩子
+     * @param bill 已加锁的单据
      */
-    private boolean tryClaimBillDetailsFinished(long billId) {
+    private void applyBillDetailsFinished(@NotNull E bill) {
+        long billId = bill.getId();
         IDictionary status = getBillDetailsFinishStatus();
         FORBIDDEN.whenNull(status, "没有找到单据的所有明细完成状态");
-        E bill = get(billId);
-        // 状态守卫：只允许「已审核」进入，其余状态一律拒绝。
+        log.info("标记明细已全部完成 {}，单据ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId);
+        // 状态守卫：修复前这里不做任何检查，任何能调到该方法的路径
+        // 都能把单据从任意状态（例如「审核中」）直接推到终态。
         // 订单因业务需要支持「任意状态强制完成」，由 isForceFinishAllowed() 豁免。
         if (!isForceFinishAllowed()) {
             FORBIDDEN.when(!getAuditedStatus().equalsKey(bill.getStatus()),
                     "单据当前状态不允许标记明细完成");
         }
-        // 关键：整段放进 REQUIRES_NEW 独立事务并立即提交，行锁在返回时即释放。
-        // 若沿用外层事务（默认 REQUIRED），行锁会一直持有到 afterAllBillDetailFinished
-        // 生成下游单据之后，外键检查要读本单据行 -> 同事务自死锁。
-        int expectedStatus = bill.getStatus();
-        String entityName = getFirstParameterizedTypeClass().getSimpleName();
-        // 本方法已在独立事务（REQUIRES_NEW）内执行，此处直接 UPDATE 即会立即提交
-        int rows = entityManager.createQuery(
-                        "update " + entityName + " e set e.status = :newStatus "
-                                + "where e.id = :id and e.status = :expected")
-                .setParameter("newStatus", status.getKey())
-                .setParameter("id", billId)
-                .setParameter("expected", expectedStatus)
-                .executeUpdate();
-        if (rows <= 0) {
-            log.info("单据 {} 的状态已被其他请求推进，跳过本次标记", billId);
-            return false;
+        // 幂等：已是「明细已完成」说明别的请求（或本请求的另一次调用）已经推进过，
+        // 再执行一次会重复生成下游单据。8 种单据的 audited 与 detailsFinish 状态
+        // 均不相同（见各 XxxService），所以这个判断不会误伤首次调用。
+        if (status.equalsKey(bill.getStatus())) {
+            log.info("单据 {} 已是明细完成状态，跳过", billId);
+            return;
         }
-        log.info("标记明细已全部完成 {}，单据ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId);
-        return true;
+        updateToDatabase(getEntityInstance(billId).setStatus(status.getKey()));
+        afterAllBillDetailFinished(billId);
+        if (status.equals(getFinishedStatus())) {
+            log.info("明细完成状态是终态");
+            // 必须传已加锁的实例：再调 setBillFinished(billId) 会走一次 getForUpdate，
+            // 而它第一行是 entityManager.clear()，会把上面刚推进的状态冲掉
+            applyBillFinished(bill);
+        }
     }
-
 
     /**
      * 是否允许绕过状态守卫强制完成单据
@@ -198,10 +143,19 @@ public abstract class AbstractBaseBillService<
      * @param billId 单据 ID
      */
     public final void setBillFinished(long billId) {
-        transactionHelper.run(() -> {
+        transactionHelper.run(() -> applyBillFinished(getForUpdate(billId)));
+    }
+
+    /**
+     * 推进单据到终态并执行后置钩子（使用已加锁的单据实例）
+     *
+     * @param bill 已加锁的单据
+     */
+    private void applyBillFinished(@NotNull E bill) {
+        long billId = bill.getId();
+        {
             IDictionary status = getFinishedStatus();
             FORBIDDEN.whenNull(status, "标记完成失败，没有找到完成状态");
-            E bill = get(billId);
             log.info("标记单据已完成 {}，单据ID:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId);
             if (!isForceFinishAllowed()) {
                 // 允许「已审核」「明细已完成」进入，其余状态拒绝
@@ -209,25 +163,16 @@ public abstract class AbstractBaseBillService<
                                 && !getBillDetailsFinishStatus().equalsKey(bill.getStatus()),
                         "单据当前状态不允许标记完成");
             }
-            // 与 setBillDetailsAllFinished 同理：用条件更新保证并发下只有一个请求
-            // 推进到终态、从而只执行一次 afterBillFinished
-            int expectedStatus = bill.getStatus();
-            String entityName = getFirstParameterizedTypeClass().getSimpleName();
-            // setBillFinished 可能在事务 A 或事务 B 内被调用，两种情况下都已无本单据行的锁
-            int rows = entityManager.createQuery(
-                            "update " + entityName + " e set e.status = :newStatus "
-                                    + "where e.id = :id and e.status = :expected")
-                    .setParameter("newStatus", status.getKey())
-                    .setParameter("id", billId)
-                    .setParameter("expected", expectedStatus)
-                    .executeUpdate();
-            if (rows <= 0) {
-                log.info("单据 {} 的状态已被其他请求推进，跳过本次完成", billId);
+            // 幂等：已是终态则不重复执行 afterBillFinished，
+            // 否则会重复生成下游单据（如重复建入库单）
+            if (status.equalsKey(bill.getStatus())) {
+                log.info("单据 {} 已是完成状态，跳过", billId);
                 return;
             }
+            updateToDatabase(getEntityInstance(billId).setStatus(status.getKey()));
             beforeBillFinish(billId);
             afterBillFinished(billId);
-        });
+        }
     }
 
     /**
@@ -244,15 +189,52 @@ public abstract class AbstractBaseBillService<
 
     /**
      * 添加明细完成数量
+     * <p>
+     * 全流程在<b>同一个事务</b>内完成：加锁 → 更新明细 → 库存增减 → 推进单据
+     * → 生成下游单据。中途任何一步失败都整体回滚，不会出现
+     * 「明细已更新但单据没推进」或「状态已推进但下游单据没生成」的中间态。
+     * </p>
+     * <p>
+     * <b>并发安全（P2-4）靠加锁，把对同一单据的报工请求串行化。</b>
+     * 加锁分三步，顺序不能变：
+     * <ol>
+     *   <li><b>普通读</b>明细拿到单据 ID —— 单据 ID 只存在明细上，必须先读到才知道锁哪张单据</li>
+     *   <li>一次性加写锁<b>本单据的全部明细行</b>（{@code getAllByBillIdForUpdate}）—— 并发报工在这里排队</li>
+     *   <li>加写锁<b>单据行</b></li>
+     * </ol>
+     * </p>
+     * <p>
+     * <b>为什么第 2 步必须一次锁全部，不能先锁本行再逐行锁</b>：
+     * 逐行加锁会形成死锁环 —— 线程 A 锁住明细 1、线程 B 锁住明细 2，
+     * B 先拿到单据锁后去「锁全部明细」就会等 A 手里的明细 1，
+     * 而 A 正在等 B 手里的单据锁。实测
+     * {@code Deadlock found when trying to get lock}。
+     * 一次锁全部则是「先到者锁住全部、后来者阻塞在第一行」，不会死锁。
+     * </p>
+     * <p>
+     * <b>为什么必须用加锁读而不是普通读</b>：MySQL 在 {@code REPEATABLE_READ} 下，
+     * 普通 SELECT 读的是「第一次一致性读时固定下来的读视图」，此后本事务再也看不到
+     * 别人的提交。第二个请求虽然排到了队，它的事务里却仍持有排队之前的读视图，
+     * 于是两个请求都判「明细未全部完成」，谁都不推进单据，单据永久卡死。
+     * {@code SELECT ... FOR UPDATE} 是<b>当前读</b>，绕开读视图直接读最新已提交版本。
+     * </p>
+     * <p>
+     * 同事务内生成下游单据（{@code INSERT INTO output}）的外键检查也要读单据行，
+     * 但<b>同一事务内重复加锁 InnoDB 直接放行</b>，不会自死锁。
+     * </p>
      *
      * @param sourceDetail 提交明细
      */
     public final void addDetailFinishQuantity(@NotNull D sourceDetail) {
         transactionHelper.run(() -> {
             Long detailId = sourceDetail.getId();
-            D detail = detailService.get(detailId);
-            Long billId = detail.getBillId();
-            E bill = get(billId);
+            // ① 普通读明细拿单据 ID。这里刻意不加锁：加锁会形成
+            //    「本行锁 → 单据锁 → 全部明细锁」的反向等待，死锁
+            Long billId = detailService.get(detailId).getBillId();
+            // ② 一次性加写锁全部明细行：并发报工在这里排队
+            detailService.getAllByBillIdForUpdate(billId);
+            // ③ 锁单据行
+            E bill = getForUpdate(billId);
             FORBIDDEN.when(!getAuditedStatus().equalsKey(bill.getStatus()), "添加明细完成数量失败，单据未审核");
             FORBIDDEN.when(getFinishedStatus().equalsKey(bill.getStatus()), "添加明细完成数量失败，单据已完成");
             Double finishQuantity = sourceDetail.getQuantity();
@@ -260,64 +242,17 @@ public abstract class AbstractBaseBillService<
             // 负数会让已完成数量被"修回来"，把库存和金额一起污染
             PARAM_INVALID.when(finishQuantity < 0, "添加明细完成数量失败，完成数量不能为负数");
             log.info("添加明细数量 {}，单据ID:{}, 明细数量:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId, finishQuantity);
-            // 明细数量更新必须在**独立事务**里完成（修复 P2-4 的关键）。
-            //
-            // 原因：CurdService.getForUpdate(long) 第一行是 entityManager.clear()，
-            // 它会丢弃当前事务中所有未 flush 的变更。而本方法在更新明细之后还会
-            // get(billId) 等操作触发 auto-flush，写回的是 clear() 之前加载的旧快照 ——
-            // 于是明细的完成数量被「回滚」成 0，两个并发请求都判不出「全部完成」，
-            // 单据永久卡死。实测：外层事务 flush 后，独立事务读到的仍是 0.0。
-            //
-            // 放进 REQUIRES_NEW 后，明细更新立即提交并释放行锁，
-            // 后续任何 clear() 都不会再影响它，别的请求也能立刻看到最新数量。
-            newTransactionHelper.run(() -> {
-                detailService.addFinishQuantity(detailId, finishQuantity);
-                return true;
-            });
 
-            // 明细添加成功后置方法（库存增减等）。
-            // 同样放进独立事务：它会持有 inventory / move 等表的行锁，
-            // 留在外层事务里会让外层长期持锁，与随后「生成下游单据」所需的
-            // 外键检查互相等待（实测 insert into output_detail 锁等待超时）。
-            newTransactionHelper.run(() -> {
-                afterDetailFinishAdded(detailId, sourceDetail);
-                return true;
-            });
+            detailService.addFinishQuantity(detailId, finishQuantity);
+            // 明细添加成功后置方法（库存增减等）
+            afterDetailFinishAdded(detailId, sourceDetail);
 
-            // 重新判断是否整个单据的明细都已完成。
-            // 修复前这一步没有互斥：两个报工请求并发打在同一单据的不同明细上时，
-            // 双方快照都早于对方提交，于是都判 allMatch=false，
-            // 谁都不会去调 setBillDetailsAllFinished，单据永久卡在「明细完成前」。
-            // 8 种单据里只有订单有手动完结接口可救。
-            //
-            // 这里<b>不能</b>用 getForUpdate(billId) 加锁：持有单据行的排他锁后，
-            // afterAllBillDetailFinished 里 INSERT 下游单据（如 output）因外键检查
-            // 还要对该行加共享锁，同事务内自死锁（Lock wait timeout）。
-            // 并发安全由三步保证（修复 P2-4「并发报工导致单据永久卡死」）：
-            //   ① 判断「是否全部完成」必须在**独立事务**里做。
-            //      外层事务是 REPEATABLE_READ，读到的是事务开始时的快照；
-            //      两个报工请求并发时，各自只看到「自己那行已完成、对方那行未完成」，
-            //      于是都判 false，谁都不会去调 setBillDetailsAllFinished。
-            //   ② 但两个线程<b>同时</b>进入独立事务时，彼此的明细更新都还没提交，
-            //      仍会同时读到 false。因此需要<b>重试</b>：先到的线程提交后，
-            //      后到的线程重试就能看到最新数据。
-            //   ③ setBillDetailsAllFinished 内的条件更新（CAS）保证只有一个请求
-            //      真正推进状态、从而只执行一次后置钩子。
-            //
-            // 重试次数取 3 是权衡：足以覆盖「两个报工请求」这一实际场景，
-            // 又不会在明细确实未完成时白白空转。
-            for (int attempt = 1; attempt <= ALL_FINISHED_RETRY; attempt++) {
-                Boolean isAllFinished = newTransactionHelper.run(() -> {
-                    List<D> latest = detailService.getAllByBillId(billId);
-                    // 空集合的 allMatch 返回 true，会让「明细被清空」的单据被判定为全部完成，
-                    // 连锁触发下游生成 0 明细的单据。这里必须先排除空集合
-                    return !latest.isEmpty()
-                            && latest.stream().allMatch(BaseBillDetailEntity::getIsFinished);
-                });
-                log.info("第 {}/{} 次判断：所有明细是否已完成 = {}", attempt, ALL_FINISHED_RETRY, isAllFinished);
-                setBillDetailsAllFinished(billId);
+            // ④ 判断是否全部完成：加锁读，能看到并发请求刚提交的数据。
+            //    本事务已持有全部明细行锁，这次加锁是同事务重复加锁，直接放行
+            if (!detailService.isAllDetailFinished(billId)) {
                 return;
             }
+            applyBillDetailsFinished(bill);
         });
     }
 
