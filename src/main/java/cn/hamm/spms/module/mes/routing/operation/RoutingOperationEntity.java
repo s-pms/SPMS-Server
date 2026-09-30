@@ -33,6 +33,7 @@ import static jakarta.persistence.FetchType.EAGER;
 @Description("工序配置")
 public class RoutingOperationEntity extends BaseEntity<RoutingOperationEntity> {
     @Description("工艺 ID")
+    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "工艺不能为空")
     @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '工艺ID'")
     private Long routingId;
 
