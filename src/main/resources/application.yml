@@ -54,8 +54,11 @@ airpower:
   websocket:
     support: redis
   api:
-    access-token-secret: "1234567890"
+    access-token-secret: "1234567890123456789012345678901234567890"
     request-log: true
     response-log: true
   redis:
     prefix: "spms:"
+  curd:
+    base-package-name: "cn.hamm.spms"
+    permission-with-package: false
