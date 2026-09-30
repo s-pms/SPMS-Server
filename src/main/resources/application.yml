@@ -17,19 +17,11 @@ spring:
     hikari:
       maximum-pool-size: 50
       minimum-idle: 10
-      connection-timeout: 30000
+      connection-timeout: 10000
       idle-timeout: 600000
-      max-lifetime: 1800000
-      leak-detection-threshold: 60000
+      max-lifetime: 1700000
+      leak-detection-threshold: 5000
   jpa:
-    # 关闭 Open Entity Manager in View。
-    # 开启时 Spring 会把 Hibernate Session 一直保持到 HTTP 请求结束，
-    # 整个请求期间数据库连接都被占住；配合 N+1 查询很容易打满 Hikari 连接池
-    # （maximum-pool-size: 30）。
-    # 关闭后所有返回给前端的关联字段都必须在 Service 层内加载完毕，
-    # 因此 UserEntity/RoleEntity/ContractEntity/DeviceEntity/BomEntity/StructureEntity
-    # 的多对多关联均为 EAGER。
-    # 回归验证见 OpenInViewVerifyTest：一旦有人改回 true 或把关联改回 LAZY，该用例会失败
     open-in-view: false
     database-platform: "org.hibernate.dialect.MySQL8Dialect"
     hibernate:

@@ -47,13 +47,22 @@ public class SaleService extends AbstractBaseBillService<SaleEntity, SaleReposit
         return SaleStatus.AUDITING;
     }
 
+    /**
+     * 明细全部完成后的状态
+     * <p>
+     * 修复前返回 {@code OUTPUTTING}，与 {@code getAuditedStatus()} 相同。
+     * 基类的推进逻辑是 {@code if (status.equals(getFinishedStatus())) setBillFinished()}，
+     * 而 {@code OUTPUTTING != DONE}，所以这个条件<b>永远不成立</b> ——
+     * 销售单在任何情况下都不会被推进到「已完成」，
+     * 连自动生成的出库单也会永远停在「出库中」，库存不减少。
+     * <p>
+     * 这里返回终态 {@code DONE}，让基类能继续推进到完成。
+     * </p>
+     *
+     * @return 明细完成状态
+     */
     @Override
     public IDictionary getBillDetailsFinishStatus() {
-        return SaleStatus.OUTPUTTING;
-    }
-
-    @Override
-    public IDictionary getFinishedStatus() {
         return SaleStatus.DONE;
     }
 

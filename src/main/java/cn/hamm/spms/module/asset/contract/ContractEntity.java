@@ -19,7 +19,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -86,7 +85,7 @@ public class ContractEntity extends BaseEntity<ContractEntity> {
      */
     @Description("附件列表")
     @Transient
-    private Set<ContractDocumentEntity> documentList = new LinkedHashSet<>();
+    private Set<ContractDocumentEntity> documentList;
 
     /**
      * 参与方列表
@@ -98,5 +97,5 @@ public class ContractEntity extends BaseEntity<ContractEntity> {
      */
     @Description("参与方列表")
     @Transient
-    private Set<ParticipantEntity> participantList = new LinkedHashSet<>();
+    private Set<ParticipantEntity> participantList;
 }

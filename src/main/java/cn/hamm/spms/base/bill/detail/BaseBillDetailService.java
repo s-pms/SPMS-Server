@@ -2,10 +2,12 @@ package cn.hamm.spms.base.bill.detail;
 
 import cn.hamm.airpower.core.NumberUtil;
 import cn.hamm.spms.base.BaseService;
+import cn.hamm.spms.base.bill.NewTransactionHelper;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +28,12 @@ public class BaseBillDetailService<
         E extends BaseBillDetailEntity<E>,
         R extends BaseBillDetailRepository<E>
         > extends BaseService<E, R> {
+
+    /**
+     * 独立事务助手，用于「重新判断明细是否全部完成」时读到最新数据（修复 P2-4）
+     */
+    @Autowired
+    protected NewTransactionHelper newTransactionHelper;
 
     /**
      * 根据单据 ID 删除所有明细
@@ -123,13 +131,19 @@ public class BaseBillDetailService<
                 updateToDatabase(detail);
                 remain = NumberUtil.subtract(remain, applied);
             }
-            // 判断所有明细是否完成
-            List<E> details = getAllByBillId(billId);
-            // 空集合的 allMatch 返回 true，会让「明细被清空」的单据被直接判定为全部完成，
-            // 连锁触发下游生成 0 明细的单据。这里必须先排除空集合
-            boolean isAllFinished = !details.isEmpty()
-                    && details.stream().allMatch(BaseBillDetailEntity::getIsFinished);
-            if (isAllFinished) {
+            // 判断所有明细是否完成。
+            // 必须放进独立事务（REQUIRES_NEW）：外层事务是 REPEATABLE_READ，
+            // 读到的是事务开始时的快照，并发报工时每个线程都只看到「自己那行完成」，
+            // 会全部判 false，单据永久卡在明细完成前（P2-4）。
+            // 新事务能看到对方已提交的数据，判断才是准确的。
+            Boolean isAllFinished = newTransactionHelper.run(() -> {
+                List<E> latest = getAllByBillId(billId);
+                // 空集合的 allMatch 返回 true，会让「明细被清空」的单据被直接判定为全部完成，
+                // 连锁触发下游生成 0 明细的单据。这里必须先排除空集合
+                return !latest.isEmpty()
+                        && latest.stream().allMatch(BaseBillDetailEntity::getIsFinished);
+            });
+            if (Boolean.TRUE.equals(isAllFinished)) {
                 // 明细已全部完成
                 billService.setBillDetailsAllFinished(billId);
             }

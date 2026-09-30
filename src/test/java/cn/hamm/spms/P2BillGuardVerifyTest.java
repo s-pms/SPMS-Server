@@ -197,7 +197,7 @@ public class P2BillGuardVerifyTest {
     // ==================== P2-2 空明细不算全部完成 ====================
 
     @Test
-    @DisplayName("P2-2 明细被清空后，单据不会被判定为「全部完成」")
+    @DisplayName("P2-2 明细被清空后，走真实报工路径单据不会被推进到已完成")
     public void emptyDetailsDoNotMeanFinished() {
         SaleEntity sale = audit(newAuditingSale());
         var detailService = ChannelServices.getSaleDetailService();
@@ -205,13 +205,22 @@ public class P2BillGuardVerifyTest {
         detailService.deleteAllByBillId(sale.getId());
         assertEquals(0, detailService.getAllByBillId(sale.getId()).size(), "前置：明细已清空");
 
-        // 再走一次分配流程（updateDetailQuantity 内部会判断是否全部完成）
-        Integer statusBefore = saleService.get(sale.getId()).getStatus();
-        saleService.setBillDetailsAllFinished(sale.getId());
+        // 走真实报工路径：updateDetailQuantity 内部会判断「是否全部完成」。
+        // Stream.allMatch 在空集合上返回 true，修复前的 !isEmpty() 守卫就是加在这里的。
+        // 注意不能直接调 setBillDetailsAllFinished —— 那是受控的推进接口，
+        // 空集合的判断本来就不在它里面。
+        detailService.updateDetailQuantity(sale.getId(), 10D, saleService, d -> {
+        });
         Integer statusAfter = saleService.get(sale.getId()).getStatus();
-        log.info("P2-2 明细为 0 时：状态 {} -> {}", statusBefore, statusAfter);
+        log.info("P2-2 明细为 0 时：单据状态 = {}", statusAfter);
         assertNotEquals(SaleStatus.DONE.getKey(), statusAfter,
                 "0 明细的单据不应被推进到已完成（修复前会连锁生成 0 明细的下游单据）");
-        log.info("P2-2 通过：0 明细单据未被推进到完成态");
+
+        // 也不应生成出库单
+        long outputCount = cn.hamm.spms.module.wms.WmsServices.getOutputService().filter(null).stream()
+                .filter(o -> o.getSale() != null && o.getSale().getId().equals(sale.getId()))
+                .count();
+        assertEquals(0, outputCount, "0 明细的单据不应生成出库单");
+        log.info("P2-2 通过：0 明细单据未被推进，出库单 {} 张", outputCount);
     }
 }

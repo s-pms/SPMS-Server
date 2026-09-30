@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 
@@ -124,10 +125,16 @@ public class ContractService extends BaseService<ContractEntity, ContractReposit
      * @param source     客户端提交的合同
      */
     private void syncLinks(long contractId, @NotNull ContractEntity source) {
-        AssetServices.getContractParticipantLinkService()
-                .syncByContractId(contractId, source.getParticipantList());
-        AssetServices.getContractDocumentLinkService()
-                .syncByContractId(contractId, source.getDocumentList());
+        // 必须判空：前端编辑合同基本信息时通常不传这两个集合，
+        // 不区分「未传」与「传空集」会导致一次普通修改就把参与方/附件全清空
+        if (Objects.nonNull(source.getParticipantList())) {
+            AssetServices.getContractParticipantLinkService()
+                    .syncByContractId(contractId, source.getParticipantList());
+        }
+        if (Objects.nonNull(source.getDocumentList())) {
+            AssetServices.getContractDocumentLinkService()
+                    .syncByContractId(contractId, source.getDocumentList());
+        }
     }
 
     /**
