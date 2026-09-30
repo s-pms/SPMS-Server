@@ -42,7 +42,11 @@ public class ContractDocumentLinkService extends BaseService<ContractDocumentLin
     }
 
     /**
-     * 把合同的附件同步到中间表（全量覆盖）
+     * 把合同的附件同步到中间表（增量）
+     * <p>
+     * 只解绑本次提交里已不存在的、只建立本次新增的。
+     * 没有 ID 的附件先落库拿到 ID 再建关联。
+     * </p>
      *
      * @param contractId 合同 ID
      * @param documents  前端提交的附件

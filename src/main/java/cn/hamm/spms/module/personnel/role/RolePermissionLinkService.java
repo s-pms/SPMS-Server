@@ -47,14 +47,9 @@ public class RolePermissionLinkService extends BaseService<RolePermissionLinkEnt
     }
 
     /**
-     * 同步某个角色的授权（增量同步）
+     * 同步某个角色的授权（增量）
      * <p>
-     * 只解绑「本次提交里已不存在」的权限、只建立「本次新增」的授权。
-     * </p>
-     * <p>
-     * 不使用 {@code repository.deleteAll} + {@code flush}：它们直接拼批量 SQL，
-     * <b>不触发</b> JPA 实体生命周期回调、<b>不走</b> {@code beforeAppDelete}
-     * 之类的业务钩子，也不做级联处理。删除一律走框架标准的 {@code delete(id)}。
+     * 只解绑本次提交里已不存在的、只建立本次新增的。
      * </p>
      *
      * @param roleId      角色 ID

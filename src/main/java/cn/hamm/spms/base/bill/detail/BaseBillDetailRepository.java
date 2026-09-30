@@ -16,20 +16,13 @@ public interface BaseBillDetailRepository<E extends BaseBillDetailEntity<E>> ext
     /**
      * 根据单据 ID 查询所有明细
      * <p>
-     * 刻意<b>不加</b> {@code @Lock}：这个方法有事务外的调用点（接口返回明细列表），
-     * 而 {@code SELECT ... FOR UPDATE} 要求必须在事务里，否则报
+     * 不能加 {@code @Lock}：本方法有事务外的调用点，而
+     * {@code SELECT ... FOR UPDATE} 必须在事务内，否则报
      * {@code Query requires transaction be in progress}。
      * </p>
      * <p>
-     * 需要「读到最新已提交数据」的场景（判断明细是否全部完成，修复 P2-4），
-     * 用 {@code BaseBillDetailService.isAllDetailFinished}，
-     * 它内部逐行走 {@code getForUpdate} 做当前读。
-     * </p>
-     * <p>
-     * 用 Spring Data 的<b>方法名派生</b>而不是 {@code @Query}：
-     * 本接口是泛型基类，实际实体是 {@code PurchaseDetailEntity} 等具体子类，
-     * JPQL 里的实体名必须是具体实体名，泛型基类里拿不到。
-     * 派生查询由 Spring Data 按实际实体生成，对泛型天然友好。
+     * 用方法名派生而非 {@code @Query}：本接口是泛型基类，JPQL 需要具体实体名，
+     * 泛型里拿不到，派生查询由 Spring Data 按实际实体生成。
      * </p>
      *
      * @param billId 单据 ID

@@ -64,15 +64,8 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     /**
      * 订单豁免基类的完成状态守卫
      * <p>
-     * {@code ORDER_MANUAL_FINISH} 配置的说明写着「允许在任何情况下手动完成订单」，
-     * 因此订单的 {@code PRODUCING} / {@code PAUSED} 状态都允许被标记完成，
-     * 而基类的守卫只放行「已审核」与「明细已完成」两种状态。
-     * <p>
-     * 这里返回配置值而不是硬编码 {@code true}：管理员把这个开关关掉后，
-     * 订单就重新受基类守卫约束，语义与配置描述一致。
-     * <p>
-     * 注意本钩子只放开<b>基类</b>的守卫，真正的状态校验在
-     * {@link #setOrderFinishedManually(long)} 里（只允许准备中/生产中/暂停中）。
+     * 返回配置值而非硬编码 true：管理员关掉开关后，订单重新受基类守卫约束。
+     * 本钩子只放开基类守卫，真正的状态校验在 {@link #setOrderFinishedManually(long)}。
      * </p>
      *
      * @return true 表示跳过基类状态守卫
@@ -85,9 +78,7 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     /**
      * <h1>手动标记订单生产完成</h1>
      * <p>
-     * {@code setBillDetailsAllFinished} 是 {@code final}，重复调用会重复执行
-     * {@code afterAllBillDetailFinished} 生成入库单，导致库存凭空翻倍；
-     * 这里补上状态守卫，同时起到幂等保护的作用。
+     * 状态守卫同时起幂等保护：重复调用不会重复生成入库单、不会让库存翻倍。
      * </p>
      *
      * @param orderId 订单 ID
@@ -108,9 +99,8 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     /**
      * 添加订单明细
      * <p>
-     * 整段收进一个事务，并使用 {@code getForUpdate} 带行锁读取订单：
-     * 原实现读-改-写无锁无事务，两个操作工并发报工会互相覆盖，
-     * 造成订单完成数量永远追不上明细实际报工量。
+     * 收进一个事务并用 {@code getForUpdate} 带行锁读取订单：
+     * 否则两个操作工并发报工会互相覆盖，订单完成数量追不上明细实际报工量。
      * </p>
      *
      * @param orderDetail 订单明细
@@ -122,7 +112,6 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         PARAM_INVALID.whenNull(orderDetail.getBillId(), "订单ID不能为空");
 
         transactionHelper.run(() -> {
-            // 悲观锁读取，避免并发报工互相覆盖
             OrderEntity order = getForUpdate(orderDetail.getBillId());
 
             boolean canReport = List.of(

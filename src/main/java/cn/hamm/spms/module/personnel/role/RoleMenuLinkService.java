@@ -46,11 +46,9 @@ public class RoleMenuLinkService extends BaseService<RoleMenuLinkEntity, RoleMen
     }
 
     /**
-     * 同步某个角色的授权（增量同步）
+     * 同步某个角色的授权（增量）
      * <p>
-     * 只解绑「本次提交里已不存在」的菜单、只建立「本次新增」的授权。
-     * 不使用 {@code repository.deleteAll} + {@code flush}（绕开钩子的批量 SQL），
-     * 删除一律走框架标准的 {@code delete(id)}。
+     * 只解绑本次提交里已不存在的、只建立本次新增的。
      * </p>
      *
      * @param roleId 角色 ID

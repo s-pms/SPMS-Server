@@ -45,21 +45,10 @@ public class ContractParticipantLinkService extends BaseService<ContractParticip
     }
 
     /**
-     * 把合同的参与方同步到中间表（增量同步）
+     * 把合同的参与方同步到中间表（增量）
      * <p>
-     * 只解绑「本次提交里已不存在」的参与方、只建立「本次新增」的关联，
-     * 不动没有变化的那些行。
-     * </p>
-     * <p>
-     * 不使用 {@code repository.deleteAll} + {@code flush} 这类语句：
-     * 它们直接拼批量 SQL，<b>不触发</b> JPA 实体生命周期回调、<b>不走</b>
-     * {@code beforeAppDelete} 之类的业务钩子，也不做级联处理 ——
-     * 将来给关联实体挂上需要清理的关联时，会静默留下脏数据。
-     * 删除一律走框架标准的 {@code delete(id)}。
-     * </p>
-     * <p>
-     * 提交的参与方若没有 ID（前端新增的行），先落库拿到 ID 再建关联，
-     * 以此保留原先 {@code cascade = CascadeType.PERSIST} 的语义。
+     * 只解绑本次提交里已不存在的、只建立本次新增的。
+     * 没有 ID 的参与方先落库拿到 ID 再建关联。
      * </p>
      *
      * @param contractId   合同 ID

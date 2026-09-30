@@ -40,11 +40,9 @@ public class UserRoleLinkService extends BaseService<UserRoleLinkEntity, UserRol
     }
 
     /**
-     * 同步用户的角色（增量同步）
+     * 同步用户的角色（增量）
      * <p>
-     * 只解绑「本次提交里已不存在」的角色、只建立「本次新增」的关联。
-     * 不使用 {@code repository.deleteAll} + {@code flush}（绕开钩子的批量 SQL），
-     * 删除一律走框架标准的 {@code delete(id)}。
+     * 只解绑本次提交里已不存在的、只建立本次新增的。
      * </p>
      *
      * @param userId 用户 ID

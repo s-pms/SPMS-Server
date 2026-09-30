@@ -10,22 +10,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * <h1>基础服务类</h1>
  * <p>
- * <b>删除一律走 {@code delete(long id)}</b>，它会触发
- * {@code beforeDelete} / {@code afterDelete} 钩子。
- * </p>
- * <p>
- * 不要用 {@code repository.deleteAll(...)} + {@code repository.flush()}：
- * 那是直接拼的批量 SQL，不触发 JPA 实体生命周期回调、不走钩子、不做级联，
- * 实体上若挂了需要清理的关联会静默留下脏数据。
- * </p>
- * <p>
- * 也不要写 {@code ids.forEach(this::delete)}。
- * 这个写法曾经会导致「删 N 条只删掉最后 1 条」：
- * {@code delete(long id)} 第一步是 {@code get(id)}，而当时的
- * {@code CurdService.getById} 第一行是 {@code entityManager.clear()}，
- * 循环里每删一条都先 {@code get} 一次，{@code clear()} 把上一条已标记删除的
- * 实体从持久化上下文丢弃，那条删除再也不会执行。
- * 该 {@code clear()} 已从框架移除，此处保留说明以免后人重新引入。
+ * 删除走 {@code delete(long id)}，它会触发 beforeDelete / afterDelete 钩子。
+ * 不用 {@code repository.deleteAll} + {@code flush}，那类批量 SQL 不走钩子、不做级联。
  * </p>
  *
  * @param <E> 实体
