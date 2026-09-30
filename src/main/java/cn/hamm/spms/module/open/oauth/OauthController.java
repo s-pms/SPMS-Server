@@ -58,6 +58,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 @Api("oauth2")
 @Slf4j
+@Permission
 public class OauthController extends ApiController implements IOauthAction {
     /**
      * {@code Error}
@@ -94,6 +95,7 @@ public class OauthController extends ApiController implements IOauthAction {
     @Autowired
     private AppConfig appConfig;
 
+    @Permission(login = false)
     @GetMapping("authorize")
     public ModelAndView index(
             HttpServletRequest request,
@@ -170,6 +172,7 @@ public class OauthController extends ApiController implements IOauthAction {
     }
 
     @PostMapping("thirdBind")
+    @Permission(authorize = false)
     public Json thirdBind(@RequestBody @Validated(OauthCallbackRequest.WhenOauthCallback.class) OauthCallbackRequest request) {
         UserEntity user = userService.get(getCurrentUserId());
         service.thirdBind(request.getPlatform(), request.getCode(), user);
@@ -177,6 +180,7 @@ public class OauthController extends ApiController implements IOauthAction {
     }
 
     @PostMapping("unBindThird")
+    @Permission(authorize = false)
     public Json unBindThird(@RequestBody @Validated(ICurdAction.WhenIdRequired.class) UserThirdLoginEntity userThirdLogin) {
         userThirdLoginService.delete(userThirdLogin.getId());
         return Json.success("解绑成功");
@@ -215,6 +219,7 @@ public class OauthController extends ApiController implements IOauthAction {
     }
 
     @PostMapping("getScopeList")
+    @Permission(login = false)
     public Json getScopeList() {
         return Json.data(DictionaryUtil.getDictionaryList(OauthScope.class,
                 OauthScope::name,

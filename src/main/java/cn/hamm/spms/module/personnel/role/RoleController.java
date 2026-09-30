@@ -23,7 +23,7 @@ public class RoleController extends BaseController<RoleEntity, RoleService, Role
 
     @Description("授权菜单")
     @PostMapping("authorizeMenu")
-    public Json authorizeMenu(@RequestBody @Validated({WhenAuthorizePermission.class, WhenIdRequired.class}) RoleEntity role) {
+    public Json authorizeMenu(@RequestBody @Validated({WhenAuthorizeMenu.class, WhenIdRequired.class}) RoleEntity role) {
         service.update(role);
         return Json.success("授权菜单成功");
     }

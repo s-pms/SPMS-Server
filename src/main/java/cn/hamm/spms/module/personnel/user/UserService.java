@@ -295,7 +295,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         String encodePassword = PermissionUtil.encodePassword(password, existUser.getSalt());
         if (!encodePassword.equals(existUser.getPassword())) {
             addEmailFailCount(email);
-            throw new ServiceException("邮箱或密码错误");
+            throw new ServiceException(USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID, "邮箱或密码错误");
         }
         resetEmailFailCount(email);
         deleteEmailCode(email);

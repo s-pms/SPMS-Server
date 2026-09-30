@@ -1,12 +1,9 @@
 package cn.hamm.spms.module.system.permission;
 
-import cn.hamm.airpower.ai.mcp.McpService;
-import cn.hamm.airpower.ai.mcp.model.McpTool;
 import cn.hamm.airpower.core.TreeUtil;
 import cn.hamm.airpower.curd.permission.PermissionUtil;
 import cn.hamm.spms.SpmsApplication;
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.module.system.permission.enums.PermissionType;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -44,23 +41,6 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     protected @NotNull List<PermissionEntity> afterGetList(@NotNull List<PermissionEntity> list) {
         list.forEach(PermissionEntity::excludeNotMeta);
         return list;
-    }
-
-    public void initMcpToolPermission(@NotNull List<McpTool> list) {
-        PermissionEntity parent = new PermissionEntity()
-                .setName("MCP工具")
-                .setIdentity("mcp:tools")
-                .setType(PermissionType.MCP.getKey())
-                .setIsSystem(true);
-        long parentId = add(parent);
-        for (McpTool mcpTool : list) {
-            add(new PermissionEntity()
-                    .setName(mcpTool.getName())
-                    .setIdentity(McpService.getPermissionIdentity(mcpTool))
-                    .setType(PermissionType.MCP.getKey())
-                    .setIsSystem(true)
-                    .setParentId(parentId));
-        }
     }
 
     public void loadPermission() {

@@ -42,7 +42,7 @@ public class DeviceController extends BaseController<
 
     @Description("获取实时采集数据")
     @PostMapping("getCurrentReport")
-    @Permission(login = false)
+    @Permission(authorize = false)
     @ExposeAll({ReportPayload.class})
     public Json getCurrentReport(@RequestBody @Validated(WhenIdRequired.class) DeviceEntity device) {
         return Json.data(service.getCurrentReport(device.getId()));
@@ -67,7 +67,7 @@ public class DeviceController extends BaseController<
 
     @Description("获取指定设备某个参数的历史")
     @PostMapping("getDevicePayloadHistory")
-    @Permission(login = false)
+    @Permission(authorize = false)
     public Json getDevicePayloadHistory(@RequestBody @Validated(WhenGetDevicePayloadHistory.class) ReportPayload payload) {
         return Json.data(service.getDevicePayloadHistory(payload));
     }

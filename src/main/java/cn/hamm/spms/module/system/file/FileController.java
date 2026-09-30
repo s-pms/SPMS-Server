@@ -5,6 +5,7 @@ import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.airpower.curd.permission.Permission;
+import cn.hamm.airpower.exception.Errors;
 import cn.hamm.airpower.file.FileHelper;
 import cn.hamm.spms.base.BaseController;
 import cn.hamm.spms.module.system.file.enums.FileCategory;
@@ -42,7 +43,9 @@ public class FileController extends BaseController<FileEntity, FileService, File
     @RequestMapping("")
     @Description("获取文件")
     @Permission(login = false)
-    public void getFileUrl(@NotNull(message = "文件不能为空") @RequestParam("url") String url, HttpServletResponse response) throws IOException {
-        response.sendRedirect(fileHelper.getPlatform().getUrl(url, 3000));
+    public void getFileUrl(@NotNull(message = "文件ID不能为空") @RequestParam("id") String id, HttpServletResponse response) throws IOException {
+        Errors.FORBIDDEN.whenEmpty(id, "文件ID不能为空");
+        FileEntity file = service.get(Long.parseLong(id));
+        response.sendRedirect(fileHelper.getPlatform().getUrl(file.getUrl(), 3000));
     }
 }

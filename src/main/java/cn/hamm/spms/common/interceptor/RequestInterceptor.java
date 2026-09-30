@@ -48,13 +48,14 @@ public class RequestInterceptor extends CurdRequestInterceptor {
             String permissionIdentity,
             HttpServletRequest request
     ) {
+        PermissionEntity needPermission = permissionService.getPermissionByIdentity(permissionIdentity);
         long userId = verifiedToken.getPayloadId();
-        UserEntity existUser = userService.getWithEnable(userId);
-        if (existUser.isRootUser()) {
+        UserEntity currentUser = userService.getWithEnable(userId);
+        if (currentUser.isRootUser()) {
             return;
         }
-        PermissionEntity needPermission = permissionService.getPermissionByIdentity(permissionIdentity);
-        if (existUser.getRoleList().stream()
+
+        if (currentUser.getRoleList().stream()
                 .flatMap(role -> role.getPermissionList().stream())
                 .anyMatch(permission -> needPermission.getId().equals(permission.getId()))
         ) {
@@ -83,6 +84,8 @@ public class RequestInterceptor extends CurdRequestInterceptor {
             default:
                 FORBIDDEN.show("不支持的令牌类型");
         }
+        long userId = verifiedToken.getPayloadId();
+        userService.getWithEnable(userId);
         return verifiedToken;
     }
 }
