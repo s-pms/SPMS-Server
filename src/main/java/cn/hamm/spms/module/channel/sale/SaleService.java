@@ -8,10 +8,20 @@ import cn.hamm.spms.module.channel.sale.detail.SaleDetailRepository;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailService;
 import cn.hamm.spms.module.channel.sale.enums.SaleStatus;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
+import cn.hamm.spms.module.wms.WmsServices;
+import cn.hamm.spms.module.wms.inventory.InventoryEntity;
+import cn.hamm.spms.module.wms.inventory.InventoryService;
+import cn.hamm.spms.module.wms.output.OutputEntity;
+import cn.hamm.spms.module.wms.output.detail.OutputDetailEntity;
+import cn.hamm.spms.module.wms.output.enums.OutputStatus;
+import cn.hamm.spms.module.wms.output.enums.OutputType;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 import static cn.hamm.spms.module.system.config.enums.ConfigFlag.SALE_BILL_AUTO_AUDIT;
 
 /**
@@ -20,6 +30,7 @@ import static cn.hamm.spms.module.system.config.enums.ConfigFlag.SALE_BILL_AUTO_
  * @author Hamm.cn
  */
 @Service
+@Slf4j
 public class SaleService extends AbstractBaseBillService<SaleEntity, SaleRepository, SaleDetailEntity, SaleDetailService, SaleDetailRepository> {
     @Override
     public IDictionary getRejectedStatus() {
@@ -38,7 +49,37 @@ public class SaleService extends AbstractBaseBillService<SaleEntity, SaleReposit
 
     @Override
     public IDictionary getBillDetailsFinishStatus() {
+        return SaleStatus.OUTPUTTING;
+    }
+
+    @Override
+    public IDictionary getFinishedStatus() {
         return SaleStatus.DONE;
+    }
+
+    @Override
+    protected void afterAllBillDetailFinished(long billId) {
+        SaleEntity sale = get(billId);
+        FORBIDDEN.whenNull(sale.getStorage(), "销售单未指定发货仓库，无法生成出库单");
+        InventoryService inventoryService = WmsServices.getInventoryService();
+        List<OutputDetailEntity> outputDetails = new ArrayList<>();
+        for (SaleDetailEntity detail : detailService.getAllByBillId(billId)) {
+            InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(
+                    detail.getMaterial().getId(), sale.getStorage().getId());
+            FORBIDDEN.whenNull(inventory, String.format("物料 %s 在仓库「%s」中没有库存记录，无法生成出库单",
+                    detail.getMaterial().getName(), sale.getStorage().getName()));
+            outputDetails.add(new OutputDetailEntity()
+                    .setInventory(inventory)
+                    .setMaterial(detail.getMaterial())
+                    .setQuantity(detail.getFinishQuantity()));
+        }
+        OutputEntity outputBill = new OutputEntity()
+                .setStatus(OutputStatus.AUDITING.getKey())
+                .setType(OutputType.SALE.getKey())
+                .setSale(sale)
+                .setDetails(outputDetails);
+        long outputId = WmsServices.getOutputService().add(outputBill);
+        log.info("销售单明细全部完成，已生成销售出库单，saleId:{}, outputId:{}", billId, outputId);
     }
 
     @Override

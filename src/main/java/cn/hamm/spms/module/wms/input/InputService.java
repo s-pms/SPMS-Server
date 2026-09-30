@@ -4,6 +4,7 @@ import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.ReflectUtil;
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
+import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.channel.ChannelServices;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
 import cn.hamm.spms.module.mes.MesServices;
@@ -74,19 +75,20 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
 
     @Override
     protected void afterDetailFinishAdded(long detailId, @NotNull InputDetailEntity inputDetail) {
-        // 入库仓库信息
-        StorageEntity storage = inputDetail.getStorage();
-        if (Objects.isNull(storage) || Objects.isNull(storage.getId())) {
-            FORBIDDEN.show("请传入入库仓库");
-            return;
-        }
-        InputDetailEntity existDetail = detailService.get(inputDetail.getId());
+        // 一律以数据库中已保存的明细为准：若取请求参数中的 storage，
+        // 客户端可以在报工时临时更换入库仓库，货就记到了别的仓库去
+        InputDetailEntity existDetail = detailService.get(detailId);
+        StorageEntity storage = existDetail.getStorage();
+        FORBIDDEN.when(Objects.isNull(storage) || Objects.isNull(storage.getId()),
+                "明细没有关联入库仓库，请先完善明细的仓库信息");
+        MaterialEntity material = existDetail.getMaterial();
+        FORBIDDEN.whenNull(material, "明细没有关联物料，请先完善明细的物料信息");
         InventoryService inventoryService = WmsServices.getInventoryService();
 
         // 查询库存信息
-        InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(existDetail.getMaterial().getId(), storage.getId());
+        InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(material.getId(), storage.getId());
 
-        // 入库数量
+        // 本次入库数量
         Double inputDetailQuantity = inputDetail.getQuantity();
 
         if (Objects.nonNull(inventory)) {
@@ -96,7 +98,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
         }
         inventory = new InventoryEntity()
                 .setQuantity(inputDetailQuantity)
-                .setMaterial(existDetail.getMaterial())
+                .setMaterial(material)
                 .setStorage(storage)
                 .setType(InventoryType.STORAGE.getKey());
         inventoryService.add(inventory);

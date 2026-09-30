@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
+import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 
 /**
  * <h1>单据 Service 基类</h1>
@@ -117,6 +118,9 @@ public abstract class AbstractBaseBillService<
             FORBIDDEN.when(!getAuditedStatus().equalsKey(bill.getStatus()), "添加明细完成数量失败，单据未审核");
             FORBIDDEN.when(getFinishedStatus().equalsKey(bill.getStatus()), "添加明细完成数量失败，单据已完成");
             Double finishQuantity = sourceDetail.getQuantity();
+            // 数量允许超过单据计划（业务上可能多发/多报），但不允许负数：
+            // 负数会让已完成数量被"修回来"，把库存和金额一起污染
+            PARAM_INVALID.when(finishQuantity < 0, "添加明细完成数量失败，完成数量不能为负数");
             log.info("添加明细数量 {}，单据ID:{}, 明细数量:{}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()), billId, finishQuantity);
             detailService.addFinishQuantity(detailId, finishQuantity);
 

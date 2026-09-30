@@ -24,8 +24,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
+import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 
 /**
  * <h1>Service</h1>
@@ -60,7 +62,36 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     /**
+     * <h1>手动标记订单生产完成</h1>
+     * <p>
+     * {@code setBillDetailsAllFinished} 是 {@code final} 且不带任何状态校验，
+     * 重复调用会重复执行 {@code afterAllBillDetailFinished} 生成入库单，导致库存凭空翻倍；
+     * 对「审核中 / 已驳回」的单据调用同样会被接受。
+     * 这里补上状态守卫，同时起到幂等保护的作用。
+     * </p>
+     *
+     * @param orderId 订单 ID
+     */
+    public void setOrderFinishedManually(long orderId) {
+        OrderEntity exist = get(orderId);
+        boolean canFinish = List.of(
+                OrderStatus.PREPARE.getKey(),
+                OrderStatus.PRODUCING.getKey(),
+                OrderStatus.PAUSED.getKey()
+        ).contains(exist.getStatus());
+        FORBIDDEN.when(!canFinish, String.format(
+                "订单当前状态为「%s」，不允许标记生产完成",
+                DictionaryUtil.getDictionary(OrderStatus.class, exist.getStatus()).getLabel()));
+        setBillDetailsAllFinished(orderId);
+    }
+
+    /**
      * 添加订单明细
+     * <p>
+     * 整段收进一个事务，并使用 {@code getForUpdate} 带行锁读取订单：
+     * 原实现读-改-写无锁无事务，两个操作工并发报工会互相覆盖，
+     * 造成订单完成数量永远追不上明细实际报工量。
+     * </p>
      *
      * @param orderDetail 订单明细
      */
@@ -68,37 +99,56 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         ConfigService configService = SystemServices.getConfigService();
         ConfigEntity config = configService.get(ConfigFlag.ORDER_ENABLE_SUBMIT_WORK);
         FORBIDDEN.when(!config.booleanConfig(), "未开启订单报工模式");
+        PARAM_INVALID.whenNull(orderDetail.getBillId(), "订单ID不能为空");
 
-        //todo 需要加锁更新
+        transactionHelper.run(() -> {
+            // 悲观锁读取，避免并发报工互相覆盖
+            OrderEntity order = getForUpdate(orderDetail.getBillId());
 
-        // 更新明细数量和状态
-        Double quantity = orderDetail.getQuantity();
-        Double ngQuantity = orderDetail.getNgQuantity();
-        orderDetail.setQuantity(quantity)
-                .setFinishQuantity(quantity)
-                .setNgQuantity(ngQuantity)
-                .setIsFinished(true);
-        OrderDetailService orderDetailService = MesServices.getOrderDetailService();
-        orderDetailService.add(orderDetail);
+            boolean canReport = List.of(
+                    OrderStatus.PREPARE.getKey(),
+                    OrderStatus.PRODUCING.getKey(),
+                    OrderStatus.PAUSED.getKey()
+            ).contains(order.getStatus());
+            FORBIDDEN.when(!canReport, String.format("订单当前状态为「%s」，无法报工",
+                    DictionaryUtil.getDictionary(OrderStatus.class, order.getStatus()).getLabel()));
 
-        // 更新订单数量
-        OrderEntity order = get(orderDetail.getBillId());
-        List<OrderDetailEntity> details = orderDetailService.getAllByBillId(order.getId());
-        double totalFinishQuantity = 0D;
-        double tatalNgQuantity = 0D;
-        for (OrderDetailEntity detail : details) {
-            totalFinishQuantity = NumberUtil.add(totalFinishQuantity, detail.getFinishQuantity());
-            tatalNgQuantity = NumberUtil.add(tatalNgQuantity, detail.getNgQuantity());
-        }
-        order.setFinishQuantity(totalFinishQuantity)
-                .setNgQuantity(tatalNgQuantity)
-        ;
-        updateToDatabase(order);
+            double reportQuantity = Objects.requireNonNullElse(orderDetail.getQuantity(), 0D);
+            double ngQuantity = Objects.requireNonNullElse(orderDetail.getNgQuantity(), 0D);
+            PARAM_INVALID.when(reportQuantity <= 0D, "报工数量必须大于 0");
+            double finishQuantity = Objects.requireNonNullElse(order.getFinishQuantity(), 0D);
+            double remainQuantity = NumberUtil.subtract(order.getQuantity(), finishQuantity);
+            PARAM_INVALID.when(reportQuantity > remainQuantity, String.format(
+                    "本次报工 %s 超过订单剩余待完成数量 %s", reportQuantity, remainQuantity));
 
-        config = configService.get(ConfigFlag.ORDER_AUTO_FINISH);
-        if (config.booleanConfig() && order.getFinishQuantity() >= order.getQuantity()) {
-            setBillDetailsAllFinished(order.getId());
-        }
+            // 更新明细数量和状态
+            orderDetail.setQuantity(reportQuantity)
+                    .setFinishQuantity(reportQuantity)
+                    .setNgQuantity(ngQuantity)
+                    .setIsFinished(true);
+            OrderDetailService orderDetailService = MesServices.getOrderDetailService();
+            orderDetailService.add(orderDetail);
+
+            // 更新订单数量
+            List<OrderDetailEntity> details = orderDetailService.getAllByBillId(order.getId());
+            double totalFinishQuantity = 0D;
+            double tatalNgQuantity = 0D;
+            for (OrderDetailEntity detail : details) {
+                totalFinishQuantity = NumberUtil.add(totalFinishQuantity,
+                        Objects.requireNonNullElse(detail.getFinishQuantity(), 0D));
+                tatalNgQuantity = NumberUtil.add(tatalNgQuantity,
+                        Objects.requireNonNullElse(detail.getNgQuantity(), 0D));
+            }
+            order.setFinishQuantity(totalFinishQuantity)
+                    .setNgQuantity(tatalNgQuantity)
+            ;
+            updateToDatabase(order);
+
+            ConfigEntity autoFinish = configService.get(ConfigFlag.ORDER_AUTO_FINISH);
+            if (autoFinish.booleanConfig() && totalFinishQuantity >= order.getQuantity()) {
+                setBillDetailsAllFinished(order.getId());
+            }
+        });
     }
 
     @Override

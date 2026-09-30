@@ -3,6 +3,7 @@ package cn.hamm.spms.module.wms.output;
 import cn.hamm.airpower.core.DictionaryUtil;
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
+import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.channel.ChannelServices;
 import cn.hamm.spms.module.mes.MesServices;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
@@ -63,19 +64,24 @@ public class OutputService extends AbstractBaseBillService<OutputEntity, OutputR
     protected void afterDetailFinishAdded(long detailId, @NotNull OutputDetailEntity outputDetail) {
         InventoryService inventoryService = WmsServices.getInventoryService();
 
-        // 出库明细
-        OutputDetailEntity existDetail = detailService.get(outputDetail.getId());
+        // 出库明细，一律以数据库中已保存的明细为准
+        OutputDetailEntity existDetail = detailService.get(detailId);
 
-        // 物料 ID
-        Long materialId = existDetail.getMaterial().getId();
+        // 库存信息，必须取明细入库时已保存的库存行；
+        // 若取请求参数中的 inventory，客户端可在报工时临时更换目标库存行
+        InventoryEntity inventory = existDetail.getInventory();
+        FORBIDDEN.whenNull(inventory, "明细没有关联库存行，请先完善明细的库存信息");
+
+        // 物料以库存行为准：库存行是唯一真源，客户端传入的 material 不可信，
+        // 且明细的 material 字段在级联保存时可能未落库
+        MaterialEntity detailMaterial = inventory.getMaterial();
+        FORBIDDEN.whenNull(detailMaterial, "库存行没有关联物料，请先完善库存信息");
+        Long materialId = detailMaterial.getId();
 
         // 出库单
         OutputEntity bill = get(existDetail.getBillId());
-
-        // 库存信息
-        InventoryEntity inventory = inventoryService.get(outputDetail.getInventory().getId());
-        FORBIDDEN.whenNotEquals(inventory.getMaterial().getId(), materialId, "物料信息不匹配");
         transactionHelper.run(() -> {
+            // 本次出库数量
             Double outputDetailQuantity = outputDetail.getQuantity();
             inventoryService.reduceInventoryQuantity(inventory.getId(), outputDetailQuantity);
             // 获取出库单类型

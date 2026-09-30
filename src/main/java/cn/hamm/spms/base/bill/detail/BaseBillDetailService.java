@@ -8,9 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
+import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 
 /**
  * <h1>单据明细 Service 基类</h1>
@@ -89,34 +91,43 @@ public class BaseBillDetailService<
             @NotNull BS billService,
             Consumer<E> detailCheck
     ) {
-        //todo 需要优化为添加完成数量，而非覆盖
-        final double finalQuantity = quantity;
+        PARAM_INVALID.when(quantity < 0, "完成数量不能为负数");
         transactionHelper.run(() -> {
-            List<E> details = getAllByBillId(billId);
-            for (E detail : details) {
-                if (finalQuantity <= 0) {
+            // 本次待分配的数量，逐行递减分配，避免同一单据多行相同物料时重复计入
+            double remain = quantity;
+            for (E detail : getAllByBillId(billId)) {
+                if (remain <= 0) {
                     break;
+                }
+                if (Boolean.TRUE.equals(detail.getIsFinished())) {
+                    continue;
                 }
                 try {
                     detailCheck.accept(detail);
                 } catch (Exception e) {
-                    continue;
-                }
-                if (detail.getIsFinished()) {
+                    // 该明细不匹配本次数量，跳过；必须留下痕迹，否则上层无法察觉产量被静默丢弃
+                    log.warn("明细不匹配本次数量分配，已跳过，明细ID:{} 原因:{}",
+                            detail.getId(), e.getMessage());
                     continue;
                 }
 
-                // 还需要完成的数量
-                double detailNeedQuantity = NumberUtil.subtract(detail.getQuantity(), detail.getFinishQuantity());
-                // 添加单据完成数量
-                detail.setFinishQuantity(finalQuantity);
-                if (finalQuantity >= detailNeedQuantity) {
-                    detail.setIsFinished(true);
+                double finished = Objects.requireNonNullElse(detail.getFinishQuantity(), 0D);
+                // 该明细还需要完成的数量
+                double detailNeedQuantity = NumberUtil.subtract(detail.getQuantity(), finished);
+                if (detailNeedQuantity <= 0) {
+                    continue;
                 }
+                // 实际分配到本行的数量，不得超过其待完成量
+                double applied = Math.min(detailNeedQuantity, remain);
+                // 累加而非覆盖
+                double newFinishQuantity = NumberUtil.add(finished, applied);
+                detail.setFinishQuantity(newFinishQuantity)
+                        .setIsFinished(newFinishQuantity >= detail.getQuantity());
                 updateToDatabase(detail);
+                remain = NumberUtil.subtract(remain, applied);
             }
             // 判断所有明细是否完成
-            details = getAllByBillId(billId);
+            List<E> details = getAllByBillId(billId);
             boolean isAllFinished = details.stream().allMatch(BaseBillDetailEntity::getIsFinished);
             if (isAllFinished) {
                 // 明细已全部完成

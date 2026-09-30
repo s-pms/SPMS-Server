@@ -10,6 +10,7 @@ import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import cn.hamm.spms.module.channel.customer.CustomerEntity;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailEntity;
 import cn.hamm.spms.module.channel.sale.enums.SaleStatus;
+import cn.hamm.spms.module.factory.storage.StorageEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -66,4 +67,9 @@ public class SaleEntity extends AbstractBaseBillEntity<SaleEntity, SaleDetailEnt
     @ManyToOne(fetch = EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "客户不能为空")
     private CustomerEntity customer;
+
+    @Description("发货仓库")
+    @ManyToOne(fetch = EAGER)
+    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "发货仓库不能为空")
+    private StorageEntity storage;
 }

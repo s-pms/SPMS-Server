@@ -56,7 +56,7 @@ public class OrderController extends BaseBillController<OrderEntity, OrderServic
         ConfigService configService = SystemServices.getConfigService();
         ConfigEntity config = configService.get(ConfigFlag.ORDER_MANUAL_FINISH);
         FORBIDDEN.when(!config.booleanConfig(), "未开启手动标记订单生产完成");
-        service.setBillDetailsAllFinished(order.getId());
+        service.setOrderFinishedManually(order.getId());
         return Json.success("手动设置为生产完成待入库状态成功");
     }
 }

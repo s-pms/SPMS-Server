@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 import static cn.hamm.spms.module.system.config.enums.ConfigFlag.PICKING_BILL_AUTO_AUDIT;
 
 /**
@@ -79,23 +80,42 @@ public class PickingService extends AbstractBaseBillService<PickingEntity, Picki
     protected void afterAllBillDetailFinished(long billId) {
         log.info("领料单所有明细都已完成，单据ID:{}", billId);
         PickingEntity pickingBill = get(billId);
+        FORBIDDEN.whenNull(pickingBill.getStructure(), "领料单未指定生产单元，无法回写线边库存");
         // 添加线边库存
         List<PickingDetailEntity> details = detailService.getAllByBillId(pickingBill.getId());
         InventoryService inventoryService = WmsServices.getInventoryService();
-        details.forEach(detail -> {
-            // 查询库存信息
-            InventoryEntity inventory = inventoryService.getByMaterialIdAndStructureId(detail.getMaterial().getId(), pickingBill.getStructure().getId());
-            if (Objects.nonNull(inventory)) {
-                inventory.setQuantity(NumberUtil.add(inventory.getQuantity(), detail.getFinishQuantity()));
-                inventoryService.updateToDatabase(inventory);
-                return;
+        transactionHelper.run(() -> {
+            for (PickingDetailEntity detail : details) {
+                if (Objects.isNull(detail.getMaterial())) {
+                    FORBIDDEN.show("领料明细没有关联物料，请先完善明细信息");
+                }
+                double finishQuantity = Objects.requireNonNullElse(detail.getFinishQuantity(), 0D);
+                if (finishQuantity <= 0) {
+                    continue;
+                }
+                // 查-建-回退重试：并���领料时两个线程可能都查不到库存行，
+                // 直接插入会撞 uk_inv_structure 唯一索引并让整张领料单回滚
+                InventoryEntity inventory = inventoryService.getByMaterialIdAndStructureId(
+                        detail.getMaterial().getId(), pickingBill.getStructure().getId());
+                if (Objects.nonNull(inventory)) {
+                    // 走 addInventoryQuantity 内部带行锁的累加，避免读-改-写丢更新
+                    inventoryService.addInventoryQuantity(inventory.getId(), finishQuantity);
+                    continue;
+                }
+                try {
+                    inventoryService.add(new InventoryEntity()
+                            .setQuantity(finishQuantity)
+                            .setMaterial(detail.getMaterial())
+                            .setStructure(pickingBill.getStructure())
+                            .setType(InventoryType.STRUCTURE.getKey()));
+                } catch (Exception e) {
+                    // 并发下另一个线程已插入，回退为累加
+                    InventoryEntity created = inventoryService.getByMaterialIdAndStructureId(
+                            detail.getMaterial().getId(), pickingBill.getStructure().getId());
+                    FORBIDDEN.whenNull(created, "写线边库存失败：" + e.getMessage());
+                    inventoryService.addInventoryQuantity(created.getId(), finishQuantity);
+                }
             }
-            inventory = new InventoryEntity()
-                    .setQuantity(detail.getFinishQuantity())
-                    .setMaterial(detail.getMaterial())
-                    .setStructure(pickingBill.getStructure())
-                    .setType(InventoryType.STRUCTURE.getKey());
-            inventoryService.add(inventory);
         });
     }
 }

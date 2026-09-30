@@ -48,6 +48,9 @@ public class InputDetailEntity extends BaseBillDetailEntity<InputDetailEntity> {
     private Double finishQuantity;
 
     @Description("仓库")
-    @Transient
+    // 必须是真正的持久化关联：原先是 @Transient，导致入库时只能取客户端传的仓库，
+    // 既可以被任意篡改，又在数据库里留不下任何痕迹。落库后报工时以数据库明细为准。
+    @ManyToOne(fetch = EAGER)
+    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "入库仓库不能为空")
     private StorageEntity storage;
 }

@@ -2,6 +2,7 @@ package cn.hamm.spms.module.wms.move;
 
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
+import lombok.extern.slf4j.Slf4j;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
 import cn.hamm.spms.module.system.config.enums.ConfigFlag;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 import static cn.hamm.spms.module.system.config.enums.ConfigFlag.MOVE_BILL_AUTO_AUDIT;
 
 /**
@@ -36,6 +38,7 @@ import static cn.hamm.spms.module.system.config.enums.ConfigFlag.MOVE_BILL_AUTO_
  * @author Hamm.cn
  */
 @Service
+@Slf4j
 public class MoveService extends AbstractBaseBillService<MoveEntity, MoveRepository, MoveDetailEntity, MoveDetailService, MoveDetailRepository> {
     @Override
     public IDictionary getAuditedStatus() {
@@ -74,6 +77,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
 
         // 来源库存信息
         InventoryEntity from = moveDetail.getInventory();
+        FORBIDDEN.whenNull(from, "明细没有关联库存行，请先完善明细的库存信息");
 
         // 物料信息
         MaterialEntity material = from.getMaterial();
@@ -108,6 +112,7 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
         details.forEach(detail -> {
             // 库存信息
             InventoryEntity inventory = detail.getInventory();
+            FORBIDDEN.whenNull(inventory, "移库明细没有关联库存行，请先完善明细的库存信息");
             inputDetails.add(new InputDetailEntity()
                     .setStorage(moveBill.getStorage())
                     .setMaterial(inventory.getMaterial())
@@ -121,21 +126,29 @@ public class MoveService extends AbstractBaseBillService<MoveEntity, MoveReposit
                     .setFinishQuantity(detail.getFinishQuantity())
             );
         });
-        // 添加入库单
+        // 添加入库单。
+        // 这里必须用 addToDatabase 而非 add：移库单的库存增减已经在
+        // afterDetailFinishAdded 里做完，生成的这张入库单/出库单只是记账凭证，
+        // 状态直接是「已完成」。而 add 会触发 afterAppAdd 里的自动审核，
+        // canAudit 判断「已完成」不是「审核中」直接抛异常，
+        // 异常冒泡会把整个移库事务回滚 —— 只要打开入/出库单自动审核，
+        // 移库功能就整体不可用。addToDatabase 不触发前后置钩子，正合这里的需求。
         InputEntity inputBill = new InputEntity()
                 .setType(InputType.MOVE.getKey())
                 .setMove(moveBill)
                 .setStatus(InputStatus.DONE.getKey());
-        inputBill.setDetails(inputDetails);
-        WmsServices.getInputService().add(inputBill);
+        long inputId = WmsServices.getInputService().addToDatabase(inputBill);
+        WmsServices.getInputDetailService().saveDetails(inputId, inputDetails);
+        log.info("移库单 {} 已生成入库单 {}", billId, inputId);
 
         // 添加出库单
         OutputEntity outputBill = new OutputEntity()
                 .setType(OutputType.MOVE.getKey())
                 .setMove(moveBill)
                 .setStatus(OutputStatus.DONE.getKey());
-        outputBill.setDetails(outputDetails);
-        WmsServices.getOutputService().add(outputBill);
+        long outputId = WmsServices.getOutputService().addToDatabase(outputBill);
+        WmsServices.getOutputDetailService().saveDetails(outputId, outputDetails);
+        log.info("移库单 {} 已生成出库单 {}", billId, outputId);
     }
 
     @Override
