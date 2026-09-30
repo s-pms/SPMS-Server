@@ -56,6 +56,7 @@ public abstract class BaseBillDetailEntity<
      * 获取数量
      *
      * @return 数量
+     * @apiNote 报工接口 {@code WhenAddFinish} 分组下必填
      */
     @NotNull(groups = {WhenAddFinish.class}, message = "数量不能为空")
     public abstract Double getQuantity();
@@ -71,7 +72,8 @@ public abstract class BaseBillDetailEntity<
     /**
      * 获取已完成数量
      *
-     * @return 数量
+     * @return 已完成数量
+     * @apiNote 单据是否「全部明细完成」以它与 {@link #getQuantity()} 的比较结果为准
      */
     public abstract Double getFinishQuantity();
 

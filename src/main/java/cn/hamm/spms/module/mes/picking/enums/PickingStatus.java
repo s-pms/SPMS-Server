@@ -12,24 +12,12 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum PickingStatus implements IDictionary {
-    /**
-     * 审核中
-     */
     AUDITING(1, "审核中"),
 
-    /**
-     * 已驳回
-     */
     REJECTED(2, "已驳回"),
 
-    /**
-     * 出库中
-     */
     OUTPUTTING(3, "出库中"),
 
-    /**
-     * 已完成
-     */
     DONE(4, "已完成");
 
     private final int key;

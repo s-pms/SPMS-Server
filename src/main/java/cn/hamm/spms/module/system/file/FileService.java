@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * <h1>Service</h1>
+ * <h1>文件</h1>
  *
  * @author Hamm.cn
  */
@@ -37,7 +37,7 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
     private FileConfig fileConfig;
 
     /**
-     * 文件上传
+     * 上传文件
      *
      * @param multipartFile 文件
      * @param fileCategory  文件类别
@@ -48,12 +48,14 @@ public class FileService extends BaseService<FileEntity, FileRepository> {
     }
 
     /**
-     * 文件上传
+     * 上传文件
      *
      * @param multipartFile 文件
      * @param fileCategory  文件类别
-     * @param uploaderId    上传人 ID，用于受保护文件的归属校验
+     * @param uploaderId    上传人 ID
      * @return 存储的文件信息
+     * @apiNote 受保护的文件类别（如合同附件）必须传 {@code uploaderId}，
+     * 否则下载时没有归属可校验，等于对所有人开放
      */
     public FileEntity upload(@NotNull MultipartFile multipartFile, @NotNull FileCategory fileCategory, Long uploaderId) {
         return upload(fileConfig.getDefaultPlatform(), multipartFile, fileCategory, uploaderId);

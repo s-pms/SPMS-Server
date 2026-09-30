@@ -28,9 +28,12 @@ import java.util.function.BiFunction;
 import static cn.hamm.spms.module.iot.report.ReportConstant.*;
 
 /**
- * <h1>数据上报的 MQ 回调</h1>
+ * <h1>设备数据上报回调</h1>
  *
  * @author Hamm.cn
+ * @apiNote 单条上报里的每个参数各自 try-catch，某个参数解析失败不影响同批其他参数；
+ * 三个系统参数（{@code Status} / {@code Alarm} / {@code PartCnt}）除了写 InfluxDB
+ * 还要回写 {@code DeviceEntity} 对应字段，其余参数只入 InfluxDB
  */
 @Component
 @Slf4j
@@ -45,6 +48,13 @@ public class ReportMqCallback implements MqttCallback {
     public void connectionLost(Throwable throwable) {
     }
 
+    /**
+     * 处理一条设备上报报文
+     *
+     * @param topic       上报 Topic
+     * @param mqttMessage 报文
+     * @apiNote 会跳过值为空、未登记为采集参数、以及 5 秒内值未变化的项
+     */
     @Override
     public void messageArrived(String topic, @NotNull MqttMessage mqttMessage) {
         String reportString = new String(mqttMessage.getPayload());
@@ -71,7 +81,6 @@ public class ReportMqCallback implements MqttCallback {
                 String parameterCode = payload.getCode();
                 String lastDataInCache = getLastDataInCache(parameterCode, uuid);
                 if (Objects.nonNull(lastDataInCache) && lastDataInCache.equals(reportValue)) {
-                    // 查到了数据 没过期 跳过
                     continue;
                 }
                 ParameterEntity parameter = parameterService.getByCode(parameterCode);
@@ -118,34 +127,35 @@ public class ReportMqCallback implements MqttCallback {
     }
 
     /**
-     * 保存数据
+     * 设备非空时执行赋值
      *
      * @param device   设备
-     * @param function 设置的函数
-     * @param value    保存的值
-     * @param <T>      保存值的类型
+     * @param function 赋值动作
+     * @param value    赋的值
+     * @param <T>      值的类型
      */
     private <T> void saveIfNotNull(DeviceEntity device, BiFunction<DeviceEntity, T, DeviceEntity> function, T value) {
         Optional.ofNullable(device).ifPresent(d -> function.apply(d, value));
     }
 
     /**
-     * 缓存设备指定参数的数据
+     * 缓存设备指定参数本次上报的值
      *
      * @param code        参数编码
      * @param uuid        设备的 UUID
      * @param reportValue 上报的数据
+     * @apiNote TTL 5 秒，仅用于相邻报文去重，不代表设备当前真实状态
      */
     private void saveLastReportParameterValue(String code, String uuid, String reportValue) {
         redisHelper.set(getDeviceReportParamCacheKey(code, uuid), reportValue, 5);
     }
 
     /**
-     * 获取设备指定参数的缓存数据
+     * 获取设备指定参数上一次上报的值
      *
-     * @param code 参数 Key
+     * @param code 参数编码
      * @param uuid 设备的 UUID
-     * @return 上报的数据
+     * @return 上报的值，缓存已过期返回 {@code null}
      */
     private @Nullable String getLastDataInCache(String code, String uuid) {
         Object object = redisHelper.get(getDeviceReportParamCacheKey(code, uuid));

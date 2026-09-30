@@ -1,14 +1,14 @@
 package cn.hamm.spms.module.personnel.user;
 
 /**
- * <h1>用户行为</h1>
+ * <h1>用户的校验分组</h1>
  *
  * @author Hamm.cn
  */
 public interface IUserAction {
 
     /**
-     * ID密码 密码登录
+     * 账号密码登录时的校验分组
      */
     interface WhenLogin {
     }
@@ -50,7 +50,7 @@ public interface IUserAction {
     }
 
     /**
-     * 获取我的信息
+     * 获取我的信息时的校验分组
      */
     interface WhenGetMyInfo {
     }

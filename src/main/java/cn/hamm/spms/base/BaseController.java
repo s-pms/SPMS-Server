@@ -21,6 +21,7 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN_EDIT;
  * @param <E> 实体
  * @param <R> 数据源
  * @author Hamm.cn
+ * @apiNote 统一拦截已发布数据的修改与删除：一旦发布，该条数据就不可再改、不可再删
  */
 @Slf4j
 @Permission

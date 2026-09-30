@@ -8,7 +8,7 @@ import cn.hamm.spms.module.channel.sale.detail.SaleDetailRepository;
 import cn.hamm.spms.module.channel.sale.detail.SaleDetailService;
 
 /**
- * <h1>Controller</h1>
+ * <h1>销售单</h1>
  *
  * @author Hamm.cn
  */

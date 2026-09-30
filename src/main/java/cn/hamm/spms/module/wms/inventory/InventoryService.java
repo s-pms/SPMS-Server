@@ -27,7 +27,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * <h1>Service</h1>
+ * <h1>库存</h1>
  *
  * @author Hamm.cn
  */
@@ -75,7 +75,7 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
 
     @Override
     protected InventoryEntity beforeCreatePredicate(@NotNull InventoryEntity inventory) {
-        // 需要移除本身的查询条件
+        // 清掉与本次查询维度无关的另一个维度，否则查仓库库存时会带上 structure 条件
         switch (DictionaryUtil.getDictionary(InventoryType.class, inventory.getType())) {
             case STORAGE -> inventory.setStorage(null);
             case STRUCTURE -> inventory.setStructure(null);
@@ -105,11 +105,13 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
     }
 
     /**
-     * 添加生产单元查询条件
+     * 添加生产单元查询条件（含所有下级生产单元）
      *
      * @param root          ROOT
      * @param search        查询条件
      * @param predicateList 查询条件列表
+     * @apiNote 条件加完后要把 {@code search.structure} 置空，否则基类会再拼一条等值条件，
+     * 交集只剩当前节点
      */
     private void addStructurePredicate(@NotNull Root<InventoryEntity> root, @NotNull InventoryEntity search, List<Predicate> predicateList) {
         StructureEntity structure = search.getStructure();
@@ -125,11 +127,13 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
     }
 
     /**
-     * 添加仓库查询条件
+     * 添加仓库查询条件（含所有下级仓库）
      *
      * @param root          ROOT
      * @param search        查询条件
      * @param predicateList 查询条件列表
+     * @apiNote 条件加完后要把 {@code search.storage} 置空，否则基类会再拼一条等值条件，
+     * 交集只剩当前节点
      */
     private void addStoragePredicate(@NotNull Root<InventoryEntity> root, @NotNull InventoryEntity search, List<Predicate> predicateList) {
         StorageEntity storage = search.getStorage();
@@ -145,20 +149,23 @@ public class InventoryService extends BaseService<InventoryEntity, InventoryRepo
     }
 
     /**
-     * 添加库存数量
+     * 累加库存数量
      *
-     * @param inventoryId 库存ID
+     * @param inventoryId 库存 ID
      * @param quantity    数量
+     * @apiNote 内部 {@code updateWithLock} 已带行锁，调用方不要再读-改-写，
+     * 否则会丢更新
      */
     public void addInventoryQuantity(long inventoryId, double quantity) {
         updateWithLock(inventoryId, exist -> exist.setQuantity(NumberUtil.add(exist.getQuantity(), quantity)));
     }
 
     /**
-     * 减少库存数量
+     * 扣减库存数量
      *
-     * @param inventoryId 库存ID
+     * @param inventoryId 库存 ID
      * @param quantity    数量
+     * @apiNote 扣成负数直接抛错，调用方不用自己先查一遍够不够
      */
     public void reduceInventoryQuantity(long inventoryId, double quantity) {
         updateWithLock(inventoryId, exist -> {

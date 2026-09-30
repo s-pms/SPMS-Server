@@ -26,7 +26,7 @@ import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.PickingBil
 import static jakarta.persistence.FetchType.EAGER;
 
 /**
- * <h1>领料单实体</h1>
+ * <h1>领料单</h1>
  *
  * @author Hamm.cn
  */
@@ -65,5 +65,5 @@ public class PickingEntity extends AbstractBaseBillEntity<PickingEntity, Picking
     @ManyToOne(fetch = EAGER)
     private OrderEntity order;
 
-    // todo 如果是工序级别的BOM 则需要关联生产时的工单
+    // TODO 工序级别的 BOM 还需要关联到具体的生产工单
 }

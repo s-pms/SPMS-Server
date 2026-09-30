@@ -16,7 +16,7 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN_EDIT;
 import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 
 /**
- * <h1>Service</h1>
+ * <h1>生产工艺</h1>
  *
  * @author zfy
  */
@@ -27,6 +27,13 @@ public class RoutingService extends BaseService<RoutingEntity, RoutingRepository
      */
     private static final String ORDER_FIELD_NAME = "orderNo";
 
+    /**
+     * 更新工艺时整体覆盖工序配置
+     *
+     * @param id     工艺 ID
+     * @param source 工艺
+     * @apiNote 工序是 {@code @Transient} 明细，只能整份重建：先按 routingId 全删再全建
+     */
     @Override
     protected void afterAppUpdate(long id, @NotNull RoutingEntity source) {
         MesServices.getRoutingOperationService().deleteByRoutingId(id);
@@ -43,6 +50,12 @@ public class RoutingService extends BaseService<RoutingEntity, RoutingRepository
         }
     }
 
+    /**
+     * 按 {@code orderNo} 升序装配工序配置
+     *
+     * @param routing 工艺
+     * @return 装配后的工艺
+     */
     @Override
     protected RoutingEntity afterAppGet(@NotNull RoutingEntity routing) {
         RoutingOperationEntity filter = new RoutingOperationEntity().setRoutingId(routing.getId());
@@ -54,6 +67,12 @@ public class RoutingService extends BaseService<RoutingEntity, RoutingRepository
         return routing;
     }
 
+    /**
+     * 勾选「使用工艺 BOM」时强制要求关联 BOM，未勾选则清空关联
+     *
+     * @param routing 工艺
+     * @return 处理后的工艺
+     */
     @Override
     protected RoutingEntity beforeAppSaveToDatabase(@NotNull RoutingEntity routing) {
         if (Objects.isNull(routing.getIsRoutingBom())) {

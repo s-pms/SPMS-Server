@@ -18,17 +18,24 @@ import java.util.Objects;
 import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 
 /**
- * <h1>Service</h1>
+ * <h1>房间</h1>
  *
  * @author Hamm.cn
  */
 @Service
 public class RoomService extends BaseService<RoomEntity, RoomRepository> {
     /**
-     * 允许用户创建的最大房间数量
+     * 单个用户允许创建的最大房间数量
      */
     private final static int MAX_ROOM_COUNT = 3;
 
+    /**
+     * 校验私有房间必须配密码
+     *
+     * @param room 房间
+     * @return 房间
+     * @apiNote 仅在 {@code isPrivate} 显式为 {@code true} 时校验，{@code null} 会被放行
+     */
     @Override
     protected @NotNull RoomEntity beforeAppSaveToDatabase(@NotNull RoomEntity room) {
         PARAM_INVALID.when(
@@ -45,6 +52,8 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
      * @param room   房间对象
      * @param userId 房主 ID
      * @return 房间 ID
+     * @apiNote 房间号是 6 位随机数且全局唯一，撞号时递归重试；重试前会重新统计房间数，
+     * 因此该校验是「每次重试都跑一遍」而非只跑一次
      */
     public final long create(RoomEntity room, long userId) {
         RoomEntity filter = new RoomEntity().setOwner(new UserEntity().setId(userId));
@@ -54,10 +63,8 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
         filter = new RoomEntity().setCode(code);
         list = filter(filter);
         if (!list.isEmpty()) {
-            // 递归创建 此处需要注意后续优化
             return create(room, userId);
         }
-        // code 没有被使用
         room.setCode(code);
         UserEntity me = PersonnelServices.getUserService().get(userId);
         room.setOwner(me);
@@ -68,7 +75,7 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
     /**
      * 获取热门房间
      *
-     * @return 房间列表
+     * @return 房间列表，按 {@code orderNumber} 倒序
      */
     public List<RoomEntity> getHotRoomList() {
         Sort sort = new Sort().setField("orderNumber").setDirection(Sort.DESC);
@@ -79,23 +86,23 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
      * 根据房间号获取房间
      *
      * @param code 房间号
-     * @return 房间
+     * @return 房间，不存在时返回 {@code null}
      */
     public RoomEntity getByCode(int code) {
         return repository.getByCode(code);
     }
 
     /**
-     * 检查是否需要密码
+     * 检查成员进入私有房间是否需要密码
      *
      * @param member 成员
-     * @return 是否需要密码
+     * @return 仅 {@code MEMBER} 和 {@code VISITOR} 需要密码
+     * @apiNote 房主与各管理员角色免密码，所以这个方法只适用于「已是该房间成员」的场景
      */
     public boolean checkIfNeedPassword(@NotNull MemberEntity member) {
         if (!member.getRoom().getIsPrivate()) {
             return false;
         }
-        // 需要密码的角色
         MemberRole[] roles = new MemberRole[]{MemberRole.MEMBER, MemberRole.VISITOR};
         return Arrays.stream(roles).anyMatch(role -> role.equalsKey(member.getRole()));
     }

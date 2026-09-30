@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class RoomMemberEvent extends ChatEvent {
     /**
-     * 成员信息
+     * 成员信息，仅返回 {@code @Meta} 字段，避免把用户敏感信息推给房间内所有人
      */
     private MemberEntity member;
 }

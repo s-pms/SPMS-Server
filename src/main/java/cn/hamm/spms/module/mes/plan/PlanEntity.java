@@ -25,7 +25,7 @@ import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.PlanBillCo
 import static jakarta.persistence.FetchType.EAGER;
 
 /**
- * <h1>领料单实体</h1>
+ * <h1>生产计划</h1>
  *
  * @author Hamm.cn
  */

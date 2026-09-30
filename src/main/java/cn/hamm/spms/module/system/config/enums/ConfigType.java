@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * <h1>系统配置类型</h1>
+ * <h1>配置值类型</h1>
  *
  * @author Hamm.cn
  */
@@ -13,17 +13,17 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ConfigType implements IDictionary {
     /**
-     * 字符串类型
+     * 任意字符串
      */
     STRING(0, "字符串类型"),
 
     /**
-     * 布尔类型
+     * 布尔开关，存为 {@code "0"} / {@code "1"}
      */
     BOOLEAN(1, "布尔类型"),
 
     /**
-     * 数字类型
+     * 整数
      */
     NUMBER(2, "数字类型"),
     ;

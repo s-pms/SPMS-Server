@@ -22,9 +22,11 @@ import org.hibernate.annotations.DynamicUpdate;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
- * <h1>角色实体</h1>
+ * <h1>房间</h1>
  *
  * @author Hamm.cn
+ * @apiNote {@code password} 标了 {@code @JsonProperty(access = WRITE_ONLY)}，永远不会随详情接口下发；
+ * 比对密码必须取 {@code password} 字段本身，不能依赖任何序列化后的返回值
  */
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)

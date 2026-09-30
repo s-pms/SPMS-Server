@@ -23,12 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.hamm.spms.module.iot.report.enums.ReportDataType.*;
 import static cn.hamm.airpower.exception.Errors.SERVICE_ERROR;
+import static cn.hamm.spms.module.iot.report.enums.ReportDataType.*;
 import static cn.hamm.spms.module.system.config.ConfigService.STRING_ONE;
 
 /**
- * <h1>Influx 助手类</h1>
+ * <h1>设备时序数据读写</h1>
  *
  * @author Hamm.cn
  */
@@ -43,19 +43,34 @@ public class InfluxHelper {
     /**
      * InfluxDB 客户端
      * <p>
-     * 必须声明为 {@code volatile}：{@code save()} 由 MQTT 回调线程调用，
-     * {@code query()} 由 HTTP 工作线程调用，两者会并发读写这个字段。
-     * 非 volatile 时其他线程可能长期看不到新值，从而反复重建客户端。
+     * 必须声明为 {@code volatile}：{@code save()} 由 MQTT 回调线程调用，{@code query()} 由 HTTP
+     * 工作线程调用，两者会并发读写这个字段，不加 volatile 会让其他线程长期看不到新值而反复重建客户端
      * </p>
      */
     private volatile InfluxDBClient influxDbClient;
 
     /**
-     * 保存数据
+     * 转义 Flux 字符串字面量
      *
-     * @param code  参数名
+     * @param value 原始字符串
+     * @return 转义后的字符串
+     * @apiNote Flux 的字符串用双引号包围，内部的 {@code "} 和 {@code \} 都要转义。
+     * {@code uuid} 只有 {@code @NotBlank} 无格式校验，不转义的话任意登录用户传一个带引号的 uuid
+     * 就能改写 {@code filter} 条件、读到其他设备的历史数据
+     */
+    private static @NotNull String escapeFlux(@Nullable String value) {
+        if (Objects.isNull(value)) {
+            return "";
+        }
+        return value.replace("\\", "\\\\").replace("\"", "\\\"");
+    }
+
+    /**
+     * 保存采集数据
+     *
+     * @param code  数采参数编码
      * @param uuid  设备 ID
-     * @param value 数据
+     * @param value 上报值，只支持数字、布尔、字符串
      */
     public void save(String code, String uuid, Object value) {
         WriteApiBlocking writeApi = getWriteApi();
@@ -87,10 +102,8 @@ public class InfluxHelper {
             influxDbClient.setLogLevel(LogLevel.NONE);
             return influxDbClient.getWriteApiBlocking();
         } catch (Exception e) {
-            // 修复前这里是 catch (Exception ignored) { influxDbClient.close(); }，
-            // 而 initInfluxDbClient() 失败时 influxDbClient 还是 null ——
-            // 对 null 调 close() 抛出的 NPE 会从 catch 块逃逸，
-            // 覆盖掉本来想表达的「写入失败」，最终调用方收到一个毫无意义的空指针。
+            // initInfluxDbClient() 失败时 influxDbClient 还是 null，对它 close() 抛出的 NPE
+            // 会从 catch 块逃逸，盖掉本来要表达的「写入失败」
             log.warn("获取 InfluxDB 写入 API 失败，本次采集数据将丢失: {}", e.getMessage(), e);
             closeInfluxDbClient();
         }
@@ -101,7 +114,7 @@ public class InfluxHelper {
      * 关闭并丢弃当前客户端
      * <p>
      * 关闭动作必须判空且自行吞掉异常：调用点往往正处于异常处理路径上，
-     * 关闭失败不应该再抛一次异常把原始故障盖掉。
+     * 关闭失败不应该再抛一次异常把原始故障盖掉
      * </p>
      */
     private void closeInfluxDbClient() {
@@ -118,44 +131,44 @@ public class InfluxHelper {
     }
 
     /**
-     * 查询数量
+     * 查询数量数据
      *
      * @param payload           报告负载
      * @param reportGranularity 报告颗粒度
-     * @return 数据
+     * @return 数据点列表
      */
     public List<ReportInfluxPayload> queryQuantity(ReportPayload payload, ReportGranularity reportGranularity) {
         return query(payload, NUMBER, reportGranularity);
     }
 
     /**
-     * 查询是否开启
+     * 查询开关量数据
      *
      * @param payload           报告负载
      * @param reportGranularity 报告颗粒度
-     * @return 数据
+     * @return 数据点列表
      */
     public List<ReportInfluxPayload> querySwitch(ReportPayload payload, ReportGranularity reportGranularity) {
         return query(payload, BOOLEAN, reportGranularity);
     }
 
     /**
-     * 查询报告信息
+     * 查询文本数据
      *
      * @param payload           报告负载
      * @param reportGranularity 报告颗粒度
-     * @return 数据
+     * @return 数据点列表
      */
     public List<ReportInfluxPayload> queryInformation(ReportPayload payload, ReportGranularity reportGranularity) {
         return query(payload, STRING, reportGranularity);
     }
 
     /**
-     * 查询报告状态
+     * 查询状态数据
      *
      * @param payload           报告负载
      * @param reportGranularity 报告颗粒度
-     * @return 数据
+     * @return 数据点列表
      */
     public List<ReportInfluxPayload> queryStatus(ReportPayload payload, ReportGranularity reportGranularity) {
         return query(payload, STATUS, reportGranularity);
@@ -172,8 +185,8 @@ public class InfluxHelper {
     private @NotNull List<ReportInfluxPayload> query(ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
         List<String> queryParams = getFluxQuery(reportPayload, reportDataType, reportGranularity);
         String flux = String.join(INFLUX_SQL_SPLIT, queryParams);
-        // 修复前这里是 System.out.println(flux)：不走 logback-spring.xml，
-        // 绕过 traceId 关联，线上排障无法定位到具体请求；查询量大时还会刷爆 stdout
+        // 改回 System.out.println 会绕过 logback-spring.xml 与 traceId 关联，线上排障定位不到
+        // 具体请求，查询量大时还会刷爆 stdout
         log.info("执行 Flux 查询: {}", flux);
         try {
             initInfluxDbClient();
@@ -207,8 +220,7 @@ public class InfluxHelper {
             }
             return result;
         } catch (Exception e) {
-            // 修复前这里没有兜底：InfluxDB 宕机时异常一路冒到 DeviceService，
-            // 前端只能看到一个 500，没有任何可读提示。
+            // 不兜底的话 InfluxDB 宕机时异常会一路冒到 DeviceService，前端只看到一个 500。
             // 这里给出明确的业务错误，并丢弃可能半初始化的客户端以便下次重建
             log.error("查询 InfluxDB 失败, code={}, uuid={}: {}", reportPayload.getCode(),
                     reportPayload.getUuid(), e.getMessage(), e);
@@ -219,16 +231,11 @@ public class InfluxHelper {
     }
 
     /**
-     * 初始化 InfluxDB
-     */
-    /**
      * 初始化 InfluxDB 客户端
      * <p>
-     * 加 {@code synchronized} + 双重检查：修复前是无锁的
-     * {@code if (null == influxDbClient) { influxDbClient = create(); }}。
-     * 采集端高频写入与前端高频查询并发时，两个线程可以同时通过 null 判断各建一个客户端
-     * （每个客户端各含一个 OkHttp 连接池），被覆盖的那个永远不会被 close，
-     * 造成连接与线程泄漏。
+     * {@code synchronized} + 双重检查不可去掉：采集端高频写入与前端高频查询并发时，
+     * 两个线程可以同时通过 null 判断各建一个客户端（每个客户端各含一个 OkHttp 连接池），
+     * 被覆盖的那个永远不会被 close，造成连接与线程泄漏
      * </p>
      */
     private void initInfluxDbClient() {
@@ -255,31 +262,15 @@ public class InfluxHelper {
     }
 
     /**
-     * 转义 Flux 字符串字面量
-     * <p>
-     * Flux 的字符串用双引号包围，内部的 {@code "} 和 {@code \} 都需要转义。
-     * 修复前 {@code uuid}（仅有 {@code @NotBlank}，无格式校验）被直接拼进
-     * {@code filter(fn: (r) => ...)}，任意登录用户传一个带引号的 uuid
-     * 就能改写查询条件，读取到其他设备的历史数据。
-     * </p>
-     *
-     * @param value 原始字符串
-     * @return 转义后的字符串
-     */
-    private static @NotNull String escapeFlux(@Nullable String value) {
-        if (Objects.isNull(value)) {
-            return "";
-        }
-        return value.replace("\\", "\\\\").replace("\"", "\\\"");
-    }
-
-    /**
      * 获取查询参数
      *
      * @param reportPayload     数采报告
      * @param reportDataType    数据类型
      * @param reportGranularity 报告颗粒度
      * @return 参数列表
+     * @apiNote 拼进 Flux 的每个变量都要过 {@link #escapeFlux(String)}。{@code code} 已由
+     * {@code DeviceService} 校验过是已注册参数，真正缺格式校验的注入入口是 {@code uuid}，
+     * 但两个都转义，避免以后放宽 code 校验时留下缺口
      */
     private @NotNull List<String> getFluxQuery(@NotNull ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
         List<String> queryParams = new ArrayList<>();

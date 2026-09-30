@@ -10,7 +10,7 @@ import cn.hamm.spms.module.wms.input.detail.InputDetailRepository;
 import cn.hamm.spms.module.wms.input.detail.InputDetailService;
 
 /**
- * <h1>Controller</h1>
+ * <h1>入库单</h1>
  *
  * @author Hamm.cn
  */

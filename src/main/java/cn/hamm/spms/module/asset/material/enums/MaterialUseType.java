@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * <h1>物料使用类型枚举</h1>
+ * <h1>物料使用类型</h1>
  *
  * @author Hamm.cn
  */

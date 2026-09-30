@@ -17,7 +17,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
 /**
- * <h1>实体</h1>
+ * <h1>通知钩子</h1>
  *
  * @author Hamm.cn
  */

@@ -18,7 +18,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**
- * <h1>销售价格实体</h1>
+ * <h1>销售价格</h1>
  *
  * @author Hamm.cn
  */

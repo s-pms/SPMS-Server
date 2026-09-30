@@ -12,24 +12,12 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum PlanStatus implements IDictionary {
-    /**
-     * 审核中
-     */
     AUDITING(1, "审核中"),
 
-    /**
-     * 已驳回
-     */
     REJECTED(2, "已驳回"),
 
-    /**
-     * 生产中
-     */
     PRODUCING(3, "生产中"),
 
-    /**
-     * 已完成
-     */
     DONE(4, "已完成");
 
     private final int key;

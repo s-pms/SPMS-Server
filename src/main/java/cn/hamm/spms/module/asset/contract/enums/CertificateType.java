@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * <h1>证件类型枚举</h1>
+ * <h1>证件类型</h1>
  *
  * @author Hamm.cn
+ * @apiNote 每项的第三个构造参数是对应的 {@link IdentityType}，新增证件类型时必须一并指定，
+ * 否则参与方会落到「其他」身份上
  */
 @AllArgsConstructor
 @Getter

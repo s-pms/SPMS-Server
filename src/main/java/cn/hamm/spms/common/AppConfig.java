@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * <h1>应用配置文件</h1>
+ * <h1>应用配置</h1>
  *
  * @author Hamm.cn
  */
@@ -19,12 +19,12 @@ public class AppConfig {
     private String projectName = "SPMS";
 
     /**
-     * 默认房间 ID {@code 不是房间号}
+     * 未配置房间时用户默认进入的房间 ID，不是房间号
      */
     private long defaultRoomId = 1L;
 
     /**
-     * 是否是开发模式
+     * 是否开发者模式，决定是否初始化演示数据
      */
     private Boolean isDevMode = false;
 

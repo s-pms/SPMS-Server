@@ -22,7 +22,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <h1>Service</h1>
+ * <h1>通知钩子</h1>
  *
  * @author Hamm.cn
  */
@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     /**
-     * 线程池
+     * 通知发送线程池，核心 5 / 最大 20 线程，队列无界
      */
     private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(
             5,
@@ -44,16 +44,18 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     private EmailHelper emailHelper;
 
     /**
-     * 发送通知
+     * 按场景向所有启用的通知钩子推送消息
      *
      * @param notifyScene 通知场景
      * @param data        通知数据
      * @param content     通知文案
+     * @param <T>         通知数据类型
+     * @apiNote 异步投递，调用方拿不到结果，异常只记日志不抛出。目标 URL 来自管理员配置，
+     * 未做白名单校验，存在 SSRF 风险
      */
     public <T> void sendNotification(NotifyScene notifyScene, T data, String content) {
         try {
             EXECUTOR.submit(() -> {
-                // 查询指定场景的 Hook 列表
                 List<NotifyEntity> notifyList = filter(
                         new NotifyEntity()
                                 .setScene(notifyScene.getKey())
@@ -61,10 +63,8 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
                 );
                 final String title = notifyScene.getLabel();
                 notifyList.forEach(notify -> {
-                    // 获取通知类型
                     NotifyChannel notifyChannel = DictionaryUtil.getDictionary(NotifyChannel.class, notify.getChannel());
 
-                    // 获取各个类型的通知内容(POST结构)
                     String requestData = switch (notifyChannel) {
                         case WORK_WECHAT -> getWorkWechatMarkDown(title, content);
                         case FEI_SHU -> getFeishuMarkDown(title, content);
@@ -73,7 +73,6 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
                         case WEB_HOOK -> getNotifyWebHookBody(notify, data);
                     };
 
-                    // 发起通知
                     doRequest(notify, requestData);
                 });
             });
@@ -83,15 +82,15 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     }
 
     /**
-     * 请求
+     * 按渠道投递通知
      *
      * @param notify 通知
-     * @param data   数据
+     * @param data   通知包体
+     * @param <T>    通知包体类型
      */
     private <T> void doRequest(@NotNull NotifyEntity notify, @NotNull T data) {
         NotifyChannel notifyChannel = DictionaryUtil.getDictionary(NotifyChannel.class, notify.getChannel());
         if (notifyChannel == NotifyChannel.EMAIL) {
-            // 如果是邮箱通知 直接发送邮件
             try {
                 NotifyScene scene = DictionaryUtil.getDictionary(NotifyScene.class, notify.getScene());
                 emailHelper.sendEmail(notify.getUrl(), scene.getLabel(), data.toString());
@@ -101,7 +100,6 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
             return;
         }
 
-        // 其他通知 发起网络请求
         HttpUtil.create().setUrl(notify.getUrl()).post(data.toString());
     }
 
@@ -180,10 +178,13 @@ public class NotifyService extends BaseService<NotifyEntity, NotifyRepository> {
     }
 
     /**
-     * 获取通知 WebHook 包体
+     * 构造 WebHook 通知包体
      *
      * @param notify 通知
+     * @param data   通知数据
+     * @param <T>    通知数据类型
      * @return 通知包体
+     * @apiNote 令牌放在包体里而不是请求头，接收方需从 JSON 的 {@code token} 字段取
      */
     protected final <T> String getNotifyWebHookBody(@NotNull NotifyEntity notify, T data) {
         NotifyScene scene = DictionaryUtil.getDictionary(NotifyScene.class, notify.getScene());

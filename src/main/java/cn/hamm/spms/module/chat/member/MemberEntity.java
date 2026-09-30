@@ -18,7 +18,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 /**
- * <h1>角色实体</h1>
+ * <h1>成员</h1>
  *
  * @author Hamm.cn
  */

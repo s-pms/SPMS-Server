@@ -12,7 +12,7 @@ import cn.hamm.spms.module.system.coderule.enums.SerialNumberUpdate;
 import org.springframework.web.bind.annotation.PostMapping;
 
 /**
- * <h1>Controller</h1>
+ * <h1>编码规则</h1>
  *
  * @author Hamm.cn
  */

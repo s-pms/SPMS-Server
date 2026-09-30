@@ -13,10 +13,10 @@ import cn.hamm.airpower.curd.model.query.Sort;
 import cn.hamm.airpower.curd.permission.PermissionUtil;
 import cn.hamm.airpower.email.helper.EmailHelper;
 import cn.hamm.spms.base.BaseService;
-import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.common.AppConfig;
 import cn.hamm.spms.module.personnel.PersonnelServices;
 import cn.hamm.spms.module.personnel.department.DepartmentEntity;
+import cn.hamm.spms.module.personnel.role.RoleEntity;
 import cn.hamm.spms.module.personnel.user.enums.UserTokenType;
 import cn.hamm.spms.module.system.SystemServices;
 import cn.hamm.spms.module.system.config.ConfigEntity;
@@ -38,18 +38,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import static cn.hamm.airpower.exception.Errors.*;
 import static cn.hamm.spms.common.exception.CustomError.EMAIL_SEND_BUSY;
 import static cn.hamm.spms.common.exception.CustomError.USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID;
 
 /**
- * <h1>Service</h1>
+ * <h1>用户</h1>
  *
  * @author Hamm.cn
  */
@@ -62,25 +58,27 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     public static final int PASSWORD_SALT_LENGTH = 4;
 
     /**
-     * 邮箱最大错误次数
+     * 邮箱验证码连续错误次数上限
      */
     public static final int EMAIL_MAX_ERROR_COUNT = 5;
+
     /**
-     * 同一 IP 每分钟最多触发的发信次数（全局维度兜底）
+     * 全局每分钟最多发信次数
      */
     private static final int EMAIL_MAX_SEND_PER_IP = 20;
+
     /**
-     * 无法获取客户端 IP 时的占位值
+     * 取不到客户端 IP 时的占位值
      */
     private static final String UNKNOWN_IP = "unknown";
 
     /**
-     * Code 缓存秒数
+     * 验证码缓存时长（秒）
      */
     private static final int CACHE_CODE_EXPIRE_SECOND = DateTimeUtil.SECOND_PER_MINUTE * 5;
 
     /**
-     * 缓存房间用户
+     * 用户所在房间的缓存 Key 前缀
      */
     private final String CACHE_ROOM_KEY = "room:user:";
 
@@ -100,16 +98,16 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     private AccessConfig accessConfig;
 
     /**
-     * 获取新的密码盐
+     * 生成邮箱验证码
      *
-     * @return 密码盐
+     * @return 6 位数字验证码
      */
     private static @NotNull String getRandomValidateCode() {
         return RandomUtil.randomNumbers(6);
     }
 
     /**
-     * 获取邮箱验证码的缓存 key
+     * 获取邮箱验证码的缓存 Key
      *
      * @param email 邮箱
      * @return 缓存 Key
@@ -120,9 +118,9 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 获取 Cookie 的缓存 key
+     * 获取 Cookie 与用户的映射缓存 Key
      *
-     * @param cookie Cookie
+     * @param cookie Cookie 值
      * @return 缓存 Key
      */
     @Contract(pure = true)
@@ -131,10 +129,11 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 重置密码
+     * 重置用户密码
      *
      * @param user        待修改密码的用户
      * @param newPassword 新密码
+     * @apiNote 每次重置都会重新生成盐
      */
     private void resetPassword(@NotNull UserEntity user, String newPassword) {
         String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
@@ -148,6 +147,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      *
      * @param userId 用户 ID
      * @return 菜单树列表
+     * @apiNote 超管（{@code id == 1}）直接返回全部菜单，不经过角色
      */
     public List<MenuEntity> getMenuListByUserId(long userId) {
         UserEntity user = get(userId);
@@ -177,6 +177,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      *
      * @param userId 用户 ID
      * @return 权限列表
+     * @apiNote 超管（{@code id == 1}）直接返回全部权限，不经过角色
      */
     public List<PermissionEntity> getPermissionListByUserId(long userId) {
         UserEntity user = get(userId);
@@ -199,14 +200,13 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * 修改密码
      *
-     * @param userId      用户ID
+     * @param userId      用户 ID
      * @param oldPassword 原密码
      * @param newPassword 新密码
      */
     public void modifyPassword(long userId, String oldPassword, String newPassword) {
         UserEntity existUser = get(userId);
 
-        // 判断原始密码
         PARAM_INVALID.whenNotEqualsIgnoreCase(
                 PermissionUtil.encodePassword(oldPassword, existUser.getSalt()),
                 existUser.getPassword(),
@@ -232,10 +232,11 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     /**
      * 通过邮箱验证码重置密码
      *
-     * @param email     邮箱
-     * @param code      验证码
+     * @param email       邮箱
+     * @param code        验证码
      * @param newPassword 新密码
-     * @param clientIp  客户端 IP，用于失败次数限流
+     * @param clientIp    客户端 IP
+     * @apiNote 成功后立即失效验证码，防止同一验证码被重复使用
      */
     public void resetPasswordViaEmail(String email, String code, String newPassword, @NotNull String clientIp) {
         validEmailAndCode(email, code, clientIp);
@@ -256,24 +257,16 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
 
     /**
      * 发送邮箱验证码
-     * <p>
-     * 限流分三个维度，缺一不可：
-     * <ul>
-     *     <li>目标邮箱：防止单账号被刷验证码</li>
-     *     <li>客户端 IP：防止循环不同邮箱把服务器当邮件中继</li>
-     *     <li>全局：兜底，防止大量 IP 各自发起</li>
-     * </ul>
-     * </p>
      *
      * @param email    邮箱
      * @param clientIp 客户端 IP
+     * @apiNote 限流分目标邮箱、客户端 IP、全局三个维度，缺一不可：
+     * 分别防单账号被刷、循环不同邮箱把服务器当邮件中继、大量 IP 各自发起
      */
     public void sendEmailCode(String email, @NotNull String clientIp) throws MessagingException {
         EMAIL_SEND_BUSY.when(redisHelper.hasKey(getEmailCodeCacheKey(email)));
-        // IP 维度：同一 IP 两分钟内只能发一次，无论目标是哪个邮箱
         String ipKey = getEmailIpSendKey(clientIp);
         EMAIL_SEND_BUSY.when(redisHelper.hasKey(ipKey), "发送过于频繁，请两分钟后再试");
-        // 全局维度：无论来源 IP，一分钟内最多放行 20 次
         String globalKey = getEmailGlobalSendKey();
         int sentThisMinute = Objects.requireNonNullElse(parseIntQuietly(redisHelper.get(globalKey)), 0);
         EMAIL_SEND_BUSY.when(sentThisMinute >= EMAIL_MAX_SEND_PER_IP, "服务器邮件发送繁忙，请稍后再试");
@@ -290,6 +283,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      *
      * @param value 缓存值
      * @return 整数值，解析失败按 0 处理
+     * @apiNote 缓存被外部改写时不能因类型异常让整个登录/发信流程失败
      */
     private @Nullable Integer parseIntQuietly(@Nullable Object value) {
         if (Objects.isNull(value)) {
@@ -310,13 +304,12 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * @return AccessToken
      */
     public final String loginWithCookieAndResponse(@NotNull HttpServletResponse response, @NotNull UserEntity user) {
-        // 创建 AccessToken
         String accessToken = createAccessToken(user.getId());
 
-        // 存储 Cookies
         String cookieString = RandomUtil.randomString();
         saveCookie(user.getId(), cookieString);
         Cookie cookie = cookieHelper.getAuthorizeCookie(cookieString);
+        // 前端要读这个 Cookie（非 HttpOnly），是全站唯一例外
         cookie.setHttpOnly(false);
         cookie.setPath(CookieHelper.DEFAULT_PATH);
         response.addCookie(cookie);
@@ -324,20 +317,20 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 存储 Cookie
+     * 存储 Cookie 与用户的映射
      *
-     * @param userId UserId
-     * @param cookie Cookie
+     * @param userId 用户 ID
+     * @param cookie Cookie 值
      */
     public void saveCookie(Long userId, String cookie) {
         redisHelper.set(getCookieUserKey(cookie), userId, DateTimeUtil.SECOND_PER_DAY);
     }
 
     /**
-     * 通过 Cookie 获取一个用户
+     * 通过 Cookie 反查用户
      *
-     * @param cookie Cookie
-     * @return UserId
+     * @param cookie Cookie 值
+     * @return 用户 ID，Cookie 不存在时返回 {@code null}
      */
     public Long getUserIdByCookie(String cookie) {
         Object userId = redisHelper.get(getCookieUserKey(cookie));
@@ -348,18 +341,18 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 账号密码登录
+     * 邮箱与密码登录
      *
      * @param email    邮箱
      * @param password 密码
      * @return 登录成功的用户
+     * @apiNote 密码错误也会累加验证码失败计数；登录成功会清空计数并作废该邮箱的验证码
      */
     public UserEntity loginViaEmailAndPassword(String email, String password) {
         PARAM_INVALID.whenEmpty(email, "请确认传入有效的邮箱");
         PARAM_INVALID.whenEmpty(password, "请确认传入有效的密码");
         UserEntity existUser = repository.getByEmail(email);
         USER_LOGIN_ACCOUNT_OR_PASSWORD_INVALID.whenNull(existUser, "邮箱或密码错误");
-        // 将用户传入的密码加密与数据库存储匹配
         String encodePassword = PermissionUtil.encodePassword(password, existUser.getSalt());
         if (!encodePassword.equals(existUser.getPassword())) {
             addEmailFailCount(email, UNKNOWN_IP);
@@ -371,23 +364,18 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 累加邮箱验证码失败次数
-     * <p>
-     * 计数键包含客户端 IP：同一 IP 对同一邮箱连续输错只锁定这个 IP 的后续尝试，
-     * 不会因为一个人的错误操作而让该邮箱的真正持有者无法登录。
-     * <b>达阈值时也不再删除验证码</b> —— 旧实现会顺手删掉受害者已经收到的验证码，
-     * 等于给了攻击者一个远程锁死他人账号的手段。
-     * </p>
+     * 累加邮箱验证码失败次数，达阈值时抛异常
      *
      * @param email    邮箱
      * @param clientIp 客户端 IP
+     * @apiNote 计数键包含客户端 IP：同一 IP 输错只锁这个 IP，不会让邮箱的真正持有者无法登录。
+     * 达阈值时<b>不删除验证码</b>，否则等于给攻击者一个远程锁死他人账号的手段
      */
     private void addEmailFailCount(String email, @NotNull String clientIp) {
         String key = getEmailFailKey(email, clientIp);
         int count = Objects.requireNonNullElse(parseIntQuietly(redisHelper.get(key)), 0) + 1;
         redisHelper.set(key, count, DateTimeUtil.SECOND_PER_HOUR);
         if (count >= EMAIL_MAX_ERROR_COUNT) {
-            // 顺带封禁该 IP 对所有邮箱的尝试，挡住换邮箱继续试
             String ipKey = getEmailIpFailKey(clientIp);
             int ipCount = Objects.requireNonNullElse(parseIntQuietly(redisHelper.get(ipKey)), 0) + 1;
             redisHelper.set(ipKey, ipCount, DateTimeUtil.SECOND_PER_HOUR);
@@ -395,6 +383,11 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         }
     }
 
+    /**
+     * 作废邮箱验证码
+     *
+     * @param email 邮箱
+     */
     private void deleteEmailCode(String email) {
         redisHelper.delete(getEmailCodeCacheKey(email));
     }
@@ -415,8 +408,9 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      *
      * @param email    邮箱
      * @param code     验证码
-     * @param clientIp 客户端 IP，用于失败次数限流
+     * @param clientIp 客户端 IP
      * @return 登录成功的用户
+     * @apiNote 邮箱尚未注册时，若 {@link ConfigFlag#AUTO_REGISTER_EMAIL_LOGIN} 开启会自动注册
      */
     public UserEntity loginViaEmailAndCode(String email, String code, @NotNull String clientIp) {
         validEmailAndCode(email, code, clientIp);
@@ -427,7 +421,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         }
         ConfigEntity configuration = SystemServices.getConfigService().get(ConfigFlag.AUTO_REGISTER_EMAIL_LOGIN);
         if (configuration.booleanConfig()) {
-            // 注册一个用户
             existUser = registerUserViaEmail(email);
         }
         PARAM_INVALID.whenNull(existUser, "登录的邮箱账户不存在");
@@ -445,6 +438,13 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         validEmailAndCode(email, code, UNKNOWN_IP);
     }
 
+    /**
+     * 验证邮箱和验证码，不匹配时累加失败次数
+     *
+     * @param email    邮箱
+     * @param code     验证码
+     * @param clientIp 客户端 IP
+     */
     private void validEmailAndCode(String email, String code, @NotNull String clientIp) {
         PARAM_INVALID.whenEmpty(email, "请确认传入有效的邮箱");
         PARAM_INVALID.whenEmpty(code, "请确认传入有效的验证码");
@@ -478,10 +478,11 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 获取指定 IP 的失败总次数缓存 Key（用于封禁换邮箱继续尝试）
+     * 获取指定 IP 的失败总次数缓存 Key
      *
      * @param clientIp 客户端 IP
      * @return 缓存 Key
+     * @apiNote 用于封禁该 IP 换邮箱继续尝试
      */
     private @NotNull String getEmailIpFailKey(@NotNull String clientIp) {
         return "email:ip:" + clientIp + ":fail";
@@ -508,7 +509,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 重置邮箱失败次数
+     * 清零邮箱失败次数
      *
      * @param email 邮箱
      */
@@ -517,7 +518,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 邮箱和随机密码注册
+     * 用邮箱和随机密码注册
      *
      * @param email 邮箱
      * @return 注册的用户
@@ -527,14 +528,13 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 邮箱和指定密码注册
+     * 用邮箱和指定密码注册
      *
      * @param email    邮箱
      * @param password 密码
      * @return 注册的用户
      */
     public UserEntity registerUserViaEmail(@NotNull String email, String password) {
-        // 昵称默认为邮箱账号 @ 前面的
         String nickname = email.split("@")[0];
         String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
         UserEntity user = new UserEntity()
@@ -580,7 +580,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
         UserEntity existUser = repository.getByEmail(user.getEmail());
         FORBIDDEN_EXIST.whenNotNull(existUser, "邮箱已经存在，请勿重复添加用户");
         if (!StringUtils.hasLength(user.getPassword())) {
-            // 创建时没有设置密码的话 随机一个密码
             String salt = RandomUtil.randomString(PASSWORD_SALT_LENGTH);
             user.setPassword(PermissionUtil.encodePassword(RandomUtil.randomString(), salt));
             user.setSalt(salt);
@@ -589,17 +588,13 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 读取用户时组装角色（并级联组装角色的菜单与权限）
-     * <p>
-     * {@code roleList} 已改为 {@code @Transient}（关联由 {@code user_role_link}
-     * 中间表承载），必须显式组装。级联组装是必需的：RBAC 鉴权链路
-     * {@code RequestInterceptor.checkUserPermission} 会一路读到
-     * {@code role.getPermissionList()}，而 open-in-view 已关闭，
-     * 事务外拿到的关联对象无法再触发懒加载。
-     * </p>
+     * 读取用户时组装角色
      *
      * @param user 用户
      * @return 组装后的用户
+     * @apiNote {@code roleList} 是 {@code @Transient}（关联由 {@code user_role_link} 中间表承载），
+     * 必须显式组装；且要级联组装角色的菜单与权限，因为 open-in-view 已关闭，
+     * 鉴权链路在事务外会一路读到 {@code role.getPermissionList()}
      */
     @Override
     protected @NotNull UserEntity afterAppGet(@NotNull UserEntity user) {
@@ -614,7 +609,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     /**
-     * 组装单个用户的角色（含角色的菜单与权限）
+     * 组装单个用户的角色及其菜单与权限
      *
      * @param user 用户
      */
@@ -623,7 +618,6 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
             return;
         }
         Set<RoleEntity> roles = PersonnelServices.getUserRoleLinkService().getRoles(user.getId());
-        // 批量组装角色的菜单与权限：两次查询搞定，不逐个角色查
         PersonnelServices.getRoleService().fillLinksForRoles(roles);
         user.setRoleList(new LinkedHashSet<>(roles));
     }
@@ -638,14 +632,12 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
 
     /**
      * 修改后同步角色
-     * <p>
-     * 必须判空：前端编辑用户基本信息时通常<b>不传</b> roleList，
-     * Jackson 反序列化后该字段是 null。若不区分「未传」与「传空集」，
-     * 一次普通的信息修改就会把用户的角色全部清空。
-     * </p>
      *
      * @param id     用户 ID
      * @param source 客户端提交的用户
+     * @apiNote 必须判 {@code null}：前端编辑用户基本信息时通常不传 roleList，
+     * Jackson 反序列化后是 {@code null}。不区分「未传」与「传空集」的话，
+     * 一次普通的信息修改就会把用户角色全部清空
      */
     @Override
     protected void afterAppUpdate(long id, @NotNull UserEntity source) {
@@ -679,7 +671,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
      * 获取当前用户所在的房间 ID
      *
      * @param userId 用户 ID
-     * @return 房间 ID
+     * @return 房间 ID，无缓存时返回默认房间 ID
      */
     public long getCurrentRoomId(long userId) {
         Object data = redisHelper.get(CACHE_ROOM_KEY + userId);
@@ -701,15 +693,12 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
 
     /**
      * 判断用户当前是否确实在指定房间
-     * <p>
-     * 与 {@link #getCurrentRoomId(long)} 的区别：后者在 Redis 无缓存时会返回
-     * 默认房间 ID（{@code app.chat.defaultRoomId}，一般为 1），
-     * 并不代表用户真的在那里。判断「是否在房间里」必须用本方法。
-     * </p>
      *
      * @param userId 用户 ID
      * @param roomId 房间 ID
-     * @return 缓存存在且指向该房间才返回 true
+     * @return 缓存存在且指向该房间才返回 {@code true}
+     * @apiNote 判断「是否在房间里」必须用本方法。{@link #getCurrentRoomId(long)} 在无缓存时
+     * 返回默认房间 ID，并不代表用户真的在那里
      */
     public boolean isInRoom(long userId, long roomId) {
         if (roomId <= 0) {

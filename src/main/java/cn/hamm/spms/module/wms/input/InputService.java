@@ -28,7 +28,7 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 import static cn.hamm.spms.module.system.config.enums.ConfigFlag.INPUT_BILL_AUTO_AUDIT;
 
 /**
- * <h1>Service</h1>
+ * <h1>入库单</h1>
  *
  * @author Hamm.cn
  */
@@ -55,6 +55,11 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
         return InputStatus.DONE;
     }
 
+    /**
+     * 入库完成后回写来源单据
+     *
+     * @param billId 入库单 ID
+     */
     @Override
     protected void afterBillFinished(long billId) {
         InputEntity inputBill = get(billId);
@@ -73,10 +78,16 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
         }
     }
 
+    /**
+     * 报工后把入库数量加到仓库库存
+     *
+     * @param detailId    入库明细 ID
+     * @param inputDetail 入库明细
+     * @apiNote 仓库一律以数据库中已保存的明细为准：若取请求参数中的 storage，
+     * 客户端可以在报工时临时更换入库仓库，货就记到了别的仓库去
+     */
     @Override
     protected void afterDetailFinishAdded(long detailId, @NotNull InputDetailEntity inputDetail) {
-        // 一律以数据库中已保存的明细为准：若取请求参数中的 storage，
-        // 客户端可以在报工时临时更换入库仓库，货就记到了别的仓库去
         InputDetailEntity existDetail = detailService.get(detailId);
         StorageEntity storage = existDetail.getStorage();
         FORBIDDEN.when(Objects.isNull(storage) || Objects.isNull(storage.getId()),
@@ -85,10 +96,7 @@ public class InputService extends AbstractBaseBillService<InputEntity, InputRepo
         FORBIDDEN.whenNull(material, "明细没有关联物料，请先完善明细的物料信息");
         InventoryService inventoryService = WmsServices.getInventoryService();
 
-        // 查询库存信息
         InventoryEntity inventory = inventoryService.getByMaterialIdAndStorageId(material.getId(), storage.getId());
-
-        // 本次入库数量
         Double inputDetailQuantity = inputDetail.getQuantity();
 
         if (Objects.nonNull(inventory)) {

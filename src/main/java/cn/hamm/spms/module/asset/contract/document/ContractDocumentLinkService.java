@@ -1,26 +1,23 @@
 package cn.hamm.spms.module.asset.contract.document;
 
 import cn.hamm.spms.base.BaseService;
-import lombok.extern.slf4j.Slf4j;
 import cn.hamm.spms.module.asset.contract.ContractEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * <h1>合同附件关联服务</h1>
+ * <h1>合同附件关联</h1>
  * <p>
- * 承载 {@code contract <-> document} 的多对多关系，取代 {@code @ManyToMany}。
+ * 承载 {@code contract <-> document} 多对多关系
  * </p>
  *
  * @author Hamm.cn
+ * @apiNote 不用 {@code @ManyToMany}：其中间表由 Hibernate 隐式生成，结构不可控也带不了业务字段；
+ * 显式关联实体就是一张普通业务表
  */
 @Slf4j
 @Service
@@ -43,17 +40,13 @@ public class ContractDocumentLinkService extends BaseService<ContractDocumentLin
 
     /**
      * 把合同的附件同步到中间表（增量）
-     * <p>
-     * 只解绑本次提交里已不存在的、只建立本次新增的。
-     * 没有 ID 的附件先落库拿到 ID 再建关联。
-     * </p>
      *
      * @param contractId 合同 ID
      * @param documents  前端提交的附件
+     * @apiNote 只解绑本次提交里已不存在的、只建立本次新增的；没有 ID 的附件先落库拿到 ID 再建关联
      */
     public void syncByContractId(long contractId, @NotNull Collection<ContractDocumentEntity> documents) {
         var documentService = cn.hamm.spms.module.asset.AssetServices.getContractDocumentService();
-        // 本次要保留的关联：没有 ID 的先落库拿到 ID
         List<ContractDocumentEntity> targets = new ArrayList<>();
         for (ContractDocumentEntity document : documents) {
             if (Objects.isNull(document)) {

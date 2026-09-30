@@ -11,9 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <h1>服务整合助手类</h1>
+ * <h1>人事模块服务聚合</h1>
  *
  * @author Hamm.cn
+ * @apiNote 跨模块取本模块服务统一走这里，不要直接 {@code @Autowired}，避免循环依赖
  */
 @Component
 public class PersonnelServices {

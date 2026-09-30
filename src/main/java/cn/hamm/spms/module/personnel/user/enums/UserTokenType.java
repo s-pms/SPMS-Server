@@ -28,7 +28,7 @@ public enum UserTokenType implements IDictionary {
     OAUTH2(2, "第三方令牌"),
     ;
     /**
-     * 用户令牌类型
+     * 令牌类型在 AccessToken payload 中的键名
      */
     public static final String TYPE = "type";
     private final int key;

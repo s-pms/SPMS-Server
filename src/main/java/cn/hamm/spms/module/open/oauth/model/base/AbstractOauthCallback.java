@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.open.oauth.model.base;
 
 /**
- * <h1>OAuth2回调抽象类</h1>
+ * <h1>第三方平台回调</h1>
  *
  * @author Hamm.cn
  */

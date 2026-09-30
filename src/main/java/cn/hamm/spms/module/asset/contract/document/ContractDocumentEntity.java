@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.asset.contract.document;
 
-import cn.hamm.airpower.core.annotation.Meta;
 import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Meta;
 import cn.hamm.airpower.curd.annotation.Search;
 import cn.hamm.spms.base.BaseEntity;
 import jakarta.persistence.Column;
@@ -15,7 +15,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 /**
- * <h1>合同附件实体</h1>
+ * <h1>合同附件</h1>
  *
  * @author Hamm.cn
  */

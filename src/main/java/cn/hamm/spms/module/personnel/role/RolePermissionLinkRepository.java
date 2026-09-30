@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * <h1>角色权限关联数据源</h1>
+ * <h1>角色权限关联</h1>
  *
  * @author Hamm.cn
  */
@@ -25,10 +25,11 @@ public interface RolePermissionLinkRepository extends BaseRepository<RolePermiss
     List<RolePermissionLinkEntity> findByRoleId(@Param("roleId") Long roleId);
 
     /**
-     * 按一批角色 ID 查关联记录（一次查询，避免逐个查造成 N+1）
+     * 按一批角色 ID 查关联记录
      *
      * @param roleIds 角色 ID 集合
      * @return 关联记录
+     * @apiNote 供批量组装使用，逐个角色查会形成 N+1
      */
     @Query("select l from RolePermissionLinkEntity l where l.role.id in :roleIds")
     List<RolePermissionLinkEntity> findByRoleIds(@Param("roleIds") List<Long> roleIds);

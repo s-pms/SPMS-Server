@@ -9,7 +9,7 @@ import static cn.hamm.airpower.curd.base.Curd.GetDetail;
 import static cn.hamm.airpower.curd.base.Curd.GetPage;
 
 /**
- * <h1>Controller</h1>
+ * <h1>库存</h1>
  *
  * @author Hamm.cn
  */

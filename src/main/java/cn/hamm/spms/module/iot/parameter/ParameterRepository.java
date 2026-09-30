@@ -4,7 +4,7 @@ import cn.hamm.spms.base.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * <h1>数据库连接信息</h1>
+ * <h1>采集参数数据源</h1>
  *
  * @author Hamm.cn
  */
@@ -14,7 +14,7 @@ public interface ParameterRepository extends BaseRepository<ParameterEntity> {
      * 根据参数编码查询
      *
      * @param code 参数编码
-     * @return 参数
+     * @return 参数，不存在时返回 {@code null}
      */
     ParameterEntity getByCode(String code);
 }

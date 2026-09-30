@@ -10,7 +10,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 /**
- * <h1>应用实体基类</h1>
+ * <h1>实体基类</h1>
  *
  * @author Hamm.cn
  */

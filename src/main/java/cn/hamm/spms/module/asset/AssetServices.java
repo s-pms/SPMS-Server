@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <h1>服务整合助手类</h1>
+ * <h1>资产模块服务聚合</h1>
  *
  * @author Hamm.cn
  */

@@ -23,7 +23,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
- * <h1>实体</h1>
+ * <h1>开放应用</h1>
  *
  * @author Hamm.cn
  */

@@ -25,31 +25,34 @@ import static cn.hamm.airpower.exception.Errors.SERVICE_ERROR;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleParam.*;
 
 /**
- * <h1>Service</h1>
+ * <h1>编码规则</h1>
  *
  * @author Hamm.cn
  */
 @Service
 public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleRepository> {
     /**
-     * {@code Label}
+     * 字典结果里的 label 键名
      */
     public static final String STRING_LABEL = "label";
+
     /**
-     * 年份位数
+     * 两位年份的截取位置
      */
     private static final int SHORT_YEAR_LENGTH = 2;
 
     /**
-     * 流水号位数
+     * 月、日、小时的补零格式
      */
     private static final String CODE_RULE_FORMATTER = "%02d";
 
     /**
-     * 创建一个自定义编码
+     * 生成一个业务编码
      *
-     * @param codeRuleField 为哪个字段创建
-     * @return 一个自定义编码
+     * @param codeRuleField 编码规则字段
+     * @return 生成的编码
+     * @apiNote 整个过程在一个事务内完成：先锁住规则行再读改写流水号，
+     * 否则并发下会拿到重复流水号
      */
     public final @NotNull String createCode(@NotNull CodeRuleField codeRuleField) {
         CodeRuleEntity codeRule = repository.getByRuleField(codeRuleField.getKey());
@@ -123,10 +126,10 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
     }
 
     /**
-     * 根据规则字段获取自定义编码规则
+     * 根据规则字段获取编码规则
      *
      * @param ruleField 规则字段
-     * @return 自定义编码规则
+     * @return 编码规则，未配置时返回 {@code null}
      */
     public final CodeRuleEntity getByRuleField(Integer ruleField) {
         return repository.getByRuleField(ruleField);
@@ -139,9 +142,11 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
 
 
     /**
-     * <h1>填充自动生成代码</h1>
+     * 为实体中标注了 {@code @AutoGenerateCode} 且为空的字段填充编码
      *
      * @param entity 实体
+     * @param <E>    实体类型
+     * @apiNote 命中第一个空字段就 {@code break}：一个实体只允许一个自动编码字段
      */
     public <E extends BaseEntity<E>> void fillFieldAutoCode(@NotNull E entity) {
         List<Field> fields = ReflectUtil.getFieldList(entity.getClass());

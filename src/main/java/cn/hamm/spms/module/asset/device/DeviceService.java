@@ -27,7 +27,7 @@ import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 import static cn.hamm.spms.module.iot.report.ReportConstant.*;
 
 /**
- * <h1>Service</h1>
+ * <h1>设备</h1>
  *
  * @author zfy
  */
@@ -84,10 +84,11 @@ public class DeviceService extends BaseService<DeviceEntity, DeviceRepository> {
     }
 
     /**
-     * 获取设备的参数列表
+     * 组装设备的可采集参数
      *
      * @param device 设备
-     * @return 设备
+     * @return 已回填参数列表的设备
+     * @apiNote 设备上已配置的非系统参数之外，恒定补上状态、报警、实时产量这三个系统参数
      */
     public DeviceEntity getDeviceParameters(@NotNull DeviceEntity device) {
         Set<ParameterEntity> parameters = new HashSet<>();

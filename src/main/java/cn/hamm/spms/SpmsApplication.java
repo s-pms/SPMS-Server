@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 /**
- * <h1>入口类</h1>
+ * <h1>SPMS 启动入口</h1>
  *
  * @author Hamm.cn
  */
@@ -19,9 +19,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 @EnableWebSocket
 @EnableScheduling
 public class SpmsApplication {
-    /**
-     * 服务器上下文对象
-     */
     private static ServletWebServerApplicationContext serverApplicationContext;
 
     private static ReportEventListener reportEventListener;
@@ -37,6 +34,14 @@ public class SpmsApplication {
         }
     }
 
+    /**
+     * 把容器与 MQTT 监听器交给静态的 {@link #main(String[])} 使用
+     *
+     * @param serverApplicationContext Web 容器上下文
+     * @param reportEventListener      MQTT 采集监听器
+     * @apiNote 两个 Bean 都是 {@code required = false}，所以 {@code main} 里必须判空：
+     * 拿不到监听器时直接跳过 {@code listen()}，否则启动会直接失败
+     */
     @Autowired(required = false)
     public void autorun(
             ServletWebServerApplicationContext serverApplicationContext,

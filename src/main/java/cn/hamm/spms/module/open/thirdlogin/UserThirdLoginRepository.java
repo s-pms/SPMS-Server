@@ -4,7 +4,7 @@ import cn.hamm.spms.base.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * <h1>Repository</h1>
+ * <h1>用户第三方账号绑定</h1>
  *
  * @author Hamm.cn
  */

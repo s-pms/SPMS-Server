@@ -6,7 +6,7 @@ import cn.hamm.spms.base.BaseController;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <h1>Controller</h1>
+ * <h1>工序</h1>
  *
  * @author zfy
  */

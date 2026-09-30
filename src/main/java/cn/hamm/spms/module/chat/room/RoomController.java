@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
- * <h1>Controller</h1>
+ * <h1>房间</h1>
  *
  * @author Hamm.cn
+ * @apiNote 房间是公开聊天室，全部接口用 {@code @Permission(authorize = false)} 跳过菜单权限校验，
+ * 身份仍由登录态决定
  */
 @Api("room")
 @Description("房间")

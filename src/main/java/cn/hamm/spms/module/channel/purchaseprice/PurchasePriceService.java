@@ -12,7 +12,7 @@ import static cn.hamm.airpower.exception.Errors.DATA_NOT_FOUND;
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN_EXIST;
 
 /**
- * <h1>Service</h1>
+ * <h1>采购价格</h1>
  *
  * @author Hamm.cn
  */
@@ -34,6 +34,14 @@ public class PurchasePriceService extends BaseService<PurchasePriceEntity, Purch
         return purchasePrice;
     }
 
+    /**
+     * 按物料和供应商查询采购价
+     *
+     * @param material 物料
+     * @param supplier 供应商
+     * @return 采购价
+     * @apiNote 未配置价格时直接报「数据不存在」，前端据此提示改用物料标准采购价
+     */
     protected PurchasePriceEntity getByMaterialAndSupplier(MaterialEntity material, SupplierEntity supplier) {
         PurchasePriceEntity exist = repository.getBySupplierAndMaterial(supplier, material);
         DATA_NOT_FOUND.whenNull(exist, "没有查询到该物料在此供应商下提供的采购价格，请参考物料标准采购价填写。");

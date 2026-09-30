@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * <h1>创建 Code 请求</h1>
+ * <h1>换取 AccessToken 请求</h1>
  *
  * @author Hamm
  */
@@ -25,7 +25,7 @@ public class OauthGetAccessTokenRequest extends OauthAppKeyRequest {
     private String appSecret;
 
     /**
-     * Code 换 AccessToken
+     * 用 Code 换 Token 时的参数校验组
      */
     public interface WhenGetAccessToken {
     }

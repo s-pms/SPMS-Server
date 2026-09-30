@@ -31,7 +31,7 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 
 /**
- * <h1>Service</h1>
+ * <h1>生产订单</h1>
  *
  * @author Hamm.cn
  */
@@ -65,12 +65,10 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
 
     /**
      * 订单豁免基类的完成状态守卫
-     * <p>
-     * 返回配置值而非硬编码 true：管理员关掉开关后，订单重新受基类守卫约束。
-     * 本钩子只放开基类守卫，真正的状态校验在 {@link #setOrderFinishedManually(long)}。
-     * </p>
      *
      * @return true 表示跳过基类状态守卫
+     * @apiNote 返回配置值而非硬编码 {@code true}：管理员关掉开关后订单重新受基类守卫约束。
+     * 本钩子只放开守卫，真正的状态校验在 {@link #setOrderFinishedManually(long)}
      */
     @Override
     protected boolean isForceFinishAllowed() {
@@ -78,12 +76,10 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     /**
-     * <h1>手动标记订单生产完成</h1>
-     * <p>
-     * 状态守卫同时起幂等保护：重复调用不会重复生成入库单、不会让库存翻倍。
-     * </p>
+     * 手动标记订单生产完成
      *
      * @param orderId 订单 ID
+     * @apiNote 状态守卫同时起幂等保护：重复调用不会重复生成入库单、不会让库存翻倍
      */
     public void setOrderFinishedManually(long orderId) {
         OrderEntity exist = get(orderId);
@@ -99,13 +95,11 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     /**
-     * 添加订单明细
-     * <p>
-     * 收进一个事务并用 {@code getForUpdate} 带行锁读取订单：
-     * 否则两个操作工并发报工会互相覆盖，订单完成数量追不上明细实际报工量。
-     * </p>
+     * 添加订单报工明细并回写订单完成数量
      *
      * @param orderDetail 订单明细
+     * @apiNote 用 {@code getForUpdate} 带行锁读取订单，否则两个操作工并发报工会互相覆盖，
+     * 订单完成数量追不上明细实际报工量
      */
     public void addOrderDetail(@NotNull OrderDetailEntity orderDetail) {
         ConfigService configService = SystemServices.getConfigService();
@@ -169,25 +163,28 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         );
     }
 
+    /**
+     * 订单全部明细完成后的下游联动
+     *
+     * @param billId 订单 ID
+     * @apiNote 计划单回写以 {@code plan} 是否存在为准，不看 {@code type}：
+     * 「是不是计划订单」就是「有没有挂计划单」，两个字段各存一份会留下
+     * {@code type=计划订单} 而 {@code plan=null} 的自相矛盾数据
+     */
     @Override
     protected void afterAllBillDetailFinished(long billId) {
         OrderEntity orderBill = get(billId);
         if (orderBill.getFinishQuantity() == 0) {
-            // 直接完成 无需入库
+            // 无产出则没有入库单，直接置为终态
             orderBill.setStatus(OrderStatus.DONE.getKey())
                     .setFinishTime(System.currentTimeMillis());
             updateToDatabase(orderBill);
             return;
         }
-        // 添加入库单
         addInputBill(orderBill);
-
-        // 以 plan 是否存在为准，不看 type：两者本是同一件事的两个副本，
-        // 历史数据里存在 type=计划订单 而 plan 为空，在此处空指针。
         if (Objects.isNull(orderBill.getPlan())) {
             return;
         }
-        // 更新计划单
         MesServices.getPlanDetailService().updateDetailQuantity(
                 orderBill.getPlan().getId(),
                 orderBill.getFinishQuantity(),
@@ -229,13 +226,11 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
 
     /**
      * 让订单类型与计划单保持一致
-     * <p>
-     * 「是不是计划订单」就是「有没有挂计划单」，不该由两个字段各存一份，
-     * 否则会出现 type=计划订单、plan=null 的自相矛盾数据。
-     * </p>
      *
      * @param order 订单
      * @return 处理后的订单
+     * @apiNote 「是不是计划订单」就是「有没有挂计划单」，不该由两个字段各存一份，
+     * 否则会出现 type=计划订单、plan=null 的自相矛盾数据
      */
     private @NotNull OrderEntity syncTypeWithPlan(@NotNull OrderEntity order) {
         boolean hasPlan = Objects.nonNull(order.getPlan());
@@ -249,6 +244,11 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
         return order;
     }
 
+    /**
+     * 审核通过后按配置自动开始生产
+     *
+     * @param billId 订单 ID
+     */
     @Override
     protected void afterBillAudited(long billId) {
         ConfigEntity config = SystemServices.getConfigService().get(ConfigFlag.ORDER_AUTO_START_AFTER_AUDIT);

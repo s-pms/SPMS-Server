@@ -8,7 +8,7 @@ import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailRepository;
 import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailService;
 
 /**
- * <h1>Controller</h1>
+ * <h1>采购单</h1>
  *
  * @author Hamm.cn
  */

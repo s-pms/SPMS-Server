@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * <h1>OAuth2第三方平台</h1>
+ * <h1>第三方授权平台</h1>
  *
  * @author Hamm.cn
  */

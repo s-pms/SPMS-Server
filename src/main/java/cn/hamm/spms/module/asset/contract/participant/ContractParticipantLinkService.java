@@ -1,29 +1,23 @@
 package cn.hamm.spms.module.asset.contract.participant;
 
 import cn.hamm.spms.base.BaseService;
-import lombok.extern.slf4j.Slf4j;
 import cn.hamm.spms.module.asset.contract.ContractEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * <h1>合同参与方关联服务</h1>
+ * <h1>合同参与方关联</h1>
  * <p>
- * 承载 {@code contract <-> participant} 的多对多关系。
- * 之所以不用 {@code @ManyToMany}：它的中间表由 Hibernate 隐式生成，
- * 结构不可控、也无法携带业务字段；显式关联实体则是一个普通业务表。
+ * 承载 {@code contract <-> participant} 多对多关系
  * </p>
  *
  * @author Hamm.cn
+ * @apiNote 不用 {@code @ManyToMany}：其中间表由 Hibernate 隐式生成，结构不可控也带不了业务字段；
+ * 显式关联实体就是一张普通业务表
  */
 @Slf4j
 @Service
@@ -46,17 +40,13 @@ public class ContractParticipantLinkService extends BaseService<ContractParticip
 
     /**
      * 把合同的参与方同步到中间表（增量）
-     * <p>
-     * 只解绑本次提交里已不存在的、只建立本次新增的。
-     * 没有 ID 的参与方先落库拿到 ID 再建关联。
-     * </p>
      *
      * @param contractId   合同 ID
      * @param participants 前端提交的参与方
+     * @apiNote 只解绑本次提交里已不存在的、只建立本次新增的；没有 ID 的参与方先落库拿到 ID 再建关联
      */
     public void syncByContractId(long contractId, @NotNull Collection<ParticipantEntity> participants) {
         var participantService = cn.hamm.spms.module.asset.AssetServices.getParticipantService();
-        // 本次要保留的关联：没有 ID 的先落库拿到 ID
         List<ParticipantEntity> targets = new ArrayList<>();
         for (ParticipantEntity participant : participants) {
             if (Objects.isNull(participant)) {

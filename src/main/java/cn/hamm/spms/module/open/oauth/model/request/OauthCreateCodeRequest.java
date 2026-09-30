@@ -15,10 +15,15 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class OauthCreateCodeRequest extends OauthAppKeyRequest {
-
+    /**
+     * 授权范围，OauthScope 的枚举名，逗号分隔
+     */
     @NotBlank(groups = {WhenCreateCode.class})
     private String scope;
 
+    /**
+     * 创建 Code 时的参数校验组
+     */
     public interface WhenCreateCode {
     }
 }

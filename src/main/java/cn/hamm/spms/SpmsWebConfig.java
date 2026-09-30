@@ -22,7 +22,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import java.util.Objects;
 
 /**
- * <h1>全局配置</h1>
+ * <h1>Web 与 WebSocket 配置</h1>
  *
  * @author Hamm.cn
  */
@@ -39,9 +39,11 @@ public class SpmsWebConfig implements WebMvcConfigurer, WebSocketConfigurer {
     }
 
     /**
-     * 获取一个 WebSocketHandler
+     * 暴露应用的 WebSocket 处理器
      *
-     * @return WebSocketHandler
+     * @return WebSocket 处理器
+     * @apiNote 单例 Bean，容器内所有连接共用这一个实例，连接维度的状态由框架的
+     * {@code WebSocketHandler} 自己按 session 保存
      */
     @Bean
     public WebSocketHandler getWebSocketHandler() {
@@ -49,7 +51,7 @@ public class SpmsWebConfig implements WebMvcConfigurer, WebSocketConfigurer {
     }
 
     /**
-     * 注册过滤器
+     * 注册请求过滤器
      *
      * @return 过滤器对象
      */
@@ -65,6 +67,8 @@ public class SpmsWebConfig implements WebMvcConfigurer, WebSocketConfigurer {
      * 添加 WebSocket 服务监听
      *
      * @param registry WebSocketHandlerRegistry
+     * @apiNote {@code airpower.websocket.support} 为 {@code NO} 时直接不注册。
+     * 注册必须带 channelPrefix，缺失会抛异常而不是降级，避免连上去却收不到消息
      */
     @Override
     public final void registerWebSocketHandlers(@NotNull WebSocketHandlerRegistry registry) {

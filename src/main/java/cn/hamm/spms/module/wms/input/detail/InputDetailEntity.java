@@ -1,12 +1,15 @@
 package cn.hamm.spms.module.wms.input.detail;
 
-import cn.hamm.airpower.core.annotation.Meta;
 import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Meta;
 import cn.hamm.airpower.core.annotation.ReadOnly;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
 import cn.hamm.spms.module.factory.storage.StorageEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +20,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**
- * <h1>入库明细实体</h1>
+ * <h1>入库明细</h1>
  *
  * @author Hamm.cn
  */
@@ -48,8 +51,8 @@ public class InputDetailEntity extends BaseBillDetailEntity<InputDetailEntity> {
     private Double finishQuantity;
 
     @Description("仓库")
-    // 必须是真正的持久化关联：原先是 @Transient，导致入库时只能取客户端传的仓库，
-    // 既可以被任意篡改，又在数据库里留不下任何痕迹。落库后报工时以数据库明细为准。
+    // 必须是真正的持久化关联（原先是 @Transient）：否则入库时只能取客户端传的仓库，
+    // 既可被任意篡改，又在数据库里留不下痕迹。落库后报工以数据库明细为准
     @ManyToOne(fetch = EAGER)
     @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "入库仓库不能为空")
     private StorageEntity storage;

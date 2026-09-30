@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.mes.plan.detail;
 
-import cn.hamm.airpower.core.annotation.Meta;
 import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Meta;
 import cn.hamm.airpower.core.annotation.ReadOnly;
 import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
 import cn.hamm.spms.module.asset.material.MaterialEntity;
@@ -19,7 +19,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**
- * <h1>计划明细实体</h1>
+ * <h1>生产计划明细</h1>
  *
  * @author Hamm.cn
  */

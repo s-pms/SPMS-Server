@@ -26,7 +26,7 @@ import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.OutputBill
 import static jakarta.persistence.FetchType.EAGER;
 
 /**
- * <h1>领料单实体</h1>
+ * <h1>出库单</h1>
  *
  * @author Hamm.cn
  */

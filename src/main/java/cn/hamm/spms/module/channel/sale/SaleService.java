@@ -25,7 +25,7 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 import static cn.hamm.spms.module.system.config.enums.ConfigFlag.SALE_BILL_AUTO_AUDIT;
 
 /**
- * <h1>Service</h1>
+ * <h1>销售单</h1>
  *
  * @author Hamm.cn
  */
@@ -49,18 +49,23 @@ public class SaleService extends AbstractBaseBillService<SaleEntity, SaleReposit
 
     /**
      * 明细全部完成后的状态
-     * <p>
-     * 必须返回终态，否则基类的 {@code status.equals(getFinishedStatus())} 恒不成立，
-     * 销售单永远推不到「已完成」，自动生成的出库单也停在「出库中」，库存不减少。
-     * </p>
      *
      * @return 明细完成状态
+     * @apiNote 必须返回终态，否则基类的 {@code status.equals(getFinishedStatus())} 恒不成立，
+     * 销售单永远推不到「已完成」，自动生成的出库单也停在「出库中」，库存不减少
      */
     @Override
     public IDictionary getBillDetailsFinishStatus() {
         return SaleStatus.DONE;
     }
 
+    /**
+     * 明细全部出库后生成销售出库单
+     *
+     * @param billId 销售单 ID
+     * @apiNote 生成下游单据前基类已用状态条件更新做推进守卫，并发报工下本方法只会执行一次，
+     * 出库单恰好 1 张；发货仓库与物料库存记录缺一不可，否则会抛 FORBIDDEN 中断整条流程
+     */
     @Override
     protected void afterAllBillDetailFinished(long billId) {
         SaleEntity sale = get(billId);
@@ -88,7 +93,6 @@ public class SaleService extends AbstractBaseBillService<SaleEntity, SaleReposit
 
     @Override
     protected void afterDetailSaved(long billId) {
-        // 计算总金额
         List<SaleDetailEntity> details = detailService.getAllByBillId(billId);
         double totalPrice = details.stream()
                 .mapToDouble(detail -> NumberUtil.multiply(

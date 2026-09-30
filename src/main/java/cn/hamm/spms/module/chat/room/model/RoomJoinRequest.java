@@ -20,7 +20,7 @@ public class RoomJoinRequest extends RootModel<RoomJoinRequest> {
     private Integer roomCode;
 
     /**
-     * 密码
+     * 进房密码，仅私有房间需要，服务端以恒定时间比较
      */
     private String password;
 }

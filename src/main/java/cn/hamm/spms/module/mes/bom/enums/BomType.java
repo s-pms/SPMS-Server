@@ -12,14 +12,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum BomType implements IDictionary {
-    /**
-     * 普通配方
-     */
     NORMAL(1, "普通配方"),
 
-    /**
-     * 工序配方
-     */
     OPERATION(2, "工序配方"),
     ;
 

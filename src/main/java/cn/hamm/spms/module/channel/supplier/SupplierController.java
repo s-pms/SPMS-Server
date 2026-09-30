@@ -7,7 +7,7 @@ import cn.hamm.airpower.curd.base.Curd;
 import cn.hamm.spms.base.BaseController;
 
 /**
- * <h1>Controller</h1>
+ * <h1>供应商</h1>
  *
  * @author Hamm.cn
  */

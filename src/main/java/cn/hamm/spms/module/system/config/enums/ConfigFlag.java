@@ -7,9 +7,11 @@ import lombok.Getter;
 import static cn.hamm.spms.module.system.config.enums.ConfigType.BOOLEAN;
 
 /**
- * <h1>系统配置</h1>
+ * <h1>系统配置开关</h1>
  *
  * @author Hamm.cn
+ * @apiNote 新增一项后，dev 模式重启会自动初始化默认配置。
+ * 枚举名即配置标识（{@code name()} 存库），改名等于新建一项，旧数据不会跟着迁移
  */
 @SuppressWarnings("AlibabaEnumConstantsMustHaveComment")
 @Getter
@@ -31,7 +33,19 @@ public enum ConfigFlag implements IDictionary {
 
     private final int key;
     private final String label;
+
+    /**
+     * 值类型
+     */
     private final ConfigType type;
+
+    /**
+     * 初始化时的默认值
+     */
     private final String defaultValue;
+
+    /**
+     * 前端展示用的说明
+     */
     private final String description;
 }

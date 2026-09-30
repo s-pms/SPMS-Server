@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
- * <h1>Service</h1>
+ * <h1>用户第三方账号绑定</h1>
  *
  * @author Hamm.cn
  */

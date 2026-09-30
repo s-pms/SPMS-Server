@@ -12,7 +12,7 @@ import java.util.Objects;
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN_EXIST;
 
 /**
- * <h1>Service</h1>
+ * <h1>成员</h1>
  *
  * @author Hamm.cn
  */
@@ -23,7 +23,7 @@ public class MemberService extends BaseService<MemberEntity, MemberRepository> {
      *
      * @param userId 用户 ID
      * @param roomId 房间 ID
-     * @return 成员信息
+     * @return 成员信息，不存在时返回 {@code null}
      */
     public MemberEntity getMember(long userId, long roomId) {
         return repository.getByUserAndRoom(new UserEntity().setId(userId), new RoomEntity().setId(roomId));
@@ -35,17 +35,17 @@ public class MemberService extends BaseService<MemberEntity, MemberRepository> {
      * @param userId 用户 ID
      * @param roomId 房间 ID
      * @return 成员
+     * @apiNote 成员已是该房间房主时角色置为 {@code OWNER}，其余一律 {@code VISITOR}，
+     * 角色是入房时快照、手工改不会持久化到下一次自动创建
      */
     public MemberEntity addMember(long userId, long roomId) {
         MemberEntity member = getMember(userId, roomId);
         FORBIDDEN_EXIST.whenNotNull(member);
-        // 没有查到成员信息
         RoomEntity room = ChatServices.getRoomService().get(roomId);
         member = new MemberEntity()
                 .setUser(new UserEntity().setId(userId))
                 .setRoom(new RoomEntity().setId(roomId));
         if (userId == room.getOwner().getId()) {
-            // 是所有者
             member.setRole(MemberRole.OWNER.getKey());
         } else {
             member.setRole(MemberRole.VISITOR.getKey());
@@ -54,11 +54,12 @@ public class MemberService extends BaseService<MemberEntity, MemberRepository> {
     }
 
     /**
-     * 获取成员信息，若不存在则自动创建
+     * 获取成员信息，不存在则自动创建
      *
      * @param userId 用户 ID
      * @param roomId 房间 ID
      * @return 成员信息
+     * @apiNote 会真的落库，调用前必须先完成密码等鉴权
      */
     public MemberEntity getMemberWithAutoCreate(long userId, long roomId) {
         MemberEntity member = getMember(userId, roomId);

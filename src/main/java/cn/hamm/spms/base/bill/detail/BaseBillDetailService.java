@@ -1,7 +1,6 @@
 package cn.hamm.spms.base.bill.detail;
 
 import cn.hamm.airpower.core.NumberUtil;
-import jakarta.persistence.LockModeType;
 import cn.hamm.spms.base.BaseService;
 import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
@@ -16,7 +15,7 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 
 /**
- * <h1>单据明细 Service 基类</h1>
+ * <h1>单据明细服务基类</h1>
  *
  * @param <E> 明细实体
  * @param <R> 明细数据源
@@ -30,12 +29,10 @@ public class BaseBillDetailService<
 
     /**
      * 根据单据 ID 删除所有明细
-     * <p>
-     * 逐条走 {@code delete(id)} 以触发钩子。不用 {@code repository.deleteByBillId}
-     * 这类派生批量删除，它不触发 JPA 生命周期回调也不做级联。
-     * </p>
      *
      * @param billId 单据 ID
+     * @apiNote 逐条走 {@code delete(id)} 以触发钩子，不要换成
+     * {@code repository.deleteByBillId} 这类派生批量删除，它既不触发 JPA 生命周期回调也不做级联
      */
     public final void deleteAllByBillId(Long billId) {
         transactionHelper.run(() -> {
@@ -58,17 +55,13 @@ public class BaseBillDetailService<
 
     /**
      * 判断单据的全部明细是否都已完成
-     * <p>
-     * 普通读即可，但调用方必须已持有单据行锁：本方法要是提前到加锁之前读，
-     * 就会固定住旧读视图，导致并发下误判「未全部完成」而卡死。
-     * </p>
-     * <p>
-     * 空集合判否：{@code allMatch} 在空集合上返回 true，
-     * 会让明细被清空的单据被判定为全部完成，连锁生成 0 明细的下游单据。
-     * </p>
      *
      * @param billId 单据 ID
      * @return true 表示全部明细都已完成
+     * @apiNote 调用方必须已持有单据行锁：本方法要是提前到加锁之前读，就会固定住旧读视图，
+     * 导致并发下误判「未全部完成」而卡死。空集合判否是因为
+     * {@code allMatch} 在空集合上返回 {@code true}，会让明细被清空的单据连锁生成
+     * 0 明细的下游单据
      */
     public final boolean isAllDetailFinished(Long billId) {
         List<E> details = getAllByBillId(billId);
@@ -85,7 +78,9 @@ public class BaseBillDetailService<
      * 保存指定单据的明细
      *
      * @param billId  单据 ID
-     * @param details 明细
+     * @param details 明细列表
+     * @apiNote 先按 billId 全删再全插，明细的 {@code id} 会全部换新，
+     * 外部系统不要长期持有明细 ID
      */
     public final void saveDetails(long billId, @NotNull List<E> details) {
         transactionHelper.run(() -> {
@@ -95,7 +90,7 @@ public class BaseBillDetailService<
     }
 
     /**
-     * 添加完成数量
+     * 累加明细完成数量，达到明细数量时自动标记该明细完成
      *
      * @param detailId 明细 ID
      * @param quantity 完成数量
@@ -110,12 +105,15 @@ public class BaseBillDetailService<
     }
 
     /**
-     * 更新明细的数量
+     * 把一次产量按明细逐行分配累加
      *
      * @param billId      单据 ID
-     * @param quantity    本次更新数量
-     * @param billService 单据 Service
-     * @param detailCheck 明细检查函数
+     * @param quantity    本次分配数量
+     * @param billService 单据 Service，提供加锁与状态推进
+     * @param detailCheck 明细筛选函数，抛异常表示该行不匹配本次分配
+     * @apiNote 加锁单据行必须在第一次读明细之前，与
+     * {@code AbstractBaseBillService#addDetailFinishQuantity} 保持相同的加锁顺序，
+     * 否则并发下两处会互相死等。被跳过的明细只告警不报错，产量会静默丢失
      */
     public <B extends AbstractBaseBillEntity<B, ?>, BS extends AbstractBaseBillService<B, ?, ?, ?, ?>> void updateDetailQuantity(
             long billId,
@@ -146,14 +144,12 @@ public class BaseBillDetailService<
                 }
 
                 double finished = Objects.requireNonNullElse(detail.getFinishQuantity(), 0D);
-                // 该明细还需要完成的数量
                 double detailNeedQuantity = NumberUtil.subtract(detail.getQuantity(), finished);
                 if (detailNeedQuantity <= 0) {
                     continue;
                 }
                 // 实际分配到本行的数量，不得超过其待完成量
                 double applied = Math.min(detailNeedQuantity, remain);
-                // 累加而非覆盖
                 double newFinishQuantity = NumberUtil.add(finished, applied);
                 detail.setFinishQuantity(newFinishQuantity)
                         .setIsFinished(newFinishQuantity >= detail.getQuantity());
@@ -161,7 +157,6 @@ public class BaseBillDetailService<
                 remain = NumberUtil.subtract(remain, applied);
             }
             if (isAllDetailFinished(billId)) {
-                // 明细已全部完成
                 billService.setBillDetailsAllFinished(billId);
             }
         });

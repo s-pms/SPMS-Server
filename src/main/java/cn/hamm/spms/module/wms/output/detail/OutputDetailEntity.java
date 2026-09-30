@@ -20,7 +20,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**
- * <h1>出库明细实体</h1>
+ * <h1>出库明细</h1>
  *
  * @author Hamm.cn
  */

@@ -23,14 +23,16 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 
 /**
- * <h1>单据 Service 基类</h1>
+ * <h1>单据服务基类</h1>
  *
  * @param <E>   单据实体
  * @param <R>   单据数据源
  * @param <D>   明细实体
  * @param <DS>  明细 Service
- * @param <DR>> 明细数据源
+ * @param <DR>  明细数据源
  * @author Hamm.cn
+ * @apiNote 所有状态推进都在同一事务内完成，并且以锁单据行（{@code SELECT ... FOR UPDATE}）作为
+ * 第一个数据库操作。InnoDB 的读视图在第一条查询时就已固定，锁排在查询之后等于没排
  */
 @Slf4j
 public abstract class AbstractBaseBillService<
@@ -48,9 +50,9 @@ public abstract class AbstractBaseBillService<
     protected TransactionHelper transactionHelper;
 
     /**
-     * 获取自动审核配置
+     * 获取自动审核配置项
      *
-     * @return 配置标识
+     * @return 配置项，返回 {@code null} 表示该单据不自动审核
      */
     protected ConfigFlag getAutoAuditConfigFlag() {
         log.info("获取自动审核配置, 无需自动审核 {}", ReflectUtil.getDescription(getFirstParameterizedTypeClass()));
@@ -59,11 +61,10 @@ public abstract class AbstractBaseBillService<
 
     /**
      * 设置单据所有明细都已完成
-     * <p>
-     * 同一事务内完成：加锁单据行 → 推进状态 → 生成下游单据 → 推进终态。
-     * </p>
      *
      * @param billId 单据 ID
+     * @apiNote 全流程在同一事务内完成，加锁单据行必须是第一个数据库操作，
+     * 否则读视图在排队前就固定了，并发下仍会重复生成下游单据
      */
     public final void setBillDetailsAllFinished(long billId) {
         transactionHelper.run(() -> applyBillDetailsFinished(getForUpdate(billId)));
@@ -71,12 +72,10 @@ public abstract class AbstractBaseBillService<
 
     /**
      * 推进单据到「明细已完成」并执行后置钩子
-     * <p>
-     * 必须传入已加锁的单据实例，否则并发下会重复执行
-     * {@code afterAllBillDetailFinished}、生成多张下游单据。
-     * </p>
      *
      * @param bill 已加锁的单据
+     * @apiNote 必须传入已加锁的单据实例，否则并发下会重复执行
+     * {@code afterAllBillDetailFinished}、生成多张下游单据
      */
     private void applyBillDetailsFinished(@NotNull E bill) {
         long billId = bill.getId();
@@ -103,11 +102,9 @@ public abstract class AbstractBaseBillService<
 
     /**
      * 是否允许绕过状态守卫强制完成单据
-     * <p>
-     * 默认不允许；订单因「允许任意状态手动完成」的业务需求重写为 true。
-     * </p>
      *
      * @return true 表示跳过状态守卫
+     * @apiNote 默认不允许；订单因「允许任意状态手动完成」的业务需求重写为 true
      */
     protected boolean isForceFinishAllowed() {
         return false;
@@ -117,6 +114,7 @@ public abstract class AbstractBaseBillService<
      * 设置单据已完成
      *
      * @param billId 单据 ID
+     * @apiNote 同样要求锁单据行是第一个数据库操作，否则并发下会重复执行 {@code afterBillFinished}
      */
     public final void setBillFinished(long billId) {
         transactionHelper.run(() -> applyBillFinished(getForUpdate(billId)));
@@ -124,11 +122,9 @@ public abstract class AbstractBaseBillService<
 
     /**
      * 推进单据到终态并执行后置钩子
-     * <p>
-     * 必须传入已加锁的单据实例，否则并发下会重复执行 {@code afterBillFinished}。
-     * </p>
      *
      * @param bill 已加锁的单据
+     * @apiNote 必须传入已加锁的单据实例，否则并发下会重复执行 {@code afterBillFinished}
      */
     private void applyBillFinished(@NotNull E bill) {
         long billId = bill.getId();
@@ -168,6 +164,7 @@ public abstract class AbstractBaseBillService<
      *
      * @param billId 单据 ID
      * @return 加锁后的单据
+     * @apiNote {@code SELECT ... FOR UPDATE} 必须在事务内调用，事务一结束锁就释放
      */
     public final E getBillForUpdate(long billId) {
         return getForUpdate(billId);
@@ -175,11 +172,9 @@ public abstract class AbstractBaseBillService<
 
     /**
      * 添加明细完成数量
-     * <p>
-     * 优先用明细自带的 billId，好让加锁排在所有查询之前。
-     * </p>
      *
-     * @param sourceDetail 提交明细（需带上 billId）
+     * @param sourceDetail 提交明细，需带上 billId
+     * @apiNote 正常路径要求前端带上 billId，好让加锁排在所有查询之前
      */
     public final void addDetailFinishQuantity(@NotNull D sourceDetail) {
         Long billId = sourceDetail.getBillId();
@@ -194,17 +189,11 @@ public abstract class AbstractBaseBillService<
 
     /**
      * 添加明细完成数量
-     * <p>
-     * 全流程在同一事务内：锁单据行 → 更新明细 → 库存增减 → 推进单据 → 生成下游单据。
-     * 并发报工只在单据行上排队，明细与库存不加锁。
-     * </p>
-     * <p>
-     * 加锁必须排在最前面，否则读视图会在排队之前固定，
-     * 排到队时看不到前一个请求的提交，双方都判「明细未全部完成」而卡死。
-     * </p>
      *
-     * @param billId      单据 ID
+     * @param billId       单据 ID
      * @param sourceDetail 提交明细
+     * @apiNote 并发报工只在单据行上排队，明细与库存不加锁。锁单据行必须是第一个数据库操作，
+     * 否则读视图在排队前就固定了，排到队时看不到前一个请求的提交，双方都判「明细未全部完成」而卡死
      */
     public final void addDetailFinishQuantity(long billId, @NotNull D sourceDetail) {
         transactionHelper.run(() -> {
@@ -234,7 +223,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 添加完成数量成功后置
+     * 添加完成数量后的后置方法
      *
      * @param detailId     明细 ID
      * @param sourceDetail 提交明细
@@ -247,7 +236,7 @@ public abstract class AbstractBaseBillService<
      * 单据完成的后置方法
      *
      * @param billId 单据 ID
-     * @apiNote 一般用于在当前单据完成后同步标记关联的其他单据为完成状态
+     * @apiNote 一般用于在当前单据完成后，同步把关联的其他单据也标记为完成
      * @see #afterAllBillDetailFinished(long)
      */
     protected void afterBillFinished(long billId) {
@@ -261,7 +250,8 @@ public abstract class AbstractBaseBillService<
      * 单据所有明细完成的后置方法
      *
      * @param billId 单据 ID
-     * @apiNote 一般用于当前单据的所有明细都已完成，可能会创建其他的单据，也可能去修改其他单据的明细
+     * @apiNote 一般用于在当前单据的所有明细都已完成后创建其他单据，
+     * 或去修改其他单据的明细
      * @see #afterBillFinished(long)
      */
     protected void afterAllBillDetailFinished(long billId) {
@@ -272,7 +262,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 单据明细保存后置方法
+     * 单据明细保存后的后置方法
      *
      * @param billId 单据 ID
      */
@@ -285,13 +275,11 @@ public abstract class AbstractBaseBillService<
 
     /**
      * 单据不支持发布
-     * <p>
-     * 发布后 {@code BaseController} 会拒绝该数据的一切修改与删除，
-     * 而单据的 Delete 接口本就被排除，这张单据就永久卡死了。
-     * {@code Curd} 没有 Publish 枚举项，{@code @Extends(exclude)} 排除不掉，只能在这里拦。
-     * </p>
      *
      * @param bill 单据
+     * @apiNote 发布后 {@code BaseController} 会拒绝该数据的一切修改与删除，而单据的 Delete 接口
+     * 本就被排除，这张单据就永久卡死了。{@code Curd} 没有 Publish 枚举项，
+     * {@code @Extends(exclude)} 排除不掉，只能在这里拦
      */
     @Override
     protected void beforePublish(@NotNull E bill) {
@@ -306,7 +294,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 单据获取后置
+     * 单据查询后的后置方法
      *
      * @param bill 单据
      * @return 单据
@@ -335,7 +323,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 单据添加后置
+     * 单据添加后的后置方法
      *
      * @param billId 单据 ID
      */
@@ -353,7 +341,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 单据更新后置
+     * 单据更新后的后置方法
      *
      * @param billId 单据 ID
      * @param source 源数据
@@ -367,15 +355,11 @@ public abstract class AbstractBaseBillService<
 
     /**
      * 保存单据明细
-     * <li>
-     * 请不要再重写后直接调用 {@link #update(CurdEntity)} ，避免出现调用循环。
-     * </li>
-     * <li>
-     * 如需再次保存，请调用 {@link #updateToDatabase(CurdEntity)} }
-     * </li>
      *
      * @param billId  单据 ID
      * @param details 明细列表
+     * @apiNote 重复保存时必须调用 {@link #updateToDatabase(CurdEntity)} 而不是
+     * {@link #update(CurdEntity)}，后者会回到本方法形成调用循环
      */
     private void saveDetails(long billId, List<D> details) {
         detailService.saveDetails(billId, details);
@@ -383,9 +367,10 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 单据审核
+     * 审核单据
      *
      * @param billId 单据 ID
+     * @apiNote 方法为 {@code final}，子类只能通过 {@link #afterBillAudited(long)} 插入审核后逻辑
      */
     protected final void audit(long billId) {
         transactionHelper.run(() -> {
@@ -399,7 +384,7 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 单据驳回
+     * 驳回单据
      *
      * @param billId 单据 ID
      */
@@ -415,10 +400,9 @@ public abstract class AbstractBaseBillService<
     }
 
     /**
-     * 单据审核的后置方法
+     * 单据审核后的后置方法
      *
      * @param billId 单据 ID
-     * @apiNote 可以添加一些审核后的业务逻辑
      */
     protected void afterBillAudited(long billId) {
         log.info("单据审核后 {}，单据ID:{}",
@@ -449,7 +433,7 @@ public abstract class AbstractBaseBillService<
      * 单据是否可审核
      *
      * @param bill 单据
-     * @return 是否审核
+     * @return 是否可审核
      */
     public final boolean canAudit(@NotNull E bill) {
         return getAuditingStatus().equalsKey(bill.getStatus());
@@ -509,7 +493,8 @@ public abstract class AbstractBaseBillService<
      * 获取所有明细均已完成的单据状态
      *
      * @return 所有明细均已完成的单据状态
-     * @apiNote 可单独配置 {@link #getFinishedStatus()}
+     * @apiNote 这是子类必须实现的状态；是否等于终态由 {@link #getFinishedStatus()} 决定，
+     * 未重写时「明细已完成」就是终态
      */
     public abstract IDictionary getBillDetailsFinishStatus();
 
@@ -517,7 +502,7 @@ public abstract class AbstractBaseBillService<
      * 获取单据已完成状态
      *
      * @return 单据已完成状态
-     * @apiNote 默认为 {@link #getBillDetailsFinishStatus()}
+     * @apiNote 默认为 {@link #getBillDetailsFinishStatus()}，即明细全部完成即单据完成
      */
     public IDictionary getFinishedStatus() {
         log.info("获取单据已完成状态: {}", getBillDetailsFinishStatus().getLabel());

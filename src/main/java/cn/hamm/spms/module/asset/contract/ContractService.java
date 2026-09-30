@@ -12,7 +12,7 @@ import java.util.Objects;
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 
 /**
- * <h1>Service</h1>
+ * <h1>合同</h1>
  *
  * @author Hamm.cn
  */
@@ -20,14 +20,12 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 public class ContractService extends BaseService<ContractEntity, ContractRepository> {
 
     /**
-     * 新建合同一律为「未生效」
-     * <p>
-     * 合同状态只能通过 {@link #enforce(long)} / {@link #stop(long)} 变更，
-     * 新建时若允许客户端直接指定，就等于凭空造出一张已生效甚至已终止的合同。
-     * </p>
+     * 新建合同
      *
      * @param source 客户端提交的合同
      * @return 处理后的合同
+     * @apiNote 状态一律置为「未生效」，只能通过 {@link #enforce(long)} / {@link #stop(long)} 变更。
+     * 若允许客户端在建单时直接指定，就等于凭空造出一张已生效甚至已终止的合同
      */
     @Override
     protected @NotNull ContractEntity beforeAdd(@NotNull ContractEntity source) {
@@ -36,18 +34,13 @@ public class ContractService extends BaseService<ContractEntity, ContractReposit
     }
 
     /**
-     * 修改时锁定合同状态
-     * <p>
-     * 状态机是「未生效 → 生效中 → 已终止」单向的，一旦允许直接改状态，
-     * 已终止的合同能一步改回「生效中」（相当于让作废合同复活），
-     * 未生效的合同也能跳过 {@link #enforce(long)} 的状态校验直接生效。
-     * <p>
-     * {@code enforce} / {@code stop} 走的是 {@code updateToDatabase}，
-     * 不经过本钩子，因此受控的状态流转不受影响。
-     * </p>
+     * 修改合同
      *
      * @param source 客户端提交的合同
      * @return 处理后的合同
+     * @apiNote 状态回填为库中原值。状态机「未生效 → 生效中 → 已终止」是单向的，
+     * 放开直接改等于让已终止的合同一步复活成「生效中」。{@code enforce} / {@code stop}
+     * 走 {@code updateToDatabase} 不经过本钩子，受控的状态流转不受影响
      */
     @Override
     protected @NotNull ContractEntity beforeUpdate(@NotNull ContractEntity source) {
@@ -58,13 +51,11 @@ public class ContractService extends BaseService<ContractEntity, ContractReposit
 
     /**
      * 读取合同时组装参与方与附件
-     * <p>
-     * 这两个集合已改为 {@code @Transient}（关联由中间表实体承载），
-     * 因此不再随实体自动加载，必须显式组装后回填，否则前端拿不到数据。
-     * </p>
      *
      * @param contract 合同
      * @return 组装后的合同
+     * @apiNote 两个集合是 {@code @Transient}（关联由中间表实体承载），不会随实体自动加载，
+     * 不显式回填前端就拿不到数据
      */
     @Override
     protected @NotNull ContractEntity afterAppGet(@NotNull ContractEntity contract) {
@@ -73,7 +64,7 @@ public class ContractService extends BaseService<ContractEntity, ContractReposit
     }
 
     /**
-     * 批量读取时同样需要组装
+     * 批量读取合同时组装参与方与附件
      *
      * @param list 合同列表
      * @return 处理后的列表
@@ -123,10 +114,10 @@ public class ContractService extends BaseService<ContractEntity, ContractReposit
      *
      * @param contractId 合同 ID
      * @param source     客户端提交的合同
+     * @apiNote 必须判空：前端编辑合同基本信息时通常不传这两个集合，
+     * 不区分「未传」与「传空集」会导致一次普通修改就把参与方/附件全清空
      */
     private void syncLinks(long contractId, @NotNull ContractEntity source) {
-        // 必须判空：前端编辑合同基本信息时通常不传这两个集合，
-        // 不区分「未传」与「传空集」会导致一次普通修改就把参与方/附件全清空
         if (Objects.nonNull(source.getParticipantList())) {
             AssetServices.getContractParticipantLinkService()
                     .syncByContractId(contractId, source.getParticipantList());

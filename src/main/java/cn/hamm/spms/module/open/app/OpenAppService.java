@@ -15,7 +15,7 @@ import java.util.Base64;
 import java.util.Objects;
 
 /**
- * <h1>Service</h1>
+ * <h1>开放应用</h1>
  *
  * @author Hamm.cn
  */

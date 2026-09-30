@@ -46,6 +46,7 @@ public abstract class AbstractBaseBillEntity<
      * 获取单据编号
      *
      * @return 单据编号
+     * @apiNote 子类须返回带 {@code @AutoGenerateCode} 的字段，由编码规则在入库前填充
      */
     public abstract String getBillCode();
 
@@ -75,16 +76,16 @@ public abstract class AbstractBaseBillEntity<
     }
 
     /**
-     * 获取状态
+     * 获取单据状态
      *
-     * @return 状态
+     * @return 状态枚举的 key
      */
     public abstract Integer getStatus();
 
     /**
-     * 设置状态
+     * 设置单据状态
      *
-     * @param status 状态值
+     * @param status 状态枚举的 key
      * @return 单据实体
      */
     public abstract E setStatus(Integer status);

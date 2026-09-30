@@ -6,7 +6,7 @@ import cn.hamm.spms.module.channel.supplier.SupplierEntity;
 import org.springframework.stereotype.Repository;
 
 /**
- * <h1>数据库连接信息</h1>
+ * <h1>采购价格</h1>
  *
  * @author Hamm.cn
  */

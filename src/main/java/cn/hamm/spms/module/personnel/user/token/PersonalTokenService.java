@@ -13,23 +13,26 @@ import java.util.List;
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN_EXIST;
 
 /**
- * <h1>Service</h1>
+ * <h1>私人令牌</h1>
  *
  * @author Hamm.cn
  */
 @Service
 public class PersonalTokenService extends BaseService<PersonalTokenEntity, PersonalTokenRepository> {
 
+    /**
+     * 私人令牌在 AccessToken 中的 payload 名
+     */
     public static final String PERSONAL_TOKEN_NAME = "personal";
 
     @Autowired
     private ApiConfig apiConfig;
 
     /**
-     * 根据令牌获取
+     * 按令牌查询
      *
      * @param token 令牌
-     * @return 令牌
+     * @return 私人令牌，不存在时返回 {@code null}
      */
     public PersonalTokenEntity getByToken(String token) {
         return repository.getByToken(token);
@@ -50,9 +53,11 @@ public class PersonalTokenService extends BaseService<PersonalTokenEntity, Perso
     }
 
     /**
-     * 创建私人令牌
+     * 生成私人令牌
      *
-     * @return AppKey
+     * @param userId 用户 ID
+     * @return 令牌
+     * @apiNote 同一用户重复生成时会撞出相同 token，靠创建后的存在性检查拒绝
      */
     public final String createToken(long userId) {
         String token = AccessTokenUtil.create().setPayloadId(userId)

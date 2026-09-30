@@ -22,7 +22,7 @@ import java.util.List;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.DepartmentCode;
 
 /**
- * <h1>实体</h1>
+ * <h1>部门</h1>
  *
  * @author Hamm.cn
  */

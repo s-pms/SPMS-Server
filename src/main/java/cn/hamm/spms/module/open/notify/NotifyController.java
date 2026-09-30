@@ -12,7 +12,7 @@ import cn.hamm.spms.module.open.notify.enums.NotifyScene;
 import org.springframework.web.bind.annotation.PostMapping;
 
 /**
- * <h1>Controller</h1>
+ * <h1>通知钩子</h1>
  *
  * @author Hamm.cn
  */

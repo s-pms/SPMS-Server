@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * <h1>Oauth 用户信息</h1>
+ * <h1>第三方用户信息</h1>
  *
  * @author Hamm.cn
  */

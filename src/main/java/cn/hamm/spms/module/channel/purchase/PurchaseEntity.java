@@ -23,7 +23,7 @@ import org.hibernate.validator.constraints.Length;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.PurchaseBillCode;
 
 /**
- * <h1>采购单实体</h1>
+ * <h1>采购单</h1>
  *
  * @author Hamm.cn
  */

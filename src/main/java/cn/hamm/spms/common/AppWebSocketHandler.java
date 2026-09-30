@@ -30,7 +30,7 @@ import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 import static cn.hamm.spms.module.chat.enums.ChatEventType.*;
 
 /**
- * <h1>应用自定义的事件处理器</h1>
+ * <h1>房间聊天事件处理</h1>
  *
  * @author Hamm.cn
  */
@@ -43,7 +43,7 @@ public class AppWebSocketHandler extends WebSocketHandler {
     private static final String GROUP_PREFIX = "group_";
 
     /**
-     * 房间在线用户列表
+     * 各房间的在线用户 ID 列表，key 为 {@code GROUP_PREFIX} + 房间 ID
      */
     protected final ConcurrentHashMap<String, List<Long>> roomOnlineUserList = new ConcurrentHashMap<>();
 
@@ -109,16 +109,14 @@ public class AppWebSocketHandler extends WebSocketHandler {
         switch (getByStringKey(webSocketPayload.getType())) {
             case ROOM_MEMBER_JOIN:
                 RoomJoinRequest joinRequest = Json.parse(webSocketPayload.getData(), RoomJoinRequest.class);
-                // 修复前这里直接 roomService.getByCode(joinRequest.getRoomCode())，
-                // 而 getByCode 的形参是 int —— 客户端发 {"type":"room_member_join","data":"{}"}
-                // 会拆箱 null 抛 NPE，异常冒到 handleTextMessage 后该 WS 连接后续消息全部失效。
+                // 客户端可能发 {"type":"room_member_join","data":"{}"}，roomCode 为 null 时拆箱会抛 NPE，
+                // 异常冒到 handleTextMessage 后这条 WS 连接后续消息全部失效
                 if (Objects.isNull(joinRequest) || Objects.isNull(joinRequest.getRoomCode())) {
                     sendWebSocketPayload(session, new WebSocketPayload()
                             .setType(ROOM_JOIN_FAIL.getKeyString())
                             .setData("请提供正确的房间号"));
                     return;
                 }
-                // 查房间信息
                 RoomEntity room = roomService.getByCode(joinRequest.getRoomCode());
                 if (Objects.isNull(room)) {
                     webSocketPayload = new WebSocketPayload()
@@ -127,10 +125,8 @@ public class AppWebSocketHandler extends WebSocketHandler {
                     sendWebSocketPayload(session, webSocketPayload);
                     return;
                 }
-                // 修复前这里是先 getMemberWithAutoCreate（内部会真的 addAndGet 落库）
-                // 再校验密码 —— 密码输错也能往私有房间写一条 Member 记录。
-                // 房间号只有 6 位（约 90 万种），可批量污染成员表、撑大在线人数统计。
-                // 因此：鉴权必须在前，成员记录创建在后。
+                // 鉴权必须排在落库之前：getMemberWithAutoCreate 会真的 addAndGet，
+                // 顺序反了密码输错也能写入成员记录，6 位房间号（约 90 万种）足够批量污染成员表
                 if (isRoomJoinRejected(userId, room, joinRequest)) {
                     sendWebSocketPayload(session, new WebSocketPayload()
                             .setType(ROOM_JOIN_FAIL.getKeyString())
@@ -139,7 +135,6 @@ public class AppWebSocketHandler extends WebSocketHandler {
                 }
                 MemberEntity joinMember = memberService.getMemberWithAutoCreate(userId, room.getId());
 
-                // 更新用户当前所在房间 ID 到缓存
                 userService.saveCurrentRoomId(userId, room.getId());
                 onRoomEvent(userId, room.getId(), ROOM_MEMBER_JOIN);
                 subscribe(GROUP_PREFIX + room.getId(), session);
@@ -169,19 +164,15 @@ public class AppWebSocketHandler extends WebSocketHandler {
 
     /**
      * 判断加入房间的请求是否应被拒绝（仅密码校验）
-     * <p>
-     * 必须先于任何写库动作调用。修复前密码校验在
-     * {@code getMemberWithAutoCreate} 之后，而后者会真的落库。
-     * </p>
-     * <p>
-     * 密码比较用 {@code MessageDigest.isEqual} 而非 {@code equalsIgnoreCase}：
-     * 后者不是恒定时间比较，会通过响应耗时侧信道逐字符试探密码。
-     * </p>
      *
      * @param userId      用户 ID
      * @param room        房间
      * @param joinRequest 加房请求
      * @return true 表示应拒绝
+     * @apiNote 必须先于任何写库动作调用：{@code getMemberWithAutoCreate} 会真的落库，
+     * 放到密码校验之后会让密码输错也能写入成员记录。密码比较用
+     * {@code MessageDigest.isEqual} 而非 {@code equalsIgnoreCase}，后者不是恒定时间比较，
+     * 会通过响应耗时侧信道逐字符试探密码
      */
     private boolean isRoomJoinRejected(long userId, @NotNull RoomEntity room, @NotNull RoomJoinRequest joinRequest) {
         // 非私有房间不需要密码
@@ -208,10 +199,8 @@ public class AppWebSocketHandler extends WebSocketHandler {
      */
     private void leaveRoom(@NotNull WebSocketSession session, long userId) {
         long leaveRoomId = userService.getCurrentRoomId(userId);
-        // 修复前这里没有「是否真的在这个房间里」的判断。
-        // Redis 无缓存时 getCurrentRoomId 返回默认房间 ID（1），
-        // 于是任何用户断开连接都会向默认房间广播一次「成员离开」事件，污染其在线人数统计。
-        // 必须用 isInRoom 而不是 getCurrentRoomId 的返回值来判断。
+        // 不能拿 getCurrentRoomId 的返回值来判断：Redis 无缓存时它返回默认房间 ID（1），
+        // 于是任何用户断开连接都会向默认房间广播一次「成员离开」，污染其在线人数统计
         if (!userService.isInRoom(userId, leaveRoomId)) {
             log.debug("用户 {} 当前不在任何房间，忽略离开事件", userId);
             return;

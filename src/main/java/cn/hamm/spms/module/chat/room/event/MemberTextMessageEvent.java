@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class MemberTextMessageEvent extends RoomMemberEvent {
     /**
-     * 文本消息内容
+     * 文本消息原文，由客户端直接上行，服务端不做转义
      */
     private String text;
 }

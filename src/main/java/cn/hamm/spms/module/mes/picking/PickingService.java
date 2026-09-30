@@ -1,6 +1,5 @@
 package cn.hamm.spms.module.mes.picking;
 
-import cn.hamm.airpower.core.NumberUtil;
 import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.spms.base.bill.AbstractBaseBillService;
 import cn.hamm.spms.module.mes.picking.detail.PickingDetailEntity;
@@ -26,7 +25,7 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 import static cn.hamm.spms.module.system.config.enums.ConfigFlag.PICKING_BILL_AUTO_AUDIT;
 
 /**
- * <h1>Service</h1>
+ * <h1>领料单</h1>
  *
  * @author Hamm.cn
  */
@@ -59,9 +58,13 @@ public class PickingService extends AbstractBaseBillService<PickingEntity, Picki
         return PICKING_BILL_AUTO_AUDIT;
     }
 
+    /**
+     * 审核通过后生成领料出库单
+     *
+     * @param billId 领料单 ID
+     */
     @Override
     protected void afterBillAudited(long billId) {
-        // 创建领料出库单
         List<OutputDetailEntity> details = new ArrayList<>();
         detailService.getAllByBillId(billId)
                 .forEach(detail -> details.add(
@@ -76,12 +79,19 @@ public class PickingService extends AbstractBaseBillService<PickingEntity, Picki
         WmsServices.getOutputService().add(outputBill);
     }
 
+    /**
+     * 领料完成后把领到的料加到线边库存
+     *
+     * @param billId 领料单 ID
+     * @apiNote 库存行是「先查后建」，并发领料时两个线程可能都查不到，
+     * 直接插入会撞 {@code uk_inv_structure} 唯一索引并让整张领料单回滚，
+     * 因此插入失败要回退为累加
+     */
     @Override
     protected void afterAllBillDetailFinished(long billId) {
         log.info("领料单所有明细都已完成，单据ID:{}", billId);
         PickingEntity pickingBill = get(billId);
         FORBIDDEN.whenNull(pickingBill.getStructure(), "领料单未指定生产单元，无法回写线边库存");
-        // 添加线边库存
         List<PickingDetailEntity> details = detailService.getAllByBillId(pickingBill.getId());
         InventoryService inventoryService = WmsServices.getInventoryService();
         transactionHelper.run(() -> {
@@ -93,8 +103,6 @@ public class PickingService extends AbstractBaseBillService<PickingEntity, Picki
                 if (finishQuantity <= 0) {
                     continue;
                 }
-                // 查-建-回退重试：并���领料时两个线程可能都查不到库存行，
-                // 直接插入会撞 uk_inv_structure 唯一索引并让整张领料单回滚
                 InventoryEntity inventory = inventoryService.getByMaterialIdAndStructureId(
                         detail.getMaterial().getId(), pickingBill.getStructure().getId());
                 if (Objects.nonNull(inventory)) {

@@ -14,7 +14,7 @@ import java.util.Objects;
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN_DELETE;
 
 /**
- * <h1>Service</h1>
+ * <h1>权限</h1>
  *
  * @author Hamm.cn
  */
@@ -22,10 +22,10 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN_DELETE;
 @Slf4j
 public class PermissionService extends BaseService<PermissionEntity, PermissionRepository> {
     /**
-     * 通过标识获取一个权限
+     * 按标识查询权限
      *
      * @param identity 权限标识
-     * @return 权限
+     * @return 权限，不存在时返回 {@code null}
      */
     public PermissionEntity getPermissionByIdentity(String identity) {
         return repository.getByIdentity(identity);
@@ -43,6 +43,12 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
         return list;
     }
 
+    /**
+     * 扫描并同步代码里声明的系统权限
+     *
+     * @apiNote 按 {@code identity} 做 upsert，启动时调用。
+     * 只会新增和更新，代码里删掉的权限不会自动从库里删掉，避免升级时误伤已授权的角色
+     */
     public void loadPermission() {
         List<PermissionEntity> permissions = PermissionUtil.scanPermission(SpmsApplication.class.getPackageName(), PermissionEntity.class);
         for (var permission : permissions) {

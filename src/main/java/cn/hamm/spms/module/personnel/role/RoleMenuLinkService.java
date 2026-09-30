@@ -1,27 +1,20 @@
 package cn.hamm.spms.module.personnel.role;
 
 import cn.hamm.spms.base.BaseService;
-import lombok.extern.slf4j.Slf4j;
 import cn.hamm.spms.module.system.menu.MenuEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * <h1>角色菜单关联服务</h1>
- * <p>
- * 承载 {@code role <-> menu} 的多对多关系，取代 {@code @ManyToMany}。
- * </p>
+ * <h1>角色菜单关联</h1>
  *
  * @author Hamm.cn
+ * @apiNote 承载 {@code role <-> menu} 的多对多关系，取代 {@code @ManyToMany}：
+ * Hibernate 隐式生成的中间表结构不可控，也承载不了业务字段
  */
 @Slf4j
 @Service
@@ -46,13 +39,12 @@ public class RoleMenuLinkService extends BaseService<RoleMenuLinkEntity, RoleMen
     }
 
     /**
-     * 同步某个角色的授权（增量）
-     * <p>
-     * 只解绑本次提交里已不存在的、只建立本次新增的。
-     * </p>
+     * 同步某个角色的授权
      *
      * @param roleId 角色 ID
      * @param menus  授权的菜单
+     * @apiNote 增量同步：只解绑本次提交里已不存在的、只新增本次新增的，
+     * 不做全删重建，避免并发下互相覆盖
      */
     public void syncByRoleId(long roleId, @NotNull Collection<MenuEntity> menus) {
         Set<Long> targetIds = menus.stream()
@@ -73,7 +65,7 @@ public class RoleMenuLinkService extends BaseService<RoleMenuLinkEntity, RoleMen
                 kept.add(menuId);
             }
         }
-        // 走 service.delete 保证前后置钩子被触发
+        // 走 service.delete 保证前后置钩子被触发，直接调 repository 会跳过
         stale.forEach(entity -> delete(entity.getId()));
         menus.stream()
                 .filter(Objects::nonNull)

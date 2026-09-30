@@ -1,26 +1,20 @@
 package cn.hamm.spms.module.personnel.user;
 
 import cn.hamm.spms.base.BaseService;
-import lombok.extern.slf4j.Slf4j;
 import cn.hamm.spms.module.personnel.role.RoleEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * <h1>用户角色关联服务</h1>
- * <p>
- * 承载 {@code user <-> role} 的多对多关系，取代 {@code @ManyToMany}。
- * </p>
+ * <h1>用户角色关联</h1>
  *
  * @author Hamm.cn
+ * @apiNote 承载 {@code user <-> role} 的多对多关系，取代 {@code @ManyToMany}：
+ * 显式中间表能承载业务字段（如授权时间、授权人），且能被独立查询与审计
  */
 @Slf4j
 @Service
@@ -40,13 +34,12 @@ public class UserRoleLinkService extends BaseService<UserRoleLinkEntity, UserRol
     }
 
     /**
-     * 同步用户的角色（增量）
-     * <p>
-     * 只解绑本次提交里已不存在的、只建立本次新增的。
-     * </p>
+     * 同步用户的角色
      *
      * @param userId 用户 ID
      * @param roles  角色集合
+     * @apiNote 增量同步：只解绑本次提交里已不存在的、只新增本次新增的，
+     * 不做全删重建，避免并发下互相覆盖
      */
     public void syncByUserId(long userId, @NotNull Collection<RoleEntity> roles) {
         Set<Long> targetIds = roles.stream()
@@ -67,7 +60,7 @@ public class UserRoleLinkService extends BaseService<UserRoleLinkEntity, UserRol
                 kept.add(roleId);
             }
         }
-        // 走 service.delete 保证前后置钩子被触发
+        // 走 service.delete 保证前后置钩子被触发，直接调 repository 会跳过
         stale.forEach(entity -> delete(entity.getId()));
         roles.stream()
                 .filter(Objects::nonNull)

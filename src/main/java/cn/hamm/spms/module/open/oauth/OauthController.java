@@ -53,7 +53,7 @@ import static cn.hamm.airpower.exception.Errors.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * <h1>Controller</h1>
+ * <h1>第三方授权</h1>
  *
  * @author Hamm.cn
  */
@@ -62,7 +62,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Permission
 public class OauthController extends ApiController implements IOauthAction {
     /**
-     * {@code Error}
+     * OAuth2 错误页视图名
      */
     public static final String STRING_ERROR = "error";
 
@@ -97,6 +97,14 @@ public class OauthController extends ApiController implements IOauthAction {
     @Autowired
     private AppConfig appConfig;
 
+    /**
+     * 发起授权，未登录时跳登录页
+     *
+     * @param request  请求
+     * @param response 响应
+     * @return 错误页，未发生错误时返回 {@code null}（响应已 302）
+     * @apiNote 内部应用跳过用户确认直接发码，外部应用统一跳到登录页由前端渲染授权确认页
+     */
     @Permission(login = false)
     @GetMapping("authorize")
     public ModelAndView index(
@@ -115,9 +123,7 @@ public class OauthController extends ApiController implements IOauthAction {
         if (!StringUtils.hasText(redirectUri)) {
             return showError(REDIRECT_URI_MISSING);
         }
-        // 回调地址必须与该应用注册时填写的地址一致。
-        // 否则攻击者只要构造一个 redirectUri=evil.com 的链接，
-        // 受害者点开并已登录时，授权码会被直接 302 送到攻击者站点，账号被接管。
+        // 回调地址必须与应用注册地址一致，否则授权码会被送到攻击者站点
         if (!isRedirectUriAllowed(redirectUri, openApp.getUrl())) {
             log.warn("回调地址与应用注册地址不匹配，已拒绝。appKey:{} 请求地址:{} 注册地址:{}",
                     appKey, redirectUri, openApp.getUrl());
@@ -129,11 +135,9 @@ public class OauthController extends ApiController implements IOauthAction {
             return redirectLogin(response, appKey, redirectUri, scope);
         }
         if (openApp.getIsInternal()) {
-            // 内部应用直接返回 code
             redirectToThirdPlatform(response, openApp.getAppKey(), userId, scope, redirectUri);
             return null;
         }
-        // 外部应用需要用户确认授权
         Map<String, Object> params = Map.of(
                 APP_KEY, appKey,
                 REDIRECT_URI, URLEncoder.encode(redirectUri, UTF_8),
@@ -143,24 +147,28 @@ public class OauthController extends ApiController implements IOauthAction {
         return null;
     }
 
+    /**
+     * 用授权码换取 AccessToken
+     *
+     * @param request 换取请求
+     * @return AccessToken、RefreshToken、授权范围与过期时间
+     * @apiNote 校验通过后立即删除授权码缓存，一个 code 只能换一次 Token。
+     * AccessToken 有效 2 小时、RefreshToken 有效 30 天，但本项目没有刷新接口，
+     * 拿到过期 Token 只能重新走一遍授权流程
+     */
     @Description("获取 AccessToken")
     @Permission(login = false)
     @PostMapping("accessToken")
     public Json accessToken(@RequestBody @Validated({OauthGetAccessTokenRequest.WhenGetAccessToken.class, WhenAppKeyRequired.class}) OauthGetAccessTokenRequest request) {
-        // 获取 Code 所属的用户 ID
         Long userId = service.getOauthUserCache(request.getAppKey(), request.getCode());
-        // 查询 App 信息
         OpenAppEntity existApp = openAppService.getByAppKey(request.getAppKey());
         FORBIDDEN.whenNotEquals(existApp.getAppSecret(), request.getAppSecret(), "应用秘钥错误");
-        // 移除缓存的用户
         service.removeOauthUserCache(existApp.getAppKey(), request.getCode());
-        // 获取 Scope
         String scope = service.getOauthScopeCache(request.getAppKey(), request.getCode());
         if (!StringUtils.hasText(scope)) {
             scope = OauthScope.BASIC_INFO.name();
         }
         service.removeOauthScopeCache(existApp.getAppKey(), request.getCode());
-        // 生成 accessToken refreshToken
         int expiresIn = SECOND_PER_HOUR * 2;
         String accessToken = buildToken(userId, scope, existApp.getAppKey(), expiresIn);
         String refreshToken = buildToken(userId, scope, existApp.getAppKey(), (long) SECOND_PER_DAY * 30);
@@ -173,6 +181,13 @@ public class OauthController extends ApiController implements IOauthAction {
         return Json.data(response);
     }
 
+    /**
+     * 第三方授权码登录
+     *
+     * @param request  回调请求
+     * @param response 响应
+     * @return 登录后的 Cookie 与 Token
+     */
     @PostMapping("callback")
     @Permission(login = false)
     public Json callback(@RequestBody @Validated(OauthCallbackRequest.WhenOauthCallback.class) OauthCallbackRequest request, HttpServletResponse response) {
@@ -181,6 +196,13 @@ public class OauthController extends ApiController implements IOauthAction {
         return Json.data(userService.loginWithCookieAndResponse(response, user), "登录成功");
     }
 
+    /**
+     * 把当前用户绑定到第三方账号
+     *
+     * @param request 回调请求
+     * @apiNote 该接口会走一次第三方换用户信息，等于让当前登录用户主动把第三方账号交出去，
+     * 属于主动换绑场景，不存在未授权风险
+     */
     @PostMapping("thirdBind")
     @Permission(authorize = false)
     public Json thirdBind(@RequestBody @Validated(OauthCallbackRequest.WhenOauthCallback.class) OauthCallbackRequest request) {
@@ -189,6 +211,12 @@ public class OauthController extends ApiController implements IOauthAction {
         return Json.success("绑定成功");
     }
 
+    /**
+     * 解绑第三方账号
+     *
+     * @param userThirdLogin 绑定记录
+     * @apiNote 必须校验绑定记录归属当前用户，否则可解别人的绑定
+     */
     @PostMapping("unBindThird")
     @Permission(authorize = false)
     public Json unBindThird(@RequestBody @Validated(ICurdAction.WhenIdRequired.class) UserThirdLoginEntity userThirdLogin) {
@@ -199,6 +227,14 @@ public class OauthController extends ApiController implements IOauthAction {
         return Json.success("解绑成功");
     }
 
+    /**
+     * 按 AccessToken 获取用户信息
+     *
+     * @param request 请求
+     * @return 按授权范围裁剪过的用户信息
+     * @apiNote 裁剪是「白名单式」的：未授权的 scope 对应字段一律置 null，
+     * 但必须逐个枚举补齐，新加字段默认不裁剪就会直接泄露给第三方
+     */
     @Description("获取当前用户的信息")
     @Permission(login = false)
     @PostMapping("getUserInfo")
@@ -215,7 +251,6 @@ public class OauthController extends ApiController implements IOauthAction {
         OauthScope[] oauthScopes = OauthScope.values();
         for (OauthScope oauthScope : oauthScopes) {
             if (scopeList.contains(oauthScope.name())) {
-                // 被授权 跳过
                 continue;
             }
             if (OauthScope.CONTACT.equals(oauthScope)) {
@@ -223,8 +258,7 @@ public class OauthController extends ApiController implements IOauthAction {
             }
             if (OauthScope.PRIVACY.equals(oauthScope)) {
                 user.setGender(null).setCreateTime(null).setUpdateTime(null).setIsDisabled(null);
-                // 所属部门与角色属于公司内部组织信息，修复前 scope 过滤完全没覆盖这两个字段，
-                // 任何拿到 access token 的第三方应用都能拿到完整组织架构
+                // 部门与角色属于公司内部组织信息，漏裁就会让任意第三方应用拿到完整组织架构
                 user.setRoleList(null).setDepartmentList(null);
             }
             if (OauthScope.REAL_NAME.equals(oauthScope)) {
@@ -234,6 +268,11 @@ public class OauthController extends ApiController implements IOauthAction {
         return Json.data(user);
     }
 
+    /**
+     * 获取全部可选的授权范围
+     *
+     * @return 授权范围列表
+     */
     @PostMapping("getScopeList")
     @Permission(login = false)
     public Json getScopeList() {
@@ -246,6 +285,14 @@ public class OauthController extends ApiController implements IOauthAction {
         ));
     }
 
+    /**
+     * 为应用签发授权码
+     *
+     * @param request 创建请求
+     * @return 授权码
+     * @apiNote 授权码与用户 ID、授权范围一起缓存在 Redis，有效期 5 分钟，只能换一次 Token；
+     * 标了默认的 scope 会被无条件追加进来，客户端无法拒绝
+     */
     @Description("创建 Code")
     @Permission(authorize = false)
     @PostMapping("createCode")
@@ -269,13 +316,14 @@ public class OauthController extends ApiController implements IOauthAction {
     }
 
     /**
-     * 生成 Token
+     * 生成 AccessToken
      *
      * @param userId    用户 ID
-     * @param scope     权限
-     * @param appKey    App Key
-     * @param expiresIn 过期时间(秒)
+     * @param scope     授权范围
+     * @param appKey    AppKey
+     * @param expiresIn 过期时间（秒）
      * @return Token
+     * @apiNote Token 是无状态签名，签发与校验用同一把 accessTokenSecret，密钥轮换会让全部已签发 Token 失效
      */
     private String buildToken(long userId, String scope, String appKey, long expiresIn) {
         return AccessTokenUtil.create()
@@ -292,9 +340,9 @@ public class OauthController extends ApiController implements IOauthAction {
      *
      * @param response    响应对象
      * @param appKey      AppKey
-     * @param redirectUri 重定向地址
+     * @param redirectUri 回调地址
      * @param scope       授权范围
-     * @return 无返回
+     * @return 恒为 {@code null}，已发出 302
      */
     private @Nullable ModelAndView redirectLogin(HttpServletResponse response, String appKey, String redirectUri, String scope) {
         String url = appConfig.getLoginUrl() + "?appKey=" +
@@ -307,10 +355,10 @@ public class OauthController extends ApiController implements IOauthAction {
     }
 
     /**
-     * 显示一个错误页面
+     * 构造 OAuth2 错误页
      *
      * @param error 错误信息
-     * @return 错误页面
+     * @return 错误页
      */
     private @NotNull ModelAndView showError(String error) {
         ModelAndView view = new ModelAndView(STRING_ERROR);
@@ -319,10 +367,12 @@ public class OauthController extends ApiController implements IOauthAction {
     }
 
     /**
-     * 重定向到指定的 URL
+     * 重定向到指定 URL
      *
      * @param response 响应体
      * @param url      目标 URL
+     * @apiNote 重定向失败只记日志。目标 URL 全部来自应用注册地址或本次请求参数，
+     * 前者已在 {@link #isRedirectUriAllowed} 校验过
      */
     private void redirect(@NotNull HttpServletResponse response, String url) {
         try {
@@ -333,14 +383,13 @@ public class OauthController extends ApiController implements IOauthAction {
     }
 
     /**
-     * 从 Cookie 获取用户ID
+     * 从登录 Cookie 中取用户 ID
      *
-     * @return Cookie 字符串
+     * @return 用户 ID，未登录返回 {@code null}
      */
     private @Nullable Long getUserIdFromCookie() {
         Cookie[] cookies = request.getCookies();
         if (Objects.isNull(cookies)) {
-            // 没有 Cookie
             return null;
         }
         String cookieString = Arrays.stream(cookies)
@@ -352,17 +401,16 @@ public class OauthController extends ApiController implements IOauthAction {
         }
         Long userId = userService.getUserIdByCookie(cookieString);
         if (Objects.isNull(userId)) {
-            // Cookie 没有找到用户
             return null;
         }
         return userId;
     }
 
     /**
-     * 获取权限范围
+     * 解析请求中的授权范围
      *
      * @param request 请求
-     * @return 权限字符串
+     * @return 授权范围，未指定时取所有默认 scope
      */
     private @NotNull String getScopeFromRequest(@NotNull HttpServletRequest request) {
         String scope = request.getParameter(SCOPE);
@@ -376,16 +424,15 @@ public class OauthController extends ApiController implements IOauthAction {
     }
 
     /**
-     * 校验回调地址是否与该应用注册时填写的地址匹配
-     * <p>
-     * 协议、主机、端口必须完全一致；路径按注册路径做前缀匹配，
-     * 因此注册 {@code https://a.com/callback} 时允许 {@code https://a.com/callback/x}，
-     * 但不允许 {@code https://a.com/other}，也不允许 {@code https://evil.com/callback}。
-     * </p>
+     * 校验回调地址是否与应用注册地址匹配
      *
-     * @param redirectUri  本次请求携带的回调地址
+     * @param redirectUri   本次请求携带的回调地址
      * @param registeredUrl 应用注册时填写的地址
      * @return 是否允许
+     * @apiNote 协议、主机、端口必须完全一致；路径按注册路径做前缀匹配，
+     * 注册 {@code https://a.com/callback} 时允许 {@code https://a.com/callback/x}，
+     * 但不允许 {@code https://a.com/other} 或 {@code https://evil.com/callback}。
+     * 两者都要求绝对地址且不含用户信息段
      */
     private boolean isRedirectUriAllowed(@Nullable String redirectUri, @Nullable String registeredUrl) {
         if (!StringUtils.hasText(redirectUri) || !StringUtils.hasText(registeredUrl)) {
@@ -396,7 +443,7 @@ public class OauthController extends ApiController implements IOauthAction {
         if (Objects.isNull(requested) || Objects.isNull(registered)) {
             return false;
         }
-        // RFC 6454：redirect_uri 不得包含用户信息段。
+        // RFC 6454：redirect_uri 不得包含用户信息段，
         // 形如 https://a.com@evil.com/cb 的地址极易在人工审阅时看错真实主机
         if (Objects.nonNull(requested.getUserInfo()) || Objects.nonNull(registered.getUserInfo())) {
             log.warn("回调地址包含用户信息段，已拒绝。请求地址:{} 注册地址:{}", redirectUri, registeredUrl);
@@ -407,13 +454,12 @@ public class OauthController extends ApiController implements IOauthAction {
                 || registered.getPort() != requested.getPort()) {
             return false;
         }
-        // 归一化末尾斜杠，避免注册 /cb 而请求 /cb/ 这类同一路径被误拒
         String registeredPath = normalizePath(registered.getPath());
         String requestedPath = normalizePath(requested.getPath());
         if ("/".equals(registeredPath)) {
             return true;
         }
-        // 必须逐段匹配，避免 /callback 匹配上 /callback-evil
+        // 逐段匹配，避免 /callback 匹配上 /callback-evil
         return requestedPath.equals(registeredPath)
                 || requestedPath.startsWith(registeredPath + "/");
     }
@@ -436,7 +482,7 @@ public class OauthController extends ApiController implements IOauthAction {
     }
 
     /**
-     * 解析 URL，非法格式一律返回 null
+     * 解析 URL，非法格式返回 {@code null}
      *
      * @param url URL 字符串
      * @return 解析结果
@@ -444,7 +490,6 @@ public class OauthController extends ApiController implements IOauthAction {
     private @Nullable URI parseUri(@NotNull String url) {
         try {
             URI uri = URI.create(url.trim());
-            // 必须是绝对地址且带主机，否则形如 /path 的相对地址会被误判为合法
             if (!StringUtils.hasText(uri.getScheme()) || !StringUtils.hasText(uri.getHost())) {
                 return null;
             }
@@ -456,13 +501,14 @@ public class OauthController extends ApiController implements IOauthAction {
     }
 
     /**
-     * 重定向回第三方页面
+     * 重定向到第三方页面
      *
      * @param response    响应
      * @param appKey      appKey
      * @param userId      用户 ID
-     * @param scope       权限列表
+     * @param scope       授权范围
      * @param redirectUri 第三方回调地址
+     * @apiNote 授权码与用户、scope 一起写 Redis 后再拼回调 URL，只有换取 Token 时才真正用掉
      */
     private void redirectToThirdPlatform(HttpServletResponse response, String appKey, Long userId, String scope, String redirectUri) {
         String code = RandomUtil.randomString();

@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * <h1>创建 Code 请求</h1>
+ * <h1>第三方授权回调请求</h1>
  *
  * @author Hamm
  */
@@ -24,6 +24,9 @@ public class OauthCallbackRequest extends OauthAppKeyRequest {
     @NotBlank(groups = {WhenOauthCallback.class}, message = "Platform 不能为空")
     private String platform;
 
+    /**
+     * 第三方授权回调时的参数校验组
+     */
     public interface WhenOauthCallback {
     }
 }

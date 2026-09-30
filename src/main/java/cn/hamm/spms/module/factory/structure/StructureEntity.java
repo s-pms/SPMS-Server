@@ -24,7 +24,7 @@ import java.util.Set;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.StructureCode;
 
 /**
- * <h1>生产单元实体</h1>
+ * <h1>生产单元</h1>
  *
  * @author Hamm.cn
  */

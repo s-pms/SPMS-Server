@@ -22,7 +22,7 @@ import java.util.List;
 import static cn.hamm.spms.module.system.config.enums.ConfigFlag.PURCHASE_BILL_AUTO_AUDIT;
 
 /**
- * <h1>Service</h1>
+ * <h1>采购单</h1>
  *
  * @author Hamm.cn
  */
@@ -57,6 +57,13 @@ public class PurchaseService extends AbstractBaseBillService<
         return PurchaseStatus.DONE;
     }
 
+    /**
+     * 明细全部入库后回填实际金额并生成采购入库单
+     *
+     * @param billId 采购单 ID
+     * @apiNote 生成下游单据前基类已用状态条件更新做推进守卫，并发报工下本方法只会执行一次，
+     * 入库单恰好 1 张；此处的实际金额按「入库数量 × 单价」累加，与总金额口径不同
+     */
     @Override
     protected void afterAllBillDetailFinished(long billId) {
         PurchaseEntity purchaseBill = get(billId);
@@ -74,7 +81,6 @@ public class PurchaseService extends AbstractBaseBillService<
         updateToDatabase(purchaseBill);
         log.info("采购单已经全部采购完成，单据ID:{}", purchaseBill.getId());
 
-        // 创建采购入库单
         InputEntity inputBill = new InputEntity()
                 .setStatus(InputStatus.AUDITING.getKey())
                 .setPurchase(purchaseBill)

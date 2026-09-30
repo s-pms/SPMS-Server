@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.open.thirdlogin;
 
-import cn.hamm.airpower.core.annotation.Meta;
 import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Meta;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.personnel.user.UserEntity;
 import jakarta.persistence.Column;
@@ -15,7 +15,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 /**
- * <h1>实体</h1>
+ * <h1>用户第三方账号绑定</h1>
  *
  * @author Hamm.cn
  */

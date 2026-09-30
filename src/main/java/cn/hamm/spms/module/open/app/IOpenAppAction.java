@@ -8,7 +8,7 @@ package cn.hamm.spms.module.open.app;
 public interface IOpenAppAction {
 
     /**
-     * 应用 Key 查询应用
+     * 按 AppKey 查询应用时的参数校验组
      */
     interface WhenGetByAppKey {
     }

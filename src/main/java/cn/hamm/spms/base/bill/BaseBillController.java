@@ -30,6 +30,8 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
  * @param <DS> 明细 Service
  * @param <DR> 明细数据源
  * @author Hamm.cn
+ * @apiNote 单据不提供删除接口；又因 {@code canEdit} 只认「已驳回」，
+ * 单据一旦审核通过就只能被推着走完状态机
  */
 @Slf4j
 @Permission
@@ -64,6 +66,15 @@ public class BaseBillController<
         return Json.success("添加完成数量成功");
     }
 
+    /**
+     * 单据更新前置校验
+     *
+     * @param bill  提交的单据
+     * @param exist 数据库中的单据
+     * @return 单据
+     * @apiNote 只有「已驳回」的单据能改；改完状态会被重置为「审核中」，
+     * 即编辑一次就等于重新提交审核
+     */
     @Contract("_, _ -> param1")
     @Override
     protected final @NotNull E beforeAppUpdate(@NotNull E bill, @NotNull E exist) {

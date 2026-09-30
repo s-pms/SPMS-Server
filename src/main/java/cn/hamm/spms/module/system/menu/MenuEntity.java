@@ -20,7 +20,7 @@ import org.hibernate.validator.constraints.Length;
 import java.util.List;
 
 /**
- * <h1>权限实体</h1>
+ * <h1>菜单</h1>
  *
  * @author Hamm.cn
  */

@@ -24,7 +24,7 @@ import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.MoveBillCo
 import static jakarta.persistence.FetchType.EAGER;
 
 /**
- * <h1>移库单实体</h1>
+ * <h1>移库单</h1>
  *
  * @author Hamm.cn
  */

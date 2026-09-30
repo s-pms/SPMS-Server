@@ -12,7 +12,7 @@ import static cn.hamm.airpower.exception.Errors.DATA_NOT_FOUND;
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN_EXIST;
 
 /**
- * <h1>Service</h1>
+ * <h1>销售价格</h1>
  *
  * @author Hamm.cn
  */
@@ -34,11 +34,26 @@ public class SalePriceService extends BaseService<SalePriceEntity, SalePriceRepo
         return salePrice;
     }
 
+    /**
+     * 更新前清空物料与客户关联
+     *
+     * @param salePrice 待更新的销售价
+     * @return 清空关联后的销售价
+     * @apiNote 物料与客户是价格的唯一维度，不允许改，只能删掉重建
+     */
     @Override
     protected @NotNull SalePriceEntity beforeUpdate(@NotNull SalePriceEntity salePrice) {
         return salePrice.setMaterial(null).setCustomer(null);
     }
 
+    /**
+     * 按物料和客户查询销售价
+     *
+     * @param material 物料
+     * @param customer 客户
+     * @return 销售价
+     * @apiNote 未配置价格时直接报「数据不存在」，前端据此提示改用物料标准销售价
+     */
     protected SalePriceEntity getByMaterialAndCustomer(MaterialEntity material, CustomerEntity customer) {
         SalePriceEntity exist = repository.getByCustomerAndMaterial(customer, material);
         DATA_NOT_FOUND.whenNull(exist, "没有查询到该物料在此客户下提供的销售价格，请参考物料标准销售价填写。");

@@ -26,7 +26,7 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 import static cn.hamm.airpower.exception.Errors.UNAUTHORIZED;
 
 /**
- * <h1>请求拦截器</h1>
+ * <h1>登录与权限拦截</h1>
  *
  * @author Hamm.cn
  */
@@ -81,6 +81,14 @@ public class RequestInterceptor extends CurdRequestInterceptor {
         ));
     }
 
+    /**
+     * 校验访问令牌
+     *
+     * @param accessToken 访问令牌
+     * @return 校验通过的令牌
+     * @apiNote 在父类校验签名之外追加三件事：令牌类型必须在 {@code UserTokenType} 枚举内、
+     * 个人令牌未被禁用、用户处于启用状态。缺任何一项都直接抛异常拦截
+     */
     @Override
     public AccessTokenUtil.VerifiedToken getVerifiedToken(String accessToken) {
         AccessTokenUtil.VerifiedToken verifiedToken = super.getVerifiedToken(accessToken);

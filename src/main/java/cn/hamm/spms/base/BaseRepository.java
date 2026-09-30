@@ -4,7 +4,7 @@ import cn.hamm.airpower.curd.base.ICurdRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
 /**
- * <h1>数据源接口</h1>
+ * <h1>实体数据源基接口</h1>
  *
  * @param <E> 实体
  * @author Hamm.cn

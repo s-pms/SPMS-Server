@@ -4,7 +4,7 @@ import cn.hamm.spms.base.BaseService;
 import org.springframework.stereotype.Service;
 
 /**
- * <h1>Service</h1>
+ * <h1>BOM 明细</h1>
  *
  * @author Hamm.cn
  */

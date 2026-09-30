@@ -8,6 +8,8 @@ import lombok.Getter;
  * <h1>报告颗粒度</h1>
  *
  * @author Hamm.cn
+ * @apiNote {@code key} 是秒数（{@code 2678400} 是按 31 天算的），{@code mark} 是 Flux
+ * {@code aggregateWindow(every: ...)} 要的时长字面量，只有 {@code ReportDataType.NUMBER} 会用到它
  */
 @AllArgsConstructor
 @Getter
@@ -43,7 +45,7 @@ public enum ReportGranularity implements IDictionary {
     ONE_WEEK(604800, "每周", "168h"),
 
     /**
-     * 每月
+     * 每月：按 31 天折算
      */
     ONE_MONTH(2678400, "每月", "744h"),
     ;

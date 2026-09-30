@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * <h1>用户角色关联数据源</h1>
+ * <h1>用户角色关联</h1>
  *
  * @author Hamm.cn
  */

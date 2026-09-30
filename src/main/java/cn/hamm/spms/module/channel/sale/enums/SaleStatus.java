@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * <h1>采购单状态</h1>
+ * <h1>销售单状态</h1>
  *
  * @author Hamm.cn
  */

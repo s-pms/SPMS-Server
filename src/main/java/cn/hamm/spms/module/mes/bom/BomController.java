@@ -10,7 +10,7 @@ import cn.hamm.spms.module.mes.bom.detail.BomDetailEntity;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * <h1>Controller</h1>
+ * <h1>BOM</h1>
  *
  * @author Hamm.cn
  */

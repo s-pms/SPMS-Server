@@ -7,12 +7,12 @@ package cn.hamm.spms.module.personnel.user.enums;
  */
 public enum UserLoginType {
     /**
-     * ID+密码 邮箱+密码
+     * 邮箱与密码登录
      */
     VIA_ACCOUNT_PASSWORD,
 
     /**
-     * 邮箱+验证码
+     * 邮箱与验证码登录
      */
     VIA_EMAIL_CODE,
 }

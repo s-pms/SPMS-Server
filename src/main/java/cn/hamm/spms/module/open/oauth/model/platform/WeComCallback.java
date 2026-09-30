@@ -20,7 +20,7 @@ import java.util.Objects;
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 
 /**
- * <h1>企业微信回调</h1>
+ * <h1>企业微信授权回调</h1>
  *
  * @author Hamm.cn
  */
@@ -47,6 +47,13 @@ public class WeComCallback extends AbstractOauthCallback {
         return new OauthUserInfo().setUserId(userId.toString());
     }
 
+    /**
+     * 获取并缓存企业微信 AccessToken
+     *
+     * @return AccessToken
+     * @apiNote 企业微信的 AccessToken 有效期 2 小时，此处固定缓存 1 小时；
+     * 缓存 Key 是全局单条，多实例部署共用同一个 token
+     */
     @Contract(pure = true)
     private String getAccessToken() {
         Object object = redisHelper.get(ACCESS_TOKEN_CACHE_KEY);

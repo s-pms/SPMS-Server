@@ -70,9 +70,12 @@ import java.util.*;
 import static cn.hamm.spms.module.iot.report.ReportConstant.*;
 
 /**
- * <h1>初始化</h1>
+ * <h1>演示数据初始化</h1>
  *
  * @author Hamm.cn
+ * @apiNote 只在 {@code app.is-dev-mode} 为 true 时执行。运行目录下的 {@code init.lock}
+ * 是「已初始化」的标记，存在就整段跳过；但 {@code ddl-auto} 为 {@code create-drop} 时
+ * schema 每次都被重建，所以该模式下必须重跑
  */
 @Component
 @Slf4j
@@ -93,7 +96,7 @@ public class SpmsDevData implements CommandLineRunner {
             log.info("非开发者模式，无需初始化数据");
             return;
         }
-        // 判断运行目录是否存在 init.lock 文件，如存在，则不初始化数据
+        // init.lock 落在运行目录，重启后它还在就说明基础数据已就位，不重复初始化
         String ddlAuto = "spring.jpa.hibernate.ddl-auto";
         if (new File(LOCK_FILE).exists() && !CREATE_DROP.equals(environment.getProperty(ddlAuto))) {
             log.info("已存在 init.lock 文件，无需初始化数据");
@@ -170,7 +173,6 @@ public class SpmsDevData implements CommandLineRunner {
         DepartmentService departmentService = PersonnelServices.getDepartmentService();
         RoomService roomService = ChatServices.getRoomService();
 
-        // 初始化用户
         UserEntity user = userService.getMaybeNull(1L);
         if (Objects.nonNull(user)) {
             return;

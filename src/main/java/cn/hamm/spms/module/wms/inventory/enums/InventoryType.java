@@ -12,14 +12,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum InventoryType implements IDictionary {
-    /**
-     * 仓库
-     */
     STORAGE(1, "仓库"),
 
-    /**
-     * 生产单元
-     */
     STRUCTURE(2, "生产单元");
 
     private final int key;

@@ -25,7 +25,7 @@ import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.RoutingCod
 import static jakarta.persistence.FetchType.EAGER;
 
 /**
- * <h1>实体</h1>
+ * <h1>生产工艺</h1>
  *
  * @author zfy
  */

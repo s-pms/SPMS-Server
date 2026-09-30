@@ -26,7 +26,7 @@ import java.util.Set;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.DeviceCode;
 
 /**
- * <h1>设备实体</h1>
+ * <h1>设备</h1>
  *
  * @author zfy
  */

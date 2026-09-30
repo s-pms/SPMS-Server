@@ -20,7 +20,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 /**
- * <h1>编码规则实体</h1>
+ * <h1>编码规则</h1>
  *
  * @author Hamm.cn
  */
@@ -90,10 +90,11 @@ public class CodeRuleEntity extends BaseEntity<CodeRuleEntity> {
     private Boolean isSystem;
 
     /**
-     * 设置是系统内置规则
+     * 设置是否系统内置规则
      *
-     * @param isSystem 内置规则
+     * @param isSystem 是否内置
      * @return 编码规则
+     * @apiNote Lombok 不会为包装类型 {@code Boolean} 字段生成链式 setter，这里手写
      */
     public CodeRuleEntity setIsSystem(Boolean isSystem) {
         this.isSystem = isSystem;

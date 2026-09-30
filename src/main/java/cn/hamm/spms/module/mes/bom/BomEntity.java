@@ -24,7 +24,7 @@ import java.util.Set;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.BomCode;
 
 /**
- * <h1>BOM 实体</h1>
+ * <h1>BOM</h1>
  *
  * @author Hamm.cn
  */

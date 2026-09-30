@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * <h1>参与人身份枚举</h1>
+ * <h1>参与人角色</h1>
  *
  * @author Hamm.cn
  */

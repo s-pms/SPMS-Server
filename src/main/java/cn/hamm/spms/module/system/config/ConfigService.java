@@ -11,23 +11,24 @@ import static cn.hamm.airpower.exception.Errors.DATA_NOT_FOUND;
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN_DELETE;
 
 /**
- * <h1>Service</h1>
+ * <h1>系统配置</h1>
  *
  * @author Hamm.cn
  */
 @Service
 public class ConfigService extends BaseService<ConfigEntity, ConfigRepository> {
     /**
-     * String {@code "0"}
+     * 布尔值「否」的存储形式
      */
     public static final String STRING_ZERO = "0";
+
     /**
-     * String {@code "1"}
+     * 布尔值「是」的存储形式
      */
     public static final String STRING_ONE = "1";
 
     /**
-     * 根据配置枚举获取配置信息
+     * 按配置枚举查询
      *
      * @param configFlag 配置枚举
      * @return 配置信息
@@ -37,10 +38,12 @@ public class ConfigService extends BaseService<ConfigEntity, ConfigRepository> {
     }
 
     /**
-     * 根据配置标识获取配置信息
+     * 按配置标识查询
      *
      * @param flag 配置标识
      * @return 配置信息
+     * @apiNote 枚举里没有登记过的标识（如历史遗留数据）不存在时直接报错，
+     * 不要静默返回默认值，那会让配置看起来生效了其实没生效
      */
     public final ConfigEntity get(@NotNull String flag) {
         ConfigEntity configuration = repository.getByFlag(flag);
@@ -57,7 +60,7 @@ public class ConfigService extends BaseService<ConfigEntity, ConfigRepository> {
     protected ConfigEntity beforeAppSaveToDatabase(@NotNull ConfigEntity config) {
         String key = config.getFlag();
         config.setIsSystem(false);
-        // 如果 Configuration枚举中包含这个标识 则设置为系统标识
+        // 标识登记在 ConfigFlag 中才算内置配置，顺带按类型规范化存进去的值
         for (ConfigFlag configFlag : ConfigFlag.values()) {
             if (configFlag.name().equals(key)) {
                 config.setIsSystem(true);

@@ -11,7 +11,10 @@ import cn.hamm.spms.module.asset.contract.enums.ContractStatus;
 import cn.hamm.spms.module.asset.contract.enums.ContractType;
 import cn.hamm.spms.module.asset.contract.participant.ParticipantEntity;
 import cn.hamm.spms.module.system.coderule.enums.CodeRuleField;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -75,12 +78,8 @@ public class ContractEntity extends BaseEntity<ContractEntity> {
     /**
      * 附件列表
      * <p>
-     * 关联关系由 {@code contract_document_link} 中间表承载
-     * （见 {@code ContractDocumentLinkEntity}），本字段仅用于承接前端提交的
-     * JSON 与回传读取结果，不参与持久化。
-     * </p>
-     * <p>
-     * 读取时由 {@code ContractService} 组装，写入时由其同步中间表。
+     * 关联由 {@code contract_document_link} 中间表承载，本字段不参与持久化，
+     * 仅用于承接前端提交的 JSON 与回传读取结果
      * </p>
      */
     @Description("附件列表")
@@ -90,9 +89,8 @@ public class ContractEntity extends BaseEntity<ContractEntity> {
     /**
      * 参与方列表
      * <p>
-     * 关联关系由 {@code contract_participant_link} 中间表承载
-     * （见 {@code ContractParticipantLinkEntity}），本字段仅用于承接前端提交的
-     * JSON 与回传读取结果，不参与持久化。
+     * 关联由 {@code contract_participant_link} 中间表承载，本字段不参与持久化，
+     * 仅用于承接前端提交的 JSON 与回传读取结果
      * </p>
      */
     @Description("参与方列表")

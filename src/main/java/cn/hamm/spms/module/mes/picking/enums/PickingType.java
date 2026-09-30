@@ -12,14 +12,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum PickingType implements IDictionary {
-    /**
-     * 生产领料
-     */
     PRODUCE(1, "生产领料"),
 
-    /**
-     * 其他领料
-     */
     OTHER(2, "其他领料");
 
     private final int key;

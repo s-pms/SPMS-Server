@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
- * <h1>Controller</h1>
+ * <h1>销售价格</h1>
  *
  * @author Hamm.cn
  */

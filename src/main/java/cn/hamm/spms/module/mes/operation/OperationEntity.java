@@ -1,7 +1,7 @@
 package cn.hamm.spms.module.mes.operation;
 
-import cn.hamm.airpower.core.annotation.Meta;
 import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Meta;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.common.annotation.AutoGenerateCode;
 import jakarta.persistence.Column;
@@ -17,7 +17,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.OperationCode;
 
 /**
- * <h1>实体</h1>
+ * <h1>工序</h1>
  *
  * @author zfy
  */

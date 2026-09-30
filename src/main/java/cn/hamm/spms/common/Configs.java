@@ -8,9 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <h1>配置整合助手类</h1>
+ * <h1>配置聚合</h1>
  *
  * @author Hamm.cn
+ * @apiNote 把 Spring 托管的各份配置暴露成静态字段，供工具类、静态方法等拿不到容器的地方使用
  */
 @Component
 public class Configs {

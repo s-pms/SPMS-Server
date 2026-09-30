@@ -21,7 +21,7 @@ import java.util.Base64;
 import static cn.hamm.airpower.exception.Errors.DATA_NOT_FOUND;
 
 /**
- * <h1>Controller</h1>
+ * <h1>开放应用</h1>
  *
  * @author Hamm.cn
  */

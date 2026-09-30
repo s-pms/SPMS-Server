@@ -10,14 +10,14 @@ import java.util.List;
 import static cn.hamm.airpower.core.TreeUtil.ROOT_ID;
 
 /**
- * <h1>Service</h1>
+ * <h1>菜单</h1>
  *
  * @author Hamm.cn
  */
 @Service
 public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     /**
-     * 排序字段
+     * 默认排序字段
      */
     public static final String ORDER_FIELD_NAME = "orderNo";
 
@@ -32,6 +32,12 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         return list;
     }
 
+    /**
+     * 初始化系统内置菜单
+     *
+     * @apiNote dev 模式建库后调用。{@code orderNo} 越小越靠前，
+     * 调整顺序时只改这里的数字，不要改菜单名字
+     */
     @SuppressWarnings("AlibabaMethodTooLong")
     public final void initMenu() {
         MenuEntity firstMenu;
@@ -140,7 +146,5 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
         add(secondMenu);
         secondMenu = new MenuEntity().setName("通知管理").setPath("/console/open/notify/list").setParentId(firstMenu.getId());
         add(secondMenu);
-        // 原先这里还有一条「MCP工具」菜单，但 MCP 模块已整体下线，
-        // 留着只会让管理员点进一个空白页
     }
 }

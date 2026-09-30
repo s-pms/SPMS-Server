@@ -22,7 +22,7 @@ import org.hibernate.validator.constraints.Length;
 import java.util.List;
 
 /**
- * <h1>权限实体</h1>
+ * <h1>权限</h1>
  *
  * @author Hamm.cn
  */
@@ -41,6 +41,12 @@ public class PermissionEntity extends BaseEntity<PermissionEntity> implements IP
     @Meta
     private String identity;
 
+    /**
+     * 是否代码内置的系统权限
+     *
+     * @apiNote 内置权限不允许删除，且不接受客户端传入，
+     * 由 {@code PermissionController.beforeAdd/beforeAppUpdate} 强制置空
+     */
     @Description("系统权限")
     @Column(columnDefinition = "bit(1) default 0 comment '系统权限'")
     private Boolean isSystem;

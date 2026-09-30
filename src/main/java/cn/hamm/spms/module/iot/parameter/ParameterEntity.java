@@ -18,9 +18,11 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 /**
- * <h1>负载数据实体</h1>
+ * <h1>采集参数</h1>
  *
  * @author Hamm.cn
+ * @apiNote {@code dataType} 绑定的是 {@link ReportDataType}（数量/状态/开关/信息），
+ * 与同包下的 {@code ParameterType} 不是同一套字典
  */
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
@@ -55,10 +57,12 @@ public class ParameterEntity extends BaseEntity<ParameterEntity> {
     private Integer dataType;
 
     /**
-     * 设置是系统内置参数
+     * 设置是否为系统内置参数
      *
-     * @param isSystem 内置参数
+     * @param isSystem 是否内置
      * @return 实体
+     * @apiNote {@code isSystem} 标了 {@code @ReadOnly}，框架会在绑定请求体时剔除该字段，
+     * 所以只能由代码内部（如 {@code SpmsDevData} 初始化）设置
      */
     public ParameterEntity setIsSystem(Boolean isSystem) {
         this.isSystem = isSystem;

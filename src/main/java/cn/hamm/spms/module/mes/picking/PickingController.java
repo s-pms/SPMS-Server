@@ -8,7 +8,7 @@ import cn.hamm.spms.module.mes.picking.detail.PickingDetailRepository;
 import cn.hamm.spms.module.mes.picking.detail.PickingDetailService;
 
 /**
- * <h1>Controller</h1>
+ * <h1>领料单</h1>
  *
  * @author Hamm.cn
  */

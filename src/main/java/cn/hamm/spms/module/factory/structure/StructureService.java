@@ -11,7 +11,7 @@ import java.util.Objects;
 import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 
 /**
- * <h1>Service</h1>
+ * <h1>生产单元</h1>
  *
  * @author Hamm.cn
  */
@@ -24,15 +24,12 @@ public class StructureService extends BaseService<StructureEntity, StructureRepo
     private static final int MAX_TREE_DEPTH = 32;
 
     /**
-     * 一次性把列表组装成树
-     * <p>
-     * 原实现在这里递归调用 {@code getList} 逐层查库，既是 N+1 查询，
-     * 又会在父子关系成环时无限递归直接爆栈。改用框架的
-     * {@code TreeUtil.buildTreeList}：单遍 Map 组装，O(n)，不递归。
-     * </p>
+     * 把列表一次性组装成树
      *
      * @param list 生产单元列表
      * @return 树形结构
+     * @apiNote 走 {@code TreeUtil.buildTreeList} 单遍组装：逐层调 {@code getList} 既是 N+1 查询，
+     * 父子成环时还会无限递归直接爆栈
      */
     @Override
     protected @NotNull List<StructureEntity> afterGetList(@NotNull List<StructureEntity> list) {

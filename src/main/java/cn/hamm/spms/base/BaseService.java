@@ -8,15 +8,13 @@ import org.jetbrains.annotations.NotNull;
 
 
 /**
- * <h1>基础服务类</h1>
- * <p>
- * 删除走 {@code delete(long id)}，它会触发 beforeDelete / afterDelete 钩子。
- * 不用 {@code repository.deleteAll} + {@code flush}，那类批量 SQL 不走钩子、不做级联。
- * </p>
+ * <h1>实体服务基类</h1>
  *
  * @param <E> 实体
  * @param <R> 数据源
  * @author Hamm.cn
+ * @apiNote 删除一律走 {@code delete(long id)}，它会触发 beforeDelete / afterDelete 钩子。
+ * {@code repository.deleteAll} 这类批量 SQL 不走 JPA 生命周期回调，也不做级联
  */
 @Slf4j
 public class BaseService<
@@ -25,10 +23,10 @@ public class BaseService<
         > extends CurdService<E, R> {
 
     /**
-     * 当前服务的数据库最后一次确认
+     * 入库前的最后一道处理
      *
      * @param entity 实体
-     * @return 处理后的数据
+     * @return 处理后的实体
      */
     protected E beforeAppSaveToDatabase(@NotNull E entity) {
         return entity;
@@ -42,9 +40,10 @@ public class BaseService<
     }
 
     /**
-     * 发布
+     * 发布数据
      *
-     * @param id ID
+     * @param id 实体 ID
+     * @apiNote 方法为 {@code final}，子类只能通过 {@link #beforePublish(BaseEntity)} 插入发布前逻辑
      */
     public final void publish(long id) {
         transactionHelper.run(() -> {
@@ -55,7 +54,7 @@ public class BaseService<
     }
 
     /**
-     * 发布前
+     * 发布前钩子
      *
      * @param entity 实体
      */

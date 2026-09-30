@@ -19,7 +19,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import static jakarta.persistence.FetchType.EAGER;
 
 /**
- * <h1>实体</h1>
+ * <h1>工序配置</h1>
  *
  * @author zfy
  */

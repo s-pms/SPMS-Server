@@ -6,7 +6,7 @@ import cn.hamm.spms.module.channel.customer.CustomerEntity;
 import org.springframework.stereotype.Repository;
 
 /**
- * <h1>数据库连接信息</h1>
+ * <h1>销售价格</h1>
  *
  * @author Hamm.cn
  */
@@ -17,7 +17,7 @@ public interface SalePriceRepository extends BaseRepository<SalePriceEntity> {
      *
      * @param customer 客户
      * @param material 物料
-     * @return 采购价实体
+     * @return 销售价实体
      */
     SalePriceEntity getByCustomerAndMaterial(CustomerEntity customer, MaterialEntity material);
 }

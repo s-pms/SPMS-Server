@@ -10,7 +10,7 @@ import cn.hamm.spms.module.wms.move.detail.MoveDetailRepository;
 import cn.hamm.spms.module.wms.move.detail.MoveDetailService;
 
 /**
- * <h1>Controller</h1>
+ * <h1>移库单</h1>
  *
  * @author Hamm.cn
  */

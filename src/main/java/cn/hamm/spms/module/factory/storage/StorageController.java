@@ -5,7 +5,7 @@ import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.spms.base.BaseController;
 
 /**
- * <h1>Controller</h1>
+ * <h1>仓库</h1>
  *
  * @author Hamm.cn
  */

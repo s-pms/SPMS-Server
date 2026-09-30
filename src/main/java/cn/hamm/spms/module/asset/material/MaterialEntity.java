@@ -23,7 +23,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 /**
- * <h1>物料实体</h1>
+ * <h1>物料</h1>
  *
  * @author Hamm.cn
  */

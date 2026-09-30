@@ -24,7 +24,7 @@ import static cn.hamm.spms.module.system.config.ConfigService.STRING_ONE;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
- * <h1>配置信息实体</h1>
+ * <h1>系统配置</h1>
  *
  * @author Hamm.cn
  */
@@ -70,16 +70,22 @@ public class ConfigEntity extends BaseEntity<ConfigEntity> {
     private Boolean isSystem;
 
     /**
-     * 设置是系统内置配置
+     * 设置是否系统内置配置
      *
-     * @param isSystem 内置配置
+     * @param isSystem 是否内置
      * @return 配置信息
+     * @apiNote Lombok 不会为包装类型 {@code Boolean} 字段生成链式 setter，这里手写
      */
     public ConfigEntity setIsSystem(Boolean isSystem) {
         this.isSystem = isSystem;
         return this;
     }
 
+    /**
+     * 读取布尔值
+     *
+     * @return {@code "1"} 为 {@code true}，其余（含 {@code null}）为 {@code false}
+     */
     @Transient
     @JsonProperty(access = WRITE_ONLY)
     public Boolean booleanConfig() {
@@ -89,6 +95,11 @@ public class ConfigEntity extends BaseEntity<ConfigEntity> {
         return STRING_ONE.equals(config);
     }
 
+    /**
+     * 读取数值
+     *
+     * @return 配置值，{@code null} 时返回 0
+     */
     @Transient
     public Long numberConfig() {
         if (Objects.isNull(config)) {

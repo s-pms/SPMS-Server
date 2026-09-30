@@ -38,7 +38,7 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN_DISABLED;
 import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
 
 /**
- * <h1>Controller</h1>
+ * <h1>用户</h1>
  *
  * @author Hamm.cn
  */
@@ -117,7 +117,8 @@ public class UserController extends BaseController<UserEntity, UserService, User
     /**
      * 获取用户权限缓存 Key
      *
-     * @return key
+     * @param userId 用户 ID
+     * @return 缓存 Key
      */
     @Contract(pure = true)
     private @NotNull String getUserPermissionCacheKey(long userId) {
@@ -127,7 +128,8 @@ public class UserController extends BaseController<UserEntity, UserService, User
     /**
      * 获取用户菜单缓存 Key
      *
-     * @return key
+     * @param userId 用户 ID
+     * @return 缓存 Key
      */
     @Contract(pure = true)
     private @NotNull String getUserMenuCacheKey(long userId) {
@@ -185,7 +187,6 @@ public class UserController extends BaseController<UserEntity, UserService, User
         Cookie cookie = cookieHelper.getAuthorizeCookie("");
         cookie.setHttpOnly(false);
         cookie.setPath(CookieHelper.DEFAULT_PATH);
-        // 清除 cookie
         cookie.setMaxAge(0);
         httpServletResponse.addCookie(cookie);
         return Json.success("退出登录成功");
@@ -209,18 +210,11 @@ public class UserController extends BaseController<UserEntity, UserService, User
     }
 
     /**
-     * <h1>处理用户登录</h1>
-     *
-     * @param userLoginType 登录方式
-     * @param user          登录数据
-     * @param response      响应的请求
-     * @return JsonData
-     */
-    /**
-     * 获取客户端 IP，用于登录与发邮件的频率限流
+     * 获取客户端 IP
      *
      * @param request 当前请求
-     * @return 客户端 IP，取不到时返回 unknown
+     * @return 客户端 IP，取不到时返回 {@code unknown}
+     * @apiNote 用于登录与发邮件的频率限流，取不到时降级为 {@code unknown} 而不是抛异常
      */
     private @NotNull String getClientIp(@NotNull HttpServletRequest request) {
         try {
@@ -231,6 +225,16 @@ public class UserController extends BaseController<UserEntity, UserService, User
         }
     }
 
+    /**
+     * 处理登录请求
+     *
+     * @param userLoginType 登录方式
+     * @param user          登录数据
+     * @param response      响应
+     * @param clientIp      客户端 IP
+     * @return 登录结果，data 为 AccessToken
+     * @apiNote 登录后清掉该用户的菜单与权限缓存，避免改过权限后仍拿到旧数据
+     */
     private Json handleLoginRequest(@NotNull UserLoginType userLoginType, UserEntity user,
                                     HttpServletResponse response, String clientIp) {
         UserEntity exist = switch (userLoginType) {

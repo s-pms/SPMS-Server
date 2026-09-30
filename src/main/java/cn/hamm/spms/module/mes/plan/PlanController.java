@@ -11,7 +11,7 @@ import cn.hamm.spms.module.mes.plan.detail.PlanDetailService;
 import static cn.hamm.airpower.curd.base.Curd.Delete;
 
 /**
- * <h1>Controller</h1>
+ * <h1>生产计划</h1>
  *
  * @author Hamm.cn
  */

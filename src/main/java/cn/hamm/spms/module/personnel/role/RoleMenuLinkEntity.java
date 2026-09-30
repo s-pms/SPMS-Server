@@ -3,11 +3,7 @@ package cn.hamm.spms.module.personnel.role;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.system.menu.MenuEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -15,13 +11,11 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 /**
- * <h1>角色与菜单的关联实体</h1>
- * <p>
- * 取代原先 {@code RoleEntity.menuList} 上的 ManyToMany 关联，
- * 原因与其他中间表实体一致。
- * </p>
+ * <h1>角色菜单关联</h1>
  *
  * @author Hamm.cn
+ * @apiNote 取代原先 {@code RoleEntity.menuList} 上的 {@code @ManyToMany}：
+ * Hibernate 隐式生成的中间表结构不可控，也承载不了业务字段
  */
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)

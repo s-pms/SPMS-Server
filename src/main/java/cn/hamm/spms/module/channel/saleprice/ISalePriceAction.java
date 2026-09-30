@@ -7,7 +7,7 @@ package cn.hamm.spms.module.channel.saleprice;
  */
 public interface ISalePriceAction {
     /**
-     * 通过物料和客户查询销售价格
+     * 按物料和客户查询销售价时的参数校验组
      */
     interface WhenGetByMaterialAndCustomer {
     }

@@ -11,10 +11,10 @@ import cn.hamm.spms.module.iot.parameter.ParameterEntity;
 import cn.hamm.spms.module.iot.report.IReportPayloadAction;
 import cn.hamm.spms.module.iot.report.ReportPayload;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashSet;
@@ -25,7 +25,7 @@ import static cn.hamm.airpower.exception.Errors.DATA_NOT_FOUND;
 import static cn.hamm.spms.module.iot.report.ReportConstant.getDeviceReportCacheKey;
 
 /**
- * <h1>Controller</h1>
+ * <h1>设备</h1>
  *
  * @author zfy
  */
@@ -77,12 +77,9 @@ public class DeviceController extends BaseController<
 
     @Override
     protected DeviceEntity beforeAppUpdate(@NotNull DeviceEntity device, @NotNull DeviceEntity exist) {
-        // 修复前这里用的是 device.getUuid()，即客户端请求体里的值。
-        // 前端若不回传 uuid（或传了别的 uuid），真实的那条实时数据缓存不会被清掉，
-        // 于是「改了设备配置但页面上的实时数据还是旧的」。
-        // 必须用数据库里的原值。
+        // 只能用库里的 uuid：前端不回传或传错 uuid 时，真实那条实时数据缓存不会被清掉
         redisHelper.delete(getDeviceReportCacheKey(exist.getUuid()));
-        // 设备换了 uuid 时，旧 uuid 的缓存也要清掉，否则会一直命中脏数据
+        // 设备换了 uuid 时旧 uuid 的缓存也要清，否则会一直命中脏数据
         if (Objects.nonNull(exist.getUuid()) && !Objects.equals(exist.getUuid(), device.getUuid())) {
             redisHelper.delete(getDeviceReportCacheKey(exist.getUuid()));
             log.info("设备 {} 的 uuid 从 {} 变为 {}，已清理旧 uuid 的实时数据缓存",

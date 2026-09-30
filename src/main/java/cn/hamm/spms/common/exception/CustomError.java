@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Contract;
  * <h1>应用自定义异常代码</h1>
  *
  * @author Hamm.cn
+ * @apiNote 枚举序号会加上 {@link AppConstant#BASE_CUSTOM_ERROR} 作为实际异常码，新增项只管往后写序号
  */
 @SuppressWarnings("AlibabaEnumConstantsMustHaveComment")
 @Getter
@@ -29,22 +30,12 @@ public enum CustomError implements IException<CustomError>, IDictionary {
         this.message = message;
     }
 
-    /**
-     * 获取枚举的 {@code Key}
-     *
-     * @return {@code Key}
-     */
     @Contract(pure = true)
     @Override
     public int getKey() {
         return code;
     }
 
-    /**
-     * 获取枚举的描述
-     *
-     * @return 描述
-     */
     @Contract(pure = true)
     @Override
     public String getLabel() {

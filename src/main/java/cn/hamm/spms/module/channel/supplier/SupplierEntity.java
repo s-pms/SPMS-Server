@@ -19,7 +19,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.SupplierCode;
 
 /**
- * <h1>供应商实体</h1>
+ * <h1>供应商</h1>
  *
  * @author Hamm.cn
  */

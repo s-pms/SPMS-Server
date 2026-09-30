@@ -10,7 +10,7 @@ import cn.hamm.spms.module.wms.output.detail.OutputDetailRepository;
 import cn.hamm.spms.module.wms.output.detail.OutputDetailService;
 
 /**
- * <h1>Controller</h1>
+ * <h1>出库单</h1>
  *
  * @author Hamm.cn
  */

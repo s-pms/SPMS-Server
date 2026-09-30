@@ -7,12 +7,12 @@ package cn.hamm.spms.common;
  */
 public class AppConstant {
     /**
-     * 应用自定义异常代码基数
+     * 应用自定义异常码基数，{@code CustomError} 的枚举序号会自动加上它
      */
     public static final int BASE_CUSTOM_ERROR = 200000;
 
     /**
-     * 超级管理员用户 ID
+     * 超级管理员用户 ID，命中即跳过全部权限校验
      */
     public static final long ROOT_USER_ID = 1L;
 

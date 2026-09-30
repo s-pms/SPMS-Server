@@ -24,7 +24,7 @@ import static cn.hamm.airpower.curd.base.Curd.Export;
 import static cn.hamm.airpower.curd.base.Curd.QueryExport;
 
 /**
- * <h1>Controller</h1>
+ * <h1>部门</h1>
  *
  * @author Hamm.cn
  */
@@ -47,14 +47,12 @@ public class DepartmentController extends BaseController<DepartmentEntity, Depar
 
     /**
      * 限制可见的部门范围
-     * <p>
-     * 本接口免权限（前端各处都要用部门选择器），因此不能直接返回全公司组织树，
-     * 否则任意登录用户都能拿到完整的组织架构。超管返回全部，
-     * 普通用户只返回自己所在部门及其子孙部门。
-     * </p>
      *
      * @param list 全量部门列表
      * @return 当前用户可见的部门列表
+     * @apiNote 供 {@code getList} 调用。本接口免权限（前端各处都要用部门选择器），
+     * 不能返回全公司组织树，否则任意登录用户都能拿到完整组织架构。
+     * 超管返回全部，普通用户只返回自己所在部门及其子孙部门
      */
     private @NotNull List<DepartmentEntity> limitVisibility(@NotNull List<DepartmentEntity> list) {
         long currentUserId = getCurrentUserId();
@@ -64,7 +62,6 @@ public class DepartmentController extends BaseController<DepartmentEntity, Depar
         UserEntity currentUser = PersonnelServices.getUserService().get(currentUserId);
         Set<DepartmentEntity> departmentList = currentUser.getDepartmentList();
         if (Objects.isNull(departmentList) || departmentList.isEmpty()) {
-            // 没有归属部门的用户看不到任何组织信息
             return List.of();
         }
         Set<Long> ownDepartmentIds = departmentList.stream()

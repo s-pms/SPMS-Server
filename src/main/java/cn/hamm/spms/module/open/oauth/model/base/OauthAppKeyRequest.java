@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * <h1>获取用户信息请求</h1>
+ * <h1>AppKey 请求</h1>
  *
  * @author Hamm
  */

@@ -16,7 +16,7 @@ import java.util.Objects;
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
 
 /**
- * <h1>Controller</h1>
+ * <h1>角色</h1>
  *
  * @author Hamm.cn
  */
@@ -39,6 +39,15 @@ public class RoleController extends BaseController<RoleEntity, RoleService, Role
         return Json.success("授权权限成功");
     }
 
+    /**
+     * 通用 update 不允许改菜单与权限
+     *
+     * @param role  待更新的角色
+     * @param exist 数据库中的角色
+     * @return 处理后的角色
+     * @apiNote 与 {@code RoleService.beforeUpdate} 的守卫重复，这里是给 HTTP 路径提前拦截，
+     * Service 层那道才是不依赖调用方的真正守卫
+     */
     @Override
     protected RoleEntity beforeAppUpdate(@NotNull RoleEntity role, @NotNull RoleEntity exist) {
         if (Objects.nonNull(role.getMenuList()) || Objects.nonNull(role.getPermissionList())) {

@@ -21,9 +21,10 @@ import java.util.List;
 import static cn.hamm.airpower.exception.Errors.FORBIDDEN_EDIT;
 
 /**
- * <h1>Controller</h1>
+ * <h1>私人令牌</h1>
  *
  * @author Hamm.cn
+ * @apiNote 令牌只属于本人，基类的通用 Curd 接口全部禁用，只开放 {@code *My} 系列
  */
 @Api("personalToken")
 @Description("私人令牌")

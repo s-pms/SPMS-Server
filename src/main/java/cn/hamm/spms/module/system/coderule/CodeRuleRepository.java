@@ -4,17 +4,17 @@ import cn.hamm.spms.base.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * <h1>数据库连接信息</h1>
+ * <h1>编码规则</h1>
  *
  * @author Hamm.cn
  */
 @Repository
 public interface CodeRuleRepository extends BaseRepository<CodeRuleEntity> {
     /**
-     * 查询指定表的编码规则实体
+     * 按规则字段查询编码规则
      *
-     * @param ruleField 从枚举字典中传入
-     * @return 编码规则实体
+     * @param ruleField {@link CodeRuleField} 的 key
+     * @return 编码规则，未配置时返回 {@code null}
      */
     CodeRuleEntity getByRuleField(Integer ruleField);
 }

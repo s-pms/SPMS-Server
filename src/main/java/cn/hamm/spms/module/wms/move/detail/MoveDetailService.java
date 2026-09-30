@@ -4,7 +4,7 @@ import cn.hamm.spms.base.bill.detail.BaseBillDetailService;
 import org.springframework.stereotype.Service;
 
 /**
- * <h1>Service</h1>
+ * <h1>移库明细</h1>
  *
  * @author Hamm.cn
  */
