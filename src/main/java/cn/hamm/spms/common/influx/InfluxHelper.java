@@ -14,6 +14,7 @@ import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.write.Point;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static cn.hamm.spms.module.iot.report.enums.ReportDataType.*;
+import static cn.hamm.airpower.exception.Errors.SERVICE_ERROR;
 import static cn.hamm.spms.module.system.config.ConfigService.STRING_ONE;
 
 /**
@@ -30,6 +32,7 @@ import static cn.hamm.spms.module.system.config.ConfigService.STRING_ONE;
  *
  * @author Hamm.cn
  */
+@Slf4j
 @Configuration
 public class InfluxHelper {
     public static final String INFLUX_FIELD_VALUE = "value";
@@ -37,7 +40,15 @@ public class InfluxHelper {
     private static final String INFLUX_SQL_SPLIT = " |> ";
     private static final String INFLUX_RECORD_VALUE_KEY = "_value";
 
-    private InfluxDBClient influxDbClient;
+    /**
+     * InfluxDB 客户端
+     * <p>
+     * 必须声明为 {@code volatile}：{@code save()} 由 MQTT 回调线程调用，
+     * {@code query()} 由 HTTP 工作线程调用，两者会并发读写这个字段。
+     * 非 volatile 时其他线程可能长期看不到新值，从而反复重建客户端。
+     * </p>
+     */
+    private volatile InfluxDBClient influxDbClient;
 
     /**
      * 保存数据
@@ -75,11 +86,35 @@ public class InfluxHelper {
             initInfluxDbClient();
             influxDbClient.setLogLevel(LogLevel.NONE);
             return influxDbClient.getWriteApiBlocking();
-        } catch (Exception ignored) {
-            influxDbClient.close();
-            influxDbClient = null;
+        } catch (Exception e) {
+            // 修复前这里是 catch (Exception ignored) { influxDbClient.close(); }，
+            // 而 initInfluxDbClient() 失败时 influxDbClient 还是 null ——
+            // 对 null 调 close() 抛出的 NPE 会从 catch 块逃逸，
+            // 覆盖掉本来想表达的「写入失败」，最终调用方收到一个毫无意义的空指针。
+            log.warn("获取 InfluxDB 写入 API 失败，本次采集数据将丢失: {}", e.getMessage(), e);
+            closeInfluxDbClient();
         }
         return null;
+    }
+
+    /**
+     * 关闭并丢弃当前客户端
+     * <p>
+     * 关闭动作必须判空且自行吞掉异常：调用点往往正处于异常处理路径上，
+     * 关闭失败不应该再抛一次异常把原始故障盖掉。
+     * </p>
+     */
+    private void closeInfluxDbClient() {
+        InfluxDBClient client = influxDbClient;
+        influxDbClient = null;
+        if (Objects.isNull(client)) {
+            return;
+        }
+        try {
+            client.close();
+        } catch (Exception e) {
+            log.debug("关闭 InfluxDB 客户端失败，已忽略", e);
+        }
     }
 
     /**
@@ -135,53 +170,107 @@ public class InfluxHelper {
      * @return 数据
      */
     private @NotNull List<ReportInfluxPayload> query(ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
-        initInfluxDbClient();
-        influxDbClient.setLogLevel(LogLevel.BASIC);
-        List<ReportInfluxPayload> result = new ArrayList<>();
-        QueryApi queryApi = influxDbClient.getQueryApi();
         List<String> queryParams = getFluxQuery(reportPayload, reportDataType, reportGranularity);
-        System.out.println(String.join(INFLUX_SQL_SPLIT, queryParams));
-        List<FluxTable> tables = queryApi.query(String.join(INFLUX_SQL_SPLIT, queryParams));
-        for (FluxTable table : tables) {
-            for (FluxRecord record : table.getRecords()) {
-                Object value = record.getValueByKey(INFLUX_RECORD_VALUE_KEY);
-                ReportInfluxPayload payload = new ReportInfluxPayload()
-                        .setTimestamp(Objects.requireNonNull(record.getTime()).toEpochMilli());
-                switch (reportDataType) {
-                    case NUMBER:
-                        payload.setValue(Objects.isNull(value) ? 0 : Double.parseDouble(value.toString()));
-                        break;
-                    case STRING:
-                        payload.setStrValue(Objects.isNull(value) ? "" : value.toString());
-                        break;
-                    case BOOLEAN:
-                        payload.setBoolValue(!Objects.isNull(value) && STRING_ONE.equals(value.toString()));
-                        break;
-                    case STATUS:
-                        payload.setIntValue(Objects.isNull(value) ? 0 : Integer.parseInt(value.toString()));
-                        break;
-                    default:
-                        continue;
+        String flux = String.join(INFLUX_SQL_SPLIT, queryParams);
+        // 修复前这里是 System.out.println(flux)：不走 logback-spring.xml，
+        // 绕过 traceId 关联，线上排障无法定位到具体请求；查询量大时还会刷爆 stdout
+        log.info("执行 Flux 查询: {}", flux);
+        try {
+            initInfluxDbClient();
+            influxDbClient.setLogLevel(LogLevel.BASIC);
+            List<ReportInfluxPayload> result = new ArrayList<>();
+            QueryApi queryApi = influxDbClient.getQueryApi();
+            List<FluxTable> tables = queryApi.query(flux);
+            for (FluxTable table : tables) {
+                for (FluxRecord record : table.getRecords()) {
+                    Object value = record.getValueByKey(INFLUX_RECORD_VALUE_KEY);
+                    ReportInfluxPayload payload = new ReportInfluxPayload()
+                            .setTimestamp(Objects.requireNonNull(record.getTime()).toEpochMilli());
+                    switch (reportDataType) {
+                        case NUMBER:
+                            payload.setValue(Objects.isNull(value) ? 0 : Double.parseDouble(value.toString()));
+                            break;
+                        case STRING:
+                            payload.setStrValue(Objects.isNull(value) ? "" : value.toString());
+                            break;
+                        case BOOLEAN:
+                            payload.setBoolValue(!Objects.isNull(value) && STRING_ONE.equals(value.toString()));
+                            break;
+                        case STATUS:
+                            payload.setIntValue(Objects.isNull(value) ? 0 : Integer.parseInt(value.toString()));
+                            break;
+                        default:
+                            continue;
+                    }
+                    result.add(payload);
                 }
-                result.add(payload);
             }
+            return result;
+        } catch (Exception e) {
+            // 修复前这里没有兜底：InfluxDB 宕机时异常一路冒到 DeviceService，
+            // 前端只能看到一个 500，没有任何可读提示。
+            // 这里给出明确的业务错误，并丢弃可能半初始化的客户端以便下次重建
+            log.error("查询 InfluxDB 失败, code={}, uuid={}: {}", reportPayload.getCode(),
+                    reportPayload.getUuid(), e.getMessage(), e);
+            closeInfluxDbClient();
+            SERVICE_ERROR.show("时序数据库暂时不可用，请稍后重试");
+            return List.of();
         }
-        return result;
     }
 
     /**
      * 初始化 InfluxDB
      */
+    /**
+     * 初始化 InfluxDB 客户端
+     * <p>
+     * 加 {@code synchronized} + 双重检查：修复前是无锁的
+     * {@code if (null == influxDbClient) { influxDbClient = create(); }}。
+     * 采集端高频写入与前端高频查询并发时，两个线程可以同时通过 null 判断各建一个客户端
+     * （每个客户端各含一个 OkHttp 连接池），被覆盖的那个永远不会被 close，
+     * 造成连接与线程泄漏。
+     * </p>
+     */
     private void initInfluxDbClient() {
-        if (Objects.isNull(influxDbClient)) {
+        if (Objects.nonNull(influxDbClient)) {
+            return;
+        }
+        synchronized (this) {
+            if (Objects.nonNull(influxDbClient)) {
+                return;
+            }
             InfluxConfig influxConfig = Configs.getInfluxConfig();
+            String token = influxConfig.getToken();
+            if (Objects.isNull(token) || token.isBlank()) {
+                throw new IllegalStateException("未配置 app.influxdb.token，无法连接 InfluxDB");
+            }
             influxDbClient = InfluxDBClientFactory.create(
                     influxConfig.getUrl(),
-                    influxConfig.getToken().toCharArray(),
+                    token.toCharArray(),
                     influxConfig.getOrg(),
                     influxConfig.getBucket()
             );
+            log.info("InfluxDB 客户端已初始化: {}", influxConfig.getUrl());
         }
+    }
+
+    /**
+     * 转义 Flux 字符串字面量
+     * <p>
+     * Flux 的字符串用双引号包围，内部的 {@code "} 和 {@code \} 都需要转义。
+     * 修复前 {@code uuid}（仅有 {@code @NotBlank}，无格式校验）被直接拼进
+     * {@code filter(fn: (r) => ...)}，任意登录用户传一个带引号的 uuid
+     * 就能改写查询条件，读取到其他设备的历史数据。
+     * </p>
+     *
+     * @param value 原始字符串
+     * @return 转义后的字符串
+     */
+    private static @NotNull String escapeFlux(@Nullable String value) {
+        if (Objects.isNull(value)) {
+            return "";
+        }
+        return value.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 
     /**
@@ -197,7 +286,11 @@ public class InfluxHelper {
         InfluxConfig influxConfig = Configs.getInfluxConfig();
         queryParams.add(String.format("from(bucket:\"%s\")", influxConfig.getBucket()));
         queryParams.add(String.format("range(start: %s, stop: %s)", Integer.parseInt(String.valueOf(reportPayload.getStartTime() / 1000)), Integer.parseInt(String.valueOf(reportPayload.getEndTime() / 1000))));
-        queryParams.add(String.format("filter(fn: (r) => r._measurement == \"%s\" and r.uuid == \"%s\")", ReportConstant.CACHE_PREFIX + reportPayload.getCode(), reportPayload.getUuid()));
+        // code 已由 DeviceService.getDevicePayloadHistory 用 getByCode 校验过必须是已注册参数，
+        // 但 uuid 只有 @NotBlank 无格式校验，是真正的注入入口，两个都做转义
+        queryParams.add(String.format("filter(fn: (r) => r._measurement == \"%s\" and r.uuid == \"%s\")",
+                escapeFlux(ReportConstant.CACHE_PREFIX + reportPayload.getCode()),
+                escapeFlux(reportPayload.getUuid())));
         queryParams.add("filter(fn: (r) => r._field == \"value\")");
         if (Objects.requireNonNull(reportDataType) == NUMBER) {
             queryParams.add("aggregateWindow(every: " + reportGranularity.getMark() + ", fn: mean)");
