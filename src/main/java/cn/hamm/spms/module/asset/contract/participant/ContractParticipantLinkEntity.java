@@ -3,7 +3,10 @@ package cn.hamm.spms.module.asset.contract.participant;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.asset.contract.ContractEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -31,14 +34,11 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "contract_participant_link")
 @Description("合同参与方关联")
 public class ContractParticipantLinkEntity extends BaseEntity<ContractParticipantLinkEntity> {
-
     @Description("所属合同")
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "contract_id", nullable = false)
     private ContractEntity contract;
 
     @Description("参与方")
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "participant_id", nullable = false)
     private ParticipantEntity participant;
 }

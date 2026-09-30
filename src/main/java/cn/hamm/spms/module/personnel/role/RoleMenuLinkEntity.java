@@ -3,7 +3,10 @@ package cn.hamm.spms.module.personnel.role;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.system.menu.MenuEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -29,11 +32,9 @@ public class RoleMenuLinkEntity extends BaseEntity<RoleMenuLinkEntity> {
 
     @Description("角色")
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id", nullable = false)
     private RoleEntity role;
 
     @Description("菜单")
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "menu_id", nullable = false)
     private MenuEntity menu;
 }

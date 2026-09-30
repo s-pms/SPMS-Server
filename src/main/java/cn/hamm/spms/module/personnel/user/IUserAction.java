@@ -42,16 +42,4 @@ public interface IUserAction {
      */
     interface WhenSendEmail {
     }
-
-    /**
-     * 发送短信
-     */
-    interface WhenSendSms {
-    }
-
-    /**
-     * 获取我的信息时的校验分组
-     */
-    interface WhenGetMyInfo {
-    }
 }

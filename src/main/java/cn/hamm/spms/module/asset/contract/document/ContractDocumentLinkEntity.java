@@ -3,7 +3,10 @@ package cn.hamm.spms.module.asset.contract.document;
 import cn.hamm.airpower.core.annotation.Description;
 import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.asset.contract.ContractEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -32,11 +35,9 @@ public class ContractDocumentLinkEntity extends BaseEntity<ContractDocumentLinkE
 
     @Description("所属合同")
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "contract_id", nullable = false)
     private ContractEntity contract;
 
     @Description("附件")
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "document_id", nullable = false)
     private ContractDocumentEntity document;
 }
