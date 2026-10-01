@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiFunction;
 
 import static cn.hamm.spms.module.iot.report.ReportConstant.*;
@@ -44,8 +46,24 @@ public class ReportMqCallback implements MqttCallback {
     @Autowired
     private InfluxHelper influxHelper;
 
+    /**
+     * 最近一次收到设备上报的时刻，毫秒时间戳
+     *
+     * @apiNote 组件创建时初始化，因此「启动后一直没有设备上报」与「订阅断开后再无数据」
+     * 两种情况都能被健康检查发现。Paho 可能在不同线程回调，故用原子类型
+     */
+    private final AtomicLong lastReportAt = new AtomicLong(System.currentTimeMillis());
+
+    /**
+     * MQTT 连接断开累计次数
+     */
+    private final AtomicInteger connectionLostCount = new AtomicInteger();
+
     @Override
-    public void connectionLost(Throwable throwable) {
+    public void connectionLost(@Nullable Throwable throwable) {
+        log.error("MQTT 连接已断开（第 {} 次），采集将停止到连接恢复为止, cause={}",
+                connectionLostCount.incrementAndGet(),
+                Objects.isNull(throwable) ? "unknown" : throwable.getMessage(), throwable);
     }
 
     /**
@@ -121,6 +139,7 @@ public class ReportMqCallback implements MqttCallback {
             deviceService.update(device);
             reportData.setPayloads(payloadList);
             redisHelper.set(getDeviceReportCacheKey(uuid), Json.toString(reportData));
+            lastReportAt.set(System.currentTimeMillis());
         } catch (java.lang.Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -163,7 +182,25 @@ public class ReportMqCallback implements MqttCallback {
     }
 
     @Override
-    public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+    public void deliveryComplete(@NotNull IMqttDeliveryToken iMqttDeliveryToken) {
+        log.debug("MQTT 消息投递完成: {}", iMqttDeliveryToken.getMessageId());
+    }
 
+    /**
+     * 获取最近一次收到设备上报的时刻
+     *
+     * @return 毫秒时间戳，组件创建时即初始化为当时
+     */
+    public long getLastReportAt() {
+        return lastReportAt.get();
+    }
+
+    /**
+     * 获取启动以来 MQTT 连接断开的次数
+     *
+     * @return 累计次数，只增不减
+     */
+    public int getConnectionLostCount() {
+        return connectionLostCount.get();
     }
 }
