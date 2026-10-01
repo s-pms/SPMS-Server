@@ -17,6 +17,8 @@
 | 0.6 | **不要在 Service 中持有 Bean 引用之外的实例变量**            | 否则 `@Scheduled` 任务会出现线程安全与状态污染                    |
 | 0.7 | **不要空注释**，除非用户明确要求                            | 用户偏好（默认为方法添加标准的 JavaDoc）                          |
 | 0.8 | **不要提交敏感信息**（密码、token、连接串等）                   | 默认配置模板中所有值都应被替换                                   |
+| 0.9 | **`ServiceException` 的 `data` 绝不携带异常或堆栈**             | `data` 会随响应体返回前端（`ExceptionInterceptor` 直接 `setData`）。要保留原异常用 `new ServiceException(msg, cause)`，堆栈用 `log.error(msg, e)` 输出，**不抛给前端** |
+| 0.10 | **注释与日志只写约束，不写修复过程的叙述**                       | 写「为什么必须这样」与无法从代码推得的事实；**不要**写「原实现错在哪」「考虑过哪些方案」「实测如何」——那属于 commit message 与 issue 档案 |
 
 ---
 
