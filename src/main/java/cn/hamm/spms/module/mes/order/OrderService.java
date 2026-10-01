@@ -214,13 +214,13 @@ public class OrderService extends AbstractBaseBillService<OrderEntity, OrderRepo
     }
 
     @Override
-    protected @NotNull OrderEntity beforeAdd(@NotNull OrderEntity order) {
+    protected @NotNull OrderEntity beforeAppAdd(@NotNull OrderEntity order) {
         order.setDetails(new ArrayList<>());
         return syncTypeWithPlan(order);
     }
 
     @Override
-    protected @NotNull OrderEntity beforeUpdate(@NotNull OrderEntity order) {
+    protected @NotNull OrderEntity beforeAppUpdate(@NotNull OrderEntity order) {
         return syncTypeWithPlan(order);
     }
 

@@ -19,7 +19,7 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN_EXIST;
 @Service
 public class PurchasePriceService extends BaseService<PurchasePriceEntity, PurchasePriceRepository> {
     @Override
-    protected @NotNull PurchasePriceEntity beforeAdd(@NotNull PurchasePriceEntity purchasePrice) {
+    protected @NotNull PurchasePriceEntity beforeAppAdd(@NotNull PurchasePriceEntity purchasePrice) {
         PurchasePriceEntity exist = repository.getBySupplierAndMaterial(
                 purchasePrice.getSupplier(),
                 purchasePrice.getMaterial()

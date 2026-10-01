@@ -25,7 +25,7 @@ public class DepartmentService extends BaseService<DepartmentEntity, DepartmentR
     static final String ORDER_FIELD_NAME = "orderNo";
 
     @Override
-    protected void beforeDelete(@NotNull DepartmentEntity department) {
+    protected void beforeAppDelete(@NotNull DepartmentEntity department) {
         TreeUtil.ensureNoChildrenBeforeDelete(department.getId(), (id) -> filter(new DepartmentEntity().setId(id)));
     }
 

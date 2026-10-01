@@ -136,7 +136,7 @@ public class CodeRuleService extends BaseService<CodeRuleEntity, CodeRuleReposit
     }
 
     @Override
-    protected void beforeDelete(@NotNull CodeRuleEntity codeRule) {
+    protected void beforeAppDelete(@NotNull CodeRuleEntity codeRule) {
         FORBIDDEN_DELETE.when(codeRule.getIsSystem(), "内置编码规则不能删除!");
     }
 

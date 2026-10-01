@@ -52,7 +52,7 @@ public class ConfigService extends BaseService<ConfigEntity, ConfigRepository> {
     }
 
     @Override
-    protected void beforeDelete(@NotNull ConfigEntity config) {
+    protected void beforeAppDelete(@NotNull ConfigEntity config) {
         FORBIDDEN_DELETE.when(config.getIsSystem(), "系统内置配置无法被删除!");
     }
 

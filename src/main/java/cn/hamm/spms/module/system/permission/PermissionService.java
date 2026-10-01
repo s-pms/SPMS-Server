@@ -32,7 +32,7 @@ public class PermissionService extends BaseService<PermissionEntity, PermissionR
     }
 
     @Override
-    protected void beforeDelete(@NotNull PermissionEntity permission) {
+    protected void beforeAppDelete(@NotNull PermissionEntity permission) {
         FORBIDDEN_DELETE.when(permission.getIsSystem(), "系统内置权限无法被删除!");
         TreeUtil.ensureNoChildrenBeforeDelete(permission.getId(), id -> filter(new PermissionEntity().setParentId(id)));
     }

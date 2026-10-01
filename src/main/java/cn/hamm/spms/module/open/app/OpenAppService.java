@@ -34,7 +34,7 @@ public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository
     }
 
     @Override
-    protected @NotNull OpenAppEntity beforeAdd(@NotNull OpenAppEntity openApp) {
+    protected @NotNull OpenAppEntity beforeAppAdd(@NotNull OpenAppEntity openApp) {
         if (!StringUtils.hasText(openApp.getAppKey())) {
             openApp.setAppKey(createAppKey());
         }

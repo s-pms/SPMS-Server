@@ -529,12 +529,12 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     @Override
-    protected void beforeDelete(@NotNull UserEntity user) {
+    protected void beforeAppDelete(@NotNull UserEntity user) {
         FORBIDDEN_DELETE.when(user.isRootUser(), "系统内置用户无法被删除!");
     }
 
     @Override
-    protected @NotNull UserEntity beforeAdd(@NotNull UserEntity user) {
+    protected @NotNull UserEntity beforeAppAdd(@NotNull UserEntity user) {
         UserEntity existUser = repository.getByEmail(user.getEmail());
         FORBIDDEN_EXIST.whenNotNull(existUser, "邮箱已经存在，请勿重复添加用户");
         if (!StringUtils.hasLength(user.getPassword())) {
@@ -606,7 +606,7 @@ public class UserService extends BaseService<UserEntity, UserRepository> {
     }
 
     @Override
-    protected void beforeDisable(@NotNull UserEntity existUser) {
+    protected void beforeAppDisable(@NotNull UserEntity existUser) {
         FORBIDDEN_DISABLED_NOT_ALLOWED.when(existUser.isRootUser(), "系统内置用户无法被禁用!");
     }
 

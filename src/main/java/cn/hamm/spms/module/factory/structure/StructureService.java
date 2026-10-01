@@ -37,7 +37,7 @@ public class StructureService extends BaseService<StructureEntity, StructureRepo
     }
 
     @Override
-    protected void beforeDelete(@NotNull StructureEntity structure) {
+    protected void beforeAppDelete(@NotNull StructureEntity structure) {
         TreeUtil.ensureNoChildrenBeforeDelete(structure.getId(), id -> filter(new StructureEntity().setParentId(id)));
     }
 

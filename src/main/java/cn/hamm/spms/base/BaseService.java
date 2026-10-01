@@ -80,10 +80,44 @@ public class BaseService<
     }
 
     @Override
-    protected void afterUpdate(long id, @NotNull E source) {
+    protected final void afterUpdate(long id, @NotNull E source) {
         afterAppUpdate(id, source);
     }
 
     protected void afterAppUpdate(long id, @NotNull E source) {
+    }
+
+    @Override
+    protected final @NotNull E beforeAdd(@NotNull E source) {
+        return beforeAppAdd(source);
+    }
+
+    protected E beforeAppAdd(@NotNull E source) {
+        return source;
+    }
+
+    @Override
+    protected final @NotNull E beforeUpdate(@NotNull E source) {
+        return beforeAppUpdate(source);
+    }
+
+    protected E beforeAppUpdate(@NotNull E source) {
+        return source;
+    }
+
+    @Override
+    protected final void beforeDelete(@NotNull E entity) {
+        beforeAppDelete(entity);
+    }
+
+    protected void beforeAppDelete(@NotNull E entity) {
+    }
+
+    @Override
+    protected final void beforeDisable(@NotNull E entity) {
+        beforeAppDisable(entity);
+    }
+
+    protected void beforeAppDisable(@NotNull E entity) {
     }
 }

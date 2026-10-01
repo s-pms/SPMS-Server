@@ -19,7 +19,7 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN_EXIST;
 @Service
 public class SalePriceService extends BaseService<SalePriceEntity, SalePriceRepository> {
     @Override
-    protected @NotNull SalePriceEntity beforeAdd(@NotNull SalePriceEntity salePrice) {
+    protected @NotNull SalePriceEntity beforeAppAdd(@NotNull SalePriceEntity salePrice) {
         SalePriceEntity exist = repository.getByCustomerAndMaterial(
                 salePrice.getCustomer(),
                 salePrice.getMaterial()
@@ -34,15 +34,8 @@ public class SalePriceService extends BaseService<SalePriceEntity, SalePriceRepo
         return salePrice;
     }
 
-    /**
-     * 更新前清空物料与客户关联
-     *
-     * @param salePrice 待更新的销售价
-     * @return 清空关联后的销售价
-     * @apiNote 物料与客户是价格的唯一维度，不允许改，只能删掉重建
-     */
     @Override
-    protected @NotNull SalePriceEntity beforeUpdate(@NotNull SalePriceEntity salePrice) {
+    protected @NotNull SalePriceEntity beforeAppUpdate(@NotNull SalePriceEntity salePrice) {
         return salePrice.setMaterial(null).setCustomer(null);
     }
 

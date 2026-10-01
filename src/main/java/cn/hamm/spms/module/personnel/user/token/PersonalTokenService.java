@@ -39,7 +39,7 @@ public class PersonalTokenService extends BaseService<PersonalTokenEntity, Perso
     }
 
     @Override
-    protected @NotNull PersonalTokenEntity beforeAdd(@NotNull PersonalTokenEntity personalToken) {
+    protected @NotNull PersonalTokenEntity beforeAppAdd(@NotNull PersonalTokenEntity personalToken) {
         List<PersonalTokenEntity> list = filter(new PersonalTokenEntity().setUser(personalToken.getUser()).setName(personalToken.getName()));
         FORBIDDEN_EXIST.when(!list.isEmpty(), "创建失败，该用户存在相同名称的私人令牌！");
         personalToken.setToken(createToken(personalToken.getUser().getId()));
@@ -47,7 +47,7 @@ public class PersonalTokenService extends BaseService<PersonalTokenEntity, Perso
     }
 
     @Override
-    protected @NotNull PersonalTokenEntity beforeUpdate(@NotNull PersonalTokenEntity personalToken) {
+    protected @NotNull PersonalTokenEntity beforeAppUpdate(@NotNull PersonalTokenEntity personalToken) {
         personalToken.setToken(null);
         return personalToken;
     }

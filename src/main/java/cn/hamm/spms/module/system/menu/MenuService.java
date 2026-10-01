@@ -22,7 +22,7 @@ public class MenuService extends BaseService<MenuEntity, MenuRepository> {
     public static final String ORDER_FIELD_NAME = "orderNo";
 
     @Override
-    protected void beforeDelete(@NotNull MenuEntity menu) {
+    protected void beforeAppDelete(@NotNull MenuEntity menu) {
         TreeUtil.ensureNoChildrenBeforeDelete(menu.getId(), (id) -> filter(new MenuEntity().setParentId(id)));
     }
 

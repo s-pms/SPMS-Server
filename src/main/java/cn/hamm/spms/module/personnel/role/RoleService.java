@@ -83,17 +83,8 @@ public class RoleService extends BaseService<RoleEntity, RoleRepository> {
         });
     }
 
-    /**
-     * 通用 update 不允许改菜单与权限
-     *
-     * @param role 待更新的角色
-     * @return 处理后的角色
-     * @apiNote 必须走 {@link #authorizeMenu} / {@link #authorizePermission} 专用入口。
-     * 守卫放在 Service 层是因为 Controller 的 {@code beforeAppUpdate} 拦不住直接调 Service 的路径；
-     * 关联改成 {@code @Transient} 后不再由 JPA 自动持久化，漏掉守卫就等于静默丢授权
-     */
     @Override
-    protected @NotNull RoleEntity beforeUpdate(@NotNull RoleEntity role) {
+    protected @NotNull RoleEntity beforeAppUpdate(@NotNull RoleEntity role) {
         // 携带了关联字段就拒绝，**包括空集**：放行空集等于用通用 update 静默清空授权，绕过授权接口
         if (Objects.nonNull(role.getMenuList()) || Objects.nonNull(role.getPermissionList())) {
             FORBIDDEN.show("请使用「授权菜单」/「授权权限」接口修改角色的菜单与权限");

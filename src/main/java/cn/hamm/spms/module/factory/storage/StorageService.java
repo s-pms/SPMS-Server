@@ -37,7 +37,7 @@ public class StorageService extends BaseService<StorageEntity, StorageRepository
     }
 
     @Override
-    protected void beforeDelete(@NotNull StorageEntity storage) {
+    protected void beforeAppDelete(@NotNull StorageEntity storage) {
         TreeUtil.ensureNoChildrenBeforeDelete(storage.getId(), id -> filter(new StorageEntity().setParentId(id)));
     }
 

@@ -18,57 +18,25 @@ import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
  */
 @Service
 public class ContractService extends BaseService<ContractEntity, ContractRepository> {
-
-    /**
-     * 新建合同
-     *
-     * @param source 客户端提交的合同
-     * @return 处理后的合同
-     * @apiNote 状态一律置为「未生效」，只能通过 {@link #enforce(long)} / {@link #stop(long)} 变更。
-     * 若允许客户端在建单时直接指定，就等于凭空造出一张已生效甚至已终止的合同
-     */
     @Override
-    protected @NotNull ContractEntity beforeAdd(@NotNull ContractEntity source) {
+    protected @NotNull ContractEntity beforeAppAdd(@NotNull ContractEntity source) {
         source.setStatus(ContractStatus.INVALID.getKey());
         return source;
     }
 
-    /**
-     * 修改合同
-     *
-     * @param source 客户端提交的合同
-     * @return 处理后的合同
-     * @apiNote 状态回填为库中原值。状态机「未生效 → 生效中 → 已终止」是单向的，
-     * 放开直接改等于让已终止的合同一步复活成「生效中」。{@code enforce} / {@code stop}
-     * 走 {@code updateToDatabase} 不经过本钩子，受控的状态流转不受影响
-     */
     @Override
-    protected @NotNull ContractEntity beforeUpdate(@NotNull ContractEntity source) {
+    protected @NotNull ContractEntity beforeAppUpdate(@NotNull ContractEntity source) {
         ContractEntity exist = get(source.getId());
         source.setStatus(exist.getStatus());
         return source;
     }
 
-    /**
-     * 读取合同时组装参与方与附件
-     *
-     * @param contract 合同
-     * @return 组装后的合同
-     * @apiNote 两个集合是 {@code @Transient}（关联由中间表实体承载），不会随实体自动加载，
-     * 不显式回填前端就拿不到数据
-     */
     @Override
     protected @NotNull ContractEntity afterAppGet(@NotNull ContractEntity contract) {
         fillLinks(contract);
         return contract;
     }
 
-    /**
-     * 批量读取合同时组装参与方与附件
-     *
-     * @param list 合同列表
-     * @return 处理后的列表
-     */
     @Override
     protected @NotNull List<ContractEntity> afterGetList(@NotNull List<ContractEntity> list) {
         list.forEach(this::fillLinks);
@@ -87,23 +55,11 @@ public class ContractService extends BaseService<ContractEntity, ContractReposit
                 AssetServices.getContractDocumentLinkService().getDocuments(contract.getId()));
     }
 
-    /**
-     * 新建后同步参与方与附件到中间表
-     *
-     * @param id     合同 ID
-     * @param source 客户端提交的合同
-     */
     @Override
     protected void afterAppAdd(long id, @NotNull ContractEntity source) {
         syncLinks(id, source);
     }
 
-    /**
-     * 修改后同步参与方与附件到中间表
-     *
-     * @param id     合同 ID
-     * @param source 客户端提交的合同
-     */
     @Override
     protected void afterAppUpdate(long id, @NotNull ContractEntity source) {
         syncLinks(id, source);
