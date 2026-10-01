@@ -51,7 +51,7 @@ public class PersonalTokenController extends BaseController<PersonalTokenEntity,
     }
 
     @Override
-    protected PersonalTokenEntity beforeAdd(@NotNull PersonalTokenEntity entity) {
+    protected PersonalTokenEntity beforeAppAdd(@NotNull PersonalTokenEntity entity) {
         throw new IllegalStateException("请使用createMy");
     }
 

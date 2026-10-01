@@ -32,6 +32,16 @@ public class BaseController<
         R extends BaseRepository<E>
         > extends CurdController<E, S, R> {
     @Override
+    protected final E beforeAdd(@NotNull E entity) {
+        return beforeAppAdd(entity);
+    }
+
+    protected E beforeAppAdd(@NotNull E entity) {
+        log.info("添加数据");
+        return entity;
+    }
+
+    @Override
     protected final E beforeUpdate(@NotNull E entity) {
         E exist = service.get(entity.getId());
         FORBIDDEN_EDIT.when(exist.getIsPublished(), "无法修改已经发布的数据");

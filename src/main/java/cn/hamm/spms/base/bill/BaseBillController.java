@@ -2,7 +2,6 @@ package cn.hamm.spms.base.bill;
 
 import cn.hamm.airpower.core.Json;
 import cn.hamm.airpower.core.annotation.Description;
-import cn.hamm.airpower.core.interfaces.IDictionary;
 import cn.hamm.airpower.curd.annotation.Extends;
 import cn.hamm.airpower.curd.base.Curd;
 import cn.hamm.airpower.curd.permission.Permission;
@@ -79,8 +78,8 @@ public class BaseBillController<
     @Override
     protected final @NotNull E beforeAppUpdate(@NotNull E bill, @NotNull E exist) {
         FORBIDDEN.when(!service.canEdit(exist), "该单据状态下无法编辑");
-        service.setAuditing(bill);
         beforeBillUpdate(bill);
+        service.setAuditing(bill);
         return bill;
     }
 
@@ -94,11 +93,10 @@ public class BaseBillController<
     }
 
     @Override
-    protected E beforeAdd(@NotNull E entity) {
-        IDictionary auditingStatus = service.getAuditingStatus();
-        beforeBillAdd(entity);
-        entity.setStatus(auditingStatus.getKey());
-        return entity;
+    protected E beforeAppAdd(@NotNull E bill) {
+        beforeBillAdd(bill);
+        service.setAuditing(bill);
+        return bill;
     }
 
     protected void beforeBillAdd(@NotNull E bill) {

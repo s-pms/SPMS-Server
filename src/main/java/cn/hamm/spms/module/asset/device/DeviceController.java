@@ -89,7 +89,7 @@ public class DeviceController extends BaseController<
     }
 
     @Override
-    protected DeviceEntity beforeAdd(@NotNull DeviceEntity device) {
+    protected DeviceEntity beforeAppAdd(@NotNull DeviceEntity device) {
         return service.getDeviceParameters(device);
     }
 }
