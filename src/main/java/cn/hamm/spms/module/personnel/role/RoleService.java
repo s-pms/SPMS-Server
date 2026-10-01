@@ -26,8 +26,6 @@ public class RoleService extends BaseService<RoleEntity, RoleRepository> {
      *
      * @param role 角色
      * @return 组装后的角色
-     * @apiNote 菜单与权限集合是 {@code @Transient}（关联由中间表承载），必须显式组装，
-     * 且必须在事务内完成：open-in-view 已关闭，事务外拿到的关联对象无法再懒加载
      */
     @Override
     protected @NotNull RoleEntity afterAppGet(@NotNull RoleEntity role) {
