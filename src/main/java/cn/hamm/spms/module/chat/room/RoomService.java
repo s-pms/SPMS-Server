@@ -30,6 +30,17 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
     private final static int MAX_ROOM_COUNT = 3;
 
     /**
+     * 房间号取值的闭区间
+     */
+    private static final int CODE_MIN = 100000;
+    private static final int CODE_MAX = 999999;
+
+    /**
+     * 房间号最大重试次数，等于取值区间的宽度
+     */
+    private static final int CODE_RETRY_LIMIT = CODE_MAX - CODE_MIN + 1;
+
+    /**
      * 校验私有房间必须配密码
      *
      * @param room 房间
@@ -52,19 +63,25 @@ public class RoomService extends BaseService<RoomEntity, RoomRepository> {
      * @param room   房间对象
      * @param userId 房主 ID
      * @return 房间 ID
-     * @apiNote 房间号是 6 位随机数且全局唯一，撞号时递归重试；重试前会重新统计房间数，
-     * 因此该校验是「每次重试都跑一遍」而非只跑一次
+     * @apiNote 房间号是 6 位随机数且全局唯一，撞号时重试。查重与插入之间没有加锁，
+     * 并发创建可能同时选中同一个号，最终由数据库唯一约束兜底
      */
     public final long create(RoomEntity room, long userId) {
         RoomEntity filter = new RoomEntity().setOwner(new UserEntity().setId(userId));
         List<RoomEntity> list = filter(filter);
         PARAM_INVALID.when(list.size() >= MAX_ROOM_COUNT, "您最多只能创建" + MAX_ROOM_COUNT + "个房间");
-        int code = RandomUtil.randomInt(100000, 999999);
-        filter = new RoomEntity().setCode(code);
-        list = filter(filter);
-        if (!list.isEmpty()) {
-            return create(room, userId);
+
+        int code = 0;
+        for (int i = 0; i < CODE_RETRY_LIMIT; i++) {
+            code = RandomUtil.randomInt(CODE_MIN, CODE_MAX);
+            if (filter(new RoomEntity().setCode(code)).isEmpty()) {
+                break;
+            }
+            code = 0;
         }
+        // 区间内每个房间号都被占用时不再插入，避免用无效 ID 建房
+        PARAM_INVALID.when(code == 0, "房间号已用尽，请稍后重试");
+
         room.setCode(code);
         UserEntity me = PersonnelServices.getUserService().get(userId);
         room.setOwner(me);

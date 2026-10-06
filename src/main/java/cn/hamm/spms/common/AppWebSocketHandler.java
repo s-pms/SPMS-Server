@@ -21,9 +21,9 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static cn.hamm.airpower.exception.Errors.PARAM_INVALID;
@@ -43,9 +43,14 @@ public class AppWebSocketHandler extends WebSocketHandler {
     private static final String GROUP_PREFIX = "group_";
 
     /**
-     * 各房间的在线用户 ID 列表，key 为 {@code GROUP_PREFIX} + 房间 ID
+     * 各房间的在线用户 ID 集合，key 为 {@code GROUP_PREFIX} + 房间 ID
+     * <p>
+     * 值必须是并发集合：{@code ConcurrentHashMap} 只保证映射本身的操作原子，
+     * 换成 {@code List} 后同一房间并发进出时 {@code contains}/{@code add} 会丢记录，
+     * 广播出去的在线人数随之失真。
+     * </p>
      */
-    protected final ConcurrentHashMap<String, List<Long>> roomOnlineUserList = new ConcurrentHashMap<>();
+    protected final ConcurrentHashMap<String, Set<Long>> roomOnlineUserSet = new ConcurrentHashMap<>();
 
     @Autowired
     private WebSocketHelper webSocketHelper;
@@ -67,23 +72,18 @@ public class AppWebSocketHandler extends WebSocketHandler {
      * @param event  事件类型
      */
     private void onRoomEvent(long userId, long roomId, @NotNull ChatEventType event) {
-        List<Long> roomUserIdList = roomOnlineUserList.get(GROUP_PREFIX + roomId);
-        if (Objects.isNull(roomUserIdList)) {
-            roomUserIdList = new ArrayList<>();
-        }
+        String groupKey = GROUP_PREFIX + roomId;
+        // computeIfAbsent 保证「取集合」与「建集合」是同一次原子操作，
+        // 避免两个线程各自 new 出一个集合后互相覆盖
+        Set<Long> onlineUsers = roomOnlineUserSet.computeIfAbsent(groupKey, key -> ConcurrentHashMap.newKeySet());
         switch (event) {
-            case ROOM_MEMBER_JOIN:
-                if (!roomUserIdList.contains(userId)) {
-                    roomUserIdList.add(userId);
-                }
-                break;
-            case ROOM_MEMBER_LEAVE:
-                roomUserIdList.remove(userId);
-                break;
-            default:
-                PARAM_INVALID.show("错误的房间事件异常类型");
+            case ROOM_MEMBER_JOIN -> onlineUsers.add(userId);
+            case ROOM_MEMBER_LEAVE -> onlineUsers.remove(userId);
+            default -> PARAM_INVALID.show("错误的房间事件异常类型");
         }
-        roomOnlineUserList.put(GROUP_PREFIX + roomId, roomUserIdList);
+        if (onlineUsers.isEmpty()) {
+            roomOnlineUserSet.remove(groupKey, onlineUsers);
+        }
         MemberEntity member = memberService.getMemberWithAutoCreate(userId, roomId);
         member.getUser().excludeNotMeta();
         member.getRoom().excludeNotMeta();
@@ -91,12 +91,12 @@ public class AppWebSocketHandler extends WebSocketHandler {
         RoomMemberEvent roomMemberEvent = new RoomMemberEvent();
         roomMemberEvent.setMember(member);
 
-        webSocketHelper.publishToChannel(GROUP_PREFIX + roomId, new WebSocketPayload()
+        webSocketHelper.publishToChannel(groupKey, new WebSocketPayload()
                 .setType(event.getKeyString())
                 .setData(Json.toString(roomMemberEvent)));
-        webSocketHelper.publishToChannel(GROUP_PREFIX + roomId, new WebSocketPayload()
+        webSocketHelper.publishToChannel(groupKey, new WebSocketPayload()
                 .setType(ONLINE_COUNT_CHANGED.getKeyString())
-                .setData(Json.toString(roomUserIdList))
+                .setData(Json.toString(List.copyOf(onlineUsers)))
         );
     }
 
@@ -145,10 +145,10 @@ public class AppWebSocketHandler extends WebSocketHandler {
                         .setType(ROOM_JOIN_SUCCESS.getKeyString())
                         .setData(Json.toString(memberJoinEvent)));
 
-                List<Long> roomUserIdList = roomOnlineUserList.get(GROUP_PREFIX + room.getId());
+                Set<Long> onlineUsers = roomOnlineUserSet.get(GROUP_PREFIX + room.getId());
                 sendWebSocketPayload(session, new WebSocketPayload()
                         .setType(ONLINE_COUNT_CHANGED.getKeyString())
-                        .setData(Json.toString(roomUserIdList)));
+                        .setData(Json.toString(List.copyOf(Objects.requireNonNullElse(onlineUsers, Set.of())))));
                 break;
             case ROOM_MEMBER_LEAVE:
                 leaveRoom(session, userId);

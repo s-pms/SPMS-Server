@@ -7,6 +7,8 @@ import cn.hamm.spms.base.BaseEntity;
 import cn.hamm.spms.module.open.notify.enums.NotifyChannel;
 import cn.hamm.spms.module.open.notify.enums.NotifyScene;
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -41,6 +43,8 @@ public class NotifyEntity extends BaseEntity<NotifyEntity> {
     private Integer scene;
 
     @Description("通知地址")
+    @NotBlank(groups = {WhenAdd.class, WhenUpdate.class}, message = "通知地址不能为空")
+    @Size(max = 255, message = "通知地址最多允许{max}个字符")
     @Column(columnDefinition = "varchar(255) default '' comment '通知地址'")
     private String url;
 
