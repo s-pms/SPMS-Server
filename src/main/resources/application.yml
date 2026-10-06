@@ -62,4 +62,4 @@ airpower:
     prefix: "spms:"
   curd:
     base-package-name: "cn.hamm.spms"
-    permission-with-package: true
+    permission-with-package: false
