@@ -74,14 +74,19 @@ import static cn.hamm.spms.module.iot.report.ReportConstant.*;
  *
  * @author Hamm.cn
  * @apiNote 只在 {@code app.is-dev-mode} 为 true 时执行。运行目录下的 {@code init.lock}
- * 是「已初始化」的标记，存在就整段跳过；但 {@code ddl-auto} 为 {@code create-drop} 时
- * schema 每次都被重建，所以该模式下必须重跑
+ * 是「已初始化」的标记，存在就整段跳过；但 {@code ddl-auto} 为 {@code create} 或
+ * {@code create-drop} 时 schema 每次启动都会被重建，该模式下必须重跑
  */
 @Component
 @Slf4j
 public class SpmsDevData implements CommandLineRunner {
     public static final int TWO = 2;
-    private static final String CREATE_DROP = "create-drop";
+
+    /**
+     * 会重建 schema 的取值，命中时 {@code init.lock} 不能作为跳过依据
+     */
+    private static final Set<String> SCHEMA_REBUILDING = Set.of("create", "create-drop");
+
     private static final String LOCK_FILE = "init.lock";
 
     @Autowired
@@ -98,7 +103,7 @@ public class SpmsDevData implements CommandLineRunner {
         }
         // init.lock 落在运行目录，重启后它还在就说明基础数据已就位，不重复初始化
         String ddlAuto = "spring.jpa.hibernate.ddl-auto";
-        if (new File(LOCK_FILE).exists() && !CREATE_DROP.equals(environment.getProperty(ddlAuto))) {
+        if (new File(LOCK_FILE).exists() && !SCHEMA_REBUILDING.contains(environment.getProperty(ddlAuto))) {
             log.info("已存在 init.lock 文件，无需初始化数据");
             return;
         }
