@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,6 +40,11 @@ public class InfluxHelper {
     private static final String INFLUX_TAG_UUID = "uuid";
     private static final String INFLUX_SQL_SPLIT = " |> ";
     private static final String INFLUX_RECORD_VALUE_KEY = "_value";
+
+    /**
+     * 非数值查询的返回条数上限
+     */
+    private static final int NON_AGGREGATE_LIMIT = 500;
 
     /**
      * InfluxDB 客户端
@@ -262,6 +268,16 @@ public class InfluxHelper {
     }
 
     /**
+     * 把毫秒时间戳格式化为 Flux 可解析的 UTC 时间点
+     *
+     * @param milliSecond 毫秒时间戳
+     * @return RFC3339 时间字面量
+     */
+    private static @NotNull String formatRangeBound(long milliSecond) {
+        return Instant.ofEpochMilli(milliSecond).toString();
+    }
+
+    /**
      * 获取查询参数
      *
      * @param reportPayload     数采报告
@@ -275,8 +291,12 @@ public class InfluxHelper {
     private @NotNull List<String> getFluxQuery(@NotNull ReportPayload reportPayload, ReportDataType reportDataType, ReportGranularity reportGranularity) {
         List<String> queryParams = new ArrayList<>();
         InfluxConfig influxConfig = Configs.getInfluxConfig();
-        queryParams.add(String.format("from(bucket:\"%s\")", influxConfig.getBucket()));
-        queryParams.add(String.format("range(start: %s, stop: %s)", Integer.parseInt(String.valueOf(reportPayload.getStartTime() / 1000)), Integer.parseInt(String.valueOf(reportPayload.getEndTime() / 1000))));
+        queryParams.add(String.format("from(bucket:\"%s\")", escapeFlux(influxConfig.getBucket())));
+        // Flux 的 range 接受 RFC3339 或 Duration 字面量；秒级 epoch 直接内插在 2038-01-19
+        // 之后会超出 int 范围（且时间点语义依赖默认时区），因此统一格式化为 UTC 时间戳字面量
+        queryParams.add(String.format("range(start: %s, stop: %s)",
+                formatRangeBound(reportPayload.getStartTime()),
+                formatRangeBound(reportPayload.getEndTime())));
         // code 已由 DeviceService.getDevicePayloadHistory 用 getByCode 校验过必须是已注册参数，
         // 但 uuid 只有 @NotBlank 无格式校验，是真正的注入入口，两个都做转义
         queryParams.add(String.format("filter(fn: (r) => r._measurement == \"%s\" and r.uuid == \"%s\")",
@@ -287,7 +307,8 @@ public class InfluxHelper {
             queryParams.add("aggregateWindow(every: " + reportGranularity.getMark() + ", fn: mean)");
             queryParams.add("fill(usePrevious: true)");
         } else {
-            queryParams.add("limit(n: 500)");
+            // 非数值数据不聚合，直接限量返回；条数写死，避免成为可调的读放大旋钮
+            queryParams.add("limit(n: " + NON_AGGREGATE_LIMIT + ")");
         }
         return queryParams;
     }

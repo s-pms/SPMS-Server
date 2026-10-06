@@ -58,11 +58,17 @@ public class DeviceController extends BaseController<
         device = service.getByUuid(device.getUuid());
         DATA_NOT_FOUND.whenNull(device);
         device.excludeNotMeta();
+        // 参数只下发编码与标题：ID、类型、内置标志都属于服务端内部信息，
+        // 对外暴露会让客户端知道可以传哪些 code 去查时序库
         Set<ParameterEntity> parameters = new HashSet<>();
         device = service.getDeviceParameters(device);
         device.getParameters().forEach(p -> {
-            p.setId(null).excludeNotMeta();
-            parameters.add(p);
+            if (Objects.isNull(p)) {
+                return;
+            }
+            parameters.add(new ParameterEntity()
+                    .setCode(p.getCode())
+                    .setLabel(p.getLabel()));
         });
         device.setParameters(parameters);
         return Json.data(device);
