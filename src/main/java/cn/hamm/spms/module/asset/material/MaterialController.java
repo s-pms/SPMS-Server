@@ -1,0 +1,18 @@
+package cn.hamm.spms.module.asset.material;
+
+import cn.hamm.airpower.api.annotation.Api;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.curd.annotation.Extends;
+import cn.hamm.airpower.curd.base.Curd;
+import cn.hamm.spms.base.BaseController;
+
+/**
+ * <h1>物料</h1>
+ *
+ * @author Hamm.cn
+ */
+@Api("material")
+@Description("物料")
+@Extends({Curd.Export, Curd.QueryExport})
+public class MaterialController extends BaseController<MaterialEntity, MaterialService, MaterialRepository> {
+}

@@ -1,0 +1,105 @@
+package cn.hamm.spms.base.bill;
+
+import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.curd.annotation.Extends;
+import cn.hamm.airpower.curd.base.Curd;
+import cn.hamm.airpower.curd.permission.Permission;
+import cn.hamm.spms.base.BaseController;
+import cn.hamm.spms.base.bill.detail.BaseBillDetailEntity;
+import cn.hamm.spms.base.bill.detail.BaseBillDetailRepository;
+import cn.hamm.spms.base.bill.detail.BaseBillDetailService;
+import cn.hamm.spms.base.bill.detail.IBaseBillDetailAction;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN;
+
+/**
+ * <h1>单据控制器基类</h1>
+ *
+ * @param <E>  单据实体
+ * @param <S>  单据 Service
+ * @param <R>  单据数据源
+ * @param <D>  明细实体
+ * @param <DS> 明细 Service
+ * @param <DR> 明细数据源
+ * @author Hamm.cn
+ * @apiNote 单据不提供删除接口；又因 {@code canEdit} 只认「已驳回」，
+ * 单据一旦审核通过就只能被推着走完状态机
+ */
+@Slf4j
+@Permission
+@Extends(exclude = {Curd.Delete})
+public class BaseBillController<
+        E extends AbstractBaseBillEntity<E, D>,
+        S extends AbstractBaseBillService<E, R, D, DS, DR>,
+        R extends BaseBillRepository<E, D>,
+        D extends BaseBillDetailEntity<D>,
+        DS extends BaseBillDetailService<D, DR>,
+        DR extends BaseBillDetailRepository<D>
+        > extends BaseController<E, S, R> implements IBaseBillAction, IBaseBillDetailAction {
+
+    @Description("审核")
+    @PostMapping("audit")
+    public Json audit(@RequestBody @Validated(WhenIdRequired.class) E bill) {
+        service.audit(bill.getId());
+        return Json.success("审核成功");
+    }
+
+    @Description("驳回")
+    @PostMapping("reject")
+    public Json reject(@RequestBody @Validated(WhenReject.class) E bill) {
+        service.reject(bill.getId());
+        return Json.success("驳回成功");
+    }
+
+    @Description("添加明细的完成数量")
+    @PostMapping("addFinish")
+    public Json addFinish(@RequestBody @Validated(WhenAddFinish.class) D detail) {
+        service.addDetailFinishQuantity(detail);
+        return Json.success("添加完成数量成功");
+    }
+
+    /**
+     * 单据更新前置校验
+     *
+     * @param bill  提交的单据
+     * @param exist 数据库中的单据
+     * @return 单据
+     * @apiNote 只有「已驳回」的单据能改；改完状态会被重置为「审核中」，
+     * 即编辑一次就等于重新提交审核
+     */
+    @Contract("_, _ -> param1")
+    @Override
+    protected final @NotNull E beforeAppUpdate(@NotNull E bill, @NotNull E exist) {
+        FORBIDDEN.when(!service.canEdit(exist), "该单据状态下无法编辑");
+        beforeBillUpdate(bill);
+        service.setAuditing(bill);
+        return bill;
+    }
+
+    /**
+     * 单据更新前置方法
+     *
+     * @param bill 单据
+     */
+    protected void beforeBillUpdate(@NotNull E bill) {
+        log.info("单据更新，单据ID：{}", bill.getId());
+    }
+
+    @Override
+    protected E beforeAppAdd(@NotNull E bill) {
+        beforeBillAdd(bill);
+        service.setAuditing(bill);
+        return bill;
+    }
+
+    protected void beforeBillAdd(@NotNull E bill) {
+        log.info("单据添加，单据ID：{}", bill.getId());
+    }
+}

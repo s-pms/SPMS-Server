@@ -1,0 +1,21 @@
+package cn.hamm.spms.module.wms.inventory.enums;
+
+import cn.hamm.airpower.core.interfaces.IDictionary;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/**
+ * <h1>库存类型</h1>
+ *
+ * @author Hamm.cn
+ */
+@AllArgsConstructor
+@Getter
+public enum InventoryType implements IDictionary {
+    STORAGE(1, "仓库"),
+
+    STRUCTURE(2, "生产单元");
+
+    private final int key;
+    private final String label;
+}

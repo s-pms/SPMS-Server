@@ -1,0 +1,88 @@
+package cn.hamm.spms.module.open.app;
+
+import cn.hamm.airpower.core.RandomUtil;
+import cn.hamm.airpower.core.RsaUtil;
+import cn.hamm.airpower.core.exception.ServiceException;
+import cn.hamm.airpower.open.IOpenAppService;
+import cn.hamm.spms.base.BaseService;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+import java.util.Objects;
+
+/**
+ * <h1>开放应用</h1>
+ *
+ * @author Hamm.cn
+ */
+@SuppressWarnings("AlibabaServiceOrDaoClassShouldEndWithImpl")
+@Service
+public class OpenAppService extends BaseService<OpenAppEntity, OpenAppRepository> implements IOpenAppService {
+    /**
+     * 通过 AppKey 获取一个应用
+     *
+     * @param appKey AppKey
+     * @return 应用
+     */
+    @Override
+    public OpenAppEntity getByAppKey(String appKey) {
+        return repository.getByAppKey(appKey);
+    }
+
+    @Override
+    protected @NotNull OpenAppEntity beforeAppAdd(@NotNull OpenAppEntity openApp) {
+        if (!StringUtils.hasText(openApp.getAppKey())) {
+            openApp.setAppKey(createAppKey());
+        }
+        if (!StringUtils.hasText(openApp.getAppSecret())) {
+            openApp.setAppSecret(createAppSecret());
+        }
+        if (!StringUtils.hasText(openApp.getPrivateKey()) || !StringUtils.hasText(openApp.getPublicKey())) {
+            resetKeyPair(openApp);
+        }
+        return openApp;
+    }
+
+    /**
+     * 创建 AppSecret
+     *
+     * @return AppSecret
+     */
+    public final String createAppSecret() {
+        return Base64.getEncoder().encodeToString(RandomUtil.randomBytes());
+    }
+
+    /**
+     * 重置密钥对
+     *
+     * @param openApp 应用
+     */
+    public final void resetKeyPair(@NotNull OpenAppEntity openApp) {
+        try {
+            RsaUtil rsaUtil = RsaUtil.create();
+            KeyPair keyPair = rsaUtil.generateKeyPair();
+            openApp.setPrivateKey(rsaUtil.getPemPrivateKey(keyPair));
+            openApp.setPublicKey(rsaUtil.getPemPublicKey(keyPair));
+        } catch (NoSuchAlgorithmException e) {
+            throw new ServiceException("重置密钥对失败，" + e.getMessage());
+        }
+    }
+
+    /**
+     * 创建 AppKey
+     *
+     * @return AppKey
+     */
+    public final String createAppKey() {
+        String appKey = RandomUtil.randomString();
+        OpenAppEntity openApp = getByAppKey(appKey);
+        if (Objects.isNull(openApp)) {
+            return appKey;
+        }
+        return createAppKey();
+    }
+}

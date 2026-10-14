@@ -1,0 +1,50 @@
+package cn.hamm.spms.module.channel.purchaseprice;
+
+import cn.hamm.spms.base.BaseService;
+import cn.hamm.spms.module.asset.material.MaterialEntity;
+import cn.hamm.spms.module.channel.supplier.SupplierEntity;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
+
+import java.util.Objects;
+
+import static cn.hamm.airpower.exception.Errors.DATA_NOT_FOUND;
+import static cn.hamm.airpower.exception.Errors.FORBIDDEN_EXIST;
+
+/**
+ * <h1>采购价格</h1>
+ *
+ * @author Hamm.cn
+ */
+@Service
+public class PurchasePriceService extends BaseService<PurchasePriceEntity, PurchasePriceRepository> {
+    @Override
+    protected @NotNull PurchasePriceEntity beforeAppAdd(@NotNull PurchasePriceEntity purchasePrice) {
+        PurchasePriceEntity exist = repository.getBySupplierAndMaterial(
+                purchasePrice.getSupplier(),
+                purchasePrice.getMaterial()
+        );
+        if (Objects.nonNull(exist)) {
+            FORBIDDEN_EXIST.show(String.format(
+                    "物料 %s 在供应商 %s 下的采购价已存在!",
+                    exist.getMaterial().getName(),
+                    exist.getSupplier().getName()
+            ));
+        }
+        return purchasePrice;
+    }
+
+    /**
+     * 按物料和供应商查询采购价
+     *
+     * @param material 物料
+     * @param supplier 供应商
+     * @return 采购价
+     * @apiNote 未配置价格时直接报「数据不存在」，前端据此提示改用物料标准采购价
+     */
+    protected PurchasePriceEntity getByMaterialAndSupplier(MaterialEntity material, SupplierEntity supplier) {
+        PurchasePriceEntity exist = repository.getBySupplierAndMaterial(supplier, material);
+        DATA_NOT_FOUND.whenNull(exist, "没有查询到该物料在此供应商下提供的采购价格，请参考物料标准采购价填写。");
+        return exist;
+    }
+}

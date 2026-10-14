@@ -1,0 +1,67 @@
+package cn.hamm.spms.module.channel.purchase;
+
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.Dictionary;
+import cn.hamm.airpower.core.annotation.Meta;
+import cn.hamm.airpower.core.annotation.ReadOnly;
+import cn.hamm.airpower.curd.annotation.Search;
+import cn.hamm.spms.base.bill.AbstractBaseBillEntity;
+import cn.hamm.spms.common.annotation.AutoGenerateCode;
+import cn.hamm.spms.module.channel.purchase.detail.PurchaseDetailEntity;
+import cn.hamm.spms.module.channel.purchase.enums.PurchaseStatus;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.validator.constraints.Length;
+
+import static cn.hamm.spms.module.system.coderule.enums.CodeRuleField.PurchaseBillCode;
+
+/**
+ * <h1>采购单</h1>
+ *
+ * @author Hamm.cn
+ */
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
+@Entity
+@Data
+@DynamicInsert
+@DynamicUpdate
+@Table(name = "purchase")
+@Description("采购单")
+public class PurchaseEntity extends AbstractBaseBillEntity<PurchaseEntity, PurchaseDetailEntity> {
+    @Description("采购单号")
+    @Column(columnDefinition = "varchar(255) default '' comment '采购单号'", unique = true)
+    @AutoGenerateCode(PurchaseBillCode)
+    @Search
+    @Meta
+    private String billCode;
+
+    @Description("采购事由")
+    @NotNull(groups = {WhenUpdate.class, WhenAdd.class}, message = "采购事由")
+    @Column(columnDefinition = "varchar(255) default '' comment '采购事由'")
+    @Length(max = 80, message = "采购事由最多允许输入{max}个字符")
+    @Search
+    private String reason;
+
+    @Description("总金额")
+    @ReadOnly
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '总金额'")
+    private Double totalPrice;
+
+    @Description("实际金额")
+    @ReadOnly
+    @Column(columnDefinition = "double(20, 6) UNSIGNED default 0 comment '实际金额'")
+    private Double totalRealPrice;
+
+    @Description("采购状态")
+    @Column(columnDefinition = "int UNSIGNED default 1 comment '采购状态'")
+    @Dictionary(value = PurchaseStatus.class, groups = {WhenAdd.class, WhenUpdate.class})
+    private Integer status;
+}

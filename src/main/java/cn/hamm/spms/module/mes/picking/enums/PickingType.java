@@ -1,0 +1,21 @@
+package cn.hamm.spms.module.mes.picking.enums;
+
+import cn.hamm.airpower.core.interfaces.IDictionary;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/**
+ * <h1>领料单类型</h1>
+ *
+ * @author Hamm.cn
+ */
+@AllArgsConstructor
+@Getter
+public enum PickingType implements IDictionary {
+    PRODUCE(1, "生产领料"),
+
+    OTHER(2, "其他领料");
+
+    private final int key;
+    private final String label;
+}

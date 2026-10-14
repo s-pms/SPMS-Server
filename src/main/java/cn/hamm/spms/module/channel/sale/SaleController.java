@@ -1,0 +1,18 @@
+package cn.hamm.spms.module.channel.sale;
+
+import cn.hamm.airpower.api.annotation.Api;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.spms.base.bill.BaseBillController;
+import cn.hamm.spms.module.channel.sale.detail.SaleDetailEntity;
+import cn.hamm.spms.module.channel.sale.detail.SaleDetailRepository;
+import cn.hamm.spms.module.channel.sale.detail.SaleDetailService;
+
+/**
+ * <h1>销售单</h1>
+ *
+ * @author Hamm.cn
+ */
+@Api("sale")
+@Description("销售单")
+public class SaleController extends BaseBillController<SaleEntity, SaleService, SaleRepository, SaleDetailEntity, SaleDetailService, SaleDetailRepository> {
+}

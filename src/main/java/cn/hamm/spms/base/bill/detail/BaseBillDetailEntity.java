@@ -1,0 +1,87 @@
+package cn.hamm.spms.base.bill.detail;
+
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.core.annotation.ReadOnly;
+import cn.hamm.spms.base.BaseEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+
+/**
+ * <h1>单据明细基类</h1>
+ *
+ * @param <E> 明细实体
+ * @author Hamm.cn
+ */
+@SuppressWarnings({"unchecked", "UnusedReturnValue"})
+@MappedSuperclass
+@Getter
+@Description("")
+public abstract class BaseBillDetailEntity<
+        E extends BaseBillDetailEntity<E>
+        > extends BaseEntity<E> implements IBaseBillDetailAction {
+    @Description("单据 ID")
+    @Column(nullable = false, columnDefinition = "bigint UNSIGNED comment '单据ID'")
+    private Long billId;
+
+    @Description("是否已完成")
+    @ReadOnly
+    @Column(columnDefinition = "bit(1) default 0 comment '是否已完成'")
+    private Boolean isFinished;
+
+    /**
+     * 设置是否已完成
+     *
+     * @param isFinished 是否已完成
+     * @return 单据明细
+     */
+    public E setIsFinished(Boolean isFinished) {
+        this.isFinished = isFinished;
+        return (E) this;
+    }
+
+    /**
+     * 设置单据 ID
+     *
+     * @param billId 单据 ID
+     * @return 明细实体
+     */
+    public E setBillId(Long billId) {
+        this.billId = billId;
+        return (E) this;
+    }
+
+    /**
+     * 获取数量
+     *
+     * @return 数量
+     * @apiNote 报工接口 {@code WhenAddFinish} 分组下必填
+     */
+    @NotNull(groups = {WhenAddFinish.class}, message = "数量不能为空")
+    public abstract Double getQuantity();
+
+    /**
+     * 设置数量
+     *
+     * @param quantity 数量
+     * @return 明细实体
+     */
+    public abstract E setQuantity(Double quantity);
+
+    /**
+     * 获取已完成数量
+     *
+     * @return 已完成数量
+     * @apiNote 单据是否「全部明细完成」以它与 {@link #getQuantity()} 的比较结果为准
+     */
+    public abstract Double getFinishQuantity();
+
+    /**
+     * 设置已完成数量
+     *
+     * @param finishQuantity 已完成数量
+     * @return 明细实体
+     */
+    public abstract E setFinishQuantity(Double finishQuantity);
+}

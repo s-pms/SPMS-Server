@@ -1,0 +1,14 @@
+package cn.hamm.spms.base;
+
+import cn.hamm.airpower.curd.base.ICurdRepository;
+import org.springframework.data.repository.NoRepositoryBean;
+
+/**
+ * <h1>实体数据源基接口</h1>
+ *
+ * @param <E> 实体
+ * @author Hamm.cn
+ */
+@NoRepositoryBean
+public interface BaseRepository<E extends BaseEntity<E>> extends ICurdRepository<E> {
+}

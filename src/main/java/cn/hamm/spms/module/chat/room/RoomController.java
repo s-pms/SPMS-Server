@@ -1,0 +1,53 @@
+package cn.hamm.spms.module.chat.room;
+
+import cn.hamm.airpower.api.annotation.Api;
+import cn.hamm.airpower.core.Json;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.airpower.curd.permission.Permission;
+import cn.hamm.spms.base.BaseController;
+import cn.hamm.spms.module.personnel.user.UserEntity;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+/**
+ * <h1>房间</h1>
+ *
+ * @author Hamm.cn
+ * @apiNote 房间是公开聊天室，全部接口用 {@code @Permission(authorize = false)} 跳过菜单权限校验，
+ * 身份仍由登录态决定
+ */
+@Api("room")
+@Description("房间")
+public class RoomController extends BaseController<RoomEntity, RoomService, RoomRepository> implements IRoomAction {
+    @Permission(authorize = false)
+    @Override
+    public Json getDetail(@NotNull RoomEntity room) {
+        return super.getDetail(room);
+    }
+
+    @Description("创建房间")
+    @PostMapping("create")
+    @Permission(authorize = false)
+    public Json create(@RequestBody @Validated(WhenCreate.class) RoomEntity source) {
+        long roomId = service.create(source, getCurrentUserId());
+        return Json.data(roomId, "房间创建成功");
+    }
+
+    @Description("获取我的房间")
+    @PostMapping("getMyRoomList")
+    @Permission(authorize = false)
+    public Json getMyRoomList() {
+        RoomEntity filter = new RoomEntity();
+        filter.setOwner(new UserEntity().setId(getCurrentUserId()));
+        return Json.data(service.filter(filter));
+    }
+
+    @Description("获取热门房间")
+    @PostMapping("getHotList")
+    @Permission(authorize = false)
+    public Json getHotList() {
+        return Json.data(service.getHotRoomList());
+    }
+}

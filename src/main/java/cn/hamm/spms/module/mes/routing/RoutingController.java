@@ -1,0 +1,17 @@
+package cn.hamm.spms.module.mes.routing;
+
+import cn.hamm.airpower.api.annotation.Api;
+import cn.hamm.airpower.core.annotation.Description;
+import cn.hamm.spms.base.BaseController;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * <h1>生产工艺</h1>
+ *
+ * @author zfy
+ */
+@RestController
+@Description("生产工艺")
+@Api("routing")
+public class RoutingController extends BaseController<RoutingEntity, RoutingService, RoutingRepository> {
+}

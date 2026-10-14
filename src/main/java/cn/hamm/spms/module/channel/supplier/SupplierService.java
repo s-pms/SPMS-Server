@@ -1,0 +1,13 @@
+package cn.hamm.spms.module.channel.supplier;
+
+import cn.hamm.spms.base.BaseService;
+import org.springframework.stereotype.Service;
+
+/**
+ * <h1>供应商</h1>
+ *
+ * @author Hamm.cn
+ */
+@Service
+public class SupplierService extends BaseService<SupplierEntity, SupplierRepository> {
+}

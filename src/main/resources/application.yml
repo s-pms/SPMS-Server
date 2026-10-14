@@ -1,0 +1,65 @@
+#file: noinspection SpellCheckingInspection
+logging:
+  config: "classpath:logback-spring.xml"
+  level:
+    org.springframework.beans: debug
+    org.springframework.context: debug
+server:
+  port: 8080
+spring:
+  profiles:
+    active: production
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 10
+      connection-timeout: 10000
+      idle-timeout: 600000
+      max-lifetime: 1700000
+      leak-detection-threshold: 5000
+  jpa:
+    open-in-view: false
+    database-platform: "org.hibernate.dialect.MySQL8Dialect"
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        column_ordering_strategy: "legacy"
+  mail:
+    properties:
+      mail:
+        smtp:
+          # 开启SMTP身份验证
+          auth: true
+          ssl:
+            # 启用SSL加密传输
+            enable: true
+          # 使用SSL Socket Factory
+          socketFactory-class: "javax.net.ssl.SSLSocketFactory"
+          socketFactory-fallback: false
+          starttls:
+            # 不需要StartTLS
+            enable: false
+  web:
+    resources:
+      add-mappings: false
+  mvc:
+    view:
+      suffix: ".html"
+      prefix: /
+airpower:
+  websocket:
+    support: redis
+  api:
+    access-token-secret: "1234567890123456789012345678901234567890"
+    request-log: true
+    response-log: true
+  redis:
+    prefix: "spms:"
+  curd:
+    base-package-name: "cn.hamm.spms"
+    permission-with-package: false

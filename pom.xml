@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cn.hamm</groupId>
+        <artifactId>airpower</artifactId>
+        <version>9.0.0</version>
+    </parent>
+    <groupId>cn.hamm.spms</groupId>
+    <artifactId>spms-server</artifactId>
+    <version>4.0.0</version>
+    <name>SPMS</name>
+    <description>smart-production-manage-system</description>
+    <dependencies>
+        <dependency>
+            <groupId>cn.hamm</groupId>
+            <artifactId>airpower-curd</artifactId>
+            <version>${airpower.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hamm</groupId>
+            <artifactId>airpower-file</artifactId>
+            <version>${airpower.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hamm</groupId>
+            <artifactId>airpower-mqtt</artifactId>
+            <version>${airpower.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hamm</groupId>
+            <artifactId>airpower-open</artifactId>
+            <version>${airpower.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hamm</groupId>
+            <artifactId>airpower-email</artifactId>
+            <version>${airpower.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hamm</groupId>
+            <artifactId>airpower-websocket</artifactId>
+            <version>${airpower.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.influxdb</groupId>
+            <artifactId>influxdb-client-java</artifactId>
+            <version>6.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!--
+                      每个测试类使用独立的 JVM。
+                      原因：单据测试会在数据库上留下未释放的行锁（详见
+                      12-P2修复报告-第三批.md 的「重大发现」一节），
+                      同 JVM 内跨测试类累积会导致后续测试类出现
+                      Lock wait timeout exceeded（表现为 insert into output 超时 50s）。
+                      独立 JVM 同时也让 create-drop 的建表在每个类之前真正执行一次，
+                      避免测试之间数据互相污染。
+                    -->
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${springboot.version}</version>
+                <configuration>
+                    <mainClass>cn.hamm.spms.SpmsApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
