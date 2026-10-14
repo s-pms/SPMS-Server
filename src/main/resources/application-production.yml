@@ -17,4 +17,3 @@ spring:
       database: 1
 app:
   login-url: "https://spms.hamm.cn/login"
-  is-dev-mode: true
