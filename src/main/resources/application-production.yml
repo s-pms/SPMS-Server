@@ -1,5 +1,3 @@
-server:
-  port: 10081
 spring:
   jpa:
     show-sql: false
