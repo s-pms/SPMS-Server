@@ -55,7 +55,7 @@ airpower:
   websocket:
     support: redis
   api:
-    access-token-secret: "1234567890123456789012345678901234567890"
+    access-token-secret: "${AIRPOWER_API_ACCESS_TOKEN_SECRET}"
     request-log: true
     response-log: true
   redis:
